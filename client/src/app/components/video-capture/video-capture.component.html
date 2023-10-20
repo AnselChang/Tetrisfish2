@@ -1,0 +1,9 @@
+<select [(ngModel)]="selectedDevice" (change)="onDeviceChange()">
+    <option *ngFor="let device of videoDevices" [ngValue]="device">{{ device.label }}</option>
+  </select>
+  
+  <video #videoElement autoplay></video>
+  
+  <!-- Display permission error -->
+  <div *ngIf="permissionError" class="error">{{ permissionError }}</div>
+  
