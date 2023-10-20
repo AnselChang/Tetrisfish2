@@ -30,14 +30,18 @@
     "@angular-devkit/build-angular": "^16.2.4",
     "@angular/cli": "^16.2.4",
     "@angular/compiler-cli": "^16.2.0",
+    "@types/connect-livereload": "^0.6.2",
     "@types/express": "^4.17.20",
     "@types/jasmine": "~4.3.0",
+    "@types/livereload": "^0.9.4",
+    "connect-livereload": "^0.6.1",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "livereload": "^0.9.3",
     "typescript": "~5.1.3"
   }
 }
