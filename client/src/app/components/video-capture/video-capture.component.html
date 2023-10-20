@@ -1,5 +1,7 @@
 <select [(ngModel)]="selectedDevice" (change)="onDeviceChange()">
-    <option *ngFor="let device of videoDevices" [ngValue]="device">{{ device.label }}</option>
+    <option *ngFor="let device of videoDevices" [ngValue]="device">
+        {{ (device === null) ? "Select a video device" : device.label }}
+    </option>
   </select>
   
   <video #videoElement autoplay></video>

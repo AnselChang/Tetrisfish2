@@ -8,20 +8,23 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 })
 export class VideoCaptureComponent implements OnInit {
   @ViewChild('videoElement') videoElement!: ElementRef;
-  videoDevices: MediaDeviceInfo[] = [];
+  videoDevices: (MediaDeviceInfo | null)[] = [];
   selectedDevice: MediaDeviceInfo | null = null;
   permissionError: string | null = null;
 
   constructor() {}
 
   ngOnInit(): void {
-    this.getVideoDevices();
+    this.generateVideoDevicesList();
+    navigator.mediaDevices.addEventListener('devicechange', this.generateVideoDevicesList.bind(this));
   
   }
 
-  getVideoDevices(): void {
+
+  generateVideoDevicesList(): void {
     navigator.mediaDevices.enumerateDevices().then(devices => {
       this.videoDevices = devices.filter(device => device.kind === 'videoinput');
+      this.videoDevices.unshift(null); // Add a null option to the beginning of the list
     });
   }
 
@@ -42,6 +45,9 @@ export class VideoCaptureComponent implements OnInit {
         this.permissionError = "Error accessing video device. Please ensure permissions are granted.";
         console.error("Error accessing video device:", err);
       });
+    } else {
+      // If no device is selected, clear the video element
+      this.videoElement.nativeElement.srcObject = null;
     }
   }
 }
