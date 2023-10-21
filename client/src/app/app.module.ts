@@ -5,11 +5,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { VideoCaptureComponent } from './components/video-capture/video-capture.component';
 import { TestComponent } from './test/test.component';
+import { InteractiveTetrisBoardComponent } from './components/tetris/interactive-tetris-board/interactive-tetris-board.component';
 @NgModule({
   declarations: [
     AppComponent,
     VideoCaptureComponent,
-    TestComponent
+    TestComponent,
+    InteractiveTetrisBoardComponent
   ],
   imports: [
     BrowserModule,

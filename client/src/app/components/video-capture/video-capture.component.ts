@@ -39,6 +39,9 @@ export class VideoCaptureComponent implements OnInit {
           deviceId: this.selectedDevice.deviceId
         }
       }).then(stream => {
+
+        console.log(stream.getVideoTracks());
+
         this.videoElement.nativeElement.srcObject = stream;
         this.permissionError = null; // Clear any previous error
       }).catch(err => {
