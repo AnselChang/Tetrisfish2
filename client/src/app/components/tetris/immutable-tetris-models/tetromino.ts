@@ -30,7 +30,7 @@ export function getColorTypeForTetromino(tetrominoType: TetrominoType): Tetromin
     }
 }
 
-export function getColorForLevel(colorType: TetrominoColorType, level: number): string {
+export function getColorForLevel(colorType: TetrominoColorType, level: number = 0): string {
     level = level % 10;
     
     // TODO: map level to color

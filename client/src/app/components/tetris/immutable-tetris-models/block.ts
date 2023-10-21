@@ -3,7 +3,7 @@ Represents the x/y position of a block in the grid. Can either represent a relat
 position. Can check if in bounds, which is useful for absolute positions only
 
 X starts at 1 on the left, and increases to the right to 10
-Y starts at 1 on the bottom, and increases to the top to 20
+Y starts at 1 on the top, and increases to the bottom to 20
 
 Objects are immutable. Transformations return new objects
 

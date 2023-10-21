@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { VideoCaptureComponent } from './components/video-capture/video-capture.component';
 import { TestComponent } from './test/test.component';
 import { InteractiveTetrisBoardComponent } from './components/tetris/interactive-tetris-board/interactive-tetris-board.component';
+import { TetrisBlockComponent } from './components/tetris/tetris-block/tetris-block.component';
 @NgModule({
   declarations: [
     AppComponent,
     VideoCaptureComponent,
     TestComponent,
-    InteractiveTetrisBoardComponent
+    InteractiveTetrisBoardComponent,
+    TetrisBlockComponent
   ],
   imports: [
     BrowserModule,

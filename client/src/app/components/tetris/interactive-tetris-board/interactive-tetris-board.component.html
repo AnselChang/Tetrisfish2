@@ -1,1 +1,10 @@
-<p>interactive-tetris-board works!</p>
+<!-- Iterate through the board left-right, top-bottom and draw each block -->
+<svg [attr.viewBox]="VIEW_BOX">
+    <g *ngFor="let y of ONE_TO_TWENTY">
+        <g *ngFor="let x of ONE_TO_TEN">
+            <g *ngIf="getBlockAt(x,y) as block">
+                <g app-tetris-block [blockData]="block" />
+            </g>
+        </g>
+    </g>
+</svg>
