@@ -8,7 +8,6 @@ Y starts at 1 on the bottom, and increases to the top to 20
 Objects are immutable. Transformations return new objects
 
 */
-
 export class BlockPosition {
     constructor(public readonly x: number, public readonly y: number) {}
 
@@ -21,4 +20,23 @@ export class BlockPosition {
     inBounds(): boolean {
         return this.x >= 1 && this.x <= 10 && this.y >= 1 && this.y <= 20;
     }
+}
+
+/*
+A class defining the relative positions of a set of blocks. Can apply translations (not rotations)
+to the set, and map to an absolute position on the board.
+
+Does not represent anything like the piece type or color of the blocks. See Tetromino for that.
+
+Objects are immutable. Transformations return new objects
+*/
+export class BlockSet {
+
+    constructor(public readonly blocks: BlockPosition[]) {}
+
+    // Returns a new BlockSet with the blocks translated by the given amount
+    translate(x: number, y: number): BlockSet {
+        return new BlockSet(this.blocks.map(block => block.translate(x, y)));
+    }
+
 }
