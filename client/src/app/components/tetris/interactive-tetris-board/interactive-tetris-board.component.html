@@ -1,8 +1,8 @@
 <!-- Iterate through the board left-right, top-bottom and draw each block -->
-<svg [attr.viewBox]="VIEW_BOX" [attr.width]="boardWidthPixels" [attr.height]="boardHeightPixels">
+<svg [attr.viewBox]="VIEW_BOX" left="0" top="0" width="100%" height="100%">
 
     <!-- Draw the board background -->
-    <rect x="0" y="0" [attr.width]="boardWidthPixels" [attr.height]="boardHeightPixels" fill="black" />
+    <rect x="0" y="0" [attr.width]="boardWidth" [attr.height]="boardHeight" fill="black" />
 
     <g *ngFor="let y of ONE_TO_TWENTY">
         <g *ngFor="let x of ONE_TO_TEN">

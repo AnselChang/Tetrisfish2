@@ -10,8 +10,8 @@ An interactable tetris board with interacable current piece and displayed next p
 */
 
 export enum BlockFillType {
-  SOLID,
-  BORDER
+  SOLID = "SOLID",
+  BORDER = "BORDER"
 }
 
 const SVG_BLOCK_SIZE = 8;
@@ -47,7 +47,6 @@ export class BlockData {
 export class InteractiveTetrisBoardComponent {
   @Input() boardState!: BoardState;
   @Input() currentPiece: CurrentPiece = new CurrentPiece(CurrentPieceState.NONE); // by default, show no current piece
-  @Input() scale = 1; // pixels, default is 300. height is calculated to maintain aspect ratio
 
   
   readonly VIEW_BOX = `0 0 ${SVG_BOARD_WIDTH} ${SVG_BOARD_HEIGHT}`;
@@ -55,12 +54,12 @@ export class InteractiveTetrisBoardComponent {
   public readonly ONE_TO_TEN: number[] = Array(10).fill(0).map((x, i) => i + 1);
   public readonly ONE_TO_TWENTY: number[] = Array(20).fill(0).map((x, i) => i + 1);
 
-  public get boardWidthPixels(): number {
-    return this.scale * SVG_BOARD_WIDTH;
+  public get boardWidth(): number {
+    return SVG_BOARD_WIDTH;
   }
 
-  public get boardHeightPixels(): number {
-    return this.scale * SVG_BOARD_HEIGHT;
+  public get boardHeight(): number {
+    return SVG_BOARD_HEIGHT;
   }
 
   public getBlockAt(x: number, y: number): BlockData | null {
@@ -69,11 +68,7 @@ export class InteractiveTetrisBoardComponent {
     const WHITE_COLOR = getColorForLevel(TetrominoColorType.COLOR_WHITE);
 
     let MAIN_COLOR, TYPE;
-    if (this.boardState.grid.at(x, y) === BlockType.FILLED) {
-      MAIN_COLOR = TetrominoColorType.COLOR_FIRST;
-      TYPE = BlockFillType.BORDER;
-    } 
-    else if (this.currentPiece.state !== CurrentPieceState.NONE && this.currentPiece.tetromino!.isAtLocation(x,y)) {
+    if (this.currentPiece.state !== CurrentPieceState.NONE && this.currentPiece.tetromino!.isAtLocation(x,y)) {
       const colorType = getColorTypeForTetromino(this.currentPiece.tetromino!.tetromino.type);
       if (colorType === TetrominoColorType.COLOR_WHITE) { // if white is current piece, display white with different border color than usual scheme
         MAIN_COLOR = TetrominoColorType.COLOR_SECOND;
@@ -82,8 +77,10 @@ export class InteractiveTetrisBoardComponent {
         MAIN_COLOR = colorType;
         TYPE = BlockFillType.SOLID;
       }
-    }
-    else {
+    } else if (this.boardState.grid.at(x, y) === BlockType.FILLED) {
+      MAIN_COLOR = TetrominoColorType.COLOR_FIRST;
+      TYPE = BlockFillType.BORDER;
+    } else {
       return null;
     }
 

@@ -35,11 +35,11 @@ export function getColorForLevel(colorType: TetrominoColorType, level: number = 
     
     // TODO: map level to color
     if (colorType === TetrominoColorType.COLOR_WHITE) {
-        return 'white';
+        return 'rgb(255, 255, 255)';
     } else if (colorType === TetrominoColorType.COLOR_FIRST) {
-        return 'blue';
+        return 'rgb(36, 87, 239)';
     } else {
-        return 'red';
+        return 'rgb(228, 75, 37)';
     }
 }
 

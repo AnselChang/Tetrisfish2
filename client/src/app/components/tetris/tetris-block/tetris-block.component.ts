@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BlockData, BlockFillType } from '../interactive-tetris-board/interactive-tetris-board.component';
 import { block } from 'core/tooltip';
 
@@ -11,11 +11,15 @@ Draws a single tetris block on the tetris board
   templateUrl: './tetris-block.component.html',
   styleUrls: ['./tetris-block.component.scss']
 })
-export class TetrisBlockComponent {
+export class TetrisBlockComponent implements OnInit {
   @Input() blockData!: BlockData;
   
   public get BlockFillType(): typeof BlockFillType {
     return BlockFillType;
+  }
+
+  ngOnInit(): void {
+      console.log(this.blockData);
   }
 
 

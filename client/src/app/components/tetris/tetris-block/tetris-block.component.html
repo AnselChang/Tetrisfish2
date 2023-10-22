@@ -8,6 +8,14 @@
         [attr.height]="blockData.svgSize"
         [attr.fill]="blockData.mainColor" />
 
+    <!-- draw a white pxiel at the top left corner -->
+    <svg:rect
+        [attr.x]="blockData.svgX"
+        [attr.y]="blockData.svgY"
+        [attr.width]="1"
+        [attr.height]="1"
+        [attr.fill]="blockData.whiteColor" />
+
     <!-- if a white tetromino, draw a a white square over the non-white color excluding 1 pixel of border-->
     <svg:rect
         *ngIf="blockData.type === BlockFillType.BORDER"
@@ -15,7 +23,7 @@
         [attr.y]="blockData.svgY + 1"
         [attr.width]="blockData.svgSize - 2"
         [attr.height]="blockData.svgSize - 2"
-        [attr.fill]="blockData.mainColor" />
+        [attr.fill]="blockData.whiteColor" />
 
     <!-- otherwise, draw a white dot at (0,0), (1,1), (1,2), (2,1)-->
     <svg:g *ngIf="blockData.type === BlockFillType.SOLID">
