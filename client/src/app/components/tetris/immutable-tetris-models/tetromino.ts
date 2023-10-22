@@ -51,6 +51,53 @@ export function getColorForTetrominoAndLevel(tetrominoType: TetrominoType, level
 // the four block sets for each rotation of the tetromino.
 // 0 = no rotation, 1 = 90 degrees clockwise, 2 = 180 degrees clockwise, 3 = 270 degrees clockwise
 export class Tetromino {
+
+    public static readonly I_PIECE: Tetromino = new Tetromino(TetrominoType.I_TYPE, [
+        new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
+            new BlockPosition(2, 0),
+            new BlockPosition(3, 0)
+        ]),
+        new BlockSet([
+            new BlockPosition(1, 0),
+            new BlockPosition(1, 1),
+            new BlockPosition(1, 2),
+            new BlockPosition(1, 3)
+        ]),
+        new BlockSet([
+            new BlockPosition(0, 1),
+            new BlockPosition(1, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(3, 1)
+        ]),
+        new BlockSet([
+            new BlockPosition(2, 0),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+            new BlockPosition(2, 3)
+        ])
+    ]);
+
+    // TODO: implement the rest of the pieces
+    public static J_PIECE: Tetromino;
+    public static L_PIECE: Tetromino;
+    public static O_PIECE: Tetromino;
+    public static S_PIECE: Tetromino;
+    public static T_PIECE: Tetromino;
+
+    public static ALL_PIECES: Tetromino[] = [
+        Tetromino.I_PIECE,
+        Tetromino.J_PIECE,
+        Tetromino.L_PIECE,
+        Tetromino.O_PIECE,
+        Tetromino.S_PIECE, 
+        Tetromino.T_PIECE];
+
+    public static getPieceByType(type: TetrominoType): Tetromino {
+        return Tetromino.ALL_PIECES.find(piece => piece.type === type)!;
+    }
+
     constructor(public readonly type: TetrominoType,  public readonly blockSet: BlockSet[])
     {}
     
@@ -62,36 +109,3 @@ export class Tetromino {
         return getColorForTetrominoAndLevel(this.type, level);
     }
 }
-
-// TODO: add all seven tetrominoes with correct block positions
-export const I_PIECE = new Tetromino(TetrominoType.I_TYPE, [
-    new BlockSet([
-        new BlockPosition(0, 0),
-        new BlockPosition(1, 0),
-        new BlockPosition(2, 0),
-        new BlockPosition(3, 0)
-    ]),
-    new BlockSet([
-        new BlockPosition(1, 0),
-        new BlockPosition(1, 1),
-        new BlockPosition(1, 2),
-        new BlockPosition(1, 3)
-    ]),
-    new BlockSet([
-        new BlockPosition(0, 1),
-        new BlockPosition(1, 1),
-        new BlockPosition(2, 1),
-        new BlockPosition(3, 1)
-    ]),
-    new BlockSet([
-        new BlockPosition(2, 0),
-        new BlockPosition(2, 1),
-        new BlockPosition(2, 2),
-        new BlockPosition(2, 3)
-    ])
-]);
-
-//export const J_PIECE = ...
-
-// TODO: add all seven tetrominoes to this array
-export const TETROMINOS = [I_PIECE]

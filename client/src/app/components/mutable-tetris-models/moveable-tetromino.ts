@@ -4,7 +4,7 @@ Exposes utility methods for checking if the tetromino is in bounds, and if it is
 other blocks.
 */
 
-import BinaryGrid, { BlockType } from "../tetris/immutable-tetris-models/binary-grid";
+import BinaryGrid, { BlockType } from "../tetris/mutable-tetris-models/binary-grid";
 import { BlockSet } from "../tetris/immutable-tetris-models/block";
 import { Tetromino } from "../tetris/immutable-tetris-models/tetromino";
 

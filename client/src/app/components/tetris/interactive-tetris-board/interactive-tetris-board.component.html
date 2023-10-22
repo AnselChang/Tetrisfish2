@@ -1,5 +1,9 @@
 <!-- Iterate through the board left-right, top-bottom and draw each block -->
-<svg [attr.viewBox]="VIEW_BOX">
+<svg [attr.viewBox]="VIEW_BOX" [attr.width]="boardWidthPixels" [attr.height]="boardHeightPixels">
+
+    <!-- Draw the board background -->
+    <rect x="0" y="0" [attr.width]="boardWidthPixels" [attr.height]="boardHeightPixels" fill="black" />
+
     <g *ngFor="let y of ONE_TO_TWENTY">
         <g *ngFor="let x of ONE_TO_TEN">
             <g *ngIf="getBlockAt(x,y) as block">
