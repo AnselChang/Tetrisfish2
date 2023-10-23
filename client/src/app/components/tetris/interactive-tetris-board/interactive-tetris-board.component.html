@@ -11,4 +11,12 @@
             </g>
         </g>
     </g>
+
+    <!-- draw the next piece on the top right corner -->
+    <svg *ngIf="nextPieceType !== null" [attr.viewBox]="NB_VIEW_BOX" y="0">
+        <!-- draw white rect over the entire area -->
+        <rect [attr.width]="nbWidth" [attr.height]="nbHeight" fill="white" />
+        <rect [attr.x]="nbWidth/4" [attr.y]="nbHeight/4" [attr.width]="nbWidth/2" [attr.height]="nbHeight/2" fill="black" />
+    </svg>
+
 </svg>

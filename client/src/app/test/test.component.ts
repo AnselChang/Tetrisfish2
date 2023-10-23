@@ -19,7 +19,7 @@ export class TestComponent implements OnInit {
     const grid = new BinaryGrid();
     // randomly populate grid
     for (let x = 1; x <= 10; x++) {
-      for (let y = 5; y <= 20; y++) {
+      for (let y = 1; y <= 20; y++) {
         grid.setAt(x, y, Math.random() > 0.5 ? BlockType.FILLED : BlockType.EMPTY);
       }
     }

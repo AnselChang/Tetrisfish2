@@ -39,4 +39,10 @@ export class BlockSet {
         return new BlockSet(this.blocks.map(block => block.translate(x, y)));
     }
 
+    // return whether a given position exists in the block set
+    contains(x: number, y: number): boolean {
+        return this.blocks.some(block => block.x === x && block.y === y);
+    }
+
+
 }
