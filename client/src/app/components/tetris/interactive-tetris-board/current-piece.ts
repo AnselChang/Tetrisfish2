@@ -4,7 +4,7 @@ Stores whether the piece exists, and if so, whether it's being placed/hovered, t
 This object is mutable and is injected into the interactive tetris board component. 
 */
 
-import MoveableTetromino from "../../mutable-tetris-models/moveable-tetromino";
+import MoveableTetromino from "../../../models/mutable-tetris-models/moveable-tetromino";
 
 export enum CurrentPieceState {
     NONE, // no current piece displayed

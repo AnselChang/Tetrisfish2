@@ -4,20 +4,21 @@ Exposes utility methods for checking if the tetromino is in bounds, and if it is
 other blocks.
 */
 
-import BinaryGrid, { BlockType } from "../tetris/mutable-tetris-models/binary-grid";
-import { BlockSet } from "../tetris/immutable-tetris-models/block";
-import { Tetromino } from "../tetris/immutable-tetris-models/tetromino";
+import BinaryGrid, { BlockType } from "./binary-grid";
+import { BlockSet } from "../immutable-tetris-models/block";
+import { Tetromino, TetrominoType } from "../immutable-tetris-models/tetromino";
 
 export default class MoveableTetromino {
 
     private currentBlockSet!: BlockSet;
 
-    constructor(public readonly tetromino: Tetromino, private rotation: number, private translateX: number, private translateY: number) {
+    constructor(public readonly tetrominoType: TetrominoType, private rotation: number, private translateX: number, private translateY: number) {
         this.updateCurrentBlockSet()
     }
 
     private updateCurrentBlockSet(): void {
-        this.currentBlockSet = this.tetromino.getBlockSet(this.rotation).translate(this.translateX, this.translateY);
+        const tetromino = Tetromino.getPieceByType(this.tetrominoType);
+        this.currentBlockSet = tetromino.getBlockSet(this.rotation).translate(this.translateX, this.translateY);
     }
 
     public getCurrentBlockSet(): BlockSet {

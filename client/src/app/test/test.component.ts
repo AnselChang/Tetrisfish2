@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import BoardState from '../components/tetris/interactive-tetris-board/board-state';
-import GameStatus from '../components/tetris/immutable-tetris-models/game-status';
-import BinaryGrid, { BlockType } from '../components/tetris/mutable-tetris-models/binary-grid';
-import { TetrominoType } from '../components/tetris/immutable-tetris-models/tetromino';
+import GameStatus from '../models/immutable-tetris-models/game-status';
+import BinaryGrid, { BlockType } from '../models/mutable-tetris-models/binary-grid';
+import { TetrominoType } from '../models/immutable-tetris-models/tetromino';
 
 @Component({
   selector: 'app-test',

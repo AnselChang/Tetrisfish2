@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import BoardState from './board-state';
 import CurrentPiece, { CurrentPieceState } from './current-piece';
-import { BlockType } from '../mutable-tetris-models/binary-grid';
-import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from '../immutable-tetris-models/tetromino';
+import { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
+import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from '../../../models/immutable-tetris-models/tetromino';
 import { Block } from 'blockly';
 
 /*
