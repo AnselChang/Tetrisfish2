@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { BlockData, BlockFillType } from '../interactive-tetris-board/interactive-tetris-board.component';
 import { block } from 'core/tooltip';
 
@@ -13,6 +13,8 @@ Draws a single tetris block on the tetris board
 })
 export class TetrisBlockComponent implements OnInit {
   @Input() blockData!: BlockData;
+
+  public isHovering: boolean = false;
   
   public get BlockFillType(): typeof BlockFillType {
     return BlockFillType;
@@ -22,6 +24,13 @@ export class TetrisBlockComponent implements OnInit {
       console.log(this.blockData);
   }
 
+  @HostListener('mouseover') onMouseOver() {
+    this.isHovering = true;
+  }
+
+  @HostListener('mouseout') onMouseOut() {
+    this.isHovering = false;
+  }
 
   // for solid blocks, get the four white pixel locations
   public getWhiteLocations(): {x: number, y: number}[] {

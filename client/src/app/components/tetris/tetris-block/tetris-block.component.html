@@ -1,7 +1,17 @@
 
-<svg:g>
+<svg:g [attr.opacity] = "isHovering ? 0.5 : 1">
+
+    <!-- Draw hovering square if hovering over no block -->
+    <svg:rect *ngIf="blockData.type === BlockFillType.NONE"
+        [attr.x]="blockData.svgX"
+        [attr.y]="blockData.svgY"
+        [attr.width]="blockData.svgSize"
+        [attr.height]="blockData.svgSize"
+        [attr.opacity]="isHovering ? 1 : 0"
+        fill="rgb(100,100,100)" />
+
     <!-- Draw the non-white color first over the entire block area -->
-    <svg:rect
+    <svg:rect *ngIf="blockData.type !== BlockFillType.NONE"
         [attr.x]="blockData.svgX"
         [attr.y]="blockData.svgY"
         [attr.width]="blockData.svgSize"
@@ -9,7 +19,7 @@
         [attr.fill]="blockData.mainColor" />
 
     <!-- draw a white pxiel at the top left corner -->
-    <svg:rect
+    <svg:rect *ngIf="blockData.type !== BlockFillType.NONE"
         [attr.x]="blockData.svgX"
         [attr.y]="blockData.svgY"
         [attr.width]="1"
@@ -25,7 +35,7 @@
         [attr.height]="blockData.svgSize - 2"
         [attr.fill]="blockData.whiteColor" />
 
-    <!-- otherwise, draw a white dot at (0,0), (1,1), (1,2), (2,1)-->
+    <!-- if solid tetromino, draw a white dot at (0,0), (1,1), (1,2), (2,1)-->
     <svg:g *ngIf="blockData.type === BlockFillType.SOLID">
         <svg:rect *ngFor="let pos of getWhiteLocations()"
             [attr.x]="blockData.svgX + pos.x"

@@ -11,7 +11,8 @@ An interactable tetris board with interacable current piece and displayed next p
 
 export enum BlockFillType {
   SOLID = "SOLID",
-  BORDER = "BORDER"
+  BORDER = "BORDER",
+  NONE = "NONE"
 }
 
 const SVG_BLOCK_SIZE = 8;
@@ -32,9 +33,9 @@ export class BlockData {
   constructor(
     public readonly x: number,
     public readonly y: number,
-    public readonly mainColor: string,
-    public readonly whiteColor: string,
     public readonly type: BlockFillType,
+    public readonly mainColor: string = "",
+    public readonly whiteColor: string = "",
     public readonly translateX: number = 0,
     public readonly translateY: number = 0
   ) {
@@ -88,7 +89,7 @@ export class InteractiveTetrisBoardComponent {
     // (x,y) is not in the block set
     const nb = TetrominoNB.getPieceByType(this.nextPieceType)!;
     if (nb.blockSet.contains(x, y)) {
-      return null;
+      return new BlockData(x, y, BlockFillType.NONE);
     }
 
     // there is a block at (x,y) in the block set. return the color/type
@@ -106,9 +107,9 @@ export class InteractiveTetrisBoardComponent {
 
     return new BlockData(
       x, y, 
+      TYPE,
       getColorForLevel(MAIN_COLOR, this.boardState.status.level),
       WHITE_COLOR,
-      TYPE,
       nb.translateX, nb.translateY
     );
   }
@@ -135,14 +136,14 @@ export class InteractiveTetrisBoardComponent {
       MAIN_COLOR = TetrominoColorType.COLOR_FIRST;
       TYPE = BlockFillType.BORDER;
     } else {
-      return null;
+      return new BlockData(x, y, BlockFillType.NONE); // no block to display
     }
 
     return new BlockData(
       x, y,
+      TYPE,
       getColorForLevel(MAIN_COLOR, this.boardState.status.level),
-      WHITE_COLOR,
-      TYPE
+      WHITE_COLOR
     );
   }
 
