@@ -94,7 +94,7 @@ export class InteractiveTetrisBoardComponent {
 
     // there is a block at (x,y) in the block set. return the color/type
     const WHITE_COLOR = getColorForLevel(TetrominoColorType.COLOR_WHITE);
-    const colorType = getColorTypeForTetromino(this.currentPiece.tetromino!.tetromino.type);
+    const colorType = getColorTypeForTetromino(this.currentPiece.tetromino!.tetrominoType);
 
     let MAIN_COLOR, TYPE;
     if (colorType === TetrominoColorType.COLOR_WHITE) { // if white is current piece, display white with different border color than usual scheme
@@ -124,7 +124,7 @@ export class InteractiveTetrisBoardComponent {
 
     let MAIN_COLOR, TYPE;
     if (this.currentPiece.state !== CurrentPieceState.NONE && this.currentPiece.tetromino!.isAtLocation(x,y)) {
-      const colorType = getColorTypeForTetromino(this.currentPiece.tetromino!.tetromino.type);
+      const colorType = getColorTypeForTetromino(this.currentPiece.tetromino!.tetrominoType);
       if (colorType === TetrominoColorType.COLOR_WHITE) { // if white is current piece, display white with different border color than usual scheme
         MAIN_COLOR = TetrominoColorType.COLOR_SECOND;
         TYPE = BlockFillType.BORDER;

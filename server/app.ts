@@ -25,5 +25,11 @@ export default function createApp(): Express {
         const greeting = { greeting: `Hello, ${ name }` };
         res.send(greeting);
     });
+
+    // Catch all routes and return the index file
+    app.get('/*', (req, res) => {
+      res.sendFile(path.join(clientDir, 'index.html'));
+    });
+
     return app;
 }
