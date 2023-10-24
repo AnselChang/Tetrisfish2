@@ -8,13 +8,14 @@ import { TestComponent } from './test/test.component';
 import { InteractiveTetrisBoardComponent } from './components/tetris/interactive-tetris-board/interactive-tetris-board.component';
 import { TetrisBlockComponent } from './components/tetris/tetris-block/tetris-block.component';
 import { AppRoutingModule } from './app-routing.module';
-import { RootComponent } from './components/layout/root/root.component';
+import { RootComponent } from './components/layout/root-components/root/root.component';
 import { PlayPageComponent } from './components/layout/play-page/play-page.component';
 import { AnalyzePageComponent } from './components/layout/analyze-page/analyze-page.component';
 import { PuzzlesPageComponent } from './components/layout/puzzles-page/puzzles-page.component';
 import { LeaderboardPageComponent } from './components/layout/leaderboard-page/leaderboard-page.component';
 import { ProfilePageComponent } from './components/layout/profile-page/profile-page.component';
 import { HomePageComponent } from './components/layout/home-page/home-page.component';
+import { PageLinkComponent } from './components/layout/root-components/page-link/page-link.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +29,8 @@ import { HomePageComponent } from './components/layout/home-page/home-page.compo
     PuzzlesPageComponent,
     LeaderboardPageComponent,
     ProfilePageComponent,
-    HomePageComponent
+    HomePageComponent,
+    PageLinkComponent
   ],
   imports: [
     BrowserModule,

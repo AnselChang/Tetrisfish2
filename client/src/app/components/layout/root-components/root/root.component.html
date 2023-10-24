@@ -1,0 +1,14 @@
+<div id="root">
+<nav>
+    <div class="left-nav">
+        <a class="logo-container" routerLink="/home" routerLinkActive="active"><img class="logo" src="./assets/img/tetrisfish_logo.svg"></a>
+        <app-page-link *ngFor="let page of pages" [routerLink]="page[0]" [displayText]="page[1]" />
+    </div>
+    <div class="right-nav">
+        <a routerLink="/profile" routerLinkActive="active">Profile</a> 
+    </div>
+</nav>
+
+<router-outlet />
+
+</div>

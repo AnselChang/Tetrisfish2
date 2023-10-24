@@ -1,0 +1,41 @@
+@import '../../../../../styles.scss';
+
+a {
+    text-decoration: none;
+    color: $text-color;
+    outline: none;
+}
+
+a:hover, a:focus {
+    text-decoration: none;
+}
+
+a > .surrounding-box {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 0px 10px;
+
+    border-color: rgba(255, 255, 255, 0);
+}
+
+a:hover > .surrounding-box {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+a.active > .surrounding-box {
+    border-color: rgba(255, 255, 255, 1);
+}
+
+.display-text {
+    color: $text-color;
+    font-family: $main-font;
+    font-size: 3vw;
+    line-height: 0;
+}
+
+@media (min-width: 1000px) {
+    .display-text {
+        font-size: 30px;
+    }
+}

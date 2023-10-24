@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class RootComponent {
 
+  public pages = [
+    ["/play", "Play"],
+    ["/analysis", "Analysis"],
+    ["/puzzles", "Puzzles"],
+    ["/leaderboard", "Leaderboard"]
+  ];
+
 }
