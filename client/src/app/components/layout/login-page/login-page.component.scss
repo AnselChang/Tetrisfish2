@@ -1,0 +1,142 @@
+.login-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #38373D;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10vh;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5vh;
+}
+
+svg {
+    width: 35vw;
+    aspect-ratio: 1/1;
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5vh;
+    height: 25vh;
+}
+
+
+.discord-button {
+    margin: 3vh 0 0 0;
+}
+
+.discord-logo {
+    width: 4vh;
+    aspect-ratio: 1/1;
+}
+
+h1, h2 {
+    text-shadow: 0.1vh 0.5vh 0.3vh black;
+}
+
+svg {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+  }
+
+h1 {
+    margin-left: 4vh;
+    font-size: 11.5vw;
+    line-height: 0;
+    letter-spacing: 2px;
+}
+
+h2 {
+    font-size: 5vw;
+    line-height: 0;
+    letter-spacing: 1.5px;
+}
+
+h3 {
+    font-size: 3.5vw;
+    line-height: 0.5;
+    letter-spacing: 1.5px;
+}
+
+.login-link {
+    text-decoration: none; /* Removes the underline */
+    color: inherit;        /* Optional: Makes the link color the same as surrounding text */
+    outline: none;         /* Removes the focus outline */
+}
+
+.login-link:hover, .login-link:focus {
+    text-decoration: none; /* Removes the underline on hover/focus */
+}
+
+$button-color: #5865F2;
+.discord-button {
+    background-color: $button-color;
+    border-radius: 1vw;
+    border: 0;
+
+    box-shadow: 0 0.4vh 1.5vh 0.05vh rgb(0,0,0,0.5);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2vh;
+    padding: 0 2vh;
+
+}
+
+.login-link:hover > .discord-button {
+    background-color: darken($button-color, 3%);
+    box-shadow: 0 0.4vh 2.5vh 0.2vh rgb(0,0,0,0.5);
+}
+
+.login-link:active > .discord-button {
+    background-color: darken($button-color, 4%);
+    transform: translateY(1px);
+    box-shadow: 0 0 2.5vh 0.2vh rgb(0,0,0,0.75);
+}
+
+@media (min-width: 700px) {
+    h3 {
+        font-size: 25px;
+    }
+}
+
+@media (min-width: 1200px) {
+    
+    svg {
+        width: 400px;
+    }
+    
+    .title {
+        gap: 25px;
+    }
+    
+    h1 {
+        font-size: 140px;
+    }
+    
+    h2 {
+        font-size: 60px;
+    }
+}

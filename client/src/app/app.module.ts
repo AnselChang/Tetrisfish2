@@ -16,6 +16,7 @@ import { LeaderboardPageComponent } from './components/layout/leaderboard-page/l
 import { ProfilePageComponent } from './components/layout/profile-page/profile-page.component';
 import { HomePageComponent } from './components/layout/home-page/home-page.component';
 import { PageLinkComponent } from './components/layout/root-components/page-link/page-link.component';
+import { LoginPageComponent } from './components/layout/login-page/login-page.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,8 @@ import { PageLinkComponent } from './components/layout/root-components/page-link
     LeaderboardPageComponent,
     ProfilePageComponent,
     HomePageComponent,
-    PageLinkComponent
+    PageLinkComponent,
+    LoginPageComponent
   ],
   imports: [
     BrowserModule,

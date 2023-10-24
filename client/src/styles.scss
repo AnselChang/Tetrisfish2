@@ -7,3 +7,8 @@ $layer-3-color: #504F52;
 $text-color: white;
 
 $main-font: 'Londrina Solid';
+
+h1, h2, h3, h4, h5, h6, p {
+    font-family: $main-font;
+    color: $text-color;
+}

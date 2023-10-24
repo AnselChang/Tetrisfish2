@@ -7,8 +7,10 @@ import { AnalyzePageComponent } from './components/layout/analyze-page/analyze-p
 import { PuzzlesPageComponent } from './components/layout/puzzles-page/puzzles-page.component';
 import { LeaderboardPageComponent } from './components/layout/leaderboard-page/leaderboard-page.component';
 import { ProfilePageComponent } from './components/layout/profile-page/profile-page.component';
+import { LoginPageComponent } from './components/layout/login-page/login-page.component';
 
 const routes: Routes = [
+  { path: 'login', component: LoginPageComponent},
   {
     path: '',
     component: RootComponent,
@@ -19,10 +21,12 @@ const routes: Routes = [
       { path: 'puzzles', component: PuzzlesPageComponent },
       { path: 'leaderboard', component: LeaderboardPageComponent },
       { path: 'profile', component: ProfilePageComponent },
-      { path: '**', redirectTo: 'home' },
-      { path: '', redirectTo: 'home', pathMatch: 'full' } // default child route
+      { path: '', redirectTo: '/login', pathMatch: 'full' },
+      { path: '**', redirectTo: '/login' },
     ]
-  }
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({
