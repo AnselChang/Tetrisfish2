@@ -16,7 +16,7 @@
     <!-- Otherwise, display login button -->
     <div *ngIf="!this.authService.isLoggedIn()" class="right-nav">
         <a routerLink="/login" routerLinkActive="active">
-            <app-button class="login-button"><h3>Login</h3></app-button>
+            <app-button class="login-button" [color]="'#4BAC4F'"><h3>Login</h3></app-button>
         </a> 
     </div>
 

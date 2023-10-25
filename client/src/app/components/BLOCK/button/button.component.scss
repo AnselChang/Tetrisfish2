@@ -1,7 +1,12 @@
 
-$button-color: #5865F2;
+:host {
+    --buttonColor: #5865F2;
+    --buttonColorHovered: #5865F2;
+    --buttonColorPressed: #5865F2;
+}
+
 .generic-button {
-    background-color: $button-color;
+    background-color: var(--buttonColor);
     border-radius: 1vw;
     border: 0;
 
@@ -21,12 +26,12 @@ $button-color: #5865F2;
 }
 
 .generic-button:hover {
-    background-color: darken($button-color, 3%);
+    background-color: var(--buttonColorHovered);
     box-shadow: 0 0.4vh 2.5vh 0.2vh rgb(0,0,0,0.5);
 }
 
 .generic-button:active {
-    background-color: darken($button-color, 4%);
+    background-color: var(--buttonColorPressed);
     transform: translateY(1px);
     box-shadow: 0 0 2.5vh 0.2vh rgb(0,0,0,0.75);
 }

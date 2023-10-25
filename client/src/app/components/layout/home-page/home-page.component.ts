@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class HomePageComponent {
 
+  public onClick(): void {
+    console.log("clicked");
+  }
+
 }
