@@ -32,7 +32,7 @@ import { LoginPageComponent } from './components/layout/login-page/login-page.co
     ProfilePageComponent,
     HomePageComponent,
     PageLinkComponent,
-    LoginPageComponent
+    LoginPageComponent,
   ],
   imports: [
     BrowserModule,

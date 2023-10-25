@@ -37,7 +37,27 @@ nav > .right-nav {
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    gap: 3.75%;
+    gap: 2vw;
+}
+
+h2 {
+    color: $text-color;
+    font-family: $main-font;
+    font-size: 2.4vw;
+    line-height: 0;
+}
+
+.profile-pic {
+    width: 6vw;
+    aspect-ratio: 1/1;
+}
+
+.profile-pic:hover {
+    filter: brightness(0.8);
+}
+
+.profile-pic:active {
+    filter: brightness(0.7);
 }
 
 @media (min-width: 1000px) {
@@ -52,6 +72,15 @@ nav > .right-nav {
     nav > .right-nav {
         gap: 20px;
     }
+    
+    h2 {
+        font-size: 24px;
+    }
+
+    .profile-pic {
+        width: 40px;
+    }
+
 }
 
 .logo-container {
@@ -61,4 +90,10 @@ nav > .right-nav {
 .logo {
     width: 50px;
     height: 50px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
 }

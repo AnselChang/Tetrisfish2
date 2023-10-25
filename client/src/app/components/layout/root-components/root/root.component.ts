@@ -14,4 +14,6 @@ export class RootComponent {
     ["/leaderboard", "Leaderboard"]
   ];
 
+  public username = "Ansel"
+
 }
