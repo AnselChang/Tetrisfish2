@@ -18,7 +18,7 @@ nav {
     justify-content: space-between;
 
     background-color: $layer-1-color;
-    padding: 0.75% 2%;
+    padding: 0 2%;
     margin: 2%;
     border-radius: 1%;
 
@@ -43,6 +43,11 @@ nav > .right-nav {
 h3 {
     line-height: 0;
 }
+
+.login-button {
+    // padding: 0 1vw;
+}
+
 .profile-pic:hover {
     filter: brightness(0.8);
 }

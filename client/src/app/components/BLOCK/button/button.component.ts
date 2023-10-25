@@ -6,7 +6,7 @@ import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
   styleUrls: ['./button.component.scss']
 })
 export class ButtonComponent implements OnInit {
-  @Input() onClick!: () => void;
+  @Input() onClick!: () => undefined;
   @Input() color: string = '#5865F2';
 
   constructor(private renderer: Renderer2, private el: ElementRef) {}
