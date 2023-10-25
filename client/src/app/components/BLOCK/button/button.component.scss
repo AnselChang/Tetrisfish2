@@ -1,0 +1,33 @@
+
+$button-color: #5865F2;
+.generic-button {
+    background-color: $button-color;
+    border-radius: 1vw;
+    border: 0;
+
+    box-shadow: 0 0.4vh 1.5vh 0.05vh rgb(0,0,0,0.5);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2vh;
+    padding: 0 2vh;
+
+    font-size: 3.5vw;
+    line-height: 0.5;
+    letter-spacing: 1.5px;
+    margin: 1vh;
+
+}
+
+.generic-button:hover {
+    background-color: darken($button-color, 3%);
+    box-shadow: 0 0.4vh 2.5vh 0.2vh rgb(0,0,0,0.5);
+}
+
+.generic-button:active {
+    background-color: darken($button-color, 4%);
+    transform: translateY(1px);
+    box-shadow: 0 0 2.5vh 0.2vh rgb(0,0,0,0.75);
+}

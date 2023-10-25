@@ -21,12 +21,10 @@ const routes: Routes = [
       { path: 'puzzles', component: PuzzlesPageComponent },
       { path: 'leaderboard', component: LeaderboardPageComponent },
       { path: 'profile', component: ProfilePageComponent },
-      { path: '', redirectTo: '/login', pathMatch: 'full' },
-      { path: '**', redirectTo: '/login' },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: '**', redirectTo: 'home' },
     ]
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({

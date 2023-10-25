@@ -17,6 +17,8 @@ import { ProfilePageComponent } from './components/layout/profile-page/profile-p
 import { HomePageComponent } from './components/layout/home-page/home-page.component';
 import { PageLinkComponent } from './components/layout/root-components/page-link/page-link.component';
 import { LoginPageComponent } from './components/layout/login-page/login-page.component';
+import { LoginButtonComponent } from './components/layout/root-components/login-button/login-button.component';
+import { ButtonComponent } from './components/BLOCK/button/button.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +35,8 @@ import { LoginPageComponent } from './components/layout/login-page/login-page.co
     HomePageComponent,
     PageLinkComponent,
     LoginPageComponent,
+    LoginButtonComponent,
+    ButtonComponent,
   ],
   imports: [
     BrowserModule,

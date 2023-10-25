@@ -9,6 +9,11 @@ import { Block } from 'blockly';
 An interactable tetris board with interacable current piece and displayed next piece in next box
 */
 
+export enum TetrisBoardMode {
+  READONLY = "READONLY",
+  INTERACTIVE = "INTERACTIVE",
+}
+
 export enum BlockFillType {
   SOLID = "SOLID",
   BORDER = "BORDER",
@@ -51,6 +56,7 @@ export class BlockData {
   styleUrls: ['./interactive-tetris-board.component.scss']
 })
 export class InteractiveTetrisBoardComponent {
+  @Input() mode = TetrisBoardMode.READONLY;
   @Input() boardState!: BoardState;
   @Input() currentPiece: CurrentPiece = new CurrentPiece(CurrentPieceState.NONE); // by default, show no current piece
   @Input() nextPieceType: TetrominoType | null = null;

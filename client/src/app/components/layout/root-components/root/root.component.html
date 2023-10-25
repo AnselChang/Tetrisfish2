@@ -5,7 +5,7 @@
         <app-page-link *ngFor="let page of pages" [routerLink]="page[0]" [displayText]="page[1]" />
     </div>
     <div class="right-nav">
-        <h2>{{username}}</h2>
+        <h3>{{username}}</h3>
         <a routerLink="/profile" routerLinkActive="active">
             <img class="profile-pic" src="./assets/img/profile.svg">
         </a> 

@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
-import { BlockData, BlockFillType } from '../interactive-tetris-board/interactive-tetris-board.component';
+import { BlockData, BlockFillType, TetrisBoardMode } from '../interactive-tetris-board/interactive-tetris-board.component';
 import { block } from 'core/tooltip';
 
 /*
@@ -12,6 +12,7 @@ Draws a single tetris block on the tetris board
   styleUrls: ['./tetris-block.component.scss']
 })
 export class TetrisBlockComponent implements OnInit {
+  @Input() mode!: TetrisBoardMode;
   @Input() blockData!: BlockData;
 
   public isHovering: boolean = false;
@@ -25,7 +26,7 @@ export class TetrisBlockComponent implements OnInit {
   }
 
   @HostListener('mouseover') onMouseOver() {
-    this.isHovering = true;
+    if (this.mode === TetrisBoardMode.INTERACTIVE) this.isHovering = true;
   }
 
   @HostListener('mouseout') onMouseOut() {

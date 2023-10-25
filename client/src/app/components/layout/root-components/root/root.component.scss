@@ -40,10 +40,7 @@ nav > .right-nav {
     gap: 2vw;
 }
 
-h2 {
-    color: $text-color;
-    font-family: $main-font;
-    font-size: 2.4vw;
+h3 {
     line-height: 0;
 }
 
@@ -71,10 +68,6 @@ h2 {
     }
     nav > .right-nav {
         gap: 20px;
-    }
-    
-    h2 {
-        font-size: 24px;
     }
 
     .profile-pic {

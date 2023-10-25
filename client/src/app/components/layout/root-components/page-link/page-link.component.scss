@@ -28,15 +28,6 @@ a.active > .surrounding-box {
     border-color: rgba(255, 255, 255, 1);
 }
 
-.display-text {
-    color: $text-color;
-    font-family: $main-font;
-    font-size: 3vw;
+h2 {
     line-height: 0;
-}
-
-@media (min-width: 1000px) {
-    .display-text {
-        font-size: 30px;
-    }
 }

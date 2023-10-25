@@ -7,7 +7,7 @@
     <g *ngFor="let y of ONE_TO_TWENTY">
         <g *ngFor="let x of ONE_TO_TEN">
             <g *ngIf="getBlockAt(x,y) as block">
-                <g app-tetris-block [blockData]="block" />
+                <g app-tetris-block [mode]="mode" [blockData]="block" />
             </g>
         </g>
     </g>
