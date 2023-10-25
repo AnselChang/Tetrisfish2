@@ -43,12 +43,6 @@ nav > .right-nav {
 h3 {
     line-height: 0;
 }
-
-.profile-pic {
-    width: 6vw;
-    aspect-ratio: 1/1;
-}
-
 .profile-pic:hover {
     filter: brightness(0.8);
 }
@@ -69,11 +63,6 @@ h3 {
     nav > .right-nav {
         gap: 20px;
     }
-
-    .profile-pic {
-        width: 40px;
-    }
-
 }
 
 .logo-container {

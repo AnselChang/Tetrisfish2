@@ -1,0 +1,14 @@
+$widthPx: 40;
+$aspectRatio: 1/1;
+
+img {
+    width: #{($widthPx / 10)}vw;
+    aspect-ratio: $aspectRatio;
+}
+
+@media (min-width: 1000px) {
+    img {
+        width: #{$widthPx}px;
+    }
+
+}

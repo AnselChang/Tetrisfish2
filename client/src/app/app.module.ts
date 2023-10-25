@@ -19,6 +19,7 @@ import { PageLinkComponent } from './components/layout/root-components/page-link
 import { LoginPageComponent } from './components/layout/login-page/login-page.component';
 import { LoginButtonComponent } from './components/layout/root-components/login-button/login-button.component';
 import { ButtonComponent } from './components/BLOCK/button/button.component';
+import { ImageComponent } from './components/BLOCK/image/image.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +38,7 @@ import { ButtonComponent } from './components/BLOCK/button/button.component';
     LoginPageComponent,
     LoginButtonComponent,
     ButtonComponent,
+    ImageComponent,
   ],
   imports: [
     BrowserModule,

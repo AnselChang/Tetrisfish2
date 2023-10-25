@@ -7,7 +7,7 @@
     <div class="right-nav">
         <h3>{{username}}</h3>
         <a routerLink="/profile" routerLinkActive="active">
-            <img class="profile-pic" src="./assets/img/profile.svg">
+            <app-image class="profile-pic" [src]="'profile.svg'" [widthPx]="40" />
         </a> 
     </div>
 </nav>
