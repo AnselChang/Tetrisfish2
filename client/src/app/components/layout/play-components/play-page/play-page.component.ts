@@ -21,7 +21,6 @@ export class PlayPageComponent {
 
   constructor() {
 
-    const status = new GameStatus(18, 120, 400000);
     const grid = new BinaryGrid();
     // randomly populate grid
     for (let x = 1; x <= 10; x++) {
@@ -30,7 +29,7 @@ export class PlayPageComponent {
       }
     }
 
-    this.boardState = new BoardState(status, grid, TetrominoType.L_TYPE, TetrominoType.T_TYPE);
+    this.boardState = new BoardState(18, grid, TetrominoType.L_TYPE, TetrominoType.T_TYPE);
   }
 
   public get panelCalibrateMode(): boolean {

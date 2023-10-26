@@ -1,5 +1,14 @@
 
-<svg:g [attr.opacity] = "isHovering ? 0.5 : 1">
+<svg:g [attr.opacity] = "isHovering ? 0.8 : 1">
+
+    <!-- draw bounding box -->
+    <svg:rect
+        [attr.x]="blockData.svgX"
+        [attr.y]="blockData.svgY"
+        [attr.width]="blockData.svgSize+1"
+        [attr.height]="blockData.svgSize+1"
+        opacity="0"
+    />
 
     <!-- Draw hovering square if hovering over no block -->
     <svg:rect *ngIf="blockData.type === BlockFillType.NONE"

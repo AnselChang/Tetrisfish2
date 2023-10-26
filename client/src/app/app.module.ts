@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { VideoCaptureComponent } from './components/layout/play-components/video-capture/video-capture.component';
-import { TestComponent } from './test/test.component';
 import { InteractiveTetrisBoardComponent } from './components/tetris/interactive-tetris-board/interactive-tetris-board.component';
 import { TetrisBlockComponent } from './components/tetris/tetris-block/tetris-block.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -27,7 +26,6 @@ import { BoardCreationPageComponent } from './components/layout/board-creation-c
   declarations: [
     AppComponent,
     VideoCaptureComponent,
-    TestComponent,
     InteractiveTetrisBoardComponent,
     TetrisBlockComponent,
     RootComponent,

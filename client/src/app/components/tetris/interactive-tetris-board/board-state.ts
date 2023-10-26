@@ -9,7 +9,7 @@ import { TetrominoType } from "../../../models/immutable-tetris-models/tetromino
 
 export default class BoardState {
     constructor(
-        public status: GameStatus,
+        public level: number,
         public grid: BinaryGrid,
         public currentPieceType: TetrominoType,
         public nextPieceType: TetrominoType

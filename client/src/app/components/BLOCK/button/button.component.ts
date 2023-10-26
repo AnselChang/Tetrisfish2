@@ -9,8 +9,9 @@ import { ColorService } from 'client/src/app/services/color.service';
 export class ButtonComponent implements AfterViewInit, OnChanges {
   @Input() onClick: any = null;
   @Input() color: string = '#5865F2';
+  @Input() expandToFitWidth: boolean = false;
 
-  constructor(private colorService: ColorService, private el: ElementRef) {
+  constructor(private colorService: ColorService, private el: ElementRef, private renderer: Renderer2) {
   }
 
   public _onClick(): void {
@@ -26,6 +27,13 @@ export class ButtonComponent implements AfterViewInit, OnChanges {
     const colorPressed = this.colorService.darken(this.color, 15);
     this.el.nativeElement.style.setProperty('--buttonColorPressed', colorPressed);
     console.log("colors:", this.color, colorHovered, colorPressed);
+
+    if (this.expandToFitWidth) {
+      this.renderer.setStyle(this.el.nativeElement, 'width', '100%');
+    } else {
+      this.renderer.removeStyle(this.el.nativeElement, 'width');
+    }
+
   }
 
   ngAfterViewInit(): void {

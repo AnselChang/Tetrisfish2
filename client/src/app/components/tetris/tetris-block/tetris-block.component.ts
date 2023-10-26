@@ -11,7 +11,7 @@ Draws a single tetris block on the tetris board
   templateUrl: './tetris-block.component.html',
   styleUrls: ['./tetris-block.component.scss']
 })
-export class TetrisBlockComponent implements OnInit {
+export class TetrisBlockComponent {
   @Input() mode!: TetrisBoardMode;
   @Input() blockData!: BlockData;
   @Output() onHover = new EventEmitter<boolean>();
@@ -21,10 +21,6 @@ export class TetrisBlockComponent implements OnInit {
   
   public get BlockFillType(): typeof BlockFillType {
     return BlockFillType;
-  }
-
-  ngOnInit(): void {
-      console.log(this.blockData);
   }
 
   @HostListener('mouseover') onMouseOver() {

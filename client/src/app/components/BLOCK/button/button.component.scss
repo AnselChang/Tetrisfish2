@@ -6,9 +6,12 @@
 }
 
 .generic-button {
+    width: 100%;
     background-color: var(--buttonColor);
     border-radius: 1vw;
     border: 0;
+
+    text-wrap: nowrap;
 
     box-shadow: 0 0.4vh 1.5vh 0.05vh rgb(0,0,0,0.5);
 

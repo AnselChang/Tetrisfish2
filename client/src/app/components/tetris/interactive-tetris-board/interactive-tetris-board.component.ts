@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import BoardState from './board-state';
 import CurrentPiece, { CurrentPieceState } from './current-piece';
 import { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
@@ -65,6 +65,7 @@ export class InteractiveTetrisBoardComponent {
   public readonly ONE_TO_TEN: number[] = Array(10).fill(0).map((x, i) => i + 1);
   public readonly ONE_TO_TWENTY: number[] = Array(20).fill(0).map((x, i) => i + 1);
 
+  
   public get boardWidth(): number {
     return SVG_BOARD_WIDTH;
   }
@@ -109,7 +110,7 @@ export class InteractiveTetrisBoardComponent {
     return new BlockData(
       x, y,
       TYPE,
-      getColorForLevel(MAIN_COLOR, this.boardState.status.level),
+      getColorForLevel(MAIN_COLOR, this.boardState.level),
       WHITE_COLOR
     );
   }

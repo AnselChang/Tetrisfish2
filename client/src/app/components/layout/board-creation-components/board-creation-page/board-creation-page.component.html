@@ -1,1 +1,51 @@
-<p>board-creation-page works!</p>
+<div id="board-creation-page">
+    <section class="display-section">
+        <h2>Create a board</h2>
+        <div class="section-content" id="display-content">
+
+            <div class="board">
+                <app-interactive-tetris-board
+                    [mode]="TetrisBoardMode.INTERACTIVE"
+                    [boardState]="boardState"
+                    (onClick)="onPlacePiece($event)"/>
+            </div>
+
+            <div class="subsection-container status-subsection">
+                <div class="subsection status-container" id="level-status">
+                    <h4>Level</h4>
+                    <h2>18</h2>
+                </div>
+                <div class="subsection piece-box current-piece">
+                    <h4>Current piece</h4>
+                </div>
+                <div class="subsection piece-box next-piece">
+                    <h4>Next piece</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="buttons-section">
+        <app-button [expandToFitWidth]="true">
+            <div class="image-button">
+                <app-image [src]="'analysis.png'" [widthPx]="50" />
+                <h2>Analyze</h2>
+            </div>
+        </app-button>
+
+        <app-button [expandToFitWidth]="true">
+            <div class="image-button">
+                <app-image [src]="'puzzle.png'" [widthPx]="50" />
+                <h2>Upload a puzzle</h2>
+            </div>
+        </app-button>
+
+        <app-button [expandToFitWidth]="true">
+            <div class="image-button">
+                <app-image [src]="'poll.png'" [widthPx]="50" />
+                <h2>Create a poll</h2>
+            </div>
+        </app-button>
+    </section>
+
+</div>

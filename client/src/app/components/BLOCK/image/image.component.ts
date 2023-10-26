@@ -12,7 +12,7 @@ export class ImageComponent implements OnInit, OnChanges {
 
   public fullSrc: string = '';
 
-  constructor(private renderer: Renderer2, private el: ElementRef) {}
+  constructor(private el: ElementRef) {}
 
   ngOnInit(): void {
     this.updateCSS();
