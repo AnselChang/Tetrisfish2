@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Host, HostListener, Input, OnInit, Output } from '@angular/core';
 import BoardState from './board-state';
 import CurrentPiece, { CurrentPieceState } from './current-piece';
 import { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
@@ -57,8 +57,11 @@ export class InteractiveTetrisBoardComponent {
   @Input() mode = TetrisBoardMode.READONLY;
   @Input() boardState!: BoardState;
   @Input() currentPiece: CurrentPiece = new CurrentPiece(CurrentPieceState.NONE); // by default, show no current piece
-  @Output() hoveredBlock = new EventEmitter<BlockData | null>();
+  @Output() hoveredBlock = new EventEmitter<BlockData>();
+  @Output() onHoverOff = new EventEmitter<void>();
   @Output() onClick = new EventEmitter<BlockData>();
+  @Output() onMouseDown = new EventEmitter<BlockData>();
+  @Output() onMouseUp = new EventEmitter<BlockData>();
 
   readonly VIEW_BOX = `0 0 ${SVG_BOARD_WIDTH} ${SVG_BOARD_HEIGHT}`;
 
@@ -74,13 +77,24 @@ export class InteractiveTetrisBoardComponent {
     return SVG_BOARD_HEIGHT;
   }
 
+  @HostListener('mouseleave') onMouseLeave() {
+    this.onHoverOff.emit();
+  }
+
   public onBlockHover(block: BlockData ,isHovering: boolean) {
-    if (!isHovering) this.hoveredBlock.emit(null);
-    else this.hoveredBlock.emit(block);
+    if (isHovering) this.hoveredBlock.emit(block);
   }
 
   public onBlockClick(block: BlockData) {
     this.onClick.emit(block);
+  }
+
+  public onBlockMouseDown(block: BlockData) {
+    this.onMouseDown.emit(block);
+  }
+
+  public onBlockMouseUp(block: BlockData) {
+    this.onMouseUp.emit(block);
   }
 
   // most blocks are white, except for the current piece

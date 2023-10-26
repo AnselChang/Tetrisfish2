@@ -7,7 +7,9 @@
                 <app-interactive-tetris-board
                     [mode]="TetrisBoardMode.INTERACTIVE"
                     [boardState]="boardState"
-                    (onClick)="onPlacePiece($event)"/>
+                    (hoveredBlock)="onBlockHover($event)"
+                    (onMouseDown)="onMouseDown($event)"
+                    (onHoverOff)="onHoverOff()"/>
             </div>
 
             <div class="subsection-container status-subsection">

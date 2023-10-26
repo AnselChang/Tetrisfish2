@@ -55,4 +55,18 @@ export default class BinaryGrid {
 
         return this.blocks[y - 1][x - 1];
     }
+
+    public copy(): BinaryGrid {
+
+        const newBlocks: BlockType[][] = [];
+        for (let i = 0; i < 20; i++) {
+            newBlocks.push([]);
+            for (let j = 0; j < 10; j++) {
+                newBlocks[i].push(this.blocks[i][j]);
+            }
+        }
+
+        return new BinaryGrid(newBlocks);
+    }
+
 }

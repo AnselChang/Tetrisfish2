@@ -16,6 +16,8 @@ export class TetrisBlockComponent {
   @Input() blockData!: BlockData;
   @Output() onHover = new EventEmitter<boolean>();
   @Output() onClick = new EventEmitter<void>();
+  @Output() onMouseDown = new EventEmitter<void>();
+  @Output() onMouseUp = new EventEmitter<void>();
 
   public isHovering: boolean = false;
   
@@ -38,6 +40,15 @@ export class TetrisBlockComponent {
   @HostListener('click') onBlockClick() {
     this.onClick.emit();
   }
+
+  @HostListener('mousedown') onBlockMouseDown() {
+    this.onMouseDown.emit();
+  }
+
+  @HostListener('mouseup') onBlockMouseUp() {
+    this.onMouseUp.emit();
+  }
+
 
   // for solid blocks, get the four white pixel locations
   public getWhiteLocations(): {x: number, y: number}[] {

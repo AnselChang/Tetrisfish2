@@ -7,7 +7,13 @@
     <g *ngFor="let y of ONE_TO_TWENTY">
         <g *ngFor="let x of ONE_TO_TEN">
             <g *ngIf="getBlockAt(x,y) as block">
-                <g app-tetris-block (onHover)="onBlockHover(block, $event)" (onClick)="onBlockClick(block)" [mode]="mode" [blockData]="block" />
+                <g app-tetris-block
+                    (onHover)="onBlockHover(block, $event)"
+                    (onClick)="onBlockClick(block)"
+                    (onMouseDown)="onBlockMouseDown(block)"
+                    (onMouseUp)="onBlockMouseUp(block)"
+                    [mode]="mode"
+                    [blockData]="block" />
             </g>
         </g>
     </g>
