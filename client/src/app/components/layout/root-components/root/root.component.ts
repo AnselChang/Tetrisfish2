@@ -12,7 +12,8 @@ export class RootComponent {
     ["/play", "Play"],
     ["/analysis", "Analysis"],
     ["/puzzles", "Puzzles"],
-    ["/leaderboard", "Leaderboard"]
+    ["/leaderboard", "Leaderboard"],
+    ["/more", "More..."]
   ];
 
   public username = "Ansel"

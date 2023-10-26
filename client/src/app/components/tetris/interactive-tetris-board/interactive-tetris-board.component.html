@@ -7,16 +7,9 @@
     <g *ngFor="let y of ONE_TO_TWENTY">
         <g *ngFor="let x of ONE_TO_TEN">
             <g *ngIf="getBlockAt(x,y) as block">
-                <g app-tetris-block [mode]="mode" [blockData]="block" />
+                <g app-tetris-block (onHover)="onBlockHover(block, $event)" (onClick)="onBlockClick(block)" [mode]="mode" [blockData]="block" />
             </g>
         </g>
     </g>
-
-    <!-- draw the next piece on the top right corner -->
-    <svg *ngIf="nextPieceType !== null" [attr.viewBox]="NB_VIEW_BOX" y="0">
-        <!-- draw white rect over the entire area -->
-        <rect [attr.width]="nbWidth" [attr.height]="nbHeight" fill="white" />
-        <rect [attr.x]="nbWidth/4" [attr.y]="nbHeight/4" [attr.width]="nbWidth/2" [attr.height]="nbHeight/2" fill="black" />
-    </svg>
 
 </svg>

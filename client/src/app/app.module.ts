@@ -20,6 +20,9 @@ import { LoginPageComponent } from './components/layout/login-page/login-page.co
 import { LoginButtonComponent } from './components/layout/root-components/login-button/login-button.component';
 import { ButtonComponent } from './components/BLOCK/button/button.component';
 import { ImageComponent } from './components/BLOCK/image/image.component';
+import { MorePageComponent } from './components/layout/more-components/more-page/more-page.component';
+import { PageButtonComponent } from './components/layout/more-components/page-button/page-button.component';
+import { BoardCreationPageComponent } from './components/layout/board-creation-components/board-creation-page/board-creation-page.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +42,9 @@ import { ImageComponent } from './components/BLOCK/image/image.component';
     LoginButtonComponent,
     ButtonComponent,
     ImageComponent,
+    MorePageComponent,
+    PageButtonComponent,
+    BoardCreationPageComponent,
   ],
   imports: [
     BrowserModule,

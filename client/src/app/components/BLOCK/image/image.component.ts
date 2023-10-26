@@ -25,9 +25,9 @@ export class ImageComponent implements OnInit, OnChanges {
   private updateCSS(): void {
     this.fullSrc = `./assets/img/${this.src}`;
     console.log(this.fullSrc);
-    this.renderer.setStyle(this.el.nativeElement.ownerDocument.body, '--widthPx', this.widthPx);
-    this.renderer.setStyle(this.el.nativeElement.ownerDocument.body, '--aspectRatio', this.aspectRatio);
-
+    this.el.nativeElement.style.setProperty('--widthPx', this.widthPx + 'px');
+    this.el.nativeElement.style.setProperty('--widthProportional', (this.widthPx / 10) + 'vw');
+    this.el.nativeElement.style.setProperty('--aspectRatio', this.aspectRatio + '');
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import BoardState from './board-state';
 import CurrentPiece, { CurrentPieceState } from './current-piece';
 import { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
@@ -41,8 +41,6 @@ export class BlockData {
     public readonly type: BlockFillType,
     public readonly mainColor: string = "",
     public readonly whiteColor: string = "",
-    public readonly translateX: number = 0,
-    public readonly translateY: number = 0
   ) {
     this.svgSize = SVG_BLOCK_SIZE;
     this.svgX = (this.x-1) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + SVG_PADDING;
@@ -59,11 +57,10 @@ export class InteractiveTetrisBoardComponent {
   @Input() mode = TetrisBoardMode.READONLY;
   @Input() boardState!: BoardState;
   @Input() currentPiece: CurrentPiece = new CurrentPiece(CurrentPieceState.NONE); // by default, show no current piece
-  @Input() nextPieceType: TetrominoType | null = null;
+  @Output() hoveredBlock = new EventEmitter<BlockData | null>();
+  @Output() onClick = new EventEmitter<BlockData>();
 
-  
   readonly VIEW_BOX = `0 0 ${SVG_BOARD_WIDTH} ${SVG_BOARD_HEIGHT}`;
-  readonly NB_VIEW_BOX = `0 0 ${SVG_NB_WIDTH} ${SVG_NB_HEIGHT}`;
 
   public readonly ONE_TO_TEN: number[] = Array(10).fill(0).map((x, i) => i + 1);
   public readonly ONE_TO_TWENTY: number[] = Array(20).fill(0).map((x, i) => i + 1);
@@ -76,50 +73,14 @@ export class InteractiveTetrisBoardComponent {
     return SVG_BOARD_HEIGHT;
   }
 
-  public get nbWidth(): number {
-    return SVG_NB_WIDTH;
+  public onBlockHover(block: BlockData ,isHovering: boolean) {
+    if (!isHovering) this.hoveredBlock.emit(null);
+    else this.hoveredBlock.emit(block);
   }
 
-  public get nbHeight(): number {
-    return SVG_NB_HEIGHT;
+  public onBlockClick(block: BlockData) {
+    this.onClick.emit(block);
   }
-
-  // return the actual color of the block at the given location
-  public getNBBlockAt(x: number, y: number): BlockData | null {
-
-    // no next piece to display
-    if (this.nextPieceType === null) {
-      return null;
-    }
-
-    // (x,y) is not in the block set
-    const nb = TetrominoNB.getPieceByType(this.nextPieceType)!;
-    if (nb.blockSet.contains(x, y)) {
-      return new BlockData(x, y, BlockFillType.NONE);
-    }
-
-    // there is a block at (x,y) in the block set. return the color/type
-    const WHITE_COLOR = getColorForLevel(TetrominoColorType.COLOR_WHITE);
-    const colorType = getColorTypeForTetromino(this.currentPiece.tetromino!.tetrominoType);
-
-    let MAIN_COLOR, TYPE;
-    if (colorType === TetrominoColorType.COLOR_WHITE) { // if white is current piece, display white with different border color than usual scheme
-      MAIN_COLOR = TetrominoColorType.COLOR_FIRST;
-      TYPE = BlockFillType.BORDER;
-    } else {
-      MAIN_COLOR = colorType;
-      TYPE = BlockFillType.SOLID;
-    }
-
-    return new BlockData(
-      x, y, 
-      TYPE,
-      getColorForLevel(MAIN_COLOR, this.boardState.status.level),
-      WHITE_COLOR,
-      nb.translateX, nb.translateY
-    );
-  }
-
 
   // most blocks are white, except for the current piece
   // if current piece is white, the border is a different color to diffeentiate

@@ -1,0 +1,11 @@
+.list-section {
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: calc(1.5vw + 5px);
+}
+
+header, section {
+    padding-left: calc(1.5vw + 5px);
+}

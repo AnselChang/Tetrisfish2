@@ -8,6 +8,8 @@ import { PuzzlesPageComponent } from './components/layout/puzzles-page/puzzles-p
 import { LeaderboardPageComponent } from './components/layout/leaderboard-page/leaderboard-page.component';
 import { ProfilePageComponent } from './components/layout/profile-page/profile-page.component';
 import { LoginPageComponent } from './components/layout/login-page/login-page.component';
+import { MorePageComponent } from './components/layout/more-components/more-page/more-page.component';
+import { BoardCreationPageComponent } from './components/layout/board-creation-components/board-creation-page/board-creation-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginPageComponent},
@@ -21,6 +23,8 @@ const routes: Routes = [
       { path: 'puzzles', component: PuzzlesPageComponent },
       { path: 'leaderboard', component: LeaderboardPageComponent },
       { path: 'profile', component: ProfilePageComponent },
+      { path: 'more', component: MorePageComponent },
+      { path: 'board-creation', component: BoardCreationPageComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: '**', redirectTo: 'home' },
     ]

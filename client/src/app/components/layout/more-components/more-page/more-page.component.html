@@ -1,0 +1,11 @@
+<header>
+    <h2>More Features</h2>
+</header>
+<section class="list-section">
+    <app-page-button *ngFor="let page of pages"
+        [icon]="page.icon"
+        [title]="page.title"
+        [subtitle]="page.subtitle"
+        [routerLink]="page.routerLink" />
+
+</section>
