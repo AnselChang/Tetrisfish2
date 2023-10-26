@@ -1,0 +1,49 @@
+<div id="play-page">
+    <section id="live-source">
+        <h2>Connect to a live source</h2>
+        <div class="section-content" id="live-source-content">
+            <app-video-capture class="ls-left-column" />
+            <div *ngIf="this.panelCalibrateMode" class="subsection ls-right-column" id="calibrate-panel">
+                <h3>Calibration</h3>
+            </div>
+            <div *ngIf="!this.panelCalibrateMode" class="subsection-container ls-right-column">
+                <div class="subsection" id="live-capture-panel">
+                    <h3>Live Capture</h3>
+                </div>
+                <div class="subsection" id="logging">
+                    <h3>Log</h3>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+    <section id="display">
+        <h2>What we're detecting...</h2>
+        <div class="section-content" id="display-content">
+
+            <div id="tetris-display">
+                <app-interactive-tetris-board />
+            </div>
+
+            <div class="subsection-container" id="status-display">
+                <div class="subsection status-container" id="level-status">
+                    <h4>Level</h4>
+                    <h2>{{getLevel()}}</h2>
+                </div>
+                <div class="subsection status-container" id="lines-status">
+                    <h4>Lines</h4>
+                    <h2>{{getLines()}}</h2>
+                </div>
+                <div class="subsection status-container" id="score-status">
+                    <h4>Score</h4>
+                    <h2>{{getScore()}}</h2>
+                </div>
+                <div class="subsection" id="next-box">
+                    <h3>Next box</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</div>

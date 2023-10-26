@@ -1,8 +1,13 @@
 import { Component } from '@angular/core';
-import BoardState from '../../tetris/interactive-tetris-board/board-state';
+import BoardState from '../../../tetris/interactive-tetris-board/board-state';
 import GameStatus from 'client/src/app/models/immutable-tetris-models/game-status';
 import BinaryGrid, { BlockType } from 'client/src/app/models/mutable-tetris-models/binary-grid';
 import { TetrominoType } from 'client/src/app/models/immutable-tetris-models/tetromino';
+
+enum PanelMode {
+  PLAY = "PLAY",
+  CALIBRATE = "CALIBRATE"
+}
 
 @Component({
   selector: 'app-play-page',
@@ -12,6 +17,7 @@ import { TetrominoType } from 'client/src/app/models/immutable-tetris-models/tet
 export class PlayPageComponent {
   
   public boardState: BoardState;
+  public panelMode: PanelMode = PanelMode.PLAY;
 
   constructor() {
 
@@ -26,4 +32,21 @@ export class PlayPageComponent {
 
     this.boardState = new BoardState(status, grid, TetrominoType.L_TYPE, TetrominoType.T_TYPE);
   }
+
+  public get panelCalibrateMode(): boolean {
+    return this.panelMode === PanelMode.CALIBRATE;
+  }
+
+  public getLevel(): number {
+    return 18;
+  }
+
+  public getLines(): number {
+    return 120;
+  }
+
+  public getScore(): number {
+    return 543223;
+  }
+
 }
