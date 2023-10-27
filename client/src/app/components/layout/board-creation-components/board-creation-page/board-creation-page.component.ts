@@ -87,7 +87,7 @@ export class BoardCreationPageComponent {
     this.hoveringOverBoard = false;
   }
 
-  public onAnalysis() {
+  public async onAnalysis() {
 
     console.log("analyzing");
     console.log(this.cache);
@@ -96,7 +96,9 @@ export class BoardCreationPageComponent {
     const board = this.cache.boardState;
     const status = new GameStatus(board.level, 110, 123456);
     const position = new GamePosition(status, board.grid, board.currentPieceType, board.nextPieceType);
-    this.evaluatorService.evaluatePosition(position, HZ_10);
+    
+    const recommendations = await this.evaluatorService.evaluatePosition(position, HZ_10);
+    console.log(recommendations);
   }
 
 }
