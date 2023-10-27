@@ -56,7 +56,6 @@ export class NextBoxComponent implements OnInit, OnChanges {
   }
 
   public getBlockData(position: BlockPosition): BlockData {
-    console.log(this.type, position);
     const WHITE_COLOR = getColorForLevel(TetrominoColorType.COLOR_WHITE);
     return new BlockData(position.x, position.y, this.SVG_PADDING, this.fillType, this.mainColor, WHITE_COLOR);
   }

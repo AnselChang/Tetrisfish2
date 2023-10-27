@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Host, HostListener, Input, OnInit, Output } from '@angular/core';
-import BoardState from './board-state';
+import InteractiveBoardState from './board-state';
 import CurrentPiece, { CurrentPieceState } from './current-piece';
 import { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
 import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from '../../../models/immutable-tetris-models/tetromino';
@@ -54,7 +54,7 @@ export class BlockData {
 })
 export class InteractiveTetrisBoardComponent {
   @Input() mode = TetrisBoardMode.READONLY;
-  @Input() boardState!: BoardState;
+  @Input() boardState!: InteractiveBoardState;
   @Input() currentPiece: CurrentPiece = new CurrentPiece(CurrentPieceState.NONE); // by default, show no current piece
   @Output() hoveredBlock = new EventEmitter<BlockData>();
   @Output() onHoverOff = new EventEmitter<void>();

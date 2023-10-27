@@ -27,10 +27,14 @@ export default function createApp(): Express {
   }
 
     app.use(express.static(clientDir));
-    app.get('/api/:name', async (req: Request, res: Response) => {
-        const name = req.params['name'];
-        const greeting = { greeting: `Hello, ${ name }` };
-        res.send(greeting);
+    app.get('/api/stackrabbit', async (req: Request, res: Response) => {
+        const url = req.query['url'];
+        console.log("Making request to Stack Rabbit API:", url);
+
+        const result = await fetch(url as string);
+        const json = await result.json();
+        console.log("Result:", json);
+        res.send(json);
     });
 
     // Catch all routes and return the index file

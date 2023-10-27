@@ -7,7 +7,7 @@ import BinaryGrid from "../../../models/mutable-tetris-models/binary-grid";
 import GameStatus from "../../../models/immutable-tetris-models/game-status";
 import { TetrominoType } from "../../../models/immutable-tetris-models/tetromino";
 
-export default class BoardState {
+export default class InteractiveBoardState {
     constructor(
         public level: number,
         public grid: BinaryGrid,

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import BoardState from '../../../tetris/interactive-tetris-board/board-state';
+import InteractiveBoardState from '../../../tetris/interactive-tetris-board/board-state';
 import GameStatus from 'client/src/app/models/immutable-tetris-models/game-status';
 import BinaryGrid, { BlockType } from 'client/src/app/models/mutable-tetris-models/binary-grid';
 import { TetrominoType } from 'client/src/app/models/immutable-tetris-models/tetromino';
@@ -16,7 +16,7 @@ enum PanelMode {
 })
 export class PlayPageComponent {
   
-  public boardState: BoardState;
+  public boardState: InteractiveBoardState;
   public panelMode: PanelMode = PanelMode.PLAY;
 
   constructor() {
@@ -29,7 +29,7 @@ export class PlayPageComponent {
       }
     }
 
-    this.boardState = new BoardState(18, grid, TetrominoType.L_TYPE, TetrominoType.T_TYPE);
+    this.boardState = new InteractiveBoardState(18, grid, TetrominoType.L_TYPE, TetrominoType.T_TYPE);
   }
 
   public get panelCalibrateMode(): boolean {

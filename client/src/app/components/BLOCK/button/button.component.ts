@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2 } from '@angular/core';
 import { ColorService } from 'client/src/app/services/color.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { ColorService } from 'client/src/app/services/color.service';
   styleUrls: ['./button.component.scss']
 })
 export class ButtonComponent implements AfterViewInit, OnChanges {
-  @Input() onClick: any = null;
+  @Output() onClick = new EventEmitter<void>();
   @Input() color: string = '#5865F2';
   @Input() expandToFitWidth: boolean = false;
 
@@ -15,7 +15,7 @@ export class ButtonComponent implements AfterViewInit, OnChanges {
   }
 
   public _onClick(): void {
-    if (this.onClick !== null) this.onClick();
+    this.onClick.emit();
   }
 
   private updateCSS() {
