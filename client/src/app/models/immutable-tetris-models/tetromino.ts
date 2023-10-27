@@ -67,12 +67,125 @@ export class Tetromino {
         ]),
     ]);
 
-    // TODO: implement the rest of the pieces
-    public static readonly J_PIECE: Tetromino;
-    public static readonly L_PIECE: Tetromino;
-    public static readonly O_PIECE: Tetromino;
-    public static readonly S_PIECE: Tetromino;
-    public static readonly T_PIECE: Tetromino;
+    public static readonly J_PIECE: Tetromino = new Tetromino(TetrominoType.J_TYPE, [
+        new BlockSet([
+            new BlockPosition(1, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(3, 1),
+            new BlockPosition(3, 2),
+        ]),
+        new BlockSet([
+            new BlockPosition(2, 0),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+            new BlockPosition(1, 2),
+        ]),
+        new BlockSet([
+            new BlockPosition(1, 0),
+            new BlockPosition(1, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(3, 1),
+        ]),
+        new BlockSet([
+            new BlockPosition(2, 0),
+            new BlockPosition(3, 0),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+        ]),
+    ]);
+
+    public static readonly L_PIECE: Tetromino = new Tetromino(TetrominoType.L_TYPE, [
+        new BlockSet([
+            new BlockPosition(1, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(3, 1),
+            new BlockPosition(1, 2),
+        ]),
+        new BlockSet([
+            new BlockPosition(1, 0),
+            new BlockPosition(2, 0),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+        ]),
+        new BlockSet([
+            new BlockPosition(3, 0),
+            new BlockPosition(3, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(1, 1),
+        ]),
+        new BlockSet([
+            new BlockPosition(2, 0),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+            new BlockPosition(3, 2),
+        ]),
+    ]);
+
+    public static readonly O_PIECE: Tetromino = new Tetromino(TetrominoType.O_TYPE, [
+        new BlockSet([
+            new BlockPosition(1, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(1, 2),
+            new BlockPosition(2, 2),
+        ]),
+    ]);
+
+    public static readonly S_PIECE: Tetromino = new Tetromino(TetrominoType.S_TYPE, [
+        new BlockSet([
+            new BlockPosition(2, 1),
+            new BlockPosition(3, 1),
+            new BlockPosition(2, 2),
+            new BlockPosition(1, 2),
+        ]),
+        new BlockSet([
+            new BlockPosition(2, 0),
+            new BlockPosition(2, 1),
+            new BlockPosition(3, 1),
+            new BlockPosition(3, 2),
+        ]),
+    ]);
+
+    public static readonly Z_PIECE: Tetromino = new Tetromino(TetrominoType.T_TYPE, [
+        new BlockSet([
+            new BlockPosition(1, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+            new BlockPosition(3, 2),
+        ]),
+        new BlockSet([
+            new BlockPosition(3, 0),
+            new BlockPosition(3, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+        ]),
+    ]);
+
+    public static readonly T_PIECE: Tetromino = new Tetromino(TetrominoType.T_TYPE, [
+        new BlockSet([
+            new BlockPosition(1, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(3, 1),
+            new BlockPosition(2, 2),
+        ]),
+        new BlockSet([
+            new BlockPosition(2, 0),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+            new BlockPosition(1, 1),
+        ]),
+        new BlockSet([
+            new BlockPosition(2, 0),
+            new BlockPosition(1, 1),
+            new BlockPosition(2, 1),
+            new BlockPosition(3, 1),
+        ]),
+        new BlockSet([
+            new BlockPosition(2, 0),
+            new BlockPosition(2, 1),
+            new BlockPosition(2, 2),
+            new BlockPosition(3, 1),
+        ]),
+    ]);
 
     public static readonly ALL_PIECES: Tetromino[] = [
         Tetromino.I_PIECE,
