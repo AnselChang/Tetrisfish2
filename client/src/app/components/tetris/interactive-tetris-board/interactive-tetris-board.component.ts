@@ -4,6 +4,7 @@ import CurrentPiece, { CurrentPieceState } from './current-piece';
 import { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
 import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from '../../../models/immutable-tetris-models/tetromino';
 import { Block } from 'blockly';
+import { PADDING_Y } from 'core/dropdowndiv';
 
 /*
 An interactable tetris board with interacable current piece and displayed next piece in next box
@@ -27,9 +28,6 @@ const SVG_PADDING = 1;
 const SVG_BOARD_WIDTH = SVG_BLOCK_SIZE + (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) * 9 + SVG_PADDING * 2;
 const SVG_BOARD_HEIGHT = SVG_BLOCK_SIZE + (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) * 19 + SVG_PADDING * 2;
 
-const SVG_NB_WIDTH = SVG_BLOCK_SIZE + (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) * 3 + SVG_PADDING * 2;
-const SVG_NB_HEIGHT = SVG_BLOCK_SIZE + (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) * 1 + SVG_PADDING * 2;
-
 export class BlockData {
   public readonly svgX: number;
   public readonly svgY: number;
@@ -38,13 +36,14 @@ export class BlockData {
   constructor(
     public readonly x: number,
     public readonly y: number,
+    padding: number,
     public readonly type: BlockFillType,
     public readonly mainColor: string = "",
     public readonly whiteColor: string = "",
   ) {
     this.svgSize = SVG_BLOCK_SIZE;
-    this.svgX = (this.x-1) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + SVG_PADDING;
-    this.svgY = (this.y-1) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + SVG_PADDING;
+    this.svgX = (this.x-1) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
+    this.svgY = (this.y-1) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
   }
 }
 
@@ -118,11 +117,12 @@ export class InteractiveTetrisBoardComponent {
       MAIN_COLOR = TetrominoColorType.COLOR_FIRST;
       TYPE = BlockFillType.BORDER;
     } else {
-      return new BlockData(x, y, BlockFillType.NONE); // no block to display
+      return new BlockData(x, y, SVG_PADDING, BlockFillType.NONE); // no block to display
     }
 
     return new BlockData(
       x, y,
+      SVG_PADDING,
       TYPE,
       getColorForLevel(MAIN_COLOR, this.boardState.level),
       WHITE_COLOR

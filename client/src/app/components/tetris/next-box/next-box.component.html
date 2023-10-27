@@ -1,0 +1,12 @@
+<!-- Iterate through the board left-right, top-bottom and draw each block -->
+<svg [attr.viewBox]="viewbox" width="50%" height="50%">
+
+    <!-- Draw the board background -->
+    <rect *ngIf="showBackground" x="0" y="0" rx="4" [attr.width]="nbWidth" [attr.height]="nbHeight" fill="black" />
+
+    <g *ngFor="let position of this.getBlockSet().blocks">
+        <g app-tetris-block
+            [mode]="TetrisBoardMode.READONLY" [blockData]="this.getBlockData(position)" />
+    </g>
+
+</svg>

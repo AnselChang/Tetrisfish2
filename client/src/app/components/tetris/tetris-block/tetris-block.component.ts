@@ -14,6 +14,7 @@ Draws a single tetris block on the tetris board
 export class TetrisBlockComponent {
   @Input() mode!: TetrisBoardMode;
   @Input() blockData!: BlockData;
+  @Input() showHovering: boolean = false;
   @Output() onHover = new EventEmitter<boolean>();
   @Output() onClick = new EventEmitter<void>();
   @Output() onMouseDown = new EventEmitter<void>();

@@ -22,6 +22,7 @@ import { ImageComponent } from './components/BLOCK/image/image.component';
 import { MorePageComponent } from './components/layout/more-components/more-page/more-page.component';
 import { PageButtonComponent } from './components/layout/more-components/page-button/page-button.component';
 import { BoardCreationPageComponent } from './components/layout/board-creation-components/board-creation-page/board-creation-page.component';
+import { NextBoxComponent } from './components/tetris/next-box/next-box.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,6 +44,7 @@ import { BoardCreationPageComponent } from './components/layout/board-creation-c
     MorePageComponent,
     PageButtonComponent,
     BoardCreationPageComponent,
+    NextBoxComponent,
   ],
   imports: [
     BrowserModule,

@@ -4,6 +4,7 @@ import BoardState from '../../../tetris/interactive-tetris-board/board-state';
 import GameStatus from 'client/src/app/models/immutable-tetris-models/game-status';
 import BinaryGrid, { BlockType } from 'client/src/app/models/mutable-tetris-models/binary-grid';
 import { TetrominoType } from 'client/src/app/models/immutable-tetris-models/tetromino';
+import { BoardCreationCacheService } from 'client/src/app/services/board-creation-cache.service';
 
 @Component({
   selector: 'app-board-creation-page',
@@ -14,10 +15,7 @@ export class BoardCreationPageComponent {
 
   readonly TetrisBoardMode = TetrisBoardMode;
 
-  public boardState = new BoardState(18, new BinaryGrid(), TetrominoType.J_TYPE, TetrominoType.T_TYPE);
-
   private blockOnMouseDown?: BlockData;
-  private blockOnHover?: BlockData;
   private oldGrid?: BinaryGrid;
   private fillType: BlockType = BlockType.FILLED;
   private mouseDown: boolean = false;
@@ -25,7 +23,7 @@ export class BoardCreationPageComponent {
   private mouseUpListener: Function | null = null;
 
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, public cache: BoardCreationCacheService) {}
   
   public onBlockHover(block: BlockData) {
 
@@ -35,7 +33,7 @@ export class BoardCreationPageComponent {
     if (this.mouseDown && this.blockOnMouseDown && this.oldGrid) {
 
       // revert to old grid
-      this.boardState.grid = this.oldGrid.copy();
+      this.cache.boardState.grid = this.oldGrid.copy();
 
       // fill in new grid
       const minX = Math.min(this.blockOnMouseDown!.x, block.x);
@@ -44,7 +42,7 @@ export class BoardCreationPageComponent {
       const maxY = Math.max(this.blockOnMouseDown!.y, block.y);
       for (let x = minX; x <= maxX; x++) {
         for (let y = minY; y <= maxY; y++) {
-          this.boardState.grid.setAt(x, y, this.fillType);
+          this.cache.boardState.grid.setAt(x, y, this.fillType);
         }
       }
     }
@@ -53,11 +51,11 @@ export class BoardCreationPageComponent {
   public onMouseDown(block: BlockData) {
 
     // make a copy of grid to revert to whenever mouse is moved so that fill can be applied again
-    this.oldGrid = this.boardState.grid.copy();
+    this.oldGrid = this.cache.boardState.grid.copy();
 
     this.blockOnMouseDown = block;
-    this.fillType = this.boardState.grid.at(block.x, block.y) === BlockType.FILLED ? BlockType.EMPTY : BlockType.FILLED;
-    this.boardState.grid.setAt(block.x, block.y, this.fillType);
+    this.fillType = this.cache.boardState.grid.at(block.x, block.y) === BlockType.FILLED ? BlockType.EMPTY : BlockType.FILLED;
+    this.cache.boardState.grid.setAt(block.x, block.y, this.fillType);
     this.mouseDown = true;
 
     // listen for mouse up globally
@@ -69,7 +67,7 @@ export class BoardCreationPageComponent {
     this.mouseDown = false;
 
     if (!this.hoveringOverBoard) {
-      this.boardState.grid = this.oldGrid!;
+      this.cache.boardState.grid = this.oldGrid!;
     }
 
     // remove listener
