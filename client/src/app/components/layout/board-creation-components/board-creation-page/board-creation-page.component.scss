@@ -62,7 +62,7 @@
     min-width: 200px;
 }
 
-.status-subsection {
+.status-subsection, .piece-box {
     width: 15vw;
     min-width: 150px;
 }
@@ -71,12 +71,12 @@ h2 {
     text-align: center;
 }
 
-.status-container, .piece-box > h4 {
+.status-container > h4, .piece-box > h4 {
     margin: 0.75vw;
     padding: 0;
 }
 
-.status-container, .piece-box > h2 {
+.status-container > h2, .piece-box > h2 {
     margin: 1vw;
     padding: 0;
 }
@@ -85,7 +85,7 @@ h2 {
     .section-content {
         flex-direction: column;
     }
-    .status-subsection {
+    .status-subsection, .piece-box {
         width: 100%;
     }
 }
