@@ -5,8 +5,9 @@
 
             <div class="board">
                 <app-interactive-tetris-board
-                    [mode]="TetrisBoardMode.INTERACTIVE"
-                    [boardState]="cache.boardState"
+                    [mode]="TetrisBoardMode.MOVEABLE_CURRENT_PIECE"
+                    [level]="cache.level"
+                    [grid]="cache.grid"
                     (hoveredBlock)="onBlockHover($event)"
                     (onMouseDown)="onMouseDown($event)"
                     (onHoverOff)="onHoverOff()"/>
@@ -19,11 +20,11 @@
                 </div>
                 <div class="subsection piece-box current-piece">
                     <h4>Current piece</h4>
-                    <app-next-box class="nb" [showBackground]="false" [level]="cache.boardState.level" [type]="cache.boardState.currentPieceType"></app-next-box>
+                    <app-next-box class="nb" [showBackground]="false" [level]="cache.level" [type]="cache.currentPieceType"></app-next-box>
                 </div>
                 <div class="subsection piece-box next-piece">
                     <h4>Next piece</h4>
-                    <app-next-box class="nb" [showBackground]="false" [level]="cache.boardState.level" [type]="cache.boardState.nextPieceType"></app-next-box>
+                    <app-next-box class="nb" [showBackground]="false" [level]="cache.level" [type]="cache.nextPieceType"></app-next-box>
                 </div>
             </div>
         </div>

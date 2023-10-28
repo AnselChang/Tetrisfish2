@@ -11,7 +11,7 @@
     />
 
     <!-- Draw hovering square if hovering over no block -->
-    <svg:rect *ngIf="blockData.type === BlockFillType.NONE"
+    <svg:rect *ngIf="type === BlockFillType.NONE"
         [attr.x]="blockData.svgX"
         [attr.y]="blockData.svgY"
         [attr.width]="blockData.svgSize"
@@ -20,38 +20,38 @@
         fill="rgb(100,100,100)" />
 
     <!-- Draw the non-white color first over the entire block area -->
-    <svg:rect *ngIf="blockData.type !== BlockFillType.NONE"
+    <svg:rect *ngIf="type !== BlockFillType.NONE"
         [attr.x]="blockData.svgX"
         [attr.y]="blockData.svgY"
         [attr.width]="blockData.svgSize"
         [attr.height]="blockData.svgSize"
-        [attr.fill]="blockData.mainColor" />
+        [attr.fill]="mainColor" />
 
     <!-- draw a white pxiel at the top left corner -->
-    <svg:rect *ngIf="blockData.type !== BlockFillType.NONE"
+    <svg:rect *ngIf="type !== BlockFillType.NONE"
         [attr.x]="blockData.svgX"
         [attr.y]="blockData.svgY"
         [attr.width]="1"
         [attr.height]="1"
-        [attr.fill]="blockData.whiteColor" />
+        [attr.fill]="whiteColor" />
 
     <!-- if a white tetromino, draw a a white square over the non-white color excluding 1 pixel of border-->
     <svg:rect
-        *ngIf="blockData.type === BlockFillType.BORDER"
+        *ngIf="type === BlockFillType.BORDER"
         [attr.x]="blockData.svgX + 1"
         [attr.y]="blockData.svgY + 1"
         [attr.width]="blockData.svgSize - 2"
         [attr.height]="blockData.svgSize - 2"
-        [attr.fill]="blockData.whiteColor" />
+        [attr.fill]="whiteColor" />
 
     <!-- if solid tetromino, draw a white dot at (0,0), (1,1), (1,2), (2,1)-->
-    <svg:g *ngIf="blockData.type === BlockFillType.SOLID">
+    <svg:g *ngIf="type === BlockFillType.SOLID">
         <svg:rect *ngFor="let pos of getWhiteLocations()"
             [attr.x]="blockData.svgX + pos.x"
             [attr.y]="blockData.svgY + pos.y"
             [attr.width]="1"
             [attr.height]="1"
-            [attr.fill]="blockData.whiteColor" />
+            [attr.fill]="whiteColor" />
     </svg:g>
 
 </svg:g>

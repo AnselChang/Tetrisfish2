@@ -1,6 +1,13 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { BlockData, BlockFillType, TetrisBoardMode } from '../interactive-tetris-board/interactive-tetris-board.component';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { BlockData, TetrisBoardMode } from '../interactive-tetris-board/interactive-tetris-board.component';
 import { block } from 'core/tooltip';
+import { TetrominoColorType, getColorForLevel, getColorForTetrominoAndLevel } from 'client/src/app/models/immutable-tetris-models/tetromino';
+
+enum BlockFillType {
+  SOLID = "SOLID",
+  BORDER = "BORDER",
+  NONE = "NONE"
+}
 
 /*
 Draws a single tetris block on the tetris board
@@ -11,7 +18,7 @@ Draws a single tetris block on the tetris board
   templateUrl: './tetris-block.component.html',
   styleUrls: ['./tetris-block.component.scss']
 })
-export class TetrisBlockComponent {
+export class TetrisBlockComponent implements OnInit, OnChanges {
   @Input() mode!: TetrisBoardMode;
   @Input() blockData!: BlockData;
   @Input() showHovering: boolean = false;
@@ -21,14 +28,46 @@ export class TetrisBlockComponent {
   @Output() onMouseUp = new EventEmitter<void>();
 
   public isHovering: boolean = false;
+
+  public type: BlockFillType = BlockFillType.SOLID;
+  public whiteColor = "white";
+  public mainColor = "white";
   
   public get BlockFillType(): typeof BlockFillType {
     return BlockFillType;
   }
 
+  ngOnInit(): void {
+      this.calculateColors();
+  }
+
+  ngOnChanges(): void {
+    this.calculateColors();
+  }
+
+  private calculateColors(): void {
+
+    // if no color, no block
+    if (this.blockData.color === undefined) {
+      this.type = BlockFillType.NONE;
+      return;
+    }
+
+    this.type = (this.blockData.color === TetrominoColorType.COLOR_WHITE) ? BlockFillType.BORDER : BlockFillType.SOLID;
+
+    let mainColorType;
+    if (this.blockData.color === TetrominoColorType.COLOR_WHITE) {
+      mainColorType = this.blockData.special ? TetrominoColorType.COLOR_SECOND : TetrominoColorType.COLOR_FIRST;
+    } else {
+      mainColorType = this.blockData.color;
+    }
+
+    this.mainColor = getColorForLevel(mainColorType, this.blockData.level);
+  }
+
   @HostListener('mouseover') onMouseOver() {
     this.onHover.emit(true);
-    if (this.mode === TetrisBoardMode.INTERACTIVE) {
+    if (this.mode === TetrisBoardMode.MOVEABLE_CURRENT_PIECE) {
       this.isHovering = true;
     }
   }

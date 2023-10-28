@@ -22,21 +22,24 @@
         <div class="section-content" id="display-content">
 
             <div id="tetris-display">
-                <app-interactive-tetris-board />
+                <app-interactive-tetris-board
+                    [grid]="capture.grid"
+                    [level]="capture.status.level"
+                />
             </div>
 
             <div class="subsection-container" id="status-display">
                 <div class="subsection status-container" id="level-status">
                     <h4>Level</h4>
-                    <h2>{{getLevel()}}</h2>
+                    <h2>{{capture.status.level}}</h2>
                 </div>
                 <div class="subsection status-container" id="lines-status">
                     <h4>Lines</h4>
-                    <h2>{{getLines()}}</h2>
+                    <h2>{{capture.status.lines}}</h2>
                 </div>
                 <div class="subsection status-container" id="score-status">
                     <h4>Score</h4>
-                    <h2>{{getScore()}}</h2>
+                    <h2>{{capture.status.score}}</h2>
                 </div>
                 <div class="subsection" id="next-box">
                     <h3>Next box</h3>

@@ -1,24 +1,18 @@
 import { Component, EventEmitter, Host, HostListener, Input, OnInit, Output } from '@angular/core';
-import InteractiveBoardState from './board-state';
-import CurrentPiece, { CurrentPieceState } from './current-piece';
-import { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
+import BinaryGrid, { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
 import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from '../../../models/immutable-tetris-models/tetromino';
 import { Block } from 'blockly';
 import { PADDING_Y } from 'core/dropdowndiv';
+import MoveableTetromino from 'client/src/app/models/mutable-tetris-models/moveable-tetromino';
 
 /*
-An interactable tetris board with interacable current piece and displayed next piece in next box
+An interactable tetris board.
+If mode is MOVEABLE_CURRENT_PIECE, can move current piece around.
 */
 
 export enum TetrisBoardMode {
   READONLY = "READONLY",
-  INTERACTIVE = "INTERACTIVE",
-}
-
-export enum BlockFillType {
-  SOLID = "SOLID",
-  BORDER = "BORDER",
-  NONE = "NONE"
+  MOVEABLE_CURRENT_PIECE = "MOVEABLE_CURRENT_PIECE", // can move current piece around
 }
 
 const SVG_BLOCK_SIZE = 8;
@@ -37,9 +31,9 @@ export class BlockData {
     public readonly x: number,
     public readonly y: number,
     padding: number,
-    public readonly type: BlockFillType,
-    public readonly mainColor: string = "",
-    public readonly whiteColor: string = "",
+    public readonly level: number,
+    public readonly color?: TetrominoColorType,
+    public readonly special: boolean = false, // if color is white and special, display the other border color
   ) {
     this.svgSize = SVG_BLOCK_SIZE;
     this.svgX = (this.x-1) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
@@ -54,8 +48,17 @@ export class BlockData {
 })
 export class InteractiveTetrisBoardComponent {
   @Input() mode = TetrisBoardMode.READONLY;
-  @Input() boardState!: InteractiveBoardState;
-  @Input() currentPiece: CurrentPiece = new CurrentPiece(CurrentPieceState.NONE); // by default, show no current piece
+  @Input() level: number = 18;
+  @Input() grid!: BinaryGrid;
+
+  // two-way binding for current piece
+  // use syntax [(currentPiece)]="currentPiece" in parent template
+  // if current piece is undefined, no piece is displayed but hovering over the board
+  // will hover the piece at the mouse location
+  @Input() currentPiece?: MoveableTetromino;
+  @Output() currentPieceChange = new EventEmitter<MoveableTetromino | undefined>();
+
+
   @Output() hoveredBlock = new EventEmitter<BlockData>();
   @Output() onHoverOff = new EventEmitter<void>();
   @Output() onClick = new EventEmitter<BlockData>();
@@ -101,31 +104,23 @@ export class InteractiveTetrisBoardComponent {
   public getBlockAt(x: number, y: number): BlockData | null {
     // type is "SOLID" for solid design if mostly mainColor, "BORDER" for mostly whiteColor with mainColor border 
 
-    const WHITE_COLOR = getColorForLevel(TetrominoColorType.COLOR_WHITE);
-
-    let MAIN_COLOR, TYPE;
-    if (this.currentPiece.state !== CurrentPieceState.NONE && this.currentPiece.tetromino!.isAtLocation(x,y)) {
-      const colorType = getColorTypeForTetromino(this.currentPiece.tetromino!.tetrominoType);
-      if (colorType === TetrominoColorType.COLOR_WHITE) { // if white is current piece, display white with different border color than usual scheme
-        MAIN_COLOR = TetrominoColorType.COLOR_SECOND;
-        TYPE = BlockFillType.BORDER;
-      } else {
-        MAIN_COLOR = colorType;
-        TYPE = BlockFillType.SOLID;
-      }
-    } else if (this.boardState.grid.at(x, y) === BlockType.FILLED) {
-      MAIN_COLOR = TetrominoColorType.COLOR_FIRST;
-      TYPE = BlockFillType.BORDER;
+    let colorType;
+    let special = false;
+    if (this.currentPiece && this.currentPiece.isAtLocation(x,y)) {
+      colorType = getColorTypeForTetromino(this.currentPiece.tetrominoType);
+      special = true;
+    } else if (this.grid.at(x, y) === BlockType.FILLED) {
+      colorType = TetrominoColorType.COLOR_WHITE;
     } else {
-      return new BlockData(x, y, SVG_PADDING, BlockFillType.NONE); // no block to display
+      return new BlockData(x, y, SVG_PADDING, this.level, undefined); // no block to display
     }
 
     return new BlockData(
       x, y,
       SVG_PADDING,
-      TYPE,
-      getColorForLevel(MAIN_COLOR, this.boardState.level),
-      WHITE_COLOR
+      this.level,
+      colorType,
+      special
     );
   }
 

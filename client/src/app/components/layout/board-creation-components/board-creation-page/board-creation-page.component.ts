@@ -1,6 +1,5 @@
 import { Component, Renderer2 } from '@angular/core';
 import { BlockData, TetrisBoardMode } from '../../../tetris/interactive-tetris-board/interactive-tetris-board.component';
-import InteractiveBoardState from '../../../tetris/interactive-tetris-board/board-state';
 import GameStatus from 'client/src/app/models/immutable-tetris-models/game-status';
 import BinaryGrid, { BlockType } from 'client/src/app/models/mutable-tetris-models/binary-grid';
 import { TetrominoType } from 'client/src/app/models/immutable-tetris-models/tetromino';
@@ -38,7 +37,7 @@ export class BoardCreationPageComponent {
     if (this.mouseDown && this.blockOnMouseDown && this.oldGrid) {
 
       // revert to old grid
-      this.cache.boardState.grid = this.oldGrid.copy();
+      this.cache.grid = this.oldGrid.copy();
 
       // fill in new grid
       const minX = Math.min(this.blockOnMouseDown!.x, block.x);
@@ -47,7 +46,7 @@ export class BoardCreationPageComponent {
       const maxY = Math.max(this.blockOnMouseDown!.y, block.y);
       for (let x = minX; x <= maxX; x++) {
         for (let y = minY; y <= maxY; y++) {
-          this.cache.boardState.grid.setAt(x, y, this.fillType);
+          this.cache.grid.setAt(x, y, this.fillType);
         }
       }
     }
@@ -56,11 +55,11 @@ export class BoardCreationPageComponent {
   public onMouseDown(block: BlockData) {
 
     // make a copy of grid to revert to whenever mouse is moved so that fill can be applied again
-    this.oldGrid = this.cache.boardState.grid.copy();
+    this.oldGrid = this.cache.grid.copy();
 
     this.blockOnMouseDown = block;
-    this.fillType = this.cache.boardState.grid.at(block.x, block.y) === BlockType.FILLED ? BlockType.EMPTY : BlockType.FILLED;
-    this.cache.boardState.grid.setAt(block.x, block.y, this.fillType);
+    this.fillType = this.cache.grid.at(block.x, block.y) === BlockType.FILLED ? BlockType.EMPTY : BlockType.FILLED;
+    this.cache.grid.setAt(block.x, block.y, this.fillType);
     this.mouseDown = true;
 
     // listen for mouse up globally
@@ -72,7 +71,7 @@ export class BoardCreationPageComponent {
     this.mouseDown = false;
 
     if (!this.hoveringOverBoard) {
-      this.cache.boardState.grid = this.oldGrid!;
+      this.cache.grid = this.oldGrid!;
     }
 
     // remove listener
@@ -93,9 +92,8 @@ export class BoardCreationPageComponent {
     console.log(this.cache);
 
 
-    const board = this.cache.boardState;
-    const status = new GameStatus(board.level, 110, 123456);
-    const position = new GamePosition(status, board.grid, board.currentPieceType, board.nextPieceType);
+    const status = new GameStatus(this.cache.level, 110, 123456);
+    const position = new GamePosition(status, this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType);
     
     const recommendations = await this.evaluatorService.evaluatePosition(position, HZ_10);
     console.log(recommendations);
