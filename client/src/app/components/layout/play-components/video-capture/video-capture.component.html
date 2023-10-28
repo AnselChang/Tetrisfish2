@@ -1,8 +1,12 @@
-<select [(ngModel)]="selectedDevice" (change)="onDeviceChange()">
-    <option *ngFor="let device of videoDevices" [ngValue]="device">
-        {{ (device === null) ? "Select a video device" : device.label }}
-    </option>
-</select>
+<div class="select-video">
+    <select [(ngModel)]="selectedDevice" (change)="onDeviceChange()">
+        <option *ngFor="let device of videoDevices" [ngValue]="device">
+            {{ (device === null) ? "Select a video device" : device.label }}
+        </option>
+    </select>
+    <button (click)="generateVideoDevicesList()">Refresh</button>
+</div>
+
   
 <video #videoElement autoplay></video>
 
