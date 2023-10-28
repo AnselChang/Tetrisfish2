@@ -11,7 +11,7 @@ import { Block } from 'blockly';
 })
 export class NextBoxComponent {
   @Input() level: number = 18;
-  @Input() type: TetrominoType = TetrominoType.L_TYPE;
+  @Input() type?: TetrominoType = TetrominoType.L_TYPE;
   @Input() SVG_PADDING = 4;
   @Input() showBackground: boolean = true;
 
@@ -30,12 +30,14 @@ export class NextBoxComponent {
   public TetrisBoardMode = TetrisBoardMode;
 
   public getBlockSet(): BlockSet {
+    if (!this.type) return new BlockSet([]);
+    
     return TetrominoNB.getPieceByType(this.type).blockSet;
   }
 
   public getBlockData(position: BlockPosition): BlockData {
     const WHITE_COLOR = getColorForLevel(TetrominoColorType.COLOR_WHITE);
-    return new BlockData(position.x, position.y, this.SVG_PADDING, this.level, getColorTypeForTetromino(this.type));
+    return new BlockData(position.x, position.y, this.SVG_PADDING, this.level, getColorTypeForTetromino(this.type!));
   }
 
 }

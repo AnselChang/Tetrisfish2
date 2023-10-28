@@ -42,7 +42,8 @@
                     <h2>{{capture.status.score}}</h2>
                 </div>
                 <div class="subsection" id="next-box">
-                    <h3>Next box</h3>
+                    <h4>Next box</h4>
+                    <app-next-box class="nb" [showBackground]="false" [level]="capture.status.level" [type]="capture.nextPieceType"></app-next-box>
                 </div>
             </div>
         </div>
