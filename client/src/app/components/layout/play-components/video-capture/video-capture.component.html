@@ -8,7 +8,9 @@
 </div>
 
   
-<video #videoElement autoplay></video>
+<video #videoElement autoplay style="display: none;"></video>
+<canvas #canvasElement width="400" height="300"></canvas>
+
 
 <!-- Display permission error -->
 <div *ngIf="permissionError" class="error">{{ permissionError }}</div>
