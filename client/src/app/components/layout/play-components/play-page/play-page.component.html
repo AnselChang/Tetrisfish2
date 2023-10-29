@@ -9,9 +9,18 @@
             <div *ngIf="!this.panelCalibrateMode" class="subsection-container ls-right-column">
                 <div class="subsection" id="live-capture-panel">
                     <h3>Live Capture</h3>
+                    <app-checkbox label="Show bounding boxes" [(isChecked)]="this.showBoundingBoxes" />
+                    <app-checkbox label="Show mino indicators" [(isChecked)]="this.showMinoIndicators" />
+                    <app-button (onClick)="goToCalibratePanel()"><h4>Calibrate</h4></app-button>
+                    <app-button (onClick)="startRecording()"><h4>Start Recording</h4></app-button>
+
                 </div>
                 <div class="subsection" id="logging">
                     <h3>Log</h3>
+                    <h4 id="log-status" 
+                    [ngStyle]="{'color': logStatus.good ? 'green' : 'red'}"
+                      >Status: {{logStatus.message}}</h4>
+                    <app-log [logs]="logs"></app-log>
                 </div>
             </div>
         </div>

@@ -1,0 +1,24 @@
+@import "../../../../../styles.scss";
+
+:host {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.log-container {
+    margin: 1vw;
+    padding: 0.5vw;
+    background-color: $layer-3-color;
+    text-align: left;
+    border-radius: 10px;
+    flex: 1 1 auto;
+    overflow: scroll;
+}
+
+.log-message {
+    margin: 0;
+    padding: 3px;
+    text-wrap: wrap;
+}

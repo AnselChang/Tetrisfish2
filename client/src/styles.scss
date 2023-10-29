@@ -7,6 +7,7 @@ $layer-3-color: #504F52;
 $text-color: white;
 
 $main-font: 'Londrina Solid';
+$data-font: 'Spline Sans Mono';
 
 // remove all styling from links
 a {
@@ -19,8 +20,13 @@ a:hover, a:focus {
     text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6 {
     font-family: $main-font;
+    color: $text-color;
+}
+
+p {
+    font-family: $data-font;
     color: $text-color;
 }
 
@@ -40,6 +46,14 @@ h4 {
     font-size: 1.6vw;
 }
 
+h5 {
+    font-size: 1.4vw;
+}
+
+p {
+    font-size: 1.2vw;
+}
+
 @media (min-width: 1000px) {
     h1 {
         font-size: 51.4px;
@@ -52,5 +66,13 @@ h4 {
     }
     h4 {
         font-size: 16px;
+    }
+
+    h5 {
+        font-size: 14px;
+    }
+
+    p {
+        font-size: 12px;
     }
 }

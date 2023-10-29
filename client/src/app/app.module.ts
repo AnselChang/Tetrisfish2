@@ -23,6 +23,8 @@ import { MorePageComponent } from './components/layout/more-components/more-page
 import { PageButtonComponent } from './components/layout/more-components/page-button/page-button.component';
 import { BoardCreationPageComponent } from './components/layout/board-creation-components/board-creation-page/board-creation-page.component';
 import { NextBoxComponent } from './components/tetris/next-box/next-box.component';
+import { CheckboxComponent } from './components/BLOCK/checkbox/checkbox.component';
+import { LogComponent } from './components/layout/play-components/log/log.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,6 +47,8 @@ import { NextBoxComponent } from './components/tetris/next-box/next-box.componen
     PageButtonComponent,
     BoardCreationPageComponent,
     NextBoxComponent,
+    CheckboxComponent,
+    LogComponent,
   ],
   imports: [
     BrowserModule,
