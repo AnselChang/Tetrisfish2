@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import GameStatus from 'client/src/app/models/immutable-tetris-models/game-status';
 import BinaryGrid, { BlockType } from 'client/src/app/models/mutable-tetris-models/binary-grid';
 import { TetrominoType } from 'client/src/app/models/immutable-tetris-models/tetromino';
-import { CaptureDataService } from 'client/src/app/services/capture/capture-data.service';
+import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
+import { ExtractedState } from 'client/src/app/models/game-models/extracted-state';
+import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -32,7 +34,7 @@ export class PlayPageComponent {
   public logs: LogMessage[];
 
   constructor(
-    public captureDataService: CaptureDataService,
+    public extractedStateService: ExtractedStateService,
     private captureFrameService: CaptureFrameService
     ) {
     this.logs = [
@@ -52,8 +54,8 @@ export class PlayPageComponent {
     return this.panelMode === PanelMode.CALIBRATE;
   }
 
-  public get capture() {
-    return this.captureDataService.get();
+  public get extractedState() {
+    return this.extractedStateService.get();
   }
 
   public goToCalibratePanel() {

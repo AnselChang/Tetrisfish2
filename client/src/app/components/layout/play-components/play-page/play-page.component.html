@@ -38,27 +38,27 @@
 
             <div id="tetris-display">
                 <app-interactive-tetris-board
-                    [grid]="capture.grid"
-                    [level]="capture.status.level"
+                    [grid]="extractedState.grid"
+                    [level]="extractedState.status.level"
                 />
             </div>
 
             <div class="subsection-container" id="status-display">
                 <div class="subsection status-container" id="level-status">
                     <h4>Level</h4>
-                    <h2>{{capture.status.level}}</h2>
+                    <h2>{{extractedState.status.level}}</h2>
                 </div>
                 <div class="subsection status-container" id="lines-status">
                     <h4>Lines</h4>
-                    <h2>{{capture.status.lines}}</h2>
+                    <h2>{{extractedState.status.lines}}</h2>
                 </div>
                 <div class="subsection status-container" id="score-status">
                     <h4>Score</h4>
-                    <h2>{{capture.status.score}}</h2>
+                    <h2>{{extractedState.status.score}}</h2>
                 </div>
                 <div class="subsection" id="next-box">
                     <h4>Next box</h4>
-                    <app-next-box class="nb" [showBackground]="false" [level]="capture.status.level" [type]="capture.nextPieceType"></app-next-box>
+                    <app-next-box class="nb" [showBackground]="false" [level]="extractedState.status.level" [type]="extractedState.nextPieceType"></app-next-box>
                 </div>
             </div>
         </div>

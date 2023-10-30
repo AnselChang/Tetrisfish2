@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CaptureDataService } from './capture-data.service';
+import { CaptureSettingsService } from './capture-settings.service';
 
 describe('CaptureDataService', () => {
-  let service: CaptureDataService;
+  let service: CaptureSettingsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CaptureDataService);
+    service = TestBed.inject(CaptureSettingsService);
   });
 
   it('should be created', () => {

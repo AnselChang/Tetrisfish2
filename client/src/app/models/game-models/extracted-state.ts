@@ -7,7 +7,7 @@ import { TetrominoType } from "../immutable-tetris-models/tetromino";
 import BinaryGrid from "../mutable-tetris-models/binary-grid";
 
 
-export class GameCaptureState {
+export class ExtractedState {
 
     // if no capture, then all fields are set to default values
     public status: GameStatus = new GameStatus(0, 0, 0);

@@ -1,3 +1,5 @@
+import { Rectangle } from "../models/game-models/capture-settings";
+
 type Point = {
     x: number;
     y: number;
@@ -23,9 +25,12 @@ export class FloodFill {
         startX: number,
         startY: number,
         isSimilar: (colorA: [number, number, number], colorB: [number, number, number]) => boolean
-    ): boolean[][] {
+    ): void {
+
+        this.filled = Array.from({ length: this.height }, () => Array(this.width).fill(false));
+
         const startColor = image.getPixelAt(startX, startY);
-        if (!startColor) return this.filled;
+        if (!startColor) return;
     
         const stack: Point[] = [];
         stack.push({ x: startX, y: startY });
@@ -33,7 +38,7 @@ export class FloodFill {
         while (stack.length) {
             const { x, y } = stack.pop()!;
             const currentColor = image.getPixelAt(x, y);
-            
+
             if (
                 currentColor &&
                 !this.filled[y][x] &&
@@ -61,8 +66,42 @@ export class FloodFill {
                 }
             }
         }
+    }
 
+    public getFilled(): boolean[][] {
         return this.filled;
+    }
+
+    public getRect(): Rectangle | undefined {
+
+        const matrix = this.filled;
+
+        let minY = matrix.length;
+        let maxY = -1;
+        let minX = matrix[0]?.length || 0;
+        let maxX = -1;
+    
+        for (let y = 0; y < matrix.length; y++) {
+            for (let x = 0; x < matrix[y].length; x++) {
+                if (matrix[y][x]) {
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                }
+            }
+        }
+    
+        if (minY <= maxY && minX <= maxX) {
+            return {
+                top: minY,
+                bottom: maxY,
+                left: minX,
+                right: maxX
+            };
+        }
+    
+        return undefined; // No true values found in the matrix
     }
     
 }

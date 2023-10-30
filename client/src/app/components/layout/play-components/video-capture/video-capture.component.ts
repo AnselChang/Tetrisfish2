@@ -1,7 +1,9 @@
 // video-capture.component.ts
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
+import { Rectangle } from 'client/src/app/models/game-models/capture-settings';
 import { sleep } from 'client/src/app/scripts/sleep';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
+import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 
 enum VideoPauseStatus {
   PLAYING = "PLAYING",
@@ -28,7 +30,10 @@ export class VideoCaptureComponent implements OnInit {
 
   private mouseClickListener: Function | null = null;
 
-  constructor(public captureFrameService: CaptureFrameService, private renderer: Renderer2) {
+  constructor(
+    private captureSettingsService: CaptureSettingsService,
+    public captureFrameService: CaptureFrameService,
+    private renderer: Renderer2) {
 
     this.captureFrameService.mode$.subscribe(mode => {
       
@@ -150,21 +155,34 @@ export class VideoCaptureComponent implements OnInit {
 
     // draw floodfill if it exists
     if (this.captureFrameService.boardFloodfill) {
-      const floodfill = this.captureFrameService.boardFloodfill;
-      for (let y = 0; y < floodfill.length; y++) {
-        for (let x = 0; x < floodfill[y].length; x++) {
-          if (floodfill[y][x]) {
-            ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-            ctx.fillRect(x, y, 1, 1);
-          }
-        }
-      }
+      this.drawFloodFill(ctx, this.captureFrameService.boardFloodfill!);
+    }
+
+    // draw board rect if it exists
+    if (this.captureSettingsService.get().boardRect) {
+      this.drawBoardRect(ctx, this.captureSettingsService.get().boardRect!);
     }
 
     // Process the pixelData as needed
     //console.log(pixelData);
 
     requestAnimationFrame(this.readPixels.bind(this));
-}
+  }
+
+  private drawFloodFill(ctx: CanvasRenderingContext2D, floodfill: boolean[][]): void {
+    for (let y = 0; y < floodfill.length; y++) {
+      for (let x = 0; x < floodfill[y].length; x++) {
+        if (floodfill[y][x]) {
+          ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+  }
+
+  private drawBoardRect(ctx: CanvasRenderingContext2D, boardRect: Rectangle): void {
+    ctx.strokeStyle = "rgba(0, 255, 0, 0.5)";
+    ctx.strokeRect(boardRect.left, boardRect.top, boardRect.right - boardRect.left, boardRect.bottom - boardRect.top);
+  }
 
 }

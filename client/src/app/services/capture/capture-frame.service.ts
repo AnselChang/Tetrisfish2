@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FloodFill, FloodFillImage } from '../../scripts/floodfill';
+import { Rectangle } from '../../models/game-models/capture-settings';
+import { CaptureSettingsService } from './capture-settings.service';
 
 export enum CaptureMode {
   NORMAL = "NORMAL",
@@ -20,7 +22,7 @@ export class CaptureFrameService implements FloodFillImage {
 
   public boardFloodfill?: boolean[][];
 
-  constructor() { }
+  constructor(private captureSettingsService: CaptureSettingsService) { }
 
   public hasFrame(): boolean {
     return this.frame !== undefined && this.width !== undefined && this.height !== undefined;
@@ -78,7 +80,11 @@ export class CaptureFrameService implements FloodFillImage {
     console.log("Clicked at", x, y, color);
 
     const floodfill = new FloodFill(this.width!, this.height!);
-    this.boardFloodfill = floodfill.floodfill(this, x, y, this.floodfillCondition.bind(this));
+    floodfill.floodfill(this, x, y, this.floodfillCondition.bind(this));
+
+    this.boardFloodfill = floodfill.getFilled();
+    this.captureSettingsService.get().boardRect = floodfill.getRect();
+
 
 
     // reset to normal mode
