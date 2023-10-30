@@ -69,7 +69,6 @@ export class PlayPageComponent {
   public determineBoundingBoxes(event: MouseEvent) {
     if (this.captureFrameService.hasFrame()) {
       event.stopPropagation();
-      this.captureFrameService.resetFloodFill();
       this.captureFrameService.mode$.next(CaptureMode.CLICK_ON_BOARD);
     }
   }

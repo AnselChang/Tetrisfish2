@@ -69,10 +69,6 @@ export class CaptureFrameService implements FloodFillImage {
       Math.abs(colorA[2] - colorB[2]) < 10;
   }
 
-  public resetFloodFill(): void {
-    this.boardFloodfill = undefined;
-  }
-
   public clickAt(x: number, y: number): void {
 
     // get pixel color

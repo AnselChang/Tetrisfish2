@@ -61,7 +61,7 @@ export class VideoCaptureComponent implements OnInit {
 
   public onMouseClick(): void {
 
-    if (this.captureFrameService.mode$.getValue() === CaptureMode.CLICK_ON_BOARD) {
+    if (this.isMouseOnVideo && this.captureFrameService.mode$.getValue() === CaptureMode.CLICK_ON_BOARD) {
       this.captureFrameService.clickAt(Math.floor(this.mouseX), Math.floor(this.mouseY));
     } else {
       this.captureFrameService.resetCaptureMode();
