@@ -80,6 +80,7 @@ export class CaptureFrameService implements FloodFillImage {
 
     this.boardFloodfill = floodfill.getFilled();
     this.captureSettingsService.get().boardRect = floodfill.getRect();
+    console.log(floodfill.getRect());
 
 
 

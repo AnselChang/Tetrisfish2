@@ -132,7 +132,7 @@ export class VideoCaptureComponent implements OnInit {
   async screenCapture(): Promise<void> {
 
     try {
-      
+
       const mediaStream = await navigator.mediaDevices.getDisplayMedia({
         video: true
       });
@@ -185,7 +185,7 @@ export class VideoCaptureComponent implements OnInit {
 
     // draw board rect if it exists
     if (this.captureSettingsService.get().boardRect) {
-      this.drawBoardRect(ctx, this.captureSettingsService.get().boardRect!);
+      this.drawRect(ctx, this.captureSettingsService.get().boardRect!, "rgb(0, 255, 0)");
     }
 
     // Process the pixelData as needed
@@ -205,9 +205,17 @@ export class VideoCaptureComponent implements OnInit {
     }
   }
 
-  private drawBoardRect(ctx: CanvasRenderingContext2D, boardRect: Rectangle): void {
-    ctx.strokeStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.strokeRect(boardRect.left, boardRect.top, boardRect.right - boardRect.left, boardRect.bottom - boardRect.top);
+  private drawRect(ctx: CanvasRenderingContext2D, boardRect: Rectangle, color: string): void {
+    ctx.strokeStyle = color;
+
+    // draw border so that the border is outside the rect
+    const BORDER_WIDTH = 2;
+    ctx.lineWidth = BORDER_WIDTH;
+    ctx.strokeRect(
+      boardRect.left - BORDER_WIDTH,
+      boardRect.top - BORDER_WIDTH,
+      boardRect.right - boardRect.left + BORDER_WIDTH*2,
+      boardRect.bottom - boardRect.top + BORDER_WIDTH*2);
   }
 
 }
