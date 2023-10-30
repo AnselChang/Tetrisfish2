@@ -9,6 +9,13 @@ minos
 import { Rectangle } from "./capture-settings";
 import { PixelReader } from "./pixel-reader";
 
+// the result of the OCRBox evaluation
+// matrix[y][x]
+export class OCRMatrix {
+    constructor(private matrix: number[][][]) {} // a 2D matrix of colors
+
+}
+
 export class OCRBox {
 
     constructor(
@@ -22,8 +29,30 @@ export class OCRBox {
     ) {}
 
     // given an image, return [numRows x numCols] array of RGB values
-    public evaluate(image: PixelReader): number[][][] {
-        return [];
+    public evaluate(image: PixelReader): OCRMatrix {
+        
+        let matrix: number[][][] = [];
+
+        let height = image.getHeight() * (1 - this.paddingTop - this.paddingBottom);
+        let startY = image.getHeight() * this.paddingTop;
+
+        let width = image.getWidth() * (1 - this.paddingLeft - this.paddingRight);
+        let startX = image.getWidth() * this.paddingLeft;
+
+        for (let yIndex = 0; yIndex <= this.numRows; yIndex++) {
+            let row: number[][] = [];
+
+            const y = startY + height * (yIndex / this.numRows);
+
+            for (let xIndex = 0; xIndex <= this.numCols; xIndex++) {
+                const x = startX + width * (xIndex / this.numCols);
+                const color = image.getPixelAt(x, y)!;
+                row.push(color);
+            }
+            matrix.push(row);
+        }
+
+        return new OCRMatrix(matrix);
     }
 
 }

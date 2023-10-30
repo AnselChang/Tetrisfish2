@@ -1,6 +1,7 @@
 /*
 Represents the 10x20 grid of blocks. 
 Binary because it only stores whether a block is filled or not, not any other information.
+grid[y][x]
 */
 
 export enum BlockType {
