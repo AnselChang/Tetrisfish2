@@ -7,15 +7,15 @@ import { ColorService } from 'client/src/app/services/color.service';
   styleUrls: ['./button.component.scss']
 })
 export class ButtonComponent implements AfterViewInit, OnChanges {
-  @Output() onClick = new EventEmitter<void>();
+  @Output() onClick = new EventEmitter<MouseEvent>();
   @Input() color: string = '#5865F2';
   @Input() expandToFitWidth: boolean = false;
 
   constructor(private colorService: ColorService, private el: ElementRef, private renderer: Renderer2) {
   }
 
-  public _onClick(): void {
-    this.onClick.emit();
+  public _onClick(event: MouseEvent): void {
+    this.onClick.emit(event);
   }
 
   private updateCSS() {

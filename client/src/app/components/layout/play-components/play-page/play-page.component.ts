@@ -3,6 +3,7 @@ import GameStatus from 'client/src/app/models/immutable-tetris-models/game-statu
 import BinaryGrid, { BlockType } from 'client/src/app/models/mutable-tetris-models/binary-grid';
 import { TetrominoType } from 'client/src/app/models/immutable-tetris-models/tetromino';
 import { CaptureDataService } from 'client/src/app/services/capture/capture-data.service';
+import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -30,7 +31,10 @@ export class PlayPageComponent {
   public logStatus: LogMessage = new LogMessage("Not recording", false);
   public logs: LogMessage[];
 
-  constructor(public captureDataService: CaptureDataService) {
+  constructor(
+    public captureDataService: CaptureDataService,
+    private captureFrameService: CaptureFrameService
+    ) {
     this.logs = [
       new LogMessage("Messagasfdsfsda fsdfasdfasdfe 1", true),
       new LogMessage("Messaasdf sdffge 2", false),
@@ -60,8 +64,12 @@ export class PlayPageComponent {
     this.panelMode = PanelMode.PLAY;
   }
 
-  public determineBoundingBoxes() {
-    
+  public determineBoundingBoxes(event: MouseEvent) {
+    if (this.captureFrameService.hasFrame()) {
+      event.stopPropagation();
+      this.captureFrameService.resetFloodFill();
+      this.captureFrameService.mode$.next(CaptureMode.CLICK_ON_BOARD);
+    }
   }
 
   public startRecording() {

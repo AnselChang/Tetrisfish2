@@ -9,7 +9,7 @@
                     <h3>Calibration</h3>
                     <div></div>
                 </div>
-                <app-button (onClick)="determineBoundingBoxes()"><h4>Determine bounding boxes</h4></app-button>
+                <app-button (onClick)="determineBoundingBoxes($event)"><h4>Determine bounding boxes</h4></app-button>
                 
             </div>
             <div *ngIf="!this.panelCalibrateMode" class="subsection-container ls-right-column">

@@ -5,11 +5,16 @@
         </option>
     </select>
     <button (click)="generateVideoDevicesList()">Refresh</button>
+    <button (click)="togglePause()">{{isPaused() ? "Resume" : "Pause"}}</button>
 </div>
 
   
 <video #videoElement autoplay style="display: none;"></video>
-<canvas #canvasElement width="400" height="300"></canvas>
+<canvas #canvasElement
+[ngStyle]="{'border' : (isCaptureModeNormal() ? '1px solid #ccc' : '3px solid green')}"
+(mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
+(mousemove)="onMouseMove($event)"
+width="400" height="300"></canvas>
 
 
 <!-- Display permission error -->
