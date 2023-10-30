@@ -111,33 +111,58 @@ export class VideoCaptureComponent implements OnInit {
     });
   }
 
-  onDeviceChange(): void {
-    this.startVideo();
-  }
+  async onDeviceChange() {
 
-  startVideo(): void {
     if (this.selectedDevice) {
-      navigator.mediaDevices.getUserMedia({
+
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           deviceId: this.selectedDevice.deviceId
         }
-      }).then(stream => {
-
-        this.videoElement.nativeElement.srcObject = stream;
-        this.permissionError = null; // Clear any previous error
-
-        // Start reading the pixels
-        this.status = VideoPauseStatus.PLAYING;
-        this.readPixels();
-
-      }).catch(err => {
-        this.permissionError = "Error accessing video device. Please ensure permissions are granted.";
-        console.error("Error accessing video device:", err);
       });
+      
+      await this.startVideo(mediaStream);
+      
     } else {
-      // If no device is selected, clear the video element
-      this.videoElement.nativeElement.srcObject = null;
+      this.stopVideo();
     }
+
+  }
+
+  async screenCapture(): Promise<void> {
+
+    try {
+      
+      const mediaStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true
+      });
+      
+      this.startVideo(mediaStream);
+
+    } catch (error) {
+      console.error('Error capturing screen:', error);
+    }
+  }
+
+  async startVideo(mediaStream: MediaStream) {
+    
+    try {
+      this.videoElement.nativeElement.srcObject = mediaStream;
+      this.permissionError = null; // Clear any previous error
+
+      // Start reading the pixels
+      this.status = VideoPauseStatus.PLAYING;
+      this.readPixels();
+
+    } catch (err) {
+
+      this.permissionError = "Error accessing video device. Please ensure permissions are granted.";
+      console.error("Error accessing video device:", err);
+    };
+  }
+
+  stopVideo() {
+    this.videoElement.nativeElement.srcObject = null;
   }
 
   readPixels(): void {
