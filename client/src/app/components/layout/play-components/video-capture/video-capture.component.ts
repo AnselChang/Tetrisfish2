@@ -27,6 +27,7 @@ export class VideoCaptureComponent implements OnInit {
     navigator.mediaDevices.enumerateDevices().then(devices => {
       this.videoDevices = devices.filter(device => device.kind === 'videoinput');
       this.videoDevices.unshift(null); // Add a null option to the beginning of the list
+      console.log("Video devices:", this.videoDevices);
     });
   }
 
@@ -41,8 +42,6 @@ export class VideoCaptureComponent implements OnInit {
           deviceId: this.selectedDevice.deviceId
         }
       }).then(stream => {
-
-        console.log(stream.getVideoTracks());
 
         this.videoElement.nativeElement.srcObject = stream;
         this.permissionError = null; // Clear any previous error
@@ -64,8 +63,6 @@ export class VideoCaptureComponent implements OnInit {
     const canvas = this.canvasElement.nativeElement;
     const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
 
-    console.log(this.videoElement.nativeElement);
-
     // Draw the video frame onto the canvas
     ctx.drawImage(this.videoElement.nativeElement, 0, 0, canvas.width, canvas.height);
 
@@ -74,13 +71,13 @@ export class VideoCaptureComponent implements OnInit {
     const pixelData = imageData.data;
 
     // Process the pixelData as needed
-    
+    console.log(pixelData);
 
     // Continue reading the pixel data
-    // sleep(500).then(() => {
-    //   requestAnimationFrame(this.readPixels.bind(this));
-    // });
-    requestAnimationFrame(this.readPixels.bind(this));
+    sleep(100).then(() => {
+      requestAnimationFrame(this.readPixels.bind(this));
+    });
+    //requestAnimationFrame(this.readPixels.bind(this));
 }
 
 }

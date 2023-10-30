@@ -36,6 +36,23 @@ section {
     border-radius: 10px;
     background-color: $layer-2-color;
     margin: 0.5vw;
+    padding: 1vw;
+}
+
+.calibration-title {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* This creates 3 equal columns */
+    align-items: center;
+}
+
+.calibration-title-back {
+    margin: 0;
+    padding: 0;
+}
+
+.calibration-title-back > h4 {
+    margin: 0.1vw;
+    padding: 0;
 }
 
 #live-capture-panel {

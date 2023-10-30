@@ -4,7 +4,13 @@
         <div class="section-content" id="live-source-content">
             <app-video-capture class="ls-left-column" />
             <div *ngIf="this.panelCalibrateMode" class="subsection ls-right-column" id="calibrate-panel">
-                <h3>Calibration</h3>
+                <div class="calibration-title">
+                    <app-button class = "calibration-title-back" (onClick)="exitCalibratePanel()"><h4>Back</h4></app-button>
+                    <h3>Calibration</h3>
+                    <div></div>
+                </div>
+                <app-button (onClick)="determineBoundingBoxes()"><h4>Determine bounding boxes</h4></app-button>
+                
             </div>
             <div *ngIf="!this.panelCalibrateMode" class="subsection-container ls-right-column">
                 <div class="subsection" id="live-capture-panel">

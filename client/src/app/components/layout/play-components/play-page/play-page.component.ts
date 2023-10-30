@@ -56,6 +56,14 @@ export class PlayPageComponent {
     this.panelMode = PanelMode.CALIBRATE;
   }
 
+  public exitCalibratePanel() {
+    this.panelMode = PanelMode.PLAY;
+  }
+
+  public determineBoundingBoxes() {
+    
+  }
+
   public startRecording() {
 
   }
