@@ -1,13 +1,10 @@
 import { Rectangle } from "../models/game-models/capture-settings";
+import { PixelReader } from "../models/game-models/pixel-reader";
 
 type Point = {
     x: number;
     y: number;
 };
-
-export interface FloodFillImage {
-    getPixelAt(x: number, y: number): [number, number, number] | undefined;
-}
 
 export class FloodFill {
     private width: number;
@@ -21,7 +18,7 @@ export class FloodFill {
     }
 
     public floodfill(
-        image: FloodFillImage,
+        image: PixelReader,
         startX: number,
         startY: number,
         isSimilar: (colorA: [number, number, number], colorB: [number, number, number]) => boolean

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FloodFill, FloodFillImage } from '../../scripts/floodfill';
+import { FloodFill } from '../../scripts/floodfill';
 import { Rectangle } from '../../models/game-models/capture-settings';
 import { CaptureSettingsService } from './capture-settings.service';
+import { PixelReader } from '../../models/game-models/pixel-reader';
 
 export enum CaptureMode {
   NORMAL = "NORMAL",
@@ -12,7 +13,7 @@ export enum CaptureMode {
 @Injectable({
   providedIn: 'root'
 })
-export class CaptureFrameService implements FloodFillImage {
+export class CaptureFrameService implements PixelReader {
 
   public mode$ = new BehaviorSubject<CaptureMode>(CaptureMode.NORMAL);
 
