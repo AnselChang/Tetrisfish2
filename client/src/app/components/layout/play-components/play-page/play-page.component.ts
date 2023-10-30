@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import GameStatus from 'client/src/app/models/immutable-tetris-models/game-status';
-import BinaryGrid, { BlockType } from 'client/src/app/models/mutable-tetris-models/binary-grid';
-import { TetrominoType } from 'client/src/app/models/immutable-tetris-models/tetromino';
+import GameStatus from 'client/src/app/models/tetromino-models/game-status';
+import BinaryGrid, { BlockType } from 'client/src/app/models/game-models/binary-grid';
+import { TetrominoType } from 'client/src/app/models/tetromino-models/tetromino';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
-import { ExtractedState } from 'client/src/app/models/game-models/extracted-state';
+import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
 
 enum PanelMode {

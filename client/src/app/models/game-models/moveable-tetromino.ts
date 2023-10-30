@@ -5,8 +5,8 @@ other blocks.
 */
 
 import BinaryGrid, { BlockType } from "./binary-grid";
-import { BlockSet } from "../immutable-tetris-models/block";
-import { Tetromino, TetrominoType } from "../immutable-tetris-models/tetromino";
+import { BlockSet } from "../tetromino-models/block";
+import { Tetromino, TetrominoType } from "../tetromino-models/tetromino";
 
 export default class MoveableTetromino {
 

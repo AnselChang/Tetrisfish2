@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ExtractedState } from '../../models/game-models/extracted-state';
+import { ExtractedState } from '../../models/capture-models/extracted-state';
 
 @Injectable({
   providedIn: 'root'

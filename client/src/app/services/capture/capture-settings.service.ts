@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CaptureSettings } from '../../models/game-models/capture-settings';
+import { CaptureSettings } from '../../models/capture-models/capture-settings';
 
 /*
 Stores the board data as it is captured and send to server

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Host, HostListener, Input, OnInit, Output } from '@angular/core';
-import BinaryGrid, { BlockType } from '../../../models/mutable-tetris-models/binary-grid';
-import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from '../../../models/immutable-tetris-models/tetromino';
+import BinaryGrid, { BlockType } from '../../../models/game-models/binary-grid';
+import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from '../../../models/tetromino-models/tetromino';
 import { Block } from 'blockly';
 import { PADDING_Y } from 'core/dropdowndiv';
-import MoveableTetromino from 'client/src/app/models/mutable-tetris-models/moveable-tetromino';
+import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 
 /*
 An interactable tetris board.

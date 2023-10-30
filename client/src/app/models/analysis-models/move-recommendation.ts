@@ -1,4 +1,4 @@
-import MoveableTetromino from "../mutable-tetris-models/moveable-tetromino";
+import MoveableTetromino from "../game-models/moveable-tetromino";
 
 // A representation of one of SR's top 5 moves for a given position
 export class MoveRecommendation {

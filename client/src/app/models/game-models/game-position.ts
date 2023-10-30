@@ -4,10 +4,10 @@ the board, the placement, and the current/next pieces
 Useful for analysis, puzzle generation, etc.
 */
 
-import GameStatus from "../immutable-tetris-models/game-status";
-import { TetrominoType } from "../immutable-tetris-models/tetromino";
-import BinaryGrid from "../mutable-tetris-models/binary-grid";
-import MoveableTetromino from "../mutable-tetris-models/moveable-tetromino";
+import GameStatus from "../tetromino-models/game-status";
+import { TetrominoType } from "../tetromino-models/tetromino";
+import BinaryGrid from "./binary-grid";
+import MoveableTetromino from "./moveable-tetromino";
 
 export class GamePosition {
 

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FloodFill } from '../../scripts/floodfill';
-import { Rectangle } from '../../models/game-models/capture-settings';
+import { Rectangle } from '../../models/capture-models/capture-settings';
 import { CaptureSettingsService } from './capture-settings.service';
-import { PixelReader } from '../../models/game-models/pixel-reader';
+import { PixelReader } from '../../models/capture-models/pixel-reader';
+import { BoardOCRBox } from '../../models/capture-models/ocr-box';
 
 export enum CaptureMode {
   NORMAL = "NORMAL",
@@ -70,7 +71,8 @@ export class CaptureFrameService implements PixelReader {
       Math.abs(colorA[2] - colorB[2]) < 10;
   }
 
-  public clickAt(x: number, y: number): void {
+  // run floodfill at given canvas location to determine board bounding box
+  public floodfillBoard(x: number, y: number): void {
 
     // get pixel color
     const color = this.getPixelAt(x, y);
@@ -80,10 +82,9 @@ export class CaptureFrameService implements PixelReader {
     floodfill.floodfill(this, x, y, this.floodfillCondition.bind(this));
 
     this.boardFloodfill = floodfill.getFilled();
-    this.captureSettingsService.get().boardRect = floodfill.getRect();
-    console.log(floodfill.getRect());
-
-
+    this.captureSettingsService.get().setBoardBoundingRect(floodfill.getRect()!);
+    console.log("RECT:", floodfill.getRect());
+    console.log(this.captureSettingsService.get().getBoardPositions());
 
     // reset to normal mode
     this.resetCaptureMode();

@@ -1,5 +1,5 @@
 import { Block } from "blockly";
-import BinaryGrid, { BlockType } from "../../models/mutable-tetris-models/binary-grid";
+import BinaryGrid, { BlockType } from "../../models/game-models/binary-grid";
 import { GamePosition } from "../../models/game-models/game-position";
 
 class StandardParams {

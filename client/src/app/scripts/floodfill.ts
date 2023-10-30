@@ -1,10 +1,6 @@
-import { Rectangle } from "../models/game-models/capture-settings";
-import { PixelReader } from "../models/game-models/pixel-reader";
-
-type Point = {
-    x: number;
-    y: number;
-};
+import { Rectangle } from "../models/capture-models/capture-settings";
+import { PixelReader } from "../models/capture-models/pixel-reader";
+import { Point } from "../models/capture-models/point";
 
 export class FloodFill {
     private width: number;

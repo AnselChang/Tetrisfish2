@@ -3,8 +3,8 @@ import { GamePosition } from '../../models/game-models/game-position';
 import { EngineMovelistURL, generateStandardParamsForPosition } from './stack-rabbit-api';
 import { Method, fetchServer } from '../../scripts/fetch-server';
 import { MoveRecommendation } from '../../models/analysis-models/move-recommendation';
-import { TetrominoType } from '../../models/immutable-tetris-models/tetromino';
-import MoveableTetromino from '../../models/mutable-tetris-models/moveable-tetromino';
+import { TetrominoType } from '../../models/tetromino-models/tetromino';
+import MoveableTetromino from '../../models/game-models/moveable-tetromino';
 
 @Injectable({
   providedIn: 'root'

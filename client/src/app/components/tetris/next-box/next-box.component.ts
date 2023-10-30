@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { BlockPosition, BlockSet } from 'client/src/app/models/immutable-tetris-models/block';
-import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from 'client/src/app/models/immutable-tetris-models/tetromino';
+import { BlockPosition, BlockSet } from 'client/src/app/models/tetromino-models/block';
+import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from 'client/src/app/models/tetromino-models/tetromino';
 import { BlockData, TetrisBoardMode } from '../interactive-tetris-board/interactive-tetris-board.component';
 import { Block } from 'blockly';
 

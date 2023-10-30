@@ -1,6 +1,7 @@
 // video-capture.component.ts
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
-import { Rectangle } from 'client/src/app/models/game-models/capture-settings';
+import { Rectangle } from 'client/src/app/models/capture-models/capture-settings';
+import { Point } from 'client/src/app/models/capture-models/point';
 import { sleep } from 'client/src/app/scripts/sleep';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
@@ -62,7 +63,7 @@ export class VideoCaptureComponent implements OnInit {
   public onMouseClick(): void {
 
     if (this.isMouseOnVideo && this.captureFrameService.mode$.getValue() === CaptureMode.CLICK_ON_BOARD) {
-      this.captureFrameService.clickAt(Math.floor(this.mouseX), Math.floor(this.mouseY));
+      this.captureFrameService.floodfillBoard(Math.floor(this.mouseX), Math.floor(this.mouseY));
     } else {
       this.captureFrameService.resetCaptureMode();
     }
@@ -179,13 +180,20 @@ export class VideoCaptureComponent implements OnInit {
     this.captureFrameService.setFrame(pixelData, canvas.width, canvas.height);
 
     // draw floodfill if it exists
-    if (this.captureFrameService.boardFloodfill) {
-      this.drawFloodFill(ctx, this.captureFrameService.boardFloodfill!);
+    const floodfill = this.captureFrameService.boardFloodfill;
+    if (floodfill) {
+      this.drawFloodFill(ctx, floodfill!);
     }
 
     // draw board rect if it exists
-    if (this.captureSettingsService.get().boardRect) {
-      this.drawRect(ctx, this.captureSettingsService.get().boardRect!, "rgb(0, 255, 0)");
+    const boundingRect = this.captureSettingsService.get().getBoardBoundingRect();
+    if (boundingRect) {
+      this.drawRect(ctx, boundingRect!, "rgb(0, 255, 0)");
+    }
+
+    const boardOCRPositions = this.captureSettingsService.get().getBoardPositions();
+    if (boardOCRPositions) {
+      this.drawOCRPositions(ctx, boardOCRPositions);
     }
 
     // Process the pixelData as needed
@@ -205,6 +213,7 @@ export class VideoCaptureComponent implements OnInit {
     }
   }
 
+  // draw a rectangle given a rectangle, with border just outside of rectangle bounds
   private drawRect(ctx: CanvasRenderingContext2D, boardRect: Rectangle, color: string): void {
     ctx.strokeStyle = color;
 
@@ -216,6 +225,39 @@ export class VideoCaptureComponent implements OnInit {
       boardRect.top - BORDER_WIDTH,
       boardRect.right - boardRect.left + BORDER_WIDTH*2,
       boardRect.bottom - boardRect.top + BORDER_WIDTH*2);
+  }
+
+  // draw a dot for each OCR position
+  private drawOCRPositions(ctx: CanvasRenderingContext2D, positions: Point[][]) {
+    for (let i = 0; i < positions.length; i++) {
+      for (let j = 0; j < positions[i].length; j++) {
+        const {x,y} = positions[i][j];
+        this.drawCircle(ctx, x, y, 2, "green");
+      }
+    }
+  }
+
+  // example: drawCircle(ctx, 50, 50, 25, 'black', 'red', 2)
+  private drawCircle(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    radius: number,
+    fill?: string | CanvasGradient | CanvasPattern,
+    stroke?: string | CanvasGradient | CanvasPattern,
+    strokeWidth?: number
+  ): void {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+    if (fill) {
+      ctx.fillStyle = fill;
+      ctx.fill();
+    }
+    if (stroke) {
+      ctx.lineWidth = strokeWidth || 1; // Default to 1 if strokeWidth is not provided
+      ctx.strokeStyle = stroke;
+      ctx.stroke();
+    }
   }
 
 }

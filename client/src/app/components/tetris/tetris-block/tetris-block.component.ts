@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { BlockData, TetrisBoardMode } from '../interactive-tetris-board/interactive-tetris-board.component';
 import { block } from 'core/tooltip';
-import { TetrominoColorType, getColorForLevel, getColorForTetrominoAndLevel } from 'client/src/app/models/immutable-tetris-models/tetromino';
+import { TetrominoColorType, getColorForLevel, getColorForTetrominoAndLevel } from 'client/src/app/models/tetromino-models/tetromino';
 
 enum BlockFillType {
   SOLID = "SOLID",
