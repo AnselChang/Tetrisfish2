@@ -1,7 +1,9 @@
 // video-capture.component.ts
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { Rectangle } from 'client/src/app/models/capture-models/capture-settings';
+import { BoardOCRBox } from 'client/src/app/models/capture-models/ocr-box';
 import { Point } from 'client/src/app/models/capture-models/point';
+import { hsvToRgb } from 'client/src/app/scripts/color';
 import { sleep } from 'client/src/app/scripts/sleep';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
@@ -153,7 +155,7 @@ export class VideoCaptureComponent implements OnInit {
 
       // Start reading the pixels
       this.status = VideoPauseStatus.PLAYING;
-      this.readPixels();
+      this.executeFrame();
 
     } catch (err) {
 
@@ -166,10 +168,14 @@ export class VideoCaptureComponent implements OnInit {
     this.videoElement.nativeElement.srcObject = null;
   }
 
-  readPixels(): void {
+  executeFrame(): void {
+
+    /* 
+    STEP 1: Obtain the video frame
+    */
+
     const canvas = this.canvasElement.nativeElement;
     const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
-
     
     // Draw the video frame onto the canvas
     ctx.drawImage(this.videoElement.nativeElement, 0, 0, canvas.width, canvas.height);
@@ -179,9 +185,20 @@ export class VideoCaptureComponent implements OnInit {
     const pixelData = imageData.data;
     this.captureFrameService.setFrame(pixelData, canvas.width, canvas.height);
 
+    /*
+    STEP 2: Process the data for the individual frame
+    */
+
+    // Extract colors for each OCR position for this frame
+    this.captureSettingsService.get().getBoard()?.evaluate(this.captureFrameService);
+
+    /*
+     STEP 3: Draw all overlays
+    */
+
     // draw floodfill if it exists
     const floodfill = this.captureFrameService.boardFloodfill;
-    if (floodfill) {
+    if (false && floodfill) {
       this.drawFloodFill(ctx, floodfill!);
     }
 
@@ -191,15 +208,12 @@ export class VideoCaptureComponent implements OnInit {
       this.drawRect(ctx, boundingRect!, "rgb(0, 255, 0)");
     }
 
-    const boardOCRPositions = this.captureSettingsService.get().getBoardPositions();
-    if (boardOCRPositions) {
-      this.drawOCRPositions(ctx, boardOCRPositions);
+    const board = this.captureSettingsService.get().getBoard();
+    if (board && board.getGrid()) {
+      this.drawOCRPositions(ctx, board!);
     }
 
-    // Process the pixelData as needed
-    //console.log(pixelData);
-
-    requestAnimationFrame(this.readPixels.bind(this));
+    requestAnimationFrame(this.executeFrame.bind(this));
   }
 
   private drawFloodFill(ctx: CanvasRenderingContext2D, floodfill: boolean[][]): void {
@@ -228,11 +242,17 @@ export class VideoCaptureComponent implements OnInit {
   }
 
   // draw a dot for each OCR position
-  private drawOCRPositions(ctx: CanvasRenderingContext2D, positions: Point[][]) {
-    for (let i = 0; i < positions.length; i++) {
-      for (let j = 0; j < positions[i].length; j++) {
-        const {x,y} = positions[i][j];
-        this.drawCircle(ctx, x, y, 2, "green");
+  private drawOCRPositions(ctx: CanvasRenderingContext2D, board: BoardOCRBox) {
+
+    const positions = board.getPositions();
+    const grid = board.getGrid();
+
+    for (let yIndex = 0; yIndex < positions.length; yIndex++) {
+      for (let xIndex = 0; xIndex < positions[yIndex].length; xIndex++) {
+        const {x,y} = positions[yIndex][xIndex];
+        const isMino = grid?.at(xIndex+1, yIndex+1);
+        const color = isMino ? "rgb(0,255,0)" : "rgb(255,0,0)";
+        this.drawCircle(ctx, x, y, 2, color);
       }
     }
   }

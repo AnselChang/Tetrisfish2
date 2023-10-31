@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import BinaryGrid from '../models/game-models/binary-grid';
-import { TetrominoType } from '../models/tetromino-models/tetromino';
+import { TetrominoType } from '../models/tetronimo-models/tetromino';
+import BinaryGrid from '../models/tetronimo-models/binary-grid';
 
 @Injectable({
   providedIn: 'root'

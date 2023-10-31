@@ -1,6 +1,6 @@
 import { Block } from "blockly";
-import BinaryGrid, { BlockType } from "../../models/game-models/binary-grid";
 import { GamePosition } from "../../models/game-models/game-position";
+import BinaryGrid, { BlockType } from "../../models/tetronimo-models/binary-grid";
 
 class StandardParams {
     constructor(

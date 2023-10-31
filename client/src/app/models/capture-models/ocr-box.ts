@@ -6,17 +6,11 @@ For example, the ocr box for the main board should store relative positions of t
 minos
 */
 
-import { HSVColor, rgb2hsv } from "../../scripts/color";
-import { Rectangle } from "./capture-settings";
+import { HSVColor, rgbToHsv } from "../../scripts/color";
+import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
+import { CaptureSettings, Rectangle } from "./capture-settings";
 import { PixelReader } from "./pixel-reader";
 import { Point } from "./point";
-
-// the result of the OCRBox evaluation
-// matrix[y][x]
-export class OCRMatrix {
-    constructor(private matrix: HSVColor[][]) {} // a 2D matrix of colors
-
-}
 
 
 export class OCRBox {
@@ -25,8 +19,10 @@ export class OCRBox {
     // each position is (x,y)
     // pos[y][x]
     private positions: Point[][];
+    private grid?: BinaryGrid;
 
     constructor(
+        private settings: CaptureSettings,
         public boundingRect: Rectangle,
         public numRows: number, // how many OCR dots to read vertically
         public paddingTop: number, // distance (in percent of height) before first OCR dot row
@@ -61,23 +57,25 @@ export class OCRBox {
     }
 
     // given an image, return [numRows x numCols] array of RGB values
-    public evaluate(image: PixelReader): OCRMatrix {
+    public evaluate(image: PixelReader): BinaryGrid {
         
-        let matrix: HSVColor[][] = [];
+        let blocks: BlockType[][] = [];
 
-        for (let yIndex = 0; yIndex <= this.numRows; yIndex++) {
-            let row: HSVColor[] = [];
+        for (let yIndex = 0; yIndex < this.numRows; yIndex++) {
+            let row: BlockType[] = [];
 
-            for (let xIndex = 0; xIndex <= this.numCols; xIndex++) {
-                const {x, y} = this.positions[yIndex][xIndex];
+            for (let xIndex = 0; xIndex < this.numCols; xIndex++) {
+                const {x, y} = this.positions[yIndex][xIndex]; // ERROR
                 const [r, g, b] = image.getPixelAt(x, y)!;
-                const hsv = rgb2hsv(r,g,b);
-                row.push(hsv);
+                const hsv = rgbToHsv(r,g,b);
+                const isMino = hsv.v >= this.settings.threshold;
+                row.push(isMino ? BlockType.FILLED : BlockType.EMPTY);
             }
-            matrix.push(row);
+            blocks.push(row);
         }
 
-        return new OCRMatrix(matrix);
+        this.grid = new BinaryGrid(blocks);
+        return this.grid;
     }
 
     // returns the canvas positions of all the OCR points
@@ -89,17 +87,21 @@ export class OCRBox {
         return this.boundingRect;
     }
 
+    public getGrid(): BinaryGrid | undefined {
+        return this.grid;
+    }
+
 }
 
 export class BoardOCRBox extends OCRBox {
 
-    constructor(boundingRect: Rectangle) {
+    constructor(settings: CaptureSettings, boundingRect: Rectangle) {
 
         // main board is 20 rows, 10 columns
         // TUNE THESE VALUES
-        super(boundingRect,
-            20, 0.03, 0.035, // numRows, paddingTop, paddingBottom
-            10, 0.05, 0.04 // numCols, paddingLeft, paddingRight
+        super(settings, boundingRect,
+            20, 0.03, 0.032, // numRows, paddingTop, paddingBottom
+            10, 0.05, 0.035 // numCols, paddingLeft, paddingRight
         );
     }
 

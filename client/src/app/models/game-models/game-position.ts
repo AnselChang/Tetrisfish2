@@ -4,9 +4,9 @@ the board, the placement, and the current/next pieces
 Useful for analysis, puzzle generation, etc.
 */
 
-import GameStatus from "../tetromino-models/game-status";
-import { TetrominoType } from "../tetromino-models/tetromino";
-import BinaryGrid from "./binary-grid";
+import GameStatus from "../tetronimo-models/game-status";
+import { TetrominoType } from "../tetronimo-models/tetromino";
+import BinaryGrid from "../tetronimo-models/binary-grid";
 import MoveableTetromino from "./moveable-tetromino";
 
 export class GamePosition {

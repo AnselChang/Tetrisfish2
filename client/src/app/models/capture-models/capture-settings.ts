@@ -2,9 +2,6 @@
 Represents all the state for a frame after OCR
 */
 
-import GameStatus from "../tetromino-models/game-status";
-import { TetrominoType } from "../tetromino-models/tetromino";
-import BinaryGrid from "../game-models/binary-grid";
 import { BoardOCRBox } from "./ocr-box";
 import { Point } from "./point";
 
@@ -17,10 +14,11 @@ export type Rectangle = {
 
 export class CaptureSettings {
 
+    public threshold: number = 5; // the hsv value (0-100) threshold for detecting a mino
     public boardOCRBox?: BoardOCRBox;
 
     public setBoardBoundingRect(boundingRect: Rectangle) {
-        this.boardOCRBox = new BoardOCRBox(boundingRect);
+        this.boardOCRBox = new BoardOCRBox(this, boundingRect);
     }
 
     public getBoardBoundingRect(): Rectangle | undefined {
@@ -31,6 +29,10 @@ export class CaptureSettings {
     public getBoardPositions(): Point[][] | undefined {
         if (!this.boardOCRBox) return undefined;
         return this.boardOCRBox?.getPositions();
+    }
+
+    public getBoard(): BoardOCRBox | undefined {
+        return this.boardOCRBox;
     }
 
 }

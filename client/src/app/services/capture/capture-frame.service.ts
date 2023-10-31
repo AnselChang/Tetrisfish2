@@ -83,6 +83,7 @@ export class CaptureFrameService implements PixelReader {
 
     this.boardFloodfill = floodfill.getFilled();
     this.captureSettingsService.get().setBoardBoundingRect(floodfill.getRect()!);
+
     console.log("RECT:", floodfill.getRect());
     console.log(this.captureSettingsService.get().getBoardPositions());
 

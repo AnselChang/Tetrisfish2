@@ -4,9 +4,10 @@ Exposes utility methods for checking if the tetromino is in bounds, and if it is
 other blocks.
 */
 
-import BinaryGrid, { BlockType } from "./binary-grid";
-import { BlockSet } from "../tetromino-models/block";
-import { Tetromino, TetrominoType } from "../tetromino-models/tetromino";
+import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
+import { BlockSet } from "../tetronimo-models/block";
+import { Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
+
 
 export default class MoveableTetromino {
 

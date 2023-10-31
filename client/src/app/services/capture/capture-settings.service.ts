@@ -12,8 +12,6 @@ export class CaptureSettingsService {
 
   private captureState: CaptureSettings = new CaptureSettings();
 
-  constructor() { }
-
   public get(): CaptureSettings {
     return this.captureState;
   }

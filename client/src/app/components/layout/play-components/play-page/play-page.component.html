@@ -10,7 +10,10 @@
                     <div></div>
                 </div>
                 <app-button (onClick)="determineBoundingBoxes($event)"><h4>Determine bounding boxes</h4></app-button>
-                
+                <div class="threshold">
+                    <p>Threshold: {{getThresholdString()}}</p>
+                    <input [(ngModel)]="settings.threshold" type="range" min="0" max="30">
+                </div>
             </div>
             <div *ngIf="!this.panelCalibrateMode" class="subsection-container ls-right-column">
                 <div class="subsection" id="live-capture-panel">

@@ -1,12 +1,11 @@
 import { Component, Renderer2 } from '@angular/core';
 import { BlockData, TetrisBoardMode } from '../../../tetris/interactive-tetris-board/interactive-tetris-board.component';
-import GameStatus from 'client/src/app/models/tetromino-models/game-status';
-import BinaryGrid, { BlockType } from 'client/src/app/models/game-models/binary-grid';
-import { TetrominoType } from 'client/src/app/models/tetromino-models/tetromino';
 import { BoardCreationCacheService } from 'client/src/app/services/board-creation-cache.service';
 import { EvaluatorService } from 'client/src/app/services/analysis/evaluator.service';
 import { GamePosition } from 'client/src/app/models/game-models/game-position';
 import { HZ_10 } from 'client/src/app/services/analysis/input-frame-timeline';
+import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
+import GameStatus from 'client/src/app/models/tetronimo-models/game-status';
 
 @Component({
   selector: 'app-board-creation-page',

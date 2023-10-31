@@ -3,43 +3,81 @@ export type HSVColor = {
     s: number;
     v: number;
 }
+export function rgbToHsv(r: number, g: number, b: number): HSVColor {
+    let rPrime = r / 255;
+    let gPrime = g / 255;
+    let bPrime = b / 255;
 
-export function rgb2hsv(r: number, g: number, b: number): HSVColor {
-    let rabs: number, gabs: number, babs: number, rr: number, gg: number, bb: number, h = 0, s = 0, v: number, diff: number, diffc: (c: number) => number, percentRoundFn: (num: number) => number;
-    
-    rabs = r / 255;
-    gabs = g / 255;
-    babs = b / 255;
-    v = Math.max(rabs, gabs, babs);
-    diff = v - Math.min(rabs, gabs, babs);
-    diffc = c => (v - c) / 6 / diff + 1 / 2;
-    percentRoundFn = num => Math.round(num * 100) / 100;
+    let max = Math.max(rPrime, gPrime, bPrime);
+    let min = Math.min(rPrime, gPrime, bPrime);
+    let delta = max - min;
 
-    if (diff == 0) {
-        h = s = 0;
+    let h: number;
+    let s: number;
+    let v = max * 100;
+
+    if (delta === 0) {
+        h = 0;
+        s = 0;
     } else {
-        s = diff / v;
-        rr = diffc(rabs);
-        gg = diffc(gabs);
-        bb = diffc(babs);
+        s = (delta / max) * 100;
 
-        if (rabs === v) {
-            h = bb - gg;
-        } else if (gabs === v) {
-            h = (1 / 3) + rr - bb;
-        } else if (babs === v) {
-            h = (2 / 3) + gg - rr;
-        }
-        if (h < 0) {
-            h += 1;
-        } else if (h > 1) {
-            h -= 1;
+        if (max === rPrime) {
+            h = ((gPrime - bPrime) / delta + (gPrime < bPrime ? 6 : 0)) * 60;
+        } else if (max === gPrime) {
+            h = ((bPrime - rPrime) / delta + 2) * 60;
+        } else {
+            h = ((rPrime - gPrime) / delta + 4) * 60;
         }
     }
 
+    return { h, s, v };
+}
+
+export function hsvToRgb(hsv: HSVColor): { r: number, g: number, b: number } {
+
+    const {h, s, v} = hsv;
+
+    let sPrime = s / 100;
+    let vPrime = v / 100;
+
+    let c = vPrime * sPrime;
+    let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    let m = vPrime - c;
+
+    let rPrime: number;
+    let gPrime: number;
+    let bPrime: number;
+
+    if (h < 60) {
+        rPrime = c;
+        gPrime = x;
+        bPrime = 0;
+    } else if (h < 120) {
+        rPrime = x;
+        gPrime = c;
+        bPrime = 0;
+    } else if (h < 180) {
+        rPrime = 0;
+        gPrime = c;
+        bPrime = x;
+    } else if (h < 240) {
+        rPrime = 0;
+        gPrime = x;
+        bPrime = c;
+    } else if (h < 300) {
+        rPrime = x;
+        gPrime = 0;
+        bPrime = c;
+    } else {
+        rPrime = c;
+        gPrime = 0;
+        bPrime = x;
+    }
+
     return {
-        h: Math.round(h * 360),
-        s: percentRoundFn(s * 100),
-        v: percentRoundFn(v * 100)
+        r: Math.round((rPrime + m) * 255),
+        g: Math.round((gPrime + m) * 255),
+        b: Math.round((bPrime + m) * 255)
     };
 }

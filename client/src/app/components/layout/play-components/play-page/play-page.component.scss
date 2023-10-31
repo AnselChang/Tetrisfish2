@@ -55,6 +55,14 @@ section {
     padding: 0;
 }
 
+.threshold {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
 #live-capture-panel {
     display: flex;
     flex-direction: column;

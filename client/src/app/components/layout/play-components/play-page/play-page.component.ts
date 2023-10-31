@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import GameStatus from 'client/src/app/models/tetromino-models/game-status';
-import BinaryGrid, { BlockType } from 'client/src/app/models/game-models/binary-grid';
-import { TetrominoType } from 'client/src/app/models/tetromino-models/tetromino';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
@@ -35,6 +32,7 @@ export class PlayPageComponent {
 
   constructor(
     public extractedStateService: ExtractedStateService,
+    public captureSettingsService: CaptureSettingsService,
     private captureFrameService: CaptureFrameService
     ) {
     this.logs = [
@@ -58,6 +56,10 @@ export class PlayPageComponent {
     return this.extractedStateService.get();
   }
 
+  public get settings() {
+    return this.captureSettingsService.get();
+  }
+
   public goToCalibratePanel() {
     this.panelMode = PanelMode.CALIBRATE;
   }
@@ -71,6 +73,12 @@ export class PlayPageComponent {
       event.stopPropagation();
       this.captureFrameService.mode$.next(CaptureMode.CLICK_ON_BOARD);
     }
+  }
+
+  public getThresholdString(): string {
+    const threshold = this.settings.threshold;
+    if (threshold < 10) return " " + threshold;
+    else return "" + threshold;
   }
 
   public startRecording() {

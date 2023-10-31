@@ -1,8 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { BlockPosition, BlockSet } from 'client/src/app/models/tetromino-models/block';
-import { TetrominoColorType, TetrominoNB, TetrominoType, getColorForLevel, getColorTypeForTetromino } from 'client/src/app/models/tetromino-models/tetromino';
+import { Component, Input } from '@angular/core';
 import { BlockData, TetrisBoardMode } from '../interactive-tetris-board/interactive-tetris-board.component';
-import { Block } from 'blockly';
+import { BlockSet, BlockPosition } from 'client/src/app/models/tetronimo-models/block';
+import { TetrominoType, TetrominoNB, getColorForLevel, TetrominoColorType, getColorTypeForTetromino } from 'client/src/app/models/tetronimo-models/tetromino';
 
 @Component({
   selector: 'app-next-box',

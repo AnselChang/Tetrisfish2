@@ -2,9 +2,9 @@
 Represents all the state for a frame after OCR
 */
 
-import GameStatus from "../tetromino-models/game-status";
-import { TetrominoType } from "../tetromino-models/tetromino";
-import BinaryGrid from "../game-models/binary-grid";
+import GameStatus from "../tetronimo-models/game-status";
+import { TetrominoType } from "../tetronimo-models/tetromino";
+import BinaryGrid from "../tetronimo-models/binary-grid";
 
 
 export class ExtractedState {
