@@ -2,11 +2,9 @@
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { Rectangle } from 'client/src/app/models/capture-models/capture-settings';
 import { BoardOCRBox } from 'client/src/app/models/capture-models/ocr-box';
-import { Point } from 'client/src/app/models/capture-models/point';
-import { hsvToRgb } from 'client/src/app/scripts/color';
-import { sleep } from 'client/src/app/scripts/sleep';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
+import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
 
 enum VideoPauseStatus {
   PLAYING = "PLAYING",
@@ -36,6 +34,7 @@ export class VideoCaptureComponent implements OnInit {
   constructor(
     private captureSettingsService: CaptureSettingsService,
     public captureFrameService: CaptureFrameService,
+    private extractedStateService: ExtractedStateService,
     private renderer: Renderer2) {
 
     this.captureFrameService.mode$.subscribe(mode => {
@@ -191,6 +190,9 @@ export class VideoCaptureComponent implements OnInit {
 
     // Extract colors for each OCR position for this frame
     this.captureSettingsService.get().getBoard()?.evaluate(this.captureFrameService);
+
+    // set extracted state to the computed OCR grid
+    this.extractedStateService.get().grid = this.captureSettingsService.get().getGrid()!;
 
     /*
      STEP 3: Draw all overlays

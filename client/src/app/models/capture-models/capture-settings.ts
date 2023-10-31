@@ -2,6 +2,7 @@
 Represents all the state for a frame after OCR
 */
 
+import BinaryGrid from "../tetronimo-models/binary-grid";
 import { BoardOCRBox } from "./ocr-box";
 import { Point } from "./point";
 
@@ -33,6 +34,11 @@ export class CaptureSettings {
 
     public getBoard(): BoardOCRBox | undefined {
         return this.boardOCRBox;
+    }
+
+    public getGrid(): BinaryGrid | undefined {
+        if (!this.boardOCRBox) return undefined;
+        return this.boardOCRBox?.getGrid();
     }
 
 }
