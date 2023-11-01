@@ -2,6 +2,7 @@
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { Rectangle } from 'client/src/app/models/capture-models/capture-settings';
 import { BoardOCRBox } from 'client/src/app/models/capture-models/ocr-box';
+import { hsvToRgb } from 'client/src/app/scripts/color';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
@@ -213,6 +214,17 @@ export class VideoCaptureComponent implements OnInit {
     const board = this.captureSettingsService.get().getBoard();
     if (board && board.getGrid()) {
       this.drawOCRPositions(ctx, board!);
+    }
+
+    // draw special points
+    if (board && board?.hasEvaluation()) {
+      for (let key of ["PAUSE_U", "PAUSE_S", "PAUSE_E"]) {
+        const point = board.getSpecialPointLocation(key);
+        const color = board.getSpecialPointColor(key);
+        const {r,g,b} = hsvToRgb(color);
+        console.log("special point", key, point, color);
+        this.drawCircle(ctx, point.x, point.y, 2, `rgb(${r},${g},${b})`);
+      }
     }
 
     requestAnimationFrame(this.executeFrame.bind(this));
