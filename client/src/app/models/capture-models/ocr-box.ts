@@ -138,9 +138,9 @@ export class OCRBox {
 export class BoardOCRBox extends OCRBox {
 
     private static readonly PAUSE_POINTS: SpecialPointsLocation = {
-        "PAUSE_U" : {x: 0.5, y: 0.29},
-        "PAUSE_S" : {x: 0.6, y: 0.29},
-        "PAUSE_E" : {x: 0.72, y: 0.29},
+        "PAUSE_U" : {x: 0.5, y: 0.292},
+        "PAUSE_S" : {x: 0.6, y: 0.292},
+        "PAUSE_E" : {x: 0.72, y: 0.292},
     };
 
     constructor(settings: CaptureSettings, boundingRect: Rectangle) {
@@ -157,17 +157,20 @@ export class BoardOCRBox extends OCRBox {
     public isPaused(): boolean | undefined {
         if (!this.hasEvaluation) return undefined;
 
-        const PAUSE_THRESHOLD_VALUE = 0.3; // if HSV value is greater than this, then pause detected
+        const PAUSE_THRESHOLD_VALUE = 30; // if HSV value is greater than this, then pause detected
         const NUM_PAUSE_POINTS_NEEDED = 2;
 
         // if at least two points detect pause, then pause detected
         let numPausePoints = 0;
+        let results = [];
         for (let key of ["PAUSE_U", "PAUSE_S", "PAUSE_E"]) {
             const color = this.getSpecialPointColor(key);
+            results.push(color.v);
             if (color.v >= PAUSE_THRESHOLD_VALUE) {
                 numPausePoints++;
             }
         }
+        //console.log("results", results);
         return numPausePoints >= NUM_PAUSE_POINTS_NEEDED;
     }
 

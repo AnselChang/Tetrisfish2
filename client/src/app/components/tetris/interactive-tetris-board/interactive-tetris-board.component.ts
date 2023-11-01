@@ -69,7 +69,9 @@ export class InteractiveTetrisBoardComponent {
   public readonly ONE_TO_TEN: number[] = Array(10).fill(0).map((x, i) => i + 1);
   public readonly ONE_TO_TWENTY: number[] = Array(20).fill(0).map((x, i) => i + 1);
   
-  public readonly PAUSE_SIZE = SVG_BOARD_WIDTH / 4;
+  public readonly PAUSE_X = SVG_BOARD_WIDTH / 2;
+  public readonly PAUSE_Y = SVG_BOARD_HEIGHT / 3;
+  public readonly PAUSE_SIZE = SVG_BOARD_WIDTH / 3;
   public readonly PAUSE_HEIGHT_OVER_WIDTH = 60/270;
   
   public get boardWidth(): number {
@@ -126,10 +128,10 @@ export class InteractiveTetrisBoardComponent {
   }
 
   public getPauseX(): number {
-    return SVG_BOARD_WIDTH / 2 - this.getPauseWidth() / 2;
+    return this.PAUSE_X - this.getPauseWidth() / 2;
   }
   public getPauseY(): number {
-    return SVG_BOARD_HEIGHT / 2 - this.PAUSE_SIZE*this.getPauseHeight() / 2;
+    return this.PAUSE_Y - this.getPauseHeight() / 2;
   }
   public getPauseWidth(): number {
     return this.PAUSE_SIZE;

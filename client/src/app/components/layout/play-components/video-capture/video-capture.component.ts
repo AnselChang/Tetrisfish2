@@ -197,7 +197,6 @@ export class VideoCaptureComponent implements OnInit {
 
     // determine if game is paused
     this.extractedStateService.get().isPaused = this.captureSettingsService.get().getBoard()?.isPaused()!;
-    console.log("isPaused", this.extractedStateService.get().isPaused);
 
     /*
      STEP 3: Draw all overlays
@@ -226,7 +225,6 @@ export class VideoCaptureComponent implements OnInit {
         const point = board.getSpecialPointLocation(key);
         const color = board.getSpecialPointColor(key);
         const {r,g,b} = hsvToRgb(color);
-        console.log("special point", key, point, color);
         this.drawCircle(ctx, point.x, point.y, 2, `rgb(${r},${g},${b})`);
       }
     }
