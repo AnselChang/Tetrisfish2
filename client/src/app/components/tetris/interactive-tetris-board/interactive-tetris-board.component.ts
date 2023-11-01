@@ -112,7 +112,7 @@ export class InteractiveTetrisBoardComponent {
     if (this.currentPiece && this.currentPiece.isAtLocation(x,y)) {
       colorType = getColorTypeForTetromino(this.currentPiece.tetrominoType);
       special = true;
-    } else if (this.grid.at(x, y) === BlockType.FILLED) {
+    } else if (this.grid && this.grid.at(x, y) === BlockType.FILLED) {
       colorType = TetrominoColorType.COLOR_WHITE;
     } else {
       return new BlockData(x, y, SVG_PADDING, this.level, undefined); // no block to display
