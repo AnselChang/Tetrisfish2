@@ -4,18 +4,26 @@
     <!-- Draw the board background -->
     <rect x="0" y="0" [attr.width]="boardWidth" [attr.height]="boardHeight" fill="black" />
 
-    <g *ngFor="let y of ONE_TO_TWENTY">
-        <g *ngFor="let x of ONE_TO_TEN">
-            <g *ngIf="getBlockAt(x,y) as block">
-                <g app-tetris-block
-                    (onHover)="onBlockHover(block, $event)"
-                    (onClick)="onBlockClick(block)"
-                    (onMouseDown)="onBlockMouseDown(block)"
-                    (onMouseUp)="onBlockMouseUp(block)"
-                    [mode]="mode"
-                    [blockData]="block" />
+    <g *ngIf="!paused">
+        <g *ngFor="let y of ONE_TO_TWENTY">
+            <g *ngFor="let x of ONE_TO_TEN">
+                <g *ngIf="getBlockAt(x,y) as block">
+                    <g app-tetris-block
+                        (onHover)="onBlockHover(block, $event)"
+                        (onClick)="onBlockClick(block)"
+                        (onMouseDown)="onBlockMouseDown(block)"
+                        (onMouseUp)="onBlockMouseUp(block)"
+                        [mode]="mode"
+                        [blockData]="block" />
+                </g>
             </g>
         </g>
     </g>
+
+    <image *ngIf="paused"xlink:href="assets/img/pause.png"
+        [attr.x]="getPauseX()"
+        [attr.y]="getPauseY()"
+        [attr.width]="getPauseWidth()"
+        [attr.height]="getPauseHeight()" />
 
 </svg>

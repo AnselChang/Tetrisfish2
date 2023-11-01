@@ -13,6 +13,7 @@ export class ExtractedState {
     public status: GameStatus = new GameStatus(0, 0, 0);
     public grid: BinaryGrid = new BinaryGrid();
     public nextPieceType?: TetrominoType = undefined;
+    public isPaused: boolean = false;
     
     constructor(
         status?: GameStatus,

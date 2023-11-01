@@ -48,6 +48,7 @@ export class InteractiveTetrisBoardComponent {
   @Input() mode = TetrisBoardMode.READONLY;
   @Input() level: number = 18;
   @Input() grid!: BinaryGrid;
+  @Input() paused: boolean = false;
 
   // two-way binding for current piece
   // use syntax [(currentPiece)]="currentPiece" in parent template
@@ -67,7 +68,9 @@ export class InteractiveTetrisBoardComponent {
 
   public readonly ONE_TO_TEN: number[] = Array(10).fill(0).map((x, i) => i + 1);
   public readonly ONE_TO_TWENTY: number[] = Array(20).fill(0).map((x, i) => i + 1);
-
+  
+  public readonly PAUSE_SIZE = SVG_BOARD_WIDTH / 4;
+  public readonly PAUSE_HEIGHT_OVER_WIDTH = 60/270;
   
   public get boardWidth(): number {
     return SVG_BOARD_WIDTH;
@@ -120,6 +123,19 @@ export class InteractiveTetrisBoardComponent {
       colorType,
       special
     );
+  }
+
+  public getPauseX(): number {
+    return SVG_BOARD_WIDTH / 2 - this.getPauseWidth() / 2;
+  }
+  public getPauseY(): number {
+    return SVG_BOARD_HEIGHT / 2 - this.PAUSE_SIZE*this.getPauseHeight() / 2;
+  }
+  public getPauseWidth(): number {
+    return this.PAUSE_SIZE;
+  }
+  public getPauseHeight(): number {
+    return this.PAUSE_SIZE*this.PAUSE_HEIGHT_OVER_WIDTH;
   }
 
 

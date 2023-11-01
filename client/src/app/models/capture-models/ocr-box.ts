@@ -169,5 +169,6 @@ export class BoardOCRBox extends OCRBox {
             }
         }
         return numPausePoints >= NUM_PAUSE_POINTS_NEEDED;
+    }
 
 }

@@ -195,6 +195,10 @@ export class VideoCaptureComponent implements OnInit {
     // set extracted state to the computed OCR grid
     this.extractedStateService.get().grid = this.captureSettingsService.get().getGrid()!;
 
+    // determine if game is paused
+    this.extractedStateService.get().isPaused = this.captureSettingsService.get().getBoard()?.isPaused()!;
+    console.log("isPaused", this.extractedStateService.get().isPaused);
+
     /*
      STEP 3: Draw all overlays
     */
