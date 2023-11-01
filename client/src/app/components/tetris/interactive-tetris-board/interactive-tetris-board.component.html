@@ -20,7 +20,8 @@
         </g>
     </g>
 
-    <image *ngIf="paused"xlink:href="assets/img/pause.png"
+    <image xlink:href="assets/img/pause.png"
+        [style.visibility]="paused ? 'visible': 'hidden'"
         [attr.x]="getPauseX()"
         [attr.y]="getPauseY()"
         [attr.width]="getPauseWidth()"

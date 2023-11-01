@@ -197,7 +197,6 @@ export class VideoCaptureComponent implements OnInit {
 
     // determine if game is paused
     this.extractedStateService.get().isPaused = this.captureSettingsService.get().getBoard()?.isPaused()!;
-
     /*
      STEP 3: Draw all overlays
     */
