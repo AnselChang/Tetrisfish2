@@ -225,8 +225,8 @@ export class VideoCaptureComponent implements OnInit {
 
     // draw next box point
     if (board) {
-      const nextBoxPoint = board.getNextBoxCanvasLocation();
-      this.drawCircle(ctx, nextBoxPoint.x, nextBoxPoint.y, 2, "rgb(0,0,255)");
+      const nextBoxPoints = board.getNextBoxCanvasLocations();
+      nextBoxPoints.forEach((point) => this.drawCircle(ctx, point.x, point.y, 2, "rgb(0,0,255)"));
     }
 
     requestAnimationFrame(this.executeFrame.bind(this));

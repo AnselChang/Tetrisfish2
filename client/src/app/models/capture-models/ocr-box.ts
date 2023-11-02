@@ -148,22 +148,24 @@ export class BoardOCRBox extends OCRBox {
         "PAUSE_E" : {x: 0.72, y: 0.292},
     };
 
-    // location of the nextbox relative to the board
-    private static readonly NEXTBOX_LOCATION = {x: 1.5, y: 0.56};
-
+    // Locations to floodfill to find the next box relative to the main board
+    private static readonly NEXTBOX_LOCATIONS = [
+        {x: 1.5, y: 0.41}, // top of the next box
+        {x: 1.5, y: 0.595} // bottom of the next box
+    ];
     constructor(settings: CaptureSettings, boundingRect: Rectangle) {
 
         // main board is 20 rows, 10 columns
         // TUNE THESE VALUES
         super(settings, boundingRect,
             20, 0.03, 0.032, // numRows, paddingTop, paddingBottom
-            10, 0.05, 0.035, // numCols, paddingLeft, paddingRight
+            10, 0.05, 0.038, // numCols, paddingLeft, paddingRight
             BoardOCRBox.PAUSE_POINTS
         );
     }
 
-    public getNextBoxCanvasLocation(): Point {
-        return this.getCanvasPositionFromRelative(BoardOCRBox.NEXTBOX_LOCATION);
+    public getNextBoxCanvasLocations(): Point[] {
+        return BoardOCRBox.NEXTBOX_LOCATIONS.map((point) => this.getCanvasPositionFromRelative(point));
     }
 
     public isPaused(): boolean | undefined {
@@ -192,11 +194,11 @@ export class NextOCRBox extends OCRBox {
     
         constructor(settings: CaptureSettings, boundingRect: Rectangle) {
     
-            // next box is 4 rows, 8 columns
+            // next box is 6 rows, 8 columns
             // TUNE THESE VALUES
             super(settings, boundingRect,
-                4, 0.37, 0.25, // numRows, paddingTop, paddingBottom
-                8, 0.14, 0.06, // numCols, paddingLeft, paddingRight
+                6, 0.37, 0.18, // numRows, paddingTop, paddingBottom
+                8, 0.08, 0.06, // numCols, paddingLeft, paddingRight
             );
         }
 }

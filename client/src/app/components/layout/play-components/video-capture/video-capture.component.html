@@ -16,7 +16,8 @@
 [ngStyle]="{'border' : (isCaptureModeNormal() ? '1px solid #ccc' : '3px solid green')}"
 (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
 (mousemove)="onMouseMove($event)"
-width="1200" height="900" style="width: 400px; height: 300px;"></canvas>
+[width]="400*CANVAS_RESOLUTION_SCALE" [height]="300*CANVAS_RESOLUTION_SCALE"
+style="width: 400px; height: 300px;"></canvas>
 
 
 <!-- Display permission error -->

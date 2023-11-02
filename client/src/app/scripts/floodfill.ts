@@ -13,14 +13,14 @@ export class FloodFill {
         this.filled = Array.from({ length: height }, () => Array(width).fill(false));
     }
 
+    // floodfill from a given point. Does not reset the filled matrix, so that you can
+    // floodfill multiple times from different points
     public floodfill(
         image: PixelReader,
         startX: number,
         startY: number,
         isSimilar: (colorA: [number, number, number], colorB: [number, number, number]) => boolean
     ): void {
-
-        this.filled = Array.from({ length: this.height }, () => Array(this.width).fill(false));
 
         const startColor = image.getPixelAt(startX, startY);
         if (!startColor) return;

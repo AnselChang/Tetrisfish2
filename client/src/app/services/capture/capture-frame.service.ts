@@ -82,11 +82,11 @@ export class CaptureFrameService implements PixelReader {
     this.captureSettingsService.get().setBoardBoundingRect(floodfill.getRect()!);
 
     // get point for next box floodfill from BoardOCRBox position
-    const nextBoxPoint = this.captureSettingsService.get().getBoard()!.getNextBoxCanvasLocation();
+    const nextBoxPoints = this.captureSettingsService.get().getBoard()!.getNextBoxCanvasLocations();
 
-    // run floodfill for next box to determine NextBoxOCRBox
+    // run floodfill on each point for next box to determine NextBoxOCRBox
     floodfill = new FloodFill(this.width!, this.height!);
-    floodfill.floodfill(this, nextBoxPoint.x, nextBoxPoint.y, this.floodfillCondition.bind(this));
+    nextBoxPoints.forEach((point) => floodfill.floodfill(this, point.x, point.y, this.floodfillCondition.bind(this)));
     this.captureSettingsService.get().setNextBoundingRect(floodfill.getRect()!);
 
     // finished processing mouse click, reset to normal capture mode
