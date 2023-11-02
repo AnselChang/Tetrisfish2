@@ -22,8 +22,6 @@ export class CaptureFrameService implements PixelReader {
   private width?: number;
   private height?: number;
 
-  public boardFloodfill?: boolean[][];
-
   constructor(private captureSettingsService: CaptureSettingsService) { }
 
   public hasFrame(): boolean {
@@ -78,16 +76,20 @@ export class CaptureFrameService implements PixelReader {
     const color = this.getPixelAt(x, y);
     console.log("Clicked at", x, y, color);
 
-    const floodfill = new FloodFill(this.width!, this.height!);
+    // run floodfill for main board to determine BoardOCRBox
+    let floodfill = new FloodFill(this.width!, this.height!);
     floodfill.floodfill(this, x, y, this.floodfillCondition.bind(this));
-
-    this.boardFloodfill = floodfill.getFilled();
     this.captureSettingsService.get().setBoardBoundingRect(floodfill.getRect()!);
 
-    console.log("RECT:", floodfill.getRect());
-    console.log(this.captureSettingsService.get().getBoardPositions());
+    // get point for next box floodfill from BoardOCRBox position
+    const nextBoxPoint = this.captureSettingsService.get().getBoard()!.getNextBoxCanvasLocation();
 
-    // reset to normal mode
+    // run floodfill for next box to determine NextBoxOCRBox
+    floodfill = new FloodFill(this.width!, this.height!);
+    floodfill.floodfill(this, nextBoxPoint.x, nextBoxPoint.y, this.floodfillCondition.bind(this));
+    this.captureSettingsService.get().setNextBoundingRect(floodfill.getRect()!);
+
+    // finished processing mouse click, reset to normal capture mode
     this.resetCaptureMode();
   }
 

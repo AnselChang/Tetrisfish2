@@ -74,10 +74,15 @@ export class OCRBox {
         // convert special points from percent to pixels
         this.specialPointsLocation = {};
         for (const [key, point] of Object.entries(specialPoints)) {
-            const x = Math.floor(this.START_X + this.WIDTH * point.x);
-            const y = Math.floor(this.START_Y + this.HEIGHT * point.y);
-            this.specialPointsLocation[key] = {x, y};
+            this.specialPointsLocation[key] = this.getCanvasPositionFromRelative(point);
         }
+    }
+
+    // convert from relative percents of box width/height to absolute pixels on canvas
+    public getCanvasPositionFromRelative(relativePosition: Point): Point {
+        const x = Math.floor(this.START_X + this.WIDTH * relativePosition.x);
+        const y = Math.floor(this.START_Y + this.HEIGHT * relativePosition.y);
+        return {x, y};
     }
 
     // given an image, return [numRows x numCols] array of RGB values
@@ -143,6 +148,9 @@ export class BoardOCRBox extends OCRBox {
         "PAUSE_E" : {x: 0.72, y: 0.292},
     };
 
+    // location of the nextbox relative to the board
+    private static readonly NEXTBOX_LOCATION = {x: 1.5, y: 0.56};
+
     constructor(settings: CaptureSettings, boundingRect: Rectangle) {
 
         // main board is 20 rows, 10 columns
@@ -152,6 +160,10 @@ export class BoardOCRBox extends OCRBox {
             10, 0.05, 0.035, // numCols, paddingLeft, paddingRight
             BoardOCRBox.PAUSE_POINTS
         );
+    }
+
+    public getNextBoxCanvasLocation(): Point {
+        return this.getCanvasPositionFromRelative(BoardOCRBox.NEXTBOX_LOCATION);
     }
 
     public isPaused(): boolean | undefined {
@@ -174,4 +186,17 @@ export class BoardOCRBox extends OCRBox {
         return numPausePoints >= NUM_PAUSE_POINTS_NEEDED;
     }
 
+}
+
+export class NextOCRBox extends OCRBox {
+    
+        constructor(settings: CaptureSettings, boundingRect: Rectangle) {
+    
+            // next box is 4 rows, 8 columns
+            // TUNE THESE VALUES
+            super(settings, boundingRect,
+                4, 0.37, 0.25, // numRows, paddingTop, paddingBottom
+                8, 0.14, 0.06, // numCols, paddingLeft, paddingRight
+            );
+        }
 }

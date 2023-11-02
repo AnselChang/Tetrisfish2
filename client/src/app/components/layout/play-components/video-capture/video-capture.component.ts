@@ -2,6 +2,8 @@
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { Rectangle } from 'client/src/app/models/capture-models/capture-settings';
 import { BoardOCRBox } from 'client/src/app/models/capture-models/ocr-box';
+import { Point } from 'client/src/app/models/capture-models/point';
+import BinaryGrid from 'client/src/app/models/tetronimo-models/binary-grid';
 import { hsvToRgb } from 'client/src/app/scripts/color';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
@@ -201,45 +203,29 @@ export class VideoCaptureComponent implements OnInit {
      STEP 3: Draw all overlays
     */
 
-    // draw floodfill if it exists
-    const floodfill = this.captureFrameService.boardFloodfill;
-    if (false && floodfill) {
-      this.drawFloodFill(ctx, floodfill!);
-    }
-
     // draw board rect if it exists
     const boundingRect = this.captureSettingsService.get().getBoardBoundingRect();
-    if (boundingRect) {
-      this.drawRect(ctx, boundingRect!, "rgb(0, 255, 0)");
-    }
+    if (boundingRect) this.drawRect(ctx, boundingRect, "rgb(0, 255, 0)");
 
+    // draw board positions if they exist
     const board = this.captureSettingsService.get().getBoard();
-    if (board && board.getGrid()) {
-      this.drawOCRPositions(ctx, board!);
-    }
+    if (board) this.drawOCRPositions(ctx, board.getPositions(), board.getGrid()!);
 
-    // draw special points
-    if (board && board?.hasEvaluation()) {
-      for (let key of ["PAUSE_U", "PAUSE_S", "PAUSE_E"]) {
-        const point = board.getSpecialPointLocation(key);
-        const color = board.getSpecialPointColor(key);
-        const {r,g,b} = hsvToRgb(color);
-        this.drawCircle(ctx, point.x, point.y, 2, `rgb(${r},${g},${b})`);
-      }
+    // draw next box rect if it exists
+    const nextBoundingRect = this.captureSettingsService.get().getNextBoundingRect();
+    if (nextBoundingRect) this.drawRect(ctx, nextBoundingRect, "rgb(0, 0, 255)");
+
+    // draw next box positions if they exist
+    const next = this.captureSettingsService.get().getNext();
+    if (next) this.drawOCRPositions(ctx, next.getPositions(), next.getGrid()!);
+
+    // draw next box point
+    if (board) {
+      const nextBoxPoint = board.getNextBoxCanvasLocation();
+      this.drawCircle(ctx, nextBoxPoint.x, nextBoxPoint.y, 2, "rgb(0,0,255)");
     }
 
     requestAnimationFrame(this.executeFrame.bind(this));
-  }
-
-  private drawFloodFill(ctx: CanvasRenderingContext2D, floodfill: boolean[][]): void {
-    for (let y = 0; y < floodfill.length; y++) {
-      for (let x = 0; x < floodfill[y].length; x++) {
-        if (floodfill[y][x]) {
-          ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-          ctx.fillRect(x, y, 1, 1);
-        }
-      }
-    }
   }
 
   // draw a rectangle given a rectangle, with border just outside of rectangle bounds
@@ -257,10 +243,7 @@ export class VideoCaptureComponent implements OnInit {
   }
 
   // draw a dot for each OCR position
-  private drawOCRPositions(ctx: CanvasRenderingContext2D, board: BoardOCRBox) {
-
-    const positions = board.getPositions();
-    const grid = board.getGrid();
+  private drawOCRPositions(ctx: CanvasRenderingContext2D, positions: Point[][], grid: BinaryGrid) {
 
     for (let yIndex = 0; yIndex < positions.length; yIndex++) {
       for (let xIndex = 0; xIndex < positions[yIndex].length; xIndex++) {
