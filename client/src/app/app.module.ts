@@ -28,6 +28,8 @@ import { LogComponent } from './components/layout/play-components/log/log.compon
 import { ButtonSmallComponent } from './components/BLOCK/button-small/button-small.component';
 import { FixedSizeImageComponent } from './components/BLOCK/fixed-size-image/fixed-size-image.component';
 import { ButtonBigComponent } from './components/BLOCK/button-big/button-big.component';
+import { SubsectionComponent } from './components/BLOCK/subsection/subsection.component';
+import { SectionComponent } from './components/BLOCK/section/section.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,6 +57,8 @@ import { ButtonBigComponent } from './components/BLOCK/button-big/button-big.com
     ButtonSmallComponent,
     FixedSizeImageComponent,
     ButtonBigComponent,
+    SubsectionComponent,
+    SectionComponent,
   ],
   imports: [
     BrowserModule,

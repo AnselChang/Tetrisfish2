@@ -6,3 +6,15 @@
     width: auto;
     padding: 10px;
 }
+
+.test-section ::ng-deep section {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.test-section-2 ::ng-deep section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

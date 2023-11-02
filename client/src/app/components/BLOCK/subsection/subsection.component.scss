@@ -1,0 +1,15 @@
+@import '../../../../styles.scss';
+
+:host {
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+.subsection {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: $layer-2-color;
+
+    margin: 0;
+}
