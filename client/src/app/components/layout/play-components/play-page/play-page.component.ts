@@ -68,7 +68,8 @@ export class PlayPageComponent {
     this.panelMode = PanelMode.PLAY;
   }
 
-  public determineBoundingBoxes(event: MouseEvent) {
+  public determineBoundingBoxes(event: Event) {
+    console.log("determineBoundingBoxes");
     if (this.captureFrameService.hasFrame()) {
       event.stopPropagation();
       this.captureFrameService.mode$.next(CaptureMode.CLICK_ON_BOARD);

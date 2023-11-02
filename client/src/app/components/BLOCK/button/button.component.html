@@ -1,4 +1,3 @@
-<button class="generic-button"
->
-    <ng-content />
+<button class="generic-button" (onclick)="click.emit($event)">
+    <ng-content></ng-content>
 </button>

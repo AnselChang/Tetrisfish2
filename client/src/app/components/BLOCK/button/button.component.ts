@@ -9,7 +9,7 @@ import { ColorService } from 'client/src/app/services/color.service';
 export class ButtonComponent implements AfterViewInit, OnChanges {
   @Input() color: string = '#5865F2';
   @Input() expandToFitWidth: boolean = false;
-  @Output() click = new EventEmitter<MouseEvent>();
+  @Output() click = new EventEmitter<Event>();
 
 
   constructor(private colorService: ColorService, private el: ElementRef, private renderer: Renderer2) {
