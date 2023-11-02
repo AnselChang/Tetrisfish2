@@ -34,6 +34,10 @@ export class VideoCaptureComponent implements OnInit {
 
   private mouseClickListener: Function | null = null;
 
+  // how many times larger the canvas stored resolution is compared to display resolution
+  // the higher the is, the more expensive OCR calculations are, but the more accurate they are
+  public readonly CANVAS_RESOLUTION_SCALE = 2;
+
   constructor(
     private captureSettingsService: CaptureSettingsService,
     public captureFrameService: CaptureFrameService,
@@ -82,8 +86,8 @@ export class VideoCaptureComponent implements OnInit {
 
   public onMouseMove(event: MouseEvent): void {
     const rect = this.canvasElement.nativeElement.getBoundingClientRect();
-    this.mouseX = event.clientX - rect.left;
-    this.mouseY = event.clientY - rect.top;
+    this.mouseX = (event.clientX - rect.left) * this.CANVAS_RESOLUTION_SCALE;
+    this.mouseY = (event.clientY - rect.top) * this.CANVAS_RESOLUTION_SCALE;
 
   }
 
