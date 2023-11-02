@@ -1,15 +1,5 @@
 @import '../../../../../styles.scss';
 
-a {
-    text-decoration: none;
-    color: $text-color;
-    outline: none;
-}
-
-a:hover, a:focus {
-    text-decoration: none;
-}
-
 a > .surrounding-box {
     border-width: 1px;
     border-style: solid;
@@ -27,8 +17,4 @@ a:hover > .surrounding-box {
 a.active > .surrounding-box {
     border-color: rgba(255, 255, 255, 1);
     background-color: $layer-2-color;
-}
-
-h2 {
-    line-height: 0;
 }

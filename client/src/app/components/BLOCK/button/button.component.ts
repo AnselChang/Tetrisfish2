@@ -7,15 +7,12 @@ import { ColorService } from 'client/src/app/services/color.service';
   styleUrls: ['./button.component.scss']
 })
 export class ButtonComponent implements AfterViewInit, OnChanges {
-  @Output() onClick = new EventEmitter<MouseEvent>();
   @Input() color: string = '#5865F2';
   @Input() expandToFitWidth: boolean = false;
+  @Output() click = new EventEmitter<MouseEvent>();
+
 
   constructor(private colorService: ColorService, private el: ElementRef, private renderer: Renderer2) {
-  }
-
-  public _onClick(event: MouseEvent): void {
-    this.onClick.emit(event);
   }
 
   private updateCSS() {
@@ -26,14 +23,6 @@ export class ButtonComponent implements AfterViewInit, OnChanges {
 
     const colorPressed = this.colorService.darken(this.color, 15);
     this.el.nativeElement.style.setProperty('--buttonColorPressed', colorPressed);
-    console.log("colors:", this.color, colorHovered, colorPressed);
-
-    if (this.expandToFitWidth) {
-      this.renderer.setStyle(this.el.nativeElement, 'width', '100%');
-    } else {
-      this.renderer.removeStyle(this.el.nativeElement, 'width');
-    }
-
   }
 
   ngAfterViewInit(): void {

@@ -25,6 +25,9 @@ import { BoardCreationPageComponent } from './components/layout/board-creation-c
 import { NextBoxComponent } from './components/tetris/next-box/next-box.component';
 import { CheckboxComponent } from './components/BLOCK/checkbox/checkbox.component';
 import { LogComponent } from './components/layout/play-components/log/log.component';
+import { ButtonSmallComponent } from './components/BLOCK/button-small/button-small.component';
+import { FixedSizeImageComponent } from './components/BLOCK/fixed-size-image/fixed-size-image.component';
+import { ButtonBigComponent } from './components/BLOCK/button-big/button-big.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,6 +52,9 @@ import { LogComponent } from './components/layout/play-components/log/log.compon
     NextBoxComponent,
     CheckboxComponent,
     LogComponent,
+    ButtonSmallComponent,
+    FixedSizeImageComponent,
+    ButtonBigComponent,
   ],
   imports: [
     BrowserModule,

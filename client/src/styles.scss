@@ -6,8 +6,9 @@ $layer-2-color: #414043;
 $layer-3-color: #504F52;
 $text-color: white;
 
-$main-font: 'Londrina Solid';
+$main-font: 'Montserrat';
 $data-font: 'Spline Sans Mono';
+$tag-font: 'Londrina Solid';
 
 // remove all styling from links
 a {
@@ -20,59 +21,40 @@ a:hover, a:focus {
     text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, p {
+    line-height: normal;
+    color: $text-color;
     font-family: $main-font;
-    color: $text-color;
-}
-
-p {
-    font-family: $data-font;
-    color: $text-color;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
-    font-size: 5.14vw;
+    font-size: 1.563rem;
+    font-weight: 700;
 }
 
 h2 {
-    font-size: 3vw;
-}
-
-h3 {
-    font-size: 2.4vw;
-}
-
-h4 {
-    font-size: 1.6vw;
-}
-
-h5 {
-    font-size: 1.4vw;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 p {
-    font-size: 1.2vw;
+    font-size: 0.813rem;
+    font-weight: 500;
+
 }
 
-@media (min-width: 1000px) {
-    h1 {
-        font-size: 51.4px;
-    }
-    h2 {
-        font-size: 30px;
-    }
-    h3 {
-        font-size: 24px;
-    }
-    h4 {
-        font-size: 16px;
-    }
+p.nav-link {
+    font-family: $main-font;
+    font-size: 1rem;
+    font-weight: 500;
+}
 
-    h5 {
-        font-size: 14px;
-    }
-
-    p {
-        font-size: 12px;
-    }
+p.tag {
+    font-family: $tag-font;
+    font-size: 0.75rem;
+    font-weight: 400;
+    
 }
