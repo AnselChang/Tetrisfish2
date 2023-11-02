@@ -8,9 +8,9 @@
     gap: 17px;
 
     padding: 13px;
-    margin: 5px;
+    margin: 5px 0; // left-right padding must be 0 so that 100% width won't cause weird overflow issues
 
-    width: auto;
+    width: 100%;
     box-sizing: border-box;
     border: 0;
 
