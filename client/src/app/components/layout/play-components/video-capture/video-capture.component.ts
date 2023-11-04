@@ -229,6 +229,15 @@ export class VideoCaptureComponent implements OnInit {
       nextBoxPoints.forEach((point) => this.drawCircle(ctx, point.x, point.y, 2, "rgb(0,0,255)"));
     }
 
+    // draw pause points
+    // if (board && board?.hasEvaluation()) {
+    //   for (let key of ["PAUSE_U", "PAUSE_S", "PAUSE_E"]) {
+    //     const point = board.getSpecialPointLocation(key);
+    //     const color = board.getSpecialPointColor(key);
+    //     this.drawCircle(ctx, point.x, point.y, 2, "rgb(255,255,255");
+    //   }
+    // }
+
     requestAnimationFrame(this.executeFrame.bind(this));
   }
 
