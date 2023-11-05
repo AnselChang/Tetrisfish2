@@ -41,6 +41,11 @@ h1 {
     font-weight: 800;
 }
 
+h1.padded {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 h2 {
     font-size: 1rem;
     font-weight: 600;
@@ -55,6 +60,10 @@ p {
     font-size: 0.813rem;
     font-weight: 500;
 
+}
+
+p.padded {
+    margin: 10px 0;
 }
 
 p.nav-link {

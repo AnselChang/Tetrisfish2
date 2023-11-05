@@ -143,9 +143,9 @@ export class OCRBox {
 export class BoardOCRBox extends OCRBox {
 
     private static readonly PAUSE_POINTS: SpecialPointsLocation = {
-        "PAUSE_U" : {x: 0.5, y: 0.290},
-        "PAUSE_S" : {x: 0.6, y: 0.290},
-        "PAUSE_E" : {x: 0.72, y: 0.290},
+        "PAUSE_U" : {x: 0.5, y: 0.288},
+        "PAUSE_S" : {x: 0.6, y: 0.288},
+        "PAUSE_E" : {x: 0.72, y: 0.288},
     };
 
     // Locations to floodfill to find the next box relative to the main board

@@ -1,0 +1,11 @@
+@import "../../../../styles.scss";
+
+.root {
+    background-color: $layer-1-color;
+    border-radius: 10px;
+
+    margin: 0;
+    height: 100%;
+    box-sizing: border-box;
+    border: 0;
+}

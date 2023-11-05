@@ -1,9 +1,12 @@
 <div class="root">
     <div class="calibrate">
-        <app-button-small label="Back to recording" />
+        <a routerLink="/play" routerLinkActive="active">
+            <app-button-small label="Back to recording" />
+        </a>
+        
         <app-section class="calibrate-panel">
             <h3>1. Click on an empty part of the board</h3>
-            <app-button-small label="Autocalibrate" />
+            <app-button-small label="Autocalibrate" (click)="determineBoundingBoxes($event)" />
             <hr>
             <h3>2. Set detection threshold</h3>
             <div class="threshold">
@@ -22,7 +25,11 @@
     <app-section class="detection-panel">
         <h1>What we're detecting...</h1>
         <app-tetris-panel>
-            <app-interactive-tetris-board />
+            <app-interactive-tetris-board
+                    [grid]="extractedState.getGrid()"
+                    [level]="extractedState.getStatus().level"
+                    [paused]="extractedState.getPaused()"
+                />
             <app-tetris-panel-item>
                 <h2>Score</h2>
                 <h1>{{extractedState.getStatus().score}}</h1>

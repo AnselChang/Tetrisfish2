@@ -32,6 +32,7 @@ import { SectionComponent } from './components/BLOCK/section/section.component';
 import { CalibratePageComponent } from './components/layout/calibrate-components/calibrate-page/calibrate-page.component';
 import { TetrisPanelComponent } from './components/BLOCK/tetris-panel/tetris-panel.component';
 import { TetrisPanelItemComponent } from './components/BLOCK/tetris-panel-item/tetris-panel-item.component';
+import { EvalBarComponent } from './components/BLOCK/eval-bar/eval-bar.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,6 +64,7 @@ import { TetrisPanelItemComponent } from './components/BLOCK/tetris-panel-item/t
     CalibratePageComponent,
     TetrisPanelComponent,
     TetrisPanelItemComponent,
+    EvalBarComponent,
   ],
   imports: [
     BrowserModule,

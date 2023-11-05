@@ -1,72 +1,65 @@
-<div id="play-page">
-    <section id="live-source">
-        <h2>Connect to a live source</h2>
-        <div class="section-content" id="live-source-content">
-            <app-video-capture class="ls-left-column" />
-            <div *ngIf="this.panelCalibrateMode" class="subsection ls-right-column" id="calibrate-panel">
-                <div class="calibration-title">
-                    <app-button class = "calibration-title-back" (click)="exitCalibratePanel()"><h4>Back</h4></app-button>
-                    <h3>Calibration</h3>
-                    <div></div>
-                </div>
-                <app-button (click)="determineBoundingBoxes($event)"><h4>Determine bounding boxes</h4></app-button>
-                <div class="threshold">
-                    <p>Threshold: {{getThresholdString()}}</p>
-                    <input [(ngModel)]="settings.threshold" type="range" min="0" max="30">
-                </div>
-            </div>
-            <div *ngIf="!this.panelCalibrateMode" class="subsection-container ls-right-column">
-                <div class="subsection" id="live-capture-panel">
-                    <h3>Live Capture</h3>
-                    <app-checkbox label="Show bounding boxes" [(isChecked)]="this.showBoundingBoxes" />
-                    <app-checkbox label="Show mino indicators" [(isChecked)]="this.showMinoIndicators" />
-                    <app-button (click)="goToCalibratePanel()"><h4>Calibrate</h4></app-button>
-                    <app-button (click)="startRecording()"><h4>Start Recording</h4></app-button>
+<div class="root">
+    <div class="col-analysis">
+        <app-section class="analysis-board">
+            <p>Analysis Board</p>
+            <app-interactive-tetris-board />
+        </app-section>
+        <app-section class="best-move-info">
+            <h2 class="best-move">(+2.3)  S-890  L-12</h2>
+            <p class="best-move-explanation">An s-flat minimizes burns while keeping a stable board</p>
+        </app-section>
 
-                </div>
-                <div class="subsection" id="logging">
-                    <h3>Log</h3>
-                    <h4 id="log-status" 
-                    [ngStyle]="{'color': logStatus.good ? 'green' : 'red'}"
-                      >Status: {{logStatus.message}}</h4>
-                    <app-log [logs]="logs"></app-log>
-                </div>
-            </div>
-        </div>
-        
-    </section>
-    <section id="display">
-        <h2>What we're detecting...</h2>
-        <div class="section-content" id="display-content">
-
-            <div id="tetris-display">
-                <app-interactive-tetris-board
+    </div>
+    <app-eval-bar class="col-eval-bar" />
+    <app-section class="col-capture">
+        <h1 class="padded">Live Capture Mode</h1>
+        <app-tetris-panel>
+            <app-interactive-tetris-board
                     [grid]="extractedState.getGrid()"
                     [level]="extractedState.getStatus().level"
                     [paused]="extractedState.getPaused()"
                 />
+            <app-tetris-panel-item>
+                <h2>Score</h2>
+                <h1>{{extractedState.getStatus().score}}</h1>
+            </app-tetris-panel-item>
+            <div class="level-lines">
+                <app-tetris-panel-item>
+                    <h2>Lines</h2>
+                    <h1>{{extractedState.getStatus().lines}}</h1>
+                </app-tetris-panel-item>
+                <app-tetris-panel-item>
+                    <h2>Level</h2>
+                    <h1>{{extractedState.getStatus().level}}</h1>
+                </app-tetris-panel-item>
             </div>
+            <app-tetris-panel-item>
+                <app-next-box [showBackground]="false" [level]="extractedState.getStatus().level" [type]="extractedState.getNextPieceType()"></app-next-box>
+            </app-tetris-panel-item>
 
-            <div class="subsection-container" id="status-display">
-                <div class="subsection status-container" id="level-status">
-                    <h4>Level</h4>
-                    <h2>{{extractedState.getStatus().level}}</h2>
-                </div>
-                <div class="subsection status-container" id="lines-status">
-                    <h4>Lines</h4>
-                    <h2>{{extractedState.getStatus().lines}}</h2>
-                </div>
-                <div class="subsection status-container" id="score-status">
-                    <h4>Score</h4>
-                    <h2>{{extractedState.getStatus().score}}</h2>
-                </div>
-                <div class="subsection" id="next-box">
-                    <h4>Next box</h4>
-                    <app-next-box class="nb" [showBackground]="false" [level]="extractedState.getStatus().level" [type]="extractedState.getNextPieceType()"></app-next-box>
-                </div>
+        </app-tetris-panel>
+    </app-section>
+    <div class="col-misc">
+        <video #videoElement autoplay></video>
+        <div class="col-misc-bottom">
+            <app-section class="time-notes">
+                <p class="padded">Time recorded</p>
+                <app-subsection>
+                    <h1>00:23:14</h1>
+                </app-subsection>
+                <p class="padded">Notes</p>
+                <app-subsection class="notes-section">
+                    <p class="notes">
+                        Trying to get colors with the help of tetrisfish stacking!
+                    </p>
+                </app-subsection>
+            </app-section>
+            <div class="buttons">
+                <app-button-big label="Stop Recording" />
+                <app-button-big label="Edit Calibration" />
+                <app-button-big label="Switch to Emulator" />
             </div>
         </div>
-    </section>
-
+    </div>
 
 </div>
