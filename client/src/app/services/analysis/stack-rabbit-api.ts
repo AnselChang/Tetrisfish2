@@ -70,8 +70,8 @@ export class EngineMovelistURL extends StackRabbitURL {
 // convert a BinaryGrid to a string formatted as 200 chars of 0s and 1s
 export function boardToString(grid: BinaryGrid): string {
     let result = "";
-    for (let y = 1; y <= 20; y++) {
-        for (let x = 1; x <= 10; x++) {
+    for (let y = 0; y < 20; y++) {
+        for (let x = 0; x < 10; x++) {
             result += grid.at(x, y) === BlockType.FILLED ? "1" : "0";
         }
     }

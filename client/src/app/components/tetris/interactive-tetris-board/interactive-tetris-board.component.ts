@@ -66,8 +66,8 @@ export class InteractiveTetrisBoardComponent {
 
   readonly VIEW_BOX = `0 0 ${SVG_BOARD_WIDTH} ${SVG_BOARD_HEIGHT}`;
 
-  public readonly ONE_TO_TEN: number[] = Array(10).fill(0).map((x, i) => i + 1);
-  public readonly ONE_TO_TWENTY: number[] = Array(20).fill(0).map((x, i) => i + 1);
+  public readonly ZERO_TO_NINE: number[] = Array(10).fill(0).map((x, i) => i);
+  public readonly ZERO_TO_NINETEEN: number[] = Array(20).fill(0).map((x, i) => i);
   
   public readonly PAUSE_X = SVG_BOARD_WIDTH / 2;
   public readonly PAUSE_Y = SVG_BOARD_HEIGHT / 3;

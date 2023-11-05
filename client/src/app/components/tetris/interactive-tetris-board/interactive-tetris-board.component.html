@@ -5,8 +5,8 @@
     <rect x="0" y="0" [attr.width]="boardWidth" [attr.height]="boardHeight" fill="black" />
 
     <g *ngIf="!paused">
-        <g *ngFor="let y of ONE_TO_TWENTY">
-            <g *ngFor="let x of ONE_TO_TEN">
+        <g *ngFor="let y of ZERO_TO_NINETEEN">
+            <g *ngFor="let x of ZERO_TO_NINE">
                 <g *ngIf="getBlockAt(x,y) as block">
                     <g app-tetris-block
                         (onHover)="onBlockHover(block, $event)"

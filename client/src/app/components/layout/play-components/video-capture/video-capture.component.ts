@@ -174,6 +174,24 @@ export class VideoCaptureComponent implements OnInit {
     this.videoElement.nativeElement.srcObject = null;
   }
 
+  updateBoardOCR(): void {
+      // Extract colors for each OCR position for this frame
+    const grid = this.captureSettingsService.get().getBoard()?.evaluate(this.captureFrameService);
+
+    // set extracted board to the computed OCR grid
+    this.extractedStateService.get().setGrid(grid!);
+
+    // determine if game is paused
+    this.extractedStateService.get().setPaused(this.captureSettingsService.get().getBoard()?.isPaused()!);
+  }
+
+  updateNextBoxOCR(): void {
+    // Extract colors for each OCR position for this frame
+    const nextGrid = this.captureSettingsService.get().getNext()?.evaluate(this.captureFrameService);
+    // set extracted next box to the computed OCR grid
+    this.extractedStateService.get().setNext(nextGrid!);
+  }
+
   executeFrame(): void {
 
     /* 
@@ -195,14 +213,9 @@ export class VideoCaptureComponent implements OnInit {
     STEP 2: Process the data for the individual frame
     */
 
-    // Extract colors for each OCR position for this frame
-    this.captureSettingsService.get().getBoard()?.evaluate(this.captureFrameService);
-
-    // set extracted state to the computed OCR grid
-    this.extractedStateService.get().grid = this.captureSettingsService.get().getGrid()!;
-
-    // determine if game is paused
-    this.extractedStateService.get().isPaused = this.captureSettingsService.get().getBoard()?.isPaused()!;
+    this.updateBoardOCR();
+    this.updateNextBoxOCR();
+    
     /*
      STEP 3: Draw all overlays
     */
@@ -230,13 +243,13 @@ export class VideoCaptureComponent implements OnInit {
     }
 
     // draw pause points
-    // if (board && board?.hasEvaluation()) {
-    //   for (let key of ["PAUSE_U", "PAUSE_S", "PAUSE_E"]) {
-    //     const point = board.getSpecialPointLocation(key);
-    //     const color = board.getSpecialPointColor(key);
-    //     this.drawCircle(ctx, point.x, point.y, 2, "rgb(255,255,255");
-    //   }
-    // }
+    if (board && board?.hasEvaluation()) {
+      for (let key of ["PAUSE_U", "PAUSE_S", "PAUSE_E"]) {
+        const point = board.getSpecialPointLocation(key);
+        const color = board.getSpecialPointColor(key);
+        this.drawCircle(ctx, point.x, point.y, 2, "rgb(255,255,255");
+      }
+    }
 
     requestAnimationFrame(this.executeFrame.bind(this));
   }
@@ -261,7 +274,7 @@ export class VideoCaptureComponent implements OnInit {
     for (let yIndex = 0; yIndex < positions.length; yIndex++) {
       for (let xIndex = 0; xIndex < positions[yIndex].length; xIndex++) {
         const {x,y} = positions[yIndex][xIndex];
-        const isMino = grid?.at(xIndex+1, yIndex+1);
+        const isMino = grid?.at(xIndex, yIndex);
         const color = isMino ? "rgb(0,255,0)" : "rgb(255,0,0)";
         this.drawCircle(ctx, x, y, 2, color);
       }

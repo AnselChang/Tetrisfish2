@@ -41,28 +41,28 @@
 
             <div id="tetris-display">
                 <app-interactive-tetris-board
-                    [grid]="extractedState.grid"
-                    [level]="extractedState.status.level"
-                    [paused]="extractedState.isPaused"
+                    [grid]="extractedState.getGrid()"
+                    [level]="extractedState.getStatus().level"
+                    [paused]="extractedState.getPaused()"
                 />
             </div>
 
             <div class="subsection-container" id="status-display">
                 <div class="subsection status-container" id="level-status">
                     <h4>Level</h4>
-                    <h2>{{extractedState.status.level}}</h2>
+                    <h2>{{extractedState.getStatus().level}}</h2>
                 </div>
                 <div class="subsection status-container" id="lines-status">
                     <h4>Lines</h4>
-                    <h2>{{extractedState.status.lines}}</h2>
+                    <h2>{{extractedState.getStatus().lines}}</h2>
                 </div>
                 <div class="subsection status-container" id="score-status">
                     <h4>Score</h4>
-                    <h2>{{extractedState.status.score}}</h2>
+                    <h2>{{extractedState.getStatus().score}}</h2>
                 </div>
                 <div class="subsection" id="next-box">
                     <h4>Next box</h4>
-                    <app-next-box class="nb" [showBackground]="false" [level]="extractedState.status.level" [type]="extractedState.nextPieceType"></app-next-box>
+                    <app-next-box class="nb" [showBackground]="false" [level]="extractedState.getStatus().level" [type]="extractedState.getNextPieceType()"></app-next-box>
                 </div>
             </div>
         </div>
