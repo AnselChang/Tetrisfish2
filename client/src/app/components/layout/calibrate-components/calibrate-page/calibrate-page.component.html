@@ -1,0 +1,42 @@
+<div class="root">
+    <div class="calibrate">
+        <app-button-small label="Back to recording" />
+        <app-section class="calibrate-panel">
+            <h3>1. Click on an empty part of the board</h3>
+            <app-button-small label="Autocalibrate" />
+            <hr>
+            <h3>2. Set detection threshold</h3>
+            <div class="threshold">
+                <p>{{settings.threshold}}</p>
+                <input [(ngModel)]="settings.threshold" type="range" min="0" max="30">
+            </div>
+            <hr>
+
+
+        </app-section>
+    </div>
+    <app-section class="live-source-panel">
+        <h1>Connect to a live source</h1>
+        <app-video-capture />
+    </app-section>
+    <app-section class="detection-panel">
+        <h1>What we're detecting...</h1>
+        <app-tetris-panel>
+            <app-interactive-tetris-board />
+            <app-tetris-panel-item>
+                <h2>Score</h2>
+                <h1>{{extractedState.getStatus().score}}</h1>
+            </app-tetris-panel-item>
+            <app-tetris-panel-item>
+                <h2>Lines</h2>
+                <h1>{{extractedState.getStatus().lines}}</h1>
+            </app-tetris-panel-item>
+            <app-tetris-panel-item>
+                <h2>Level</h2>
+                <h1>{{extractedState.getStatus().level}}</h1>
+            </app-tetris-panel-item>
+
+        </app-tetris-panel>
+
+    </app-section>
+</div>

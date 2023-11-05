@@ -25,23 +25,30 @@ a:hover, a:focus {
     text-decoration: none;
 }
 
-h1, h2, p {
+h1, h2, h3, p {
     line-height: normal;
     color: $text-color;
     font-family: $main-font;
     font-style: normal;
+    text-align: center;
     margin: 0;
     padding: 0;
 }
 
 h1 {
+    line-height: 1.4;
     font-size: 1.563rem;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 h2 {
     font-size: 1rem;
     font-weight: 600;
+}
+
+h3 {
+    font-size: 0.6875rem;
+    font-weight: 700;
 }
 
 p {
@@ -62,3 +69,11 @@ p.tag {
     font-weight: 400;
     
 }
+
+hr {
+    border: none; /* Remove the default border */
+    height: 0.5px; /* Make it thin */
+    background-color: rgba(255, 255, 255, 0.3); /* White with 50% opacity */
+    margin: 15px auto; /* Optional: adds some space before and after the HR */
+    width: 90%;
+  }

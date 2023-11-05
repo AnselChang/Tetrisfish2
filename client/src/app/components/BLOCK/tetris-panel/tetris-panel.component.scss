@@ -1,0 +1,17 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 0 10px;
+}
+
+.tetris-board {
+    flex-basis: 60%;
+}
+
+.panel-items {
+    flex-basis: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

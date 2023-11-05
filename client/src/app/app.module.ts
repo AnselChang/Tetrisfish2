@@ -16,7 +16,6 @@ import { ProfilePageComponent } from './components/layout/profile-page/profile-p
 import { HomePageComponent } from './components/layout/home-page/home-page.component';
 import { PageLinkComponent } from './components/layout/root-components/page-link/page-link.component';
 import { LoginPageComponent } from './components/layout/login-page/login-page.component';
-import { LoginButtonComponent } from './components/layout/root-components/login-button/login-button.component';
 import { ButtonComponent } from './components/BLOCK/button/button.component';
 import { ImageComponent } from './components/BLOCK/image/image.component';
 import { MorePageComponent } from './components/layout/more-components/more-page/more-page.component';
@@ -30,6 +29,9 @@ import { FixedSizeImageComponent } from './components/BLOCK/fixed-size-image/fix
 import { ButtonBigComponent } from './components/BLOCK/button-big/button-big.component';
 import { SubsectionComponent } from './components/BLOCK/subsection/subsection.component';
 import { SectionComponent } from './components/BLOCK/section/section.component';
+import { CalibratePageComponent } from './components/layout/calibrate-components/calibrate-page/calibrate-page.component';
+import { TetrisPanelComponent } from './components/BLOCK/tetris-panel/tetris-panel.component';
+import { TetrisPanelItemComponent } from './components/BLOCK/tetris-panel-item/tetris-panel-item.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +47,6 @@ import { SectionComponent } from './components/BLOCK/section/section.component';
     HomePageComponent,
     PageLinkComponent,
     LoginPageComponent,
-    LoginButtonComponent,
     ButtonComponent,
     ImageComponent,
     MorePageComponent,
@@ -59,6 +60,9 @@ import { SectionComponent } from './components/BLOCK/section/section.component';
     ButtonBigComponent,
     SubsectionComponent,
     SectionComponent,
+    CalibratePageComponent,
+    TetrisPanelComponent,
+    TetrisPanelItemComponent,
   ],
   imports: [
     BrowserModule,

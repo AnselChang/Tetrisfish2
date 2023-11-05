@@ -20,12 +20,11 @@ nav {
     justify-content: space-between;
 
     background-color: $layer-1-color;
-    padding: 0 2%;
-    margin: 2%;
-    border-radius: 10px;
+    padding: 0 10px;
+    margin: 10px;
+    border-radius: 5px;
 
     flex: 0 1 auto;
-
 }
 
 nav > .left-nav {
@@ -33,7 +32,7 @@ nav > .left-nav {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    gap: 3.75%;
+    gap: 10px;
 }
 
 nav > .right-nav {
@@ -41,15 +40,7 @@ nav > .right-nav {
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    gap: 2vw;
-}
-
-h3 {
-    line-height: 0;
-}
-
-.login-button {
-    // padding: 0 1vw;
+    gap: 10px;
 }
 
 .profile-pic:hover {
@@ -60,18 +51,6 @@ h3 {
     filter: brightness(0.7);
 }
 
-@media (min-width: 1000px) {
-    nav {
-        padding: 8px 20px;
-        margin: 20px;
-    }
-    nav > .left-nav {
-        gap: 20px;
-    }
-    nav > .right-nav {
-        gap: 20px;
-    }
-}
 
 .logo-container {
     flex-shrink: 2;
