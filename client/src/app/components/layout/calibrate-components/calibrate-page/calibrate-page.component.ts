@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/cor
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
+import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
 
 @Component({
   selector: 'app-calibrate-page',
@@ -13,6 +14,7 @@ export class CalibratePageComponent {
   @Input() captureVideoElement!: ElementRef<HTMLVideoElement>;
 
   constructor(
+    public videoCaptureService: VideoCaptureService,
     private captureSettingsService: CaptureSettingsService,
     private extractedStateService: ExtractedStateService,
     private captureFrameService: CaptureFrameService

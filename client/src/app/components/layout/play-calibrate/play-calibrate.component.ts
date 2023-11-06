@@ -23,6 +23,7 @@ export class PlayCalibrateComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit(): void {
     this.videoCaptureService.initVideoDevices();
+    this.mode = this.videoCaptureService.isCapturing() ? PlayMode.PLAY : PlayMode.CALIBRATE;
   }
 
   ngAfterViewInit(): void {
@@ -33,6 +34,7 @@ export class PlayCalibrateComponent implements OnInit, AfterViewInit, OnDestroy 
       this.videoCaptureService.stopCapture();
   }
 
+  // defaults to calibration page unless capture is running
   public isPlayPage(): boolean {
     return this.mode === PlayMode.PLAY;
   }

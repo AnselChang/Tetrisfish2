@@ -62,6 +62,11 @@ export class VideoCaptureService {
     return this.status === VideoPauseStatus.PAUSED;
   }
 
+  public isCapturing(): boolean {
+    console.log("isCapturing:", this.isCaptureRunning);
+    return this.isCaptureRunning;
+  }
+
   public togglePause(): void {
     if (this.status === VideoPauseStatus.PLAYING) {
       this.status = VideoPauseStatus.PAUSED;

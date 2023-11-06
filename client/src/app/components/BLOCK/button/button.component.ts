@@ -10,6 +10,7 @@ export class ButtonComponent implements AfterViewInit, OnChanges {
   @Input() color: string = '#5865F2';
   @Input() expandToFitWidth: boolean = false;
   @Output() click = new EventEmitter<Event>();
+  @Input() buttonDisabled: boolean = false;
 
 
   constructor(private colorService: ColorService, private el: ElementRef, private renderer: Renderer2) {
@@ -32,5 +33,4 @@ export class ButtonComponent implements AfterViewInit, OnChanges {
   ngOnChanges(): void {
     this.updateCSS();
   }
-
 }

@@ -1,4 +1,4 @@
-<button class="generic-button button-big">
+<button class="generic-button button-big" [disabled]="buttonDisabled ? true : null">
     <app-fixed-size-image *ngIf="icon" [src]="icon" [width]="31"></app-fixed-size-image>
     <div class="text">
         <h1>{{label}}</h1>

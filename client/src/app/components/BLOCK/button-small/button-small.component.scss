@@ -18,11 +18,11 @@
     box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.5);
 }
 
-.button-small:hover {
-    box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.5);
+.button-small:not(:disabled):hover {
+    box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.75);
 }
 
-.button-small:active {
+.button-small:not(:disabled):active {
     transform: translateY(1px);
     box-shadow: 0 0 4.5px 0.15px rgb(0,0,0,0.75);
 }

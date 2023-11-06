@@ -3,6 +3,7 @@
     --buttonColor: #5865F2;
     --buttonColorHovered: black;
     --buttonColorPressed: #5865F2;
+    --buttonColorDisabled: grey;
 }
 
 .generic-button {
@@ -16,4 +17,8 @@
 
 .generic-button:active {
     background-color: var(--buttonColorPressed);
+}
+
+.generic-button:disabled {
+    background-color: var(--buttonColorDisabled);
 }

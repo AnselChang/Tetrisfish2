@@ -19,11 +19,11 @@
     box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.5);
 }
 
-.button-big:hover {
-    box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.5);
+.button-big:not(:disabled):hover {
+    box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.75);
 }
 
-.button-big:active {
+.button-big:not(:disabled):active {
     transform: translateY(1px);
     box-shadow: 0 0 4.5px 0.15px rgb(0,0,0,0.75);
 }
