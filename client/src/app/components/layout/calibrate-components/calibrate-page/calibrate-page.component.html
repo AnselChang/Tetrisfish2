@@ -15,11 +15,11 @@
         </app-section>
     </div>
     <app-section class="live-source-panel">
-        <h1>Connect to a live source</h1>
+        <h1 class="padded">Connect to a live source</h1>
         <app-video-capture [captureVideoElement]="captureVideoElement" />
     </app-section>
     <app-section class="detection-panel">
-        <h1>What we're detecting...</h1>
+        <h1 class="padded">What we're detecting...</h1>
         <app-tetris-panel>
             <app-interactive-tetris-board
                     [grid]="extractedState.getGrid()"
@@ -33,10 +33,12 @@
             <app-tetris-panel-item>
                 <h2>Lines</h2>
                 <h1>{{extractedState.getStatus().lines}}</h1>
+                <p>Confidence: 0%</p>
             </app-tetris-panel-item>
             <app-tetris-panel-item>
                 <h2>Level</h2>
                 <h1>{{extractedState.getStatus().level}}</h1>
+                <p>Confidence: 0%</p>
             </app-tetris-panel-item>
             <app-tetris-panel-item>
                 <app-next-box [showBackground]="false" [level]="extractedState.getStatus().level" [type]="extractedState.getNextPieceType()"></app-next-box>

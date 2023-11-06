@@ -166,10 +166,13 @@ export class VideoCaptureService {
     STEP 2: Process the data for the individual frame
     */
 
-    this.updateBoardOCR();
-    this.updateNextBoxOCR();
-    this.updateLevelOCR();
-    this.updateLinesOCR();
+    const board = this.captureSettingsService.get().getBoard();
+    if (board) {
+      this.updateBoardOCR();
+      this.updateNextBoxOCR();
+      this.updateLevelOCR();
+      this.updateLinesOCR();
+    }
     
     /*
      STEP 3: Draw all overlays
@@ -191,7 +194,13 @@ export class VideoCaptureService {
   }
 
   updateLevelOCR() {
-    const levelGrid = this.captureSettingsService.get().getLevel()?.evaluate(this.captureFrameService);
+    const levelOCR = this.captureSettingsService.get().getLevel()!;
+    const levelGrid = levelOCR.evaluate(this.captureFrameService);
+
+    levelOCR.getDigits()!.forEach((digitOCR, index) => {
+      digitOCR.print();
+    });
+
     this.extractedStateService.get().setLevel(levelGrid!);
   }
 

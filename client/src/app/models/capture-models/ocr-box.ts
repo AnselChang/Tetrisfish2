@@ -6,6 +6,7 @@ For example, the ocr box for the main board should store relative positions of t
 minos
 */
 
+import { Bitboard } from "../../scripts/bitboard";
 import { HSVColor, rgbToHsv } from "../../scripts/color";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import { CaptureSettings, Rectangle, ThresholdType } from "./capture-settings";
@@ -231,16 +232,18 @@ export class NextOCRBox extends OCRBox {
 }
 
 export class NumberOCRBox extends OCRBox {
+
+    private static readonly RESOLUTION = 16;
     
-    constructor(settings: CaptureSettings, boundingRect: Rectangle, numDigits: number,
+    constructor(settings: CaptureSettings, boundingRect: Rectangle, private numDigits: number,
         public paddingTop: number, // distance (in percent of height) before first OCR dot row
         public paddingBottom: number, // distance (in percent of height) after last OCR dot row
         public paddingLeft: number, // distance (in percent of width) before first OCR dot column
         public paddingRight: number,
     ) {
 
-        const NUM_ROWS = 20;
-        const NUM_COLS = 15 * numDigits;
+        const NUM_ROWS = NumberOCRBox.RESOLUTION;
+        const NUM_COLS = NumberOCRBox.RESOLUTION * numDigits;
 
         // level box is 1 row, 2 columns
         // TUNE THESE VALUES
@@ -250,6 +253,46 @@ export class NumberOCRBox extends OCRBox {
                 NUM_COLS, paddingLeft, paddingRight
             )
         );
+    }
+
+    // if digit is 0, then columns 0-15 are used, etc.
+    convertToBitboard(digit: number): Bitboard | undefined {
+
+        if (!this.hasEvaluation()) {
+            return undefined;
+        }
+
+        let bigIntValue = 0n;
+
+        const startX = digit * NumberOCRBox.RESOLUTION;
+        const endX = startX + NumberOCRBox.RESOLUTION;
+      
+        // Assuming grid is a 16x16 array
+        for (let y = 0; y < 16; y++) {
+          for (let x = startX; x < endX; x++) {
+            // Calculate the bit position
+            const bitPosition = BigInt(y * 16 + x);
+            // Set the bit if the cell in the grid is 1
+            if ((this.getGrid()!).at(x,y) === BlockType.FILLED) {
+              bigIntValue |= (1n << bitPosition);
+            }
+          }
+        }
+      
+        return new Bitboard(bigIntValue);
+    }
+
+    getDigits(): Bitboard[] | undefined {
+            
+        if (!this.hasEvaluation()) {
+            return undefined;
+        }
+
+        let digits: Bitboard[] = [];
+        for (let digit = 0; digit < this.numDigits; digit++) {
+            digits.push(this.convertToBitboard(digit)!);
+        }
+        return digits;
     }
 }
 
