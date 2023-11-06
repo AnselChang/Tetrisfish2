@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
+import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -21,7 +22,10 @@ export class LogMessage {
   templateUrl: './play-page.component.html',
   styleUrls: ['./play-page.component.scss']
 })
-export class PlayPageComponent {
+export class PlayPageComponent implements AfterViewInit {
+  @Input() videoElement!: ElementRef<HTMLVideoElement>;
+  @Output() onSwitchMode = new EventEmitter<void>();
+  @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
   
   public panelMode: PanelMode = PanelMode.PLAY;
   public showBoundingBoxes: boolean = true;
@@ -31,6 +35,7 @@ export class PlayPageComponent {
   public logs: LogMessage[];
 
   constructor(
+    public videoCaptureService: VideoCaptureService,
     public extractedStateService: ExtractedStateService,
     public captureSettingsService: CaptureSettingsService,
     private captureFrameService: CaptureFrameService
@@ -46,6 +51,10 @@ export class PlayPageComponent {
       new LogMessage("Messaasdf sdffge 2", false),
       new LogMessage("Mesasdfasdfa sdfafdasfs dfaffdfasfdafssage 3", true),
     ];
+  }
+
+  ngAfterViewInit(): void {
+      this.videoCaptureService.registerCanvas(this.canvasElement, true);
   }
 
   public get panelCalibrateMode(): boolean {

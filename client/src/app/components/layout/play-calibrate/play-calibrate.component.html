@@ -1,0 +1,5 @@
+<!-- Video that is shared between play an calibrate page. it is always hidden and running in background -->
+<video #videoElement autoplay style="display: none;"></video>
+
+<app-play-page *ngIf="isPlayPage()" [videoElement]="captureVideoElement" (onSwitchMode)="switchPage()" />
+<app-calibrate-page *ngIf="!isPlayPage()" [captureVideoElement]="captureVideoElement" (onSwitchMode)="switchPage()"/>

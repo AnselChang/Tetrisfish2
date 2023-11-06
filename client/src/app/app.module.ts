@@ -33,6 +33,7 @@ import { CalibratePageComponent } from './components/layout/calibrate-components
 import { TetrisPanelComponent } from './components/BLOCK/tetris-panel/tetris-panel.component';
 import { TetrisPanelItemComponent } from './components/BLOCK/tetris-panel-item/tetris-panel-item.component';
 import { EvalBarComponent } from './components/BLOCK/eval-bar/eval-bar.component';
+import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -65,6 +66,7 @@ import { EvalBarComponent } from './components/BLOCK/eval-bar/eval-bar.component
     TetrisPanelComponent,
     TetrisPanelItemComponent,
     EvalBarComponent,
+    PlayCalibrateComponent,
   ],
   imports: [
     BrowserModule,

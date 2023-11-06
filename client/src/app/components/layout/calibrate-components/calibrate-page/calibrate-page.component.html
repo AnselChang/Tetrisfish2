@@ -1,8 +1,6 @@
 <div class="root">
     <div class="calibrate">
-        <a routerLink="/play" routerLinkActive="active">
-            <app-button-small label="Back to recording" />
-        </a>
+        <app-button-small label="Back to recording" (click)="onSwitchMode.emit()" />
         
         <app-section class="calibrate-panel">
             <h3>1. Click on an empty part of the board</h3>
@@ -20,7 +18,7 @@
     </div>
     <app-section class="live-source-panel">
         <h1>Connect to a live source</h1>
-        <app-video-capture />
+        <app-video-capture [captureVideoElement]="captureVideoElement" />
     </app-section>
     <app-section class="detection-panel">
         <h1>What we're detecting...</h1>

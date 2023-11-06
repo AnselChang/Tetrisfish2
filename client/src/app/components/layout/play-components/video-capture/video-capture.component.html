@@ -1,14 +1,14 @@
 <div class="select-video">
-    <button (click)="screenCapture()">Capture Screen</button>
-    <select [(ngModel)]="selectedDevice" (change)="onDeviceChange()">
-        <option *ngFor="let device of videoDevices" [ngValue]="device">
+    <button (click)="captureServ.screenCapture()">Capture Screen</button>
+    <select [(ngModel)]="captureServ.selectedDevice" (change)="captureServ.onDeviceChange()">
+        <option *ngFor="let device of captureServ.videoDevices" [ngValue]="device">
             {{ (device === null) ? "...or select a video device" : device.label }}
         </option>
     </select>
 </div>
 <div class="video-options">
-    <button (click)="generateVideoDevicesList()">Refresh</button>
-    <button (click)="togglePause()">{{isPaused() ? "Resume" : "Pause"}}</button>
+    <button (click)="captureServ.generateVideoDevicesList()">Refresh</button>
+    <button (click)="captureServ.togglePause()">{{captureServ.isPaused() ? "Resume" : "Pause"}}</button>
 </div>
   
 <video #videoElement autoplay style="display: none;"></video>
@@ -16,9 +16,9 @@
 [ngStyle]="{'border' : (isCaptureModeNormal() ? '1px solid #ccc' : '3px solid green')}"
 (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
 (mousemove)="onMouseMove($event)"
-[width]="450*CANVAS_RESOLUTION_SCALE" [height]="450*CANVAS_RESOLUTION_SCALE"
-style="width: 450px; height: 450px;"></canvas>
-
+[width]="captureServ.OCR_WIDTH" [height]="captureServ.OCR_HEIGHT"
+[style.width.px]="captureServ.DISPLAY_WIDTH" [style.height.px]="captureServ.DISPLAY_HEIGHT">
+</canvas>
 
 <!-- Display permission error -->
-<div *ngIf="permissionError" class="error">{{ permissionError }}</div>
+<div *ngIf="captureServ.permissionError" class="error">{{ captureServ.permissionError }}</div>

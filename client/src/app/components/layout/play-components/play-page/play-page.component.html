@@ -1,3 +1,8 @@
+<canvas #canvasElement
+[width]="videoCaptureService.OCR_WIDTH" [height]="videoCaptureService.OCR_HEIGHT"
+style="display: none;"></canvas>
+
+
 <div class="root">
     <div class="col-analysis">
         <app-section class="analysis-board">
@@ -56,9 +61,7 @@
             </app-section>
             <div class="buttons">
                 <app-button-big label="Stop Recording" />
-                <a routerLink="/calibrate" routerLinkActive="active">
-                    <app-button-big label="Edit Calibration" />
-                </a>
+                <app-button-big label="Edit Calibration" (click)="onSwitchMode.emit()"/>
                 <app-button-big label="Switch to Emulator" />
             </div>
         </div>

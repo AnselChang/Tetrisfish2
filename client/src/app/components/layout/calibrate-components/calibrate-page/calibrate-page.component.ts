@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
@@ -9,6 +9,8 @@ import { ExtractedStateService } from 'client/src/app/services/capture/extracted
   styleUrls: ['./calibrate-page.component.scss']
 })
 export class CalibratePageComponent {
+  @Output() onSwitchMode = new EventEmitter<void>();
+  @Input() captureVideoElement!: ElementRef<HTMLVideoElement>;
 
   constructor(
     private captureSettingsService: CaptureSettingsService,
