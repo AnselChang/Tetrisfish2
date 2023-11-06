@@ -4,7 +4,7 @@ Represents all the state for a frame after OCR
 
 import BinaryGrid from "../tetronimo-models/binary-grid";
 import { Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
-import { BoardOCRBox, LevelOCRBox, NextOCRBox } from "./ocr-box";
+import { BoardOCRBox, LevelOCRBox, LinesOCRBox, NextOCRBox } from "./ocr-box";
 import { Point } from "./point";
 
 export type Rectangle = {
@@ -35,6 +35,7 @@ export class CaptureSettings {
     private boardOCRBox?: BoardOCRBox;
     private nextOCRBox?: NextOCRBox;
     private levelOCRBox?: LevelOCRBox;
+    private linesOCRBox?: LevelOCRBox;
 
     public setBoardBoundingRect(boundingRect: Rectangle) {
         this.boardOCRBox = new BoardOCRBox(this, boundingRect);
@@ -48,6 +49,10 @@ export class CaptureSettings {
         this.levelOCRBox = new LevelOCRBox(this, boundingRect);
     }
 
+    public setLinesBoundingRect(boundingRect: Rectangle) {
+        this.linesOCRBox = new LinesOCRBox(this, boundingRect);
+    }
+
     public getNext(): NextOCRBox | undefined {
         return this.nextOCRBox;
     }
@@ -58,6 +63,10 @@ export class CaptureSettings {
 
     public getLevel(): LevelOCRBox | undefined {
         return this.levelOCRBox;
+    }
+
+    public getLines(): LinesOCRBox | undefined {
+        return this.linesOCRBox;
     }
 
 }

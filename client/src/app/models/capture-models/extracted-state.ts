@@ -63,6 +63,10 @@ export class ExtractedState {
         this.status.level = 0; // TODO
     }
 
+    public setLines(linesGrid: BinaryGrid): void {
+        this.status.lines = 0; // TODO
+    }
+
     public setPaused(isPaused: boolean): void {
         this.isPaused = isPaused;
     }

@@ -169,6 +169,7 @@ export class VideoCaptureService {
     this.updateBoardOCR();
     this.updateNextBoxOCR();
     this.updateLevelOCR();
+    this.updateLinesOCR();
     
     /*
      STEP 3: Draw all overlays
@@ -201,6 +202,11 @@ export class VideoCaptureService {
     this.extractedStateService.get().setNext(nextGrid!);
   }
 
+  updateLinesOCR(): void {
+    const linesGrid = this.captureSettingsService.get().getLines()?.evaluate(this.captureFrameService);
+    this.extractedStateService.get().setLines(linesGrid!);
+  }
+
   drawCanvasOverlays(ctx: CanvasRenderingContext2D): void {
 
     // draw main board
@@ -211,6 +217,9 @@ export class VideoCaptureService {
 
     // draw level box
     this.drawOCROverlay(ctx, this.captureSettingsService.get().getLevel());
+
+    // draw lines box
+    this.drawOCROverlay(ctx, this.captureSettingsService.get().getLines());
 
     const board = this.captureSettingsService.get().getBoard();
 
@@ -224,6 +233,12 @@ export class VideoCaptureService {
     if (board) {
       const levelPoint = board.getLevelCanvasLocation();
       this.drawCircle(ctx, levelPoint.x, levelPoint.y, 2, "rgb(0,0,255)");
+    }
+
+    // draw lines point
+    if (board) {
+      const linesPoint = board.getLinesCanvasLocation();
+      this.drawCircle(ctx, linesPoint.x, linesPoint.y, 2, "rgb(0,0,255)");
     }
 
 

@@ -166,6 +166,7 @@ export class BoardOCRBox extends OCRBox {
     ];
 
     private static readonly LEVEL_LOCATION = {x: 1.35, y: 0.8};
+    private static readonly LINES_LOCATION = {x: 0.01, y: -0.15};
 
     constructor(settings: CaptureSettings, boundingRect: Rectangle) {
 
@@ -186,6 +187,10 @@ export class BoardOCRBox extends OCRBox {
 
     public getLevelCanvasLocation(): Point {
         return this.getCanvasPositionFromRelative(BoardOCRBox.LEVEL_LOCATION);
+    }
+
+    public getLinesCanvasLocation(): Point {
+        return this.getCanvasPositionFromRelative(BoardOCRBox.LINES_LOCATION);
     }
 
     public isPaused(): boolean | undefined {
@@ -225,7 +230,7 @@ export class NextOCRBox extends OCRBox {
         }
 }
 
-export class DigitOCRBox extends OCRBox {
+export class NumberOCRBox extends OCRBox {
     
     constructor(settings: CaptureSettings, boundingRect: Rectangle, numDigits: number,
         public paddingTop: number, // distance (in percent of height) before first OCR dot row
@@ -248,15 +253,25 @@ export class DigitOCRBox extends OCRBox {
     }
 }
 
-export class LevelOCRBox extends DigitOCRBox {
+export class LevelOCRBox extends NumberOCRBox {
     
     constructor(settings: CaptureSettings, boundingRect: Rectangle) {
 
-        // level box is 1 row, 2 columns
-        // TUNE THESE VALUES
         super(settings, boundingRect, 2,
-            0.495, 0.18, // paddingTop, paddingBottom
+            0.5, 0.18, // paddingTop, paddingBottom
             0.42, 0.25, // paddingLeft, paddingRight
         );
     }
+}
+
+export class LinesOCRBox extends NumberOCRBox {
+
+    constructor(settings: CaptureSettings, boundingRect: Rectangle) {
+
+        super(settings, boundingRect, 3,
+            0.21, 0.3, // paddingTop, paddingBottom
+            0.69, 0.04, // paddingLeft, paddingRight
+        );
+    }
+
 }
