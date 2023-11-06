@@ -59,6 +59,10 @@ export class ExtractedState {
         console.log("next piece type: " + this.nextPieceType);
     }
 
+    public setLevel(levelGrid: BinaryGrid): void {
+        this.status.level = 0; // TODO
+    }
+
     public setPaused(isPaused: boolean): void {
         this.isPaused = isPaused;
     }

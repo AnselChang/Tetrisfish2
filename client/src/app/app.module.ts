@@ -34,6 +34,7 @@ import { TetrisPanelComponent } from './components/BLOCK/tetris-panel/tetris-pan
 import { TetrisPanelItemComponent } from './components/BLOCK/tetris-panel-item/tetris-panel-item.component';
 import { EvalBarComponent } from './components/BLOCK/eval-bar/eval-bar.component';
 import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
+import { ThresholdInputComponent } from './components/layout/calibrate-components/threshold-input/threshold-input.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,6 +68,7 @@ import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-
     TetrisPanelItemComponent,
     EvalBarComponent,
     PlayCalibrateComponent,
+    ThresholdInputComponent,
   ],
   imports: [
     BrowserModule,

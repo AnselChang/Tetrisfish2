@@ -5,6 +5,7 @@ import { ExtractedStateService } from './extracted-state.service';
 import { Rectangle } from '../../models/capture-models/capture-settings';
 import { Point } from '../../models/capture-models/point';
 import BinaryGrid from '../../models/tetronimo-models/binary-grid';
+import { OCRBox } from '../../models/capture-models/ocr-box';
 
 export enum VideoPauseStatus {
   PLAYING = "PLAYING",
@@ -167,6 +168,7 @@ export class VideoCaptureService {
 
     this.updateBoardOCR();
     this.updateNextBoxOCR();
+    this.updateLevelOCR();
     
     /*
      STEP 3: Draw all overlays
@@ -187,6 +189,11 @@ export class VideoCaptureService {
     this.extractedStateService.get().setPaused(this.captureSettingsService.get().getBoard()?.isPaused()!);
   }
 
+  updateLevelOCR() {
+    const levelGrid = this.captureSettingsService.get().getLevel()?.evaluate(this.captureFrameService);
+    this.extractedStateService.get().setLevel(levelGrid!);
+  }
+
   updateNextBoxOCR(): void {
     // Extract colors for each OCR position for this frame
     const nextGrid = this.captureSettingsService.get().getNext()?.evaluate(this.captureFrameService);
@@ -195,27 +202,30 @@ export class VideoCaptureService {
   }
 
   drawCanvasOverlays(ctx: CanvasRenderingContext2D): void {
-    // draw board rect if it exists
-    const boundingRect = this.captureSettingsService.get().getBoardBoundingRect();
-    if (boundingRect) this.drawRect(ctx, boundingRect, "rgb(0, 255, 0)");
 
-    // draw board positions if they exist
+    // draw main board
+    this.drawOCROverlay(ctx, this.captureSettingsService.get().getBoard());
+
+    // draw next box
+    this.drawOCROverlay(ctx, this.captureSettingsService.get().getNext());
+
+    // draw level box
+    this.drawOCROverlay(ctx, this.captureSettingsService.get().getLevel());
+
     const board = this.captureSettingsService.get().getBoard();
-    if (board) this.drawOCRPositions(ctx, board.getPositions(), board.getGrid()!);
-
-    // draw next box rect if it exists
-    const nextBoundingRect = this.captureSettingsService.get().getNextBoundingRect();
-    if (nextBoundingRect) this.drawRect(ctx, nextBoundingRect, "rgb(0, 0, 255)");
-
-    // draw next box positions if they exist
-    const next = this.captureSettingsService.get().getNext();
-    if (next) this.drawOCRPositions(ctx, next.getPositions(), next.getGrid()!);
 
     // draw next box point
     if (board) {
       const nextBoxPoints = board.getNextBoxCanvasLocations();
       nextBoxPoints.forEach((point) => this.drawCircle(ctx, point.x, point.y, 2, "rgb(0,0,255)"));
     }
+    
+    // draw level point
+    if (board) {
+      const levelPoint = board.getLevelCanvasLocation();
+      this.drawCircle(ctx, levelPoint.x, levelPoint.y, 2, "rgb(0,0,255)");
+    }
+
 
     // draw pause points
     if (board && board?.hasEvaluation()) {
@@ -239,6 +249,17 @@ export class VideoCaptureService {
       boardRect.top - BORDER_WIDTH,
       boardRect.right - boardRect.left + BORDER_WIDTH*2,
       boardRect.bottom - boardRect.top + BORDER_WIDTH*2);
+  }
+
+  private drawOCROverlay(ctx: CanvasRenderingContext2D, ocr?: OCRBox): void {
+
+    if (!ocr) return;
+
+    // draw board rect
+    this.drawRect(ctx, ocr.getBoundingRect(), "rgb(0, 255, 0)");
+
+    // draw board positions
+    this.drawOCRPositions(ctx, ocr.getPositions(), ocr.getGrid()!);
   }
 
   // draw a dot for each OCR position

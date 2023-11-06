@@ -6,11 +6,9 @@
             <h3>1. Click on an empty part of the board</h3>
             <app-button-small label="Autocalibrate" (click)="determineBoundingBoxes($event)" />
             <hr>
-            <h3>2. Set detection threshold</h3>
-            <div class="threshold">
-                <p>{{settings.threshold}}</p>
-                <input [(ngModel)]="settings.threshold" type="range" min="0" max="30">
-            </div>
+            <app-threshold-input label="2. Set mino detection threshold" [type]="ThresholdType.MINO" />
+            <hr>
+            <app-threshold-input label="3. Set text detection threshold" [type]="ThresholdType.TEXT" />
             <hr>
 
 

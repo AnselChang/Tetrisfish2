@@ -4,7 +4,7 @@ Represents all the state for a frame after OCR
 
 import BinaryGrid from "../tetronimo-models/binary-grid";
 import { Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
-import { BoardOCRBox, NextOCRBox } from "./ocr-box";
+import { BoardOCRBox, LevelOCRBox, NextOCRBox } from "./ocr-box";
 import { Point } from "./point";
 
 export type Rectangle = {
@@ -14,11 +14,27 @@ export type Rectangle = {
     right: number;
 };
 
+export enum ThresholdType {
+    MINO = "MINO",
+    TEXT = "TEXT"
+}
+
+export class Threshold {
+    constructor(public value: number, public min: number, public max: number) {}
+}
+
 export class CaptureSettings {
 
-    public threshold: number = 5; // the hsv value (0-100) threshold for detecting a mino
-    public boardOCRBox?: BoardOCRBox;
-    public nextOCRBox?: NextOCRBox;
+    public threshold: number = 5; 
+
+    public thresholds = {
+        [ThresholdType.MINO]: new Threshold(5, 0, 30), // the hsv value threshold for detecting a mino
+        [ThresholdType.TEXT]: new Threshold(40, 0, 100) // the hsv value threshold for detecting text
+    };
+
+    private boardOCRBox?: BoardOCRBox;
+    private nextOCRBox?: NextOCRBox;
+    private levelOCRBox?: LevelOCRBox;
 
     public setBoardBoundingRect(boundingRect: Rectangle) {
         this.boardOCRBox = new BoardOCRBox(this, boundingRect);
@@ -28,41 +44,20 @@ export class CaptureSettings {
         this.nextOCRBox = new NextOCRBox(this, boundingRect);
     }
 
+    public setLevelBoundingRect(boundingRect: Rectangle) {
+        this.levelOCRBox = new LevelOCRBox(this, boundingRect);
+    }
+
     public getNext(): NextOCRBox | undefined {
         return this.nextOCRBox;
-    }
-
-    public getNextPiece(): TetrominoType {
-        return TetrominoType.I_TYPE;
-    }
-
-    public getNextBoundingRect(): Rectangle | undefined {
-        if (!this.nextOCRBox) return undefined;
-        return this.nextOCRBox?.getBoundingRect()!;
-    }
-
-    public getNextPositions(): Point[][] | undefined {
-        if (!this.nextOCRBox) return undefined;
-        return this.nextOCRBox?.getPositions();
-    }
-
-    public getBoardBoundingRect(): Rectangle | undefined {
-        if (!this.boardOCRBox) return undefined;
-        return this.boardOCRBox?.getBoundingRect()!;
-    }
-
-    public getBoardPositions(): Point[][] | undefined {
-        if (!this.boardOCRBox) return undefined;
-        return this.boardOCRBox?.getPositions();
     }
 
     public getBoard(): BoardOCRBox | undefined {
         return this.boardOCRBox;
     }
 
-    public getGrid(): BinaryGrid | undefined {
-        if (!this.boardOCRBox) return undefined;
-        return this.boardOCRBox?.getGrid();
+    public getLevel(): LevelOCRBox | undefined {
+        return this.levelOCRBox;
     }
 
 }

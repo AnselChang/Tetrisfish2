@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { ThresholdType } from 'client/src/app/models/capture-models/capture-settings';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
@@ -12,6 +13,8 @@ import { VideoCaptureService } from 'client/src/app/services/capture/video-captu
 export class CalibratePageComponent {
   @Output() onSwitchMode = new EventEmitter<void>();
   @Input() captureVideoElement!: ElementRef<HTMLVideoElement>;
+
+  readonly ThresholdType = ThresholdType;
 
   constructor(
     public videoCaptureService: VideoCaptureService,

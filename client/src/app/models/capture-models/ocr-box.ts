@@ -8,7 +8,7 @@ minos
 
 import { HSVColor, rgbToHsv } from "../../scripts/color";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
-import { CaptureSettings, Rectangle } from "./capture-settings";
+import { CaptureSettings, Rectangle, ThresholdType } from "./capture-settings";
 import { PixelReader } from "./pixel-reader";
 import { Point } from "./point";
 
@@ -20,6 +20,16 @@ type SpecialPointsColor = {
     [key: string]: HSVColor
 };
 
+class OCRPosition {
+    constructor(
+        public numRows: number, // how many OCR dots to read vertically
+        public paddingTop: number, // distance (in percent of height) before first OCR dot row
+        public paddingBottom: number, // distance (in percent of height) after last OCR dot row
+        public numCols: number, // how many OCR dots to read horizontally
+        public paddingLeft: number, // distance (in percent of width) before first OCR dot column
+        public paddingRight: number, // distance (in percent of width) after last OCR dot column
+    ) {}
+}
 
 export class OCRBox {
 
@@ -39,32 +49,28 @@ export class OCRBox {
     constructor(
         private settings: CaptureSettings,
         public boundingRect: Rectangle,
-        public numRows: number, // how many OCR dots to read vertically
-        public paddingTop: number, // distance (in percent of height) before first OCR dot row
-        public paddingBottom: number, // distance (in percent of height) after last OCR dot row
-        public numCols: number, // how many OCR dots to read horizontally
-        public paddingLeft: number, // distance (in percent of width) before first OCR dot column
-        public paddingRight: number, // distance (in percent of width) after last OCR dot column
+        protected thresholdType: ThresholdType,
+        public p: OCRPosition,
         specialPoints: SpecialPointsLocation = {} // special points to capture. units in percent of width/height
     ) {
 
         const boundingWidth = boundingRect.right - boundingRect.left;
         const boundingHeight = boundingRect.bottom - boundingRect.top;
 
-        this.HEIGHT = boundingHeight * (1 - this.paddingTop - this.paddingBottom);
-        this.START_Y = boundingRect.top + boundingHeight * this.paddingTop;
+        this.HEIGHT = boundingHeight * (1 - p.paddingTop - p.paddingBottom);
+        this.START_Y = boundingRect.top + boundingHeight * p.paddingTop;
 
-        this.WIDTH = boundingWidth * (1 - this.paddingLeft - this.paddingRight);
-        this.START_X = boundingRect.left + boundingWidth * this.paddingLeft;
+        this.WIDTH = boundingWidth * (1 - p.paddingLeft - p.paddingRight);
+        this.START_X = boundingRect.left + boundingWidth * p.paddingLeft;
 
         this.positions = [];
-        for (let yIndex = 0; yIndex < this.numRows; yIndex++) {
+        for (let yIndex = 0; yIndex < p.numRows; yIndex++) {
             let row: Point[] = [];
 
-            const y = Math.floor(this.START_Y + this.HEIGHT * (yIndex / (this.numRows-1)));
+            const y = Math.floor(this.START_Y + this.HEIGHT * (yIndex / (p.numRows-1)));
 
-            for (let xIndex = 0; xIndex < this.numCols; xIndex++) {
-                const x = Math.floor(this.START_X + this.WIDTH * (xIndex / (this.numCols-1)));
+            for (let xIndex = 0; xIndex < p.numCols; xIndex++) {
+                const x = Math.floor(this.START_X + this.WIDTH * (xIndex / (p.numCols-1)));
                 
                 row.push({x, y});
             }
@@ -90,14 +96,15 @@ export class OCRBox {
         
         let blocks: BlockType[][] = [];
 
-        for (let yIndex = 0; yIndex < this.numRows; yIndex++) {
+        for (let yIndex = 0; yIndex < this.p.numRows; yIndex++) {
             let row: BlockType[] = [];
 
-            for (let xIndex = 0; xIndex < this.numCols; xIndex++) {
+            for (let xIndex = 0; xIndex < this.p.numCols; xIndex++) {
                 const {x, y} = this.positions[yIndex][xIndex];
                 const [r, g, b] = image.getPixelAt(x, y)!;
                 const hsv = rgbToHsv(r,g,b);
-                const isMino = hsv.v >= this.settings.threshold;
+                const thresholdValue = this.settings.thresholds[this.thresholdType].value;
+                const isMino = hsv.v >= thresholdValue;
                 row.push(isMino ? BlockType.FILLED : BlockType.EMPTY);
             }
             blocks.push(row);
@@ -124,6 +131,10 @@ export class OCRBox {
 
     public getGrid(): BinaryGrid | undefined {
         return this.grid;
+    }
+
+    public getAllSpecialPointKeys(): string[] {
+        return Object.keys(this.specialPointsLocation);
     }
 
     public getSpecialPointColor(key: string): HSVColor {
@@ -153,19 +164,28 @@ export class BoardOCRBox extends OCRBox {
         {x: 1.5, y: 0.41}, // top of the next box
         {x: 1.5, y: 0.595} // bottom of the next box
     ];
+
+    private static readonly LEVEL_LOCATION = {x: 1.35, y: 0.8};
+
     constructor(settings: CaptureSettings, boundingRect: Rectangle) {
 
         // main board is 20 rows, 10 columns
         // TUNE THESE VALUES
-        super(settings, boundingRect,
-            20, 0.03, 0.032, // numRows, paddingTop, paddingBottom
-            10, 0.05, 0.038, // numCols, paddingLeft, paddingRight
+        super(settings, boundingRect, ThresholdType.MINO,
+            new OCRPosition(
+                20, 0.03, 0.032, // numRows, paddingTop, paddingBottom
+                10, 0.05, 0.038, // numCols, paddingLeft, paddingRight
+            ),
             BoardOCRBox.PAUSE_POINTS
         );
     }
 
     public getNextBoxCanvasLocations(): Point[] {
         return BoardOCRBox.NEXTBOX_LOCATIONS.map((point) => this.getCanvasPositionFromRelative(point));
+    }
+
+    public getLevelCanvasLocation(): Point {
+        return this.getCanvasPositionFromRelative(BoardOCRBox.LEVEL_LOCATION);
     }
 
     public isPaused(): boolean | undefined {
@@ -196,9 +216,47 @@ export class NextOCRBox extends OCRBox {
     
             // next box is 6 rows, 8 columns
             // TUNE THESE VALUES
-            super(settings, boundingRect,
-                6, 0.37, 0.18, // numRows, paddingTop, paddingBottom
-                8, 0.08, 0.06, // numCols, paddingLeft, paddingRight
+            super(settings, boundingRect, ThresholdType.MINO,
+                new OCRPosition(
+                    6, 0.37, 0.18, // numRows, paddingTop, paddingBottom
+                    8, 0.08, 0.06, // numCols, paddingLeft, paddingRight
+                )
             );
         }
+}
+
+export class DigitOCRBox extends OCRBox {
+    
+    constructor(settings: CaptureSettings, boundingRect: Rectangle, numDigits: number,
+        public paddingTop: number, // distance (in percent of height) before first OCR dot row
+        public paddingBottom: number, // distance (in percent of height) after last OCR dot row
+        public paddingLeft: number, // distance (in percent of width) before first OCR dot column
+        public paddingRight: number,
+    ) {
+
+        const NUM_ROWS = 20;
+        const NUM_COLS = 15 * numDigits;
+
+        // level box is 1 row, 2 columns
+        // TUNE THESE VALUES
+        super(settings, boundingRect, ThresholdType.TEXT,
+            new OCRPosition(
+                NUM_ROWS, paddingTop, paddingBottom,
+                NUM_COLS, paddingLeft, paddingRight
+            )
+        );
+    }
+}
+
+export class LevelOCRBox extends DigitOCRBox {
+    
+    constructor(settings: CaptureSettings, boundingRect: Rectangle) {
+
+        // level box is 1 row, 2 columns
+        // TUNE THESE VALUES
+        super(settings, boundingRect, 2,
+            0.495, 0.18, // paddingTop, paddingBottom
+            0.42, 0.25, // paddingLeft, paddingRight
+        );
+    }
 }
