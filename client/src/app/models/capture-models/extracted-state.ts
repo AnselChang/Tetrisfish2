@@ -14,6 +14,9 @@ export class ExtractedState {
     private grid: BinaryGrid = new BinaryGrid();
     private nextPieceType?: TetrominoType = undefined;
 
+    private levelConfidence: string = "";
+    private linesConfidence: string = "";
+
     private isPaused: boolean = false;
     
     constructor(
@@ -59,12 +62,22 @@ export class ExtractedState {
         console.log("next piece type: " + this.nextPieceType);
     }
 
-    public setLevel(levelGrid: BinaryGrid): void {
-        this.status.level = 0; // TODO
+    public setLevel(level: number, confidence: string): void {
+        this.status.level = level;
+        this.levelConfidence = confidence;
     }
 
-    public setLines(linesGrid: BinaryGrid): void {
-        this.status.lines = 0; // TODO
+    public setLines(lines: number, confidence: string): void {
+        this.status.lines = lines;
+        this.linesConfidence = confidence;
+    }
+
+    public getLevelConfidence(): string {
+        return this.levelConfidence;
+    }
+
+    public getLinesConfidence(): string {
+        return this.linesConfidence;
     }
 
     public setPaused(isPaused: boolean): void {

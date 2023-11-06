@@ -193,17 +193,6 @@ export class VideoCaptureService {
     this.extractedStateService.get().setPaused(this.captureSettingsService.get().getBoard()?.isPaused()!);
   }
 
-  updateLevelOCR() {
-    const levelOCR = this.captureSettingsService.get().getLevel()!;
-    const levelGrid = levelOCR.evaluate(this.captureFrameService);
-
-    levelOCR.getDigits()!.forEach((digitOCR, index) => {
-      digitOCR.print();
-    });
-
-    this.extractedStateService.get().setLevel(levelGrid!);
-  }
-
   updateNextBoxOCR(): void {
     // Extract colors for each OCR position for this frame
     const nextGrid = this.captureSettingsService.get().getNext()?.evaluate(this.captureFrameService);
@@ -211,9 +200,20 @@ export class VideoCaptureService {
     this.extractedStateService.get().setNext(nextGrid!);
   }
 
+  updateLevelOCR() {
+    const levelOCR = this.captureSettingsService.get().getLevel()!;
+    levelOCR.evaluate(this.captureFrameService);
+
+    const [level, confidence] = levelOCR.classifyNumber()!;
+    this.extractedStateService.get().setLevel(level, confidence);
+  }
+
   updateLinesOCR(): void {
-    const linesGrid = this.captureSettingsService.get().getLines()?.evaluate(this.captureFrameService);
-    this.extractedStateService.get().setLines(linesGrid!);
+    const linesOCR = this.captureSettingsService.get().getLines()!;
+    linesOCR.evaluate(this.captureFrameService);
+    
+    const [lines, confidence] = linesOCR.classifyNumber()!;
+    this.extractedStateService.get().setLines(lines, confidence);
   }
 
   drawCanvasOverlays(ctx: CanvasRenderingContext2D): void {

@@ -294,6 +294,27 @@ export class NumberOCRBox extends OCRBox {
         }
         return digits;
     }
+
+    // return the full number and a string representation of confidence for each digit
+    classifyNumber(): [number, string] | undefined {
+
+        if (!this.hasEvaluation()) {
+            return undefined;
+        }
+
+        let number = "";
+        let confidences: number[] = [];
+        this.getDigits()!.forEach((digit) => {
+            const [digitValue, confidence] = Bitboard.classify(digit);
+            number += "" + digitValue;
+            confidences.push(confidence);
+        });
+
+        const confidenceString = '[' + confidences.map(num => `${Math.round(num * 100)}%`).join(', ') + ']';
+        return [parseInt(number), confidenceString];
+
+    }
+
 }
 
 export class LevelOCRBox extends NumberOCRBox {
