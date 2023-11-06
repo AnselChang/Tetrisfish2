@@ -221,10 +221,10 @@ are for half-mino increments to center the piece
 export class TetrominoNB {
 
     public static readonly I_NB: TetrominoNB = new TetrominoNB(TetrominoType.I_TYPE, new BlockSet([
+        new BlockPosition(0, 0.5),
         new BlockPosition(1, 0.5),
         new BlockPosition(2, 0.5),
-        new BlockPosition(3, 0.5),
-        new BlockPosition(4, 0.5)
+        new BlockPosition(3, 0.5)
     ]));
 
     public static readonly T_NB: TetrominoNB = new TetrominoNB(TetrominoType.T_TYPE, new BlockSet([
