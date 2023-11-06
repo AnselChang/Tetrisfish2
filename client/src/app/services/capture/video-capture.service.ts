@@ -6,7 +6,7 @@ import { Rectangle } from '../../models/capture-models/capture-settings';
 import { Point } from '../../models/capture-models/point';
 import BinaryGrid from '../../models/tetronimo-models/binary-grid';
 import { OCRBox } from '../../models/capture-models/ocr-box';
-import { GameStateMachineService } from '../game-state-machine/game-state-machine.service';
+import { GameStateMachineService, PlayCalibratePage } from '../game-state-machine/game-state-machine.service';
 
 export enum VideoPauseStatus {
   PLAYING = "PLAYING",
@@ -150,7 +150,7 @@ export class VideoCaptureService {
     if (!this.isCaptureRunning || !this.videoElement || !this.canvasElement) return;
 
     /* 
-    STEP 1: Obtain the video frame
+    STEP 1: Obtain the video frame and map it to the canvas
     */
 
     const canvas = this.canvasElement.nativeElement;
@@ -165,7 +165,7 @@ export class VideoCaptureService {
     this.captureFrameService.setFrame(pixelData, canvas.width, canvas.height);
 
     /*
-    STEP 2: Process the data for the individual frame
+    STEP 2: Capture OCR data for the individual frame
     */
     if (this.captureSettingsService.get().isCalibrated()) {
       this.updateBoardOCR();
@@ -175,15 +175,20 @@ export class VideoCaptureService {
     }
 
     /*
-    STEP 3: Run game state machine
+    STEP 3: Run game state machine for game start/end, placements, etc.
     */
     this.gameStateMachineService.tick();
     
     /*
-     STEP 4: Draw all overlays
+     STEP 4: Draw all overlays if on calibrate page
     */
-    if (!this.isCanvasHidden) this.drawCanvasOverlays(ctx);
+    if (this.gameStateMachineService.getPlayCalibratePage() === PlayCalibratePage.CALIBRATE) {
+      this.drawCanvasOverlays(ctx);
+    }
 
+    /*
+    STEP 5: Execute next frame after some delay
+    */
     requestAnimationFrame(this.executeFrame.bind(this));
   }
 

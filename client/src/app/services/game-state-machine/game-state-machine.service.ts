@@ -27,10 +27,13 @@ export class GameStateMachineService {
   private playCalibratePage: PlayCalibratePage = PlayCalibratePage.PLAY;
   private gameStatus: GameStatus = GameStatus.NOT_PLAYING;
 
+  private gameStartLevel: number = 0;
+
   constructor(private extractedStateService: ExtractedStateService) { }
 
   public startGame(): void {
     this.gameStatus = GameStatus.PLAYING;
+    this.gameStartLevel = this.extractedStateService.get().getStatus().level;
   }
 
   public endGame(): void {
@@ -72,6 +75,10 @@ export class GameStateMachineService {
 
   public getGameStatus(): GameStatus {
     return this.gameStatus;
+  }
+
+  public getGameStartLevel(): number {
+    return this.gameStartLevel;
   }
 
   public getPlayCalibratePage(): PlayCalibratePage {

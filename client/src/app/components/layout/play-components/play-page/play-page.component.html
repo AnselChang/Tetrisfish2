@@ -12,7 +12,7 @@
     </div>
     <app-eval-bar class="col-eval-bar" />
     <app-section class="col-capture">
-        <h1 class="padded">Live Capture Mode</h1>
+        <h1 class="padded">Live Capture Mode • <span [ngStyle]="{'color': getStatusColor()}">{{getStatusString()}}</span></h1>
 
         <canvas #canvasElement
         [width]="videoCaptureService.OCR_WIDTH" [height]="videoCaptureService.OCR_HEIGHT"
@@ -61,7 +61,6 @@
                 </app-subsection>
             </app-section>
             <div class="buttons">
-                <app-button-big label="Stop Recording" />
                 <app-button-big label="Edit Calibration" (click)="onSwitchMode.emit()"/>
                 <app-button-big label="Switch to Emulator" />
             </div>

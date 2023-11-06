@@ -5,6 +5,7 @@ import { ExtractedState } from 'client/src/app/models/capture-models/extracted-s
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
 import { GameStateMachineService, GameStatus } from 'client/src/app/services/game-state-machine/game-state-machine.service';
+import { TEXT_GREEN, TEXT_RED } from 'client/src/app/misc/colors';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -97,8 +98,15 @@ export class PlayPageComponent implements AfterViewInit {
     else return "" + threshold;
   }
 
-  public startRecording() {
-
+  public getStatusString(): string {
+    if (this.isInGame()) {
+      const startLevel = this.gameStateMachineService.getGameStartLevel();
+      return `Playing Level ${startLevel} Start`;
+    }
+    else return "Not Playing";
   }
 
+  public getStatusColor(): string {
+    return this.isInGame() ? TEXT_GREEN : TEXT_RED;
+  }
 }
