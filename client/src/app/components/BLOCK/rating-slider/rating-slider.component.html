@@ -1,6 +1,6 @@
 <mat-slider [min]="MIN_VALUE" [max]="MAX_VALUE"
 [step]="1" [showTickMarks]="true"
 [discrete]="true" [displayWith]="displayValueAsString">
-    <input matSliderStartThumb [value]="leftValue" (input)="onInput($event)" (valueChange)="setLeftValue($event)">
-    <input matSliderEndThumb [value]="rightValue" (valueChange)="setRightValue($event)">
+    <input matSliderStartThumb [value]="leftValue" (input)="setLeftValue($event)">
+    <input matSliderEndThumb [value]="rightValue" (input)="setRightValue($event)">
   </mat-slider>

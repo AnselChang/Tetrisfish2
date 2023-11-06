@@ -26,23 +26,19 @@ export class RatingSliderComponent implements AfterViewInit, OnChanges {
     this.updateCSS();
   }
 
-  public setLeftValue(value: number | EvaluationRating) {
-    console.log("left", value);
-    this.leftValue = value as EvaluationRating;
-    this.leftValueChange.emit(this.leftValue);
+
+  public setLeftValue(event: Event) {
+    this.leftValue = parseInt((event.target as HTMLInputElement).value);
+    this.leftValueChange.emit(this.rightValue);
     this.updateCSS();
   }
 
-  public setRightValue(value: number | EvaluationRating) {
-    console.log("right", value);
-    this.rightValue = value as EvaluationRating;
+  public setRightValue(event: Event) {
+    this.rightValue = parseInt((event.target as HTMLInputElement).value);
     this.rightValueChange.emit(this.rightValue);
     this.updateCSS();
   }
 
-  public onInput(event: Event) {
-    console.log(event);
-  }
 
   private updateCSS() {
 

@@ -23,3 +23,11 @@
     background-color: var(--rightColor) !important;
     border-color: var(--rightColor) !important;
 }
+
+:host ::ng-deep .mdc-slider__value-indicator-text {
+    font-size: 0.7rem !important;
+}
+
+:host ::ng-deep .mdc-slider__value-indicator {
+    padding: 0 8px !important;
+}
