@@ -40,6 +40,9 @@
                 <h2>Level</h2>
                 <h1>{{extractedState.getStatus().level}}</h1>
             </app-tetris-panel-item>
+            <app-tetris-panel-item>
+                <app-next-box [showBackground]="false" [level]="extractedState.getStatus().level" [type]="extractedState.getNextPieceType()"></app-next-box>
+            </app-tetris-panel-item>
 
         </app-tetris-panel>
 

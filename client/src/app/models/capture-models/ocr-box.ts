@@ -94,7 +94,7 @@ export class OCRBox {
             let row: BlockType[] = [];
 
             for (let xIndex = 0; xIndex < this.numCols; xIndex++) {
-                const {x, y} = this.positions[yIndex][xIndex]; // ERROR
+                const {x, y} = this.positions[yIndex][xIndex];
                 const [r, g, b] = image.getPixelAt(x, y)!;
                 const hsv = rgbToHsv(r,g,b);
                 const isMino = hsv.v >= this.settings.threshold;

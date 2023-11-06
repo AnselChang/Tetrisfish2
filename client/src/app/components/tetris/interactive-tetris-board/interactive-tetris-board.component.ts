@@ -34,8 +34,8 @@ export class BlockData {
     public readonly special: boolean = false, // if color is white and special, display the other border color
   ) {
     this.svgSize = SVG_BLOCK_SIZE;
-    this.svgX = (this.x-1) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
-    this.svgY = (this.y-1) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
+    this.svgX = (this.x) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
+    this.svgY = (this.y) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
   }
 }
 

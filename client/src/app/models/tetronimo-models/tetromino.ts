@@ -216,57 +216,57 @@ export class Tetromino {
 /*
 For displaying the next piece in the next box. only stores the default rotation, and translations
 are for half-mino increments to center the piece
-// X is between 1 and 4, Y is between 1 and 2 inclusive
+// X is between 0 and 3, Y is between 0 and 1 inclusive
 */
 export class TetrominoNB {
 
     public static readonly I_NB: TetrominoNB = new TetrominoNB(TetrominoType.I_TYPE, new BlockSet([
-        new BlockPosition(2, 1.5),
-        new BlockPosition(3, 1.5),
-        new BlockPosition(4, 1.5),
-        new BlockPosition(5, 1.5)
+        new BlockPosition(1, 0.5),
+        new BlockPosition(2, 0.5),
+        new BlockPosition(3, 0.5),
+        new BlockPosition(4, 0.5)
     ]));
 
     public static readonly T_NB: TetrominoNB = new TetrominoNB(TetrominoType.T_TYPE, new BlockSet([
-        new BlockPosition(1.5, 1),
-        new BlockPosition(2.5, 1),
-        new BlockPosition(3.5, 1),
-        new BlockPosition(2.5, 2)
+        new BlockPosition(0.5, 0),
+        new BlockPosition(1.5, 0),
+        new BlockPosition(2.5, 0),
+        new BlockPosition(1.5, 1)
     ]));
 
     public static readonly J_NB: TetrominoNB = new TetrominoNB(TetrominoType.J_TYPE, new BlockSet([
-        new BlockPosition(1.5, 1),
-        new BlockPosition(2.5, 1),
-        new BlockPosition(3.5, 1),
-        new BlockPosition(3.5, 2)
+        new BlockPosition(0.5, 0),
+        new BlockPosition(1.5, 0),
+        new BlockPosition(2.5, 0),
+        new BlockPosition(2.5, 1)
     ]));
 
     public static readonly L_NB: TetrominoNB = new TetrominoNB(TetrominoType.L_TYPE, new BlockSet([
-        new BlockPosition(1.5, 1),
-        new BlockPosition(2.5, 1),
-        new BlockPosition(3.5, 1),
-        new BlockPosition(1.5, 2)
+        new BlockPosition(0.5, 0),
+        new BlockPosition(1.5, 0),
+        new BlockPosition(2.5, 0),
+        new BlockPosition(0.5, 1)
     ]));
 
     public static readonly O_NB: TetrominoNB = new TetrominoNB(TetrominoType.O_TYPE, new BlockSet([
-        new BlockPosition(2, 1),
-        new BlockPosition(3, 1),
-        new BlockPosition(2, 2),
-        new BlockPosition(3, 2)
+        new BlockPosition(1, 0),
+        new BlockPosition(2, 0),
+        new BlockPosition(1, 1),
+        new BlockPosition(2, 1)
     ]));
 
     public static readonly S_NB: TetrominoNB = new TetrominoNB(TetrominoType.S_TYPE, new BlockSet([
+        new BlockPosition(0.5, 0),
+        new BlockPosition(1.5, 0),
         new BlockPosition(1.5, 1),
-        new BlockPosition(2.5, 1),
-        new BlockPosition(2.5, 2),
-        new BlockPosition(3.5, 2)
+        new BlockPosition(2.5, 1)
     ]));
 
     public static readonly Z_NB: TetrominoNB = new TetrominoNB(TetrominoType.Z_TYPE, new BlockSet([
-        new BlockPosition(1.5, 2),
-        new BlockPosition(2.5, 2),
-        new BlockPosition(2.5, 1),
-        new BlockPosition(3.5, 1)
+        new BlockPosition(0.5, 1),
+        new BlockPosition(1.5, 1),
+        new BlockPosition(1.5, 0),
+        new BlockPosition(2.5, 0)
     ]));
 
     public static readonly ALL_NB: TetrominoNB[] = [
