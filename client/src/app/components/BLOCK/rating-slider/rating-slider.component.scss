@@ -1,0 +1,25 @@
+:host {
+    --sliderGradient: linear-gradient(to right, red, yellow, green);
+    --activeSliderGradient: linear-gradient(to right, green, purple);
+    --leftColor: red;
+    --rightColor: green;
+}
+
+:host ::ng-deep .mdc-slider__track--inactive {
+    background-image: var(--sliderGradient) !important;
+}
+
+
+:host ::ng-deep .mat-mdc-slider .mdc-slider__track--active_fill {
+    border-image: var(--activeSliderGradient) 1;
+}
+
+:host ::ng-deep .mdc-slider__thumb:first-of-type .mdc-slider__thumb-knob {
+    background-color: var(--leftColor) !important;
+    border-color: var(--leftColor) !important;
+}
+
+:host ::ng-deep .mdc-slider__thumb:last-of-type .mdc-slider__thumb-knob {
+    background-color: var(--rightColor) !important;
+    border-color: var(--rightColor) !important;
+}

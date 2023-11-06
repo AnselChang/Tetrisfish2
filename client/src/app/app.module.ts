@@ -7,6 +7,7 @@ import { VideoCaptureComponent } from './components/layout/play-components/video
 import { InteractiveTetrisBoardComponent } from './components/tetris/interactive-tetris-board/interactive-tetris-board.component';
 import { TetrisBlockComponent } from './components/tetris/tetris-block/tetris-block.component';
 import { AppRoutingModule } from './app-routing.module';
+import {MatSliderModule} from '@angular/material/slider';
 import { RootComponent } from './components/layout/root-components/root/root.component';
 import { PlayPageComponent } from './components/layout/play-components/play-page/play-page.component';
 import { AnalyzePageComponent } from './components/layout/analyze-page/analyze-page.component';
@@ -35,6 +36,8 @@ import { TetrisPanelItemComponent } from './components/BLOCK/tetris-panel-item/t
 import { EvalBarComponent } from './components/BLOCK/eval-bar/eval-bar.component';
 import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
 import { ThresholdInputComponent } from './components/layout/calibrate-components/threshold-input/threshold-input.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RatingSliderComponent } from './components/BLOCK/rating-slider/rating-slider.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -69,12 +72,15 @@ import { ThresholdInputComponent } from './components/layout/calibrate-component
     EvalBarComponent,
     PlayCalibrateComponent,
     ThresholdInputComponent,
+    RatingSliderComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatSliderModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -10,6 +10,13 @@ $layer-2-color: #414043;
 $layer-3-color: #504F52;
 $text-color: white;
 
+$best-color: #58D774;
+$good-color: #90D758;
+$mediocre-color: #A1A1A1;
+$inaccuracy-color: #E6DF3E;
+$mistake-color: #D79558;
+$blunder-color: #D75858;
+
 $main-font: 'Montserrat';
 $data-font: 'Spline Sans Mono';
 $tag-font: 'Londrina Solid';
@@ -86,3 +93,5 @@ hr {
     margin: 15px auto; /* Optional: adds some space before and after the HR */
     width: 90%;
   }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

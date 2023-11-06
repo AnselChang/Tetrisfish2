@@ -30,6 +30,7 @@
               "client/src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "client/src/styles.scss"
             ],
             "scripts": []
@@ -93,6 +94,7 @@
               "client/src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "client/src/styles.scss"
             ],
             "scripts": []
