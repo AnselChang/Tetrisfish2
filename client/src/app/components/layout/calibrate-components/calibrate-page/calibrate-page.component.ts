@@ -38,4 +38,7 @@ export class CalibratePageComponent {
     }
   }
 
+  public isCalibrated(): boolean {
+    return this.captureSettingsService.get().isCalibrated();
+  }
 }

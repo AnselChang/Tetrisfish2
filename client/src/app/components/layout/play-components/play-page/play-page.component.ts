@@ -4,6 +4,7 @@ import { CaptureFrameService, CaptureMode } from 'client/src/app/services/captur
 import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
+import { GameStateMachineService, GameStatus } from 'client/src/app/services/game-state-machine/game-state-machine.service';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -38,6 +39,7 @@ export class PlayPageComponent implements AfterViewInit {
     public videoCaptureService: VideoCaptureService,
     public extractedStateService: ExtractedStateService,
     public captureSettingsService: CaptureSettingsService,
+    private gameStateMachineService: GameStateMachineService,
     private captureFrameService: CaptureFrameService
     ) {
     this.logs = [
@@ -67,6 +69,10 @@ export class PlayPageComponent implements AfterViewInit {
 
   public get settings() {
     return this.captureSettingsService.get();
+  }
+
+  public isInGame(): boolean {
+    return this.gameStateMachineService.getGameStatus() === GameStatus.PLAYING;
   }
 
   public goToCalibratePanel() {

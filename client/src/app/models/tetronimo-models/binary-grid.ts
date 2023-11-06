@@ -40,6 +40,13 @@ export default class BinaryGrid {
         return this.blocks[y][x];
     }
 
+    // returns how many minos exist in the grid
+    public minoCount(): number {
+        return this.blocks.reduce((acc, row) => 
+            acc + row.reduce((rowAcc, block) => 
+                rowAcc + (block === BlockType.FILLED ? 1 : 0), 0), 0);
+    }
+
     public copy(): BinaryGrid {
 
         const newBlocks: BlockType[][] = [];

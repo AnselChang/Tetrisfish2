@@ -37,6 +37,10 @@ export class CaptureSettings {
     private levelOCRBox?: LevelOCRBox;
     private linesOCRBox?: LevelOCRBox;
 
+    public isCalibrated(): boolean {
+        return this.boardOCRBox !== undefined && this.nextOCRBox !== undefined && this.levelOCRBox !== undefined && this.linesOCRBox !== undefined;
+    }
+
     public setBoardBoundingRect(boundingRect: Rectangle) {
         this.boardOCRBox = new BoardOCRBox(this, boundingRect);
     }

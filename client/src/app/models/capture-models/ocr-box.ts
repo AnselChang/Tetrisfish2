@@ -306,7 +306,7 @@ export class NumberOCRBox extends OCRBox {
         let confidences: number[] = [];
         this.getDigits()!.forEach((digit) => {
             const [digitValue, confidence] = Bitboard.classify(digit);
-            number += "" + digitValue;
+            number += digitValue.toString();
             confidences.push(confidence);
         });
 
@@ -333,7 +333,7 @@ export class LinesOCRBox extends NumberOCRBox {
     constructor(settings: CaptureSettings, boundingRect: Rectangle) {
 
         super(settings, boundingRect, 3,
-            0.21, 0.3, // paddingTop, paddingBottom
+            0.23, 0.3, // paddingTop, paddingBottom
             0.69, 0.04, // paddingLeft, paddingRight
         );
     }

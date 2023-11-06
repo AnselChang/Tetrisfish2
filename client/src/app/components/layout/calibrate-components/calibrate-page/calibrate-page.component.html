@@ -1,6 +1,6 @@
 <div class="root">
     <div class="calibrate">
-        <app-button-small label="Back to recording" [buttonDisabled]="!videoCaptureService.isCapturing()" (click)="onSwitchMode.emit()" />
+        <app-button-small label="Back to recording" [buttonDisabled]="!isCalibrated()" (click)="onSwitchMode.emit()" />
         
         <app-section class="calibrate-panel">
             <h3>1. Click on an empty part of the board</h3>

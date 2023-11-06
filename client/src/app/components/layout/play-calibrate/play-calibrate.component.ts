@@ -1,10 +1,8 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
+import { GameStateMachineService, PlayCalibratePage } from 'client/src/app/services/game-state-machine/game-state-machine.service';
 
-export enum PlayMode {
-  PLAY = "PLAY",
-  CALIBRATE = "CALIBRATE"
-}
+
 
 @Component({
   selector: 'app-play-calibrate',
@@ -15,15 +13,18 @@ export class PlayCalibrateComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('videoElement') captureVideoElement!: ElementRef<HTMLVideoElement>;
 
   
-  private mode: PlayMode = PlayMode.PLAY;
-
-  constructor(private videoCaptureService: VideoCaptureService) {
+  constructor(
+    private videoCaptureService: VideoCaptureService,
+    private gameService: GameStateMachineService,
+    ) {
 
   }
 
   ngOnInit(): void {
     this.videoCaptureService.initVideoDevices();
-    this.mode = this.videoCaptureService.isCapturing() ? PlayMode.PLAY : PlayMode.CALIBRATE;
+
+    const page = this.videoCaptureService.isCapturing() ? PlayCalibratePage.PLAY : PlayCalibratePage.CALIBRATE;
+    this.gameService.setPlayCalibratePage(page);
   }
 
   ngAfterViewInit(): void {
@@ -36,14 +37,14 @@ export class PlayCalibrateComponent implements OnInit, AfterViewInit, OnDestroy 
 
   // defaults to calibration page unless capture is running
   public isPlayPage(): boolean {
-    return this.mode === PlayMode.PLAY;
+    return this.gameService.getPlayCalibratePage() === PlayCalibratePage.PLAY;
   }
 
   public switchPage(): void {
-    if (this.mode === PlayMode.PLAY) {
-      this.mode = PlayMode.CALIBRATE;
+    if (this.gameService.getPlayCalibratePage() === PlayCalibratePage.PLAY) {
+      this.gameService.setPlayCalibratePage(PlayCalibratePage.CALIBRATE);
     } else {
-      this.mode = PlayMode.PLAY;
+      this.gameService.setPlayCalibratePage(PlayCalibratePage.PLAY);
     }
   }
 

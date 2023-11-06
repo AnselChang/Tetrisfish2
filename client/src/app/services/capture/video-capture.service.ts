@@ -6,6 +6,7 @@ import { Rectangle } from '../../models/capture-models/capture-settings';
 import { Point } from '../../models/capture-models/point';
 import BinaryGrid from '../../models/tetronimo-models/binary-grid';
 import { OCRBox } from '../../models/capture-models/ocr-box';
+import { GameStateMachineService } from '../game-state-machine/game-state-machine.service';
 
 export enum VideoPauseStatus {
   PLAYING = "PLAYING",
@@ -42,7 +43,8 @@ export class VideoCaptureService {
   constructor(
     private captureFrameService: CaptureFrameService,
     private captureSettingsService: CaptureSettingsService,
-    private extractedStateService: ExtractedStateService
+    private extractedStateService: ExtractedStateService,
+    private gameStateMachineService: GameStateMachineService,
     ) { }
 
   public initVideoDevices() {
@@ -165,17 +167,20 @@ export class VideoCaptureService {
     /*
     STEP 2: Process the data for the individual frame
     */
-
-    const board = this.captureSettingsService.get().getBoard();
-    if (board) {
+    if (this.captureSettingsService.get().isCalibrated()) {
       this.updateBoardOCR();
       this.updateNextBoxOCR();
       this.updateLevelOCR();
       this.updateLinesOCR();
     }
+
+    /*
+    STEP 3: Run game state machine
+    */
+    this.gameStateMachineService.tick();
     
     /*
-     STEP 3: Draw all overlays
+     STEP 4: Draw all overlays
     */
     if (!this.isCanvasHidden) this.drawCanvasOverlays(ctx);
 

@@ -383,6 +383,7 @@ export class TetronimoOCR {
         return diff;
     }
 
+    // classify next box piece type based on OCR grid. If no piece is sufficiently similar, return undefined
     public static findMostSimilarPieceType(grid: BinaryGrid): TetrominoType | undefined {
 
         const MAXIMUM_DIFFERENCE_ALLOWED = 2;
