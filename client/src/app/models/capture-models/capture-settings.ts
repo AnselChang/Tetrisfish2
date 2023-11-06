@@ -29,7 +29,7 @@ export class CaptureSettings {
 
     public thresholds = {
         [ThresholdType.MINO]: new Threshold(5, 0, 30), // the hsv value threshold for detecting a mino
-        [ThresholdType.TEXT]: new Threshold(40, 0, 100) // the hsv value threshold for detecting text
+        [ThresholdType.TEXT]: new Threshold(70, 0, 100) // the hsv value threshold for detecting text
     };
 
     private boardOCRBox?: BoardOCRBox;
