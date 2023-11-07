@@ -256,17 +256,17 @@ export class TetrominoNB {
     ]));
 
     public static readonly S_NB: TetrominoNB = new TetrominoNB(TetrominoType.S_TYPE, new BlockSet([
-        new BlockPosition(0.5, 0),
-        new BlockPosition(1.5, 0),
-        new BlockPosition(1.5, 1),
-        new BlockPosition(2.5, 1)
-    ]));
-
-    public static readonly Z_NB: TetrominoNB = new TetrominoNB(TetrominoType.Z_TYPE, new BlockSet([
         new BlockPosition(0.5, 1),
         new BlockPosition(1.5, 1),
         new BlockPosition(1.5, 0),
         new BlockPosition(2.5, 0)
+    ]));
+
+    public static readonly Z_NB: TetrominoNB = new TetrominoNB(TetrominoType.Z_TYPE, new BlockSet([
+        new BlockPosition(0.5, 0),
+        new BlockPosition(1.5, 0),
+        new BlockPosition(1.5, 1),
+        new BlockPosition(2.5, 1)
     ]));
 
     public static readonly ALL_NB: TetrominoNB[] = [

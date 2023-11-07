@@ -9,7 +9,14 @@ export enum BlockType {
     FILLED = 1
 }
 
-export default class BinaryGrid {
+export interface Grid {
+    get numRows(): number;
+    get numCols(): number;
+    exists(x: number, y: number): boolean;
+
+}
+
+export default class BinaryGrid implements Grid {
 
     constructor(public blocks: BlockType[][] = [], numRows: number = 20, numCols: number = 10) {
 
@@ -40,8 +47,12 @@ export default class BinaryGrid {
         return this.blocks[y][x];
     }
 
+    public exists(x: number, y: number): boolean {
+        return this.at(x, y) === BlockType.FILLED;
+    }
+
     // returns how many minos exist in the grid
-    public minoCount(): number {
+    public count(): number {
         return this.blocks.reduce((acc, row) => 
             acc + row.reduce((rowAcc, block) => 
                 rowAcc + (block === BlockType.FILLED ? 1 : 0), 0), 0);

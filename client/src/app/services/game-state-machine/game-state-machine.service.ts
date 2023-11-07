@@ -68,7 +68,7 @@ export class GameStateMachineService {
   // 2. Next piece is valid
   private detectGameStart(state: ExtractedState): boolean {
 
-    if (state.getGrid().minoCount() !== 4) return false;
+    if (state.getGrid().count() !== 4) return false;
     if (state.getNextPieceType() === undefined) return false;
     return true;
   }

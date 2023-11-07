@@ -29,12 +29,24 @@ export class RatingSliderComponent implements AfterViewInit, OnChanges {
 
   public setLeftValue(event: Event) {
     this.leftValue = parseInt((event.target as HTMLInputElement).value);
+
+    if (this.leftValue > this.rightValue) {
+      [this.leftValue, this.rightValue] = [this.rightValue, this.leftValue];
+      this.rightValueChange.emit(this.rightValue);
+    }
+
     this.leftValueChange.emit(this.rightValue);
     this.updateCSS();
   }
 
   public setRightValue(event: Event) {
     this.rightValue = parseInt((event.target as HTMLInputElement).value);
+
+    if (this.leftValue > this.rightValue) {
+      [this.leftValue, this.rightValue] = [this.rightValue, this.leftValue];
+      this.leftValueChange.emit(this.leftValue);
+    }
+
     this.rightValueChange.emit(this.rightValue);
     this.updateCSS();
   }
@@ -57,7 +69,7 @@ export class RatingSliderComponent implements AfterViewInit, OnChanges {
     }
     gradient = gradient.slice(0, -1); // remove last comma
     gradient += ")";
-
+    console.log(this.leftValue, this.rightValue, gradient);
     this.el.nativeElement.style.setProperty('--activeSliderGradient', gradient);
   }
 

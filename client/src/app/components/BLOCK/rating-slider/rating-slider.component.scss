@@ -1,8 +1,10 @@
+@import "../../../../styles.scss";
+
 :host {
-    --sliderGradient: linear-gradient(to right, red, yellow, green);
-    --activeSliderGradient: linear-gradient(to right, green, purple);
-    --leftColor: red;
-    --rightColor: green;
+    --sliderGradient: #{linear-gradient(to right, $best-color, $good-color, $mediocre-color, $inaccuracy-color, $mistake-color, $blunder-color)};
+    --activeSliderGradient: #{linear-gradient(to right, $best-color, $good-color, $mediocre-color, $inaccuracy-color, $mistake-color, $blunder-color)};
+    --leftColor: #{$best-color};
+    --rightColor: #{$blunder-color};
 }
 
 :host ::ng-deep .mdc-slider__track--inactive {
