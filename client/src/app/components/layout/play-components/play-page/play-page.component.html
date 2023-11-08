@@ -27,16 +27,16 @@
                 />
             <app-tetris-panel-item>
                 <h2>Score</h2>
-                <h1>{{extractedState.getStatus().score}}</h1>
+                <h1>{{getScoreString()}}</h1>
             </app-tetris-panel-item>
             <div class="level-lines">
                 <app-tetris-panel-item>
                     <h2>Lines</h2>
-                    <h1>{{extractedState.getStatus().lines}}</h1>
+                    <h1>{{getLinesString()}}</h1>
                 </app-tetris-panel-item>
                 <app-tetris-panel-item>
                     <h2>Level</h2>
-                    <h1>{{extractedState.getStatus().level}}</h1>
+                    <h1>{{getLevelString()}}</h1>
                 </app-tetris-panel-item>
             </div>
             <app-tetris-panel-item>

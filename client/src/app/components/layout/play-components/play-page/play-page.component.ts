@@ -72,6 +72,21 @@ export class PlayPageComponent implements AfterViewInit {
     return this.captureSettingsService.get();
   }
 
+  public getScoreString(): string | number {
+    const status = this.gameStateMachineService.getCurrentGameStatus();
+    return status ? status.score : "N/A";
+  }
+
+  public getLevelString(): string | number {
+    const status = this.gameStateMachineService.getCurrentGameStatus();
+    return status ? status.level : "N/A";
+  }
+
+  public getLinesString(): string | number {
+    const status = this.gameStateMachineService.getCurrentGameStatus();
+    return status ? status.lines : "N/A";
+  }
+
   public isInGame(): boolean {
     return this.gameStateMachineService.getGameStatus() === PlayStatus.PLAYING;
   }

@@ -69,7 +69,7 @@ class GridStateMachine {
 
   // If new piece has spawned, return the grid without and with previous piece
   // otherwise, return undefined
-  public processFrame(currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [BinaryGrid?, BinaryGrid?, TetrominoType?, number] | undefined {
+  public processFrame(currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [BinaryGrid?, BinaryGrid?, TetrominoType?, number?] | undefined {
 
     const currentMinoCount = currentGrid.count();
     const [result, linesCleared] = this.doesMinoCountSuggestPieceSpawn(currentMinoCount);
@@ -151,6 +151,11 @@ export class GameStateMachineService {
 
     if (this.playStatus === PlayStatus.NOT_PLAYING) {
 
+      // in calibrate page, cannot start game
+      if (this.playCalibratePage === PlayCalibratePage.CALIBRATE) {
+        return
+      }
+
       // if game start detected, then start game
       if (this.detectGameStart(state)) {
         console.log("Started game due to game start detection");
@@ -173,7 +178,7 @@ export class GameStateMachineService {
 
       // otherwise, process grid for mino changes and spawned piece detection
       // result is undefined if no piece spawn detected, or [gridWithoutPlacement, gridWithPlacement] if piece spawn detected
-      const result = this.gridSM.processFrame(state.getGrid());
+      const result = this.gridSM.processFrame(state.getGrid(), state.getNextPieceType());
 
       // if no piece spawn, do nothing
       if (result === undefined) {
