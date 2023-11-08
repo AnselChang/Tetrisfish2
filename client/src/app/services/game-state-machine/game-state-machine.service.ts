@@ -16,7 +16,6 @@ and ending the game.
 
 export enum PlayStatus {
   PLAYING = "PLAYING",
-  LIMBO = "LIMBO",
   NOT_PLAYING = "NOT_PLAYING"
 }
 
@@ -30,6 +29,15 @@ enum MinoResult {
   NO_CHANGE = "NO_CHANGE",
   SPAWN = "SPAWN",
   LIMBO = "LIMBO" // some intermediate frame where a line clear is still happening, or capture is bad this frame
+}
+
+class SpawnData {
+  constructor(
+    public gridWithoutPlacement?: BinaryGrid,
+    public gridWithPlacement?: BinaryGrid,
+    public nextPieceType?: TetrominoType,
+    public linesCleared?: number
+  ) {}
 }
 
 // a class that stores the last stable mino count, and can imply state changes when mino count changes
@@ -69,7 +77,7 @@ class GridStateMachine {
 
   // If new piece has spawned, return the grid without and with previous piece
   // otherwise, return undefined
-  public processFrame(currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [BinaryGrid?, BinaryGrid?, TetrominoType?, number?] | undefined {
+  public processFrame(currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [MinoResult, SpawnData | undefined] {
 
     const currentMinoCount = currentGrid.count();
     const [result, linesCleared] = this.doesMinoCountSuggestPieceSpawn(currentMinoCount);
@@ -83,20 +91,24 @@ class GridStateMachine {
         // if we can't isolate the spawned piece, then either the capture accidentally captured four extra minos,
         // or the new piece is temporarily overlapping with other minos in the board.
         // either way, we skip this frame and wait for a frame where the new piece is isolated
-        return undefined;
+        return [MinoResult.NO_CHANGE, undefined];
       } else {
 
 
         // if we CAN isolate the spawned piece, then we can assume that the new piece has spawned
+
+        // update mino count
+        this.lastStableMinoCount = currentMinoCount;
+
         // we can derive what the grid looks like without the spawned piece by removing the minos of the spawned piece from current grid
         this.lastStableGridWithoutPlacement = this.nextStableGridWithoutPlacement;
         this.nextStableGridWithoutPlacement = currentGrid.copy();
         spawnedMinos.forEach(({ x, y }) => this.nextStableGridWithoutPlacement!.setAt(x, y, BlockType.EMPTY));
-        
-        // no previous placement to register if this is the first spawned piece
-        if (this.lastStableGridWithoutPlacement === undefined) return undefined;
 
-        return [this.lastStableGridWithoutPlacement, this.stableGridWithPlacement, this.nextPieceType, linesCleared];
+        // no previous placement to register if this is the first spawned piece
+        if (this.lastStableGridWithoutPlacement === undefined) return [MinoResult.NO_CHANGE, undefined];
+
+        return [MinoResult.SPAWN, new SpawnData(this.lastStableGridWithoutPlacement, this.stableGridWithPlacement, this.nextPieceType, linesCleared)];
       }
     } else if (result === MinoResult.NO_CHANGE) {
       // if there was no change in minos, the piece is still falling. Update the lastStableGridWithPlacement to this frame
@@ -105,10 +117,10 @@ class GridStateMachine {
       // keep polling next box to overwrite possibly bad previous next box values
       if (nextPieceType !== undefined) this.nextPieceType = nextPieceType;
 
-      return undefined;
+      return [MinoResult.NO_CHANGE, undefined];
     } else { // result === MinoResult.LIMBO
       // if in limbo, then we skip this frame
-      return undefined;
+      return [MinoResult.NO_CHANGE, undefined];
     }
   }
 }
@@ -130,6 +142,14 @@ export class GameStateMachineService {
 
   // all the placements for the current game
   private placements: GamePlacement[] = [];
+
+  // how many times a completely invalid frame has been detected consecutively
+  private invalidFrameCount = 0;
+  private readonly MAX_INVALID_FRAMES = 20; // if this many invalid frames in a row, end game
+
+  // how many times successfully game start detection has been detected consecutively
+  private gameStartDetectionCount = 0;
+  private readonly MIN_GAME_START_DETECTION = 10; // if this many game start detections in a row, start game
 
   constructor(private extractedStateService: ExtractedStateService) { }
 
@@ -158,8 +178,16 @@ export class GameStateMachineService {
 
       // if game start detected, then start game
       if (this.detectGameStart(state)) {
-        console.log("Started game due to game start detection");
-        this.startGame();
+        this.gameStartDetectionCount++;
+        console.log(`Game Start Detection (${this.gameStartDetectionCount})`);
+        if (this.gameStartDetectionCount >= this.MIN_GAME_START_DETECTION) {
+          this.startGame();
+          console.log("Game start fully detected. Starting game");
+        }
+        return;
+      } else {
+        if (this.gameStartDetectionCount > 0) console.log("Game Start Detection failed. Resetting");
+        this.gameStartDetectionCount = 0;
       }
 
     } else if (this.playStatus === PlayStatus.PLAYING) {
@@ -175,58 +203,82 @@ export class GameStateMachineService {
       if (state.getPaused()) {
         return;
       }
+      
+      // if both level and next box have invalid states, this is an invalid frame
+      if (this.isInvalidLevel(state.getStatus().level) && state.getNextPieceType() === undefined) {
+        this.invalidFrameCount++;
+        console.log(`Invalid Frame (${this.invalidFrameCount})`);
+
+        // if MAX_INVALID_FRAMES invalid frames in a row, end game
+        if (this.invalidFrameCount >= this.MAX_INVALID_FRAMES) {
+          console.log(`Ended game due to ${this.MAX_INVALID_FRAMES} invalid frames in a row`);
+          this.endGame();
+          return;
+        }
+
+      } else {
+        this.invalidFrameCount = 0;
+      }
 
       // otherwise, process grid for mino changes and spawned piece detection
       // result is undefined if no piece spawn detected, or [gridWithoutPlacement, gridWithPlacement] if piece spawn detected
-      const result = this.gridSM.processFrame(state.getGrid(), state.getNextPieceType());
+      const [minoResult, data] = this.gridSM.processFrame(state.getGrid(), state.getNextPieceType());
 
-      // if no piece spawn, do nothing
-      if (result === undefined) {
-        return;
+      if (minoResult === MinoResult.SPAWN) {
+
+        // if piece spawn, generate a new game placement
+        const newPlacement = this.runGamePlacement(data!);
+        
+        // if placement is invalid, exit game due to invalid state
+        if (newPlacement === undefined) {
+          console.log("Ended game due to invalid placement state");
+          this.endGame();
+          return;
+        }
+
+        // Otherwise, append placement to placements
+        this.placements.push(newPlacement);
+        console.log("NEW PLACEMENT", newPlacement.status, newPlacement.nextPieceType);
+        data!.gridWithoutPlacement?.print();
+        data!.gridWithPlacement?.print();
       }
-
-      // if piece spawn, generate a new game placement
-      const newPlacement = this.runGamePlacement(result[0], result[1], result[2], result[3]);
       
-      // if placement is invalid, exit game due to invalid state
-      if (newPlacement === undefined) {
-        console.log("Ended game due to invalid placement state");
-        this.endGame();
-        return;
-      }
-
-      // Otherwise, append placement to placements
-      this.placements.push(newPlacement);
     }
 
   }
 
+  // detected level can only be at or one higher than current level
+  private isInvalidLevel(detectedLevel: number): boolean {
+    const currentLevel = this.currentGameStatus!.level;
+    return detectedLevel !== currentLevel && detectedLevel !== currentLevel + 1;
+  }
+
   // return a new GamePlacement object encapsulating the previous placement's data, then update game state like score
   // return undefined if the placement is invalid
-  private runGamePlacement(gridWithoutPlacement?: BinaryGrid, gridWithPlacement?: BinaryGrid, nextPieceType?: TetrominoType, linesCleared?: number): GamePlacement | undefined {
+  private runGamePlacement(data: SpawnData): GamePlacement | undefined {
 
-    if (gridWithoutPlacement === undefined) {
+    if (data.gridWithoutPlacement === undefined) {
       console.log("Error: gridWithoutPlacement is undefined");
       return undefined;
     }
 
-    if (gridWithPlacement === undefined) {
+    if (data.gridWithPlacement === undefined) {
       console.log("Error: gridWithPlacement is undefined");
       return undefined;
     }
 
-    if (nextPieceType === undefined) {
+    if (data.nextPieceType === undefined) {
       console.log("Error: nextPieceType is undefined");
       return undefined;
     }
 
-    if (linesCleared === undefined || linesCleared < 0 || linesCleared > 4) {
-      console.log("Error: linesCleared is not valid:", linesCleared);
+    if (data.linesCleared === undefined || data.linesCleared < 0 || data.linesCleared > 4) {
+      console.log("Error: linesCleared is not valid:", data.linesCleared);
       return undefined;
     }
 
     // find the piece type, orientation, and position for the placed piece
-    const piece = MoveableTetromino.computeMoveableTetronimo(gridWithoutPlacement, gridWithPlacement);
+    const piece = MoveableTetromino.computeMoveableTetronimo(data.gridWithoutPlacement, data.gridWithPlacement);
 
     // if cannot find piece, then the placement is invalid
     if (piece === undefined) {
@@ -237,14 +289,14 @@ export class GameStateMachineService {
     // create new game placement
     const newPlacement = new GamePlacement(
       this.currentGameStatus!.copy(),
-      gridWithoutPlacement,
+      data.gridWithoutPlacement,
       piece,
-      nextPieceType
+      data.nextPieceType
     );
 
     // update score/level/lines after placement
-    if (linesCleared > 0) {
-      this.currentGameStatus!.onLineClear(linesCleared);
+    if (data.linesCleared > 0) {
+      this.currentGameStatus!.onLineClear(data.linesCleared);
     }
     
     return newPlacement;
@@ -255,7 +307,6 @@ export class GameStateMachineService {
   // 1. Board has 4 minos
   // 2. Next piece is valid
   private detectGameStart(state: ExtractedState): boolean {
-
     if (state.getGrid().count() !== 4) return false;
     if (state.getNextPieceType() === undefined) return false;
     return true;

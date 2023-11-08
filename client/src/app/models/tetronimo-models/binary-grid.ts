@@ -71,4 +71,8 @@ export default class BinaryGrid implements Grid {
         return new BinaryGrid(newBlocks);
     }
 
+    public print(): void {
+        console.log(this.blocks.map(row => row.map(block => block === BlockType.FILLED ? 'X' : '.').join('')).join('\n'));
+    }
+
 }
