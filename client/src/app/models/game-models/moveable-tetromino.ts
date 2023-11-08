@@ -17,6 +17,12 @@ export default class MoveableTetromino {
         this.updateCurrentBlockSet()
     }
 
+    // given grids without and with the piece, return a MoveableTetromino that represents the piece if found,
+    // or undefined if not found
+    static computeMoveableTetronimo(gridWithoutPiece: BinaryGrid, gridWithPiece: BinaryGrid): MoveableTetromino | undefined {
+        return new MoveableTetromino(TetrominoType.I_TYPE, 0, 0, 0); // DUMMY CODE
+    }
+
     private updateCurrentBlockSet(): void {
         const tetromino = Tetromino.getPieceByType(this.tetrominoType);
         this.currentBlockSet = tetromino.getBlockSet(this.rotation).translate(this.translateX, this.translateY);

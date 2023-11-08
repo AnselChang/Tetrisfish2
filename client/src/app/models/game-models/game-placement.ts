@@ -9,7 +9,7 @@ import { TetrominoType } from "../tetronimo-models/tetromino";
 import BinaryGrid from "../tetronimo-models/binary-grid";
 import MoveableTetromino from "./moveable-tetromino";
 
-class GamePlacement {
+export class GamePlacement {
 
     constructor(
         public status: GameStatus,
