@@ -6,6 +6,8 @@ import { ExtractedStateService } from 'client/src/app/services/capture/extracted
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
 import { GameStateMachineService, PlayStatus } from 'client/src/app/services/game-state-machine/game-state-machine.service';
 import { TEXT_GREEN, TEXT_RED } from 'client/src/app/misc/colors';
+import BinaryGrid from 'client/src/app/models/tetronimo-models/binary-grid';
+import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -124,4 +126,9 @@ export class PlayPageComponent implements AfterViewInit {
   public getStatusColor(): string {
     return this.isInGame() ? TEXT_GREEN : TEXT_RED;
   }
+
+  public getLastPlacement(): GamePlacement | undefined {
+    return this.gameStateMachineService.getMostRecentPlacement();
+  }
+
 }

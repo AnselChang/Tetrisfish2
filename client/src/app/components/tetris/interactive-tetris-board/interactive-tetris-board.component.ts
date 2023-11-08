@@ -47,7 +47,7 @@ export class BlockData {
 export class InteractiveTetrisBoardComponent {
   @Input() mode = TetrisBoardMode.READONLY;
   @Input() level: number = 18;
-  @Input() grid!: BinaryGrid;
+  @Input() grid: BinaryGrid | undefined;
   @Input() paused: boolean = false;
 
   // two-way binding for current piece

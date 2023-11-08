@@ -332,4 +332,9 @@ export class GameStateMachineService {
     this.playCalibratePage = page;
   }
 
+  public getMostRecentPlacement(): GamePlacement | undefined {
+    if (this.placements.length === 0) return undefined;
+    return this.placements[this.placements.length - 1];
+  }
+
 }
