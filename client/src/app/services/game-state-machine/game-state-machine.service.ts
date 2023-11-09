@@ -58,7 +58,7 @@ class GridStateMachine {
   private nextStableGridWithoutPlacement?: BinaryGrid;
 
   // the grid with the spawned piece in its final placement
-  private stableGridWithPlacement?: BinaryGrid;
+  private stableGridWithPlacement?: BinaryGrid = new BinaryGrid();
 
   // the type of the next piece
   private nextPieceType?: TetrominoType;
@@ -101,11 +101,15 @@ class GridStateMachine {
     // this should also trigger the first frame of the game where the spawned piece is fully visible
     if (result === MinoResult.SPAWN) {
       const spawnedMinos = findFourConnectedComponent(currentGrid);
+      this.debug.log(`Spawned minos: ${spawnedMinos?.map(({ x, y }) => `(${x}, ${y})`).join(", ")})`);
 
-      if (spawnedMinos === null) {
+      if (spawnedMinos === null && linesCleared > 0) {
         // if we can't isolate the spawned piece, then either the capture accidentally captured four extra minos,
         // or the new piece is temporarily overlapping with other minos in the board.
+        // HOWEVER, THIS ONLY MATTERS WHEN THERE'S A LINE CLEAR
+        // Without a line clear, simply rollback to previous stable mino count grid to get the grid without placement
         // either way, we skip this frame and wait for a frame where the new piece is isolated
+        this.debug.log("Although SPAWN detected, Cannot isolate spawned piece and lines were cleared, skipping frame");
         return [MinoResult.NO_CHANGE, undefined];
       } else {
 
@@ -115,10 +119,21 @@ class GridStateMachine {
         // update mino count
         this.lastStableMinoCount = currentMinoCount;
 
-        // we can derive what the grid looks like without the spawned piece by removing the minos of the spawned piece from current grid
+        // cache last stable grid without placement
         this.lastStableGridWithoutPlacement = this.nextStableGridWithoutPlacement;
-        this.nextStableGridWithoutPlacement = currentGrid.copy();
-        spawnedMinos.forEach(({ x, y }) => this.nextStableGridWithoutPlacement!.setAt(x, y, BlockType.EMPTY));
+
+        if (linesCleared > 0) {
+          // we can't simply use the last stable grid with placement because the line clear would have removed minos
+          // instead, we can derive what the grid looks like without the spawned piece by removing the minos of the spawned piece from current grid
+          this.nextStableGridWithoutPlacement = currentGrid.copy();
+          spawnedMinos!.forEach(({ x, y }) => this.nextStableGridWithoutPlacement!.setAt(x, y, BlockType.EMPTY));
+          this.debug.log("Lines cleared, set nextStableGridWithoutPlacement by removing spawned minos from current grid")
+        } else {
+          // if no lines were cleared, we can just use the last stableGridWithPlacement
+          this.nextStableGridWithoutPlacement = this.stableGridWithPlacement!.copy();
+          this.debug.log("No lines cleared, set nextStableGridWithoutPlacement by copying previous stableGridWithPlacement")
+        }
+        
 
         // no previous placement to register if this is the first spawned piece
         if (this.lastStableGridWithoutPlacement === undefined) {
@@ -128,11 +143,13 @@ class GridStateMachine {
 
         this.debug.logGrid("Last Stable Grid Without Placement", this.lastStableGridWithoutPlacement);
         this.debug.logGrid("Stable Grid With Placement", this.stableGridWithPlacement);
+        this.debug.logGrid("Next Stable Grid Without Placement", this.nextStableGridWithoutPlacement);
         return [MinoResult.SPAWN, new SpawnData(this.lastStableGridWithoutPlacement, this.stableGridWithPlacement, this.nextPieceType, linesCleared)];
       }
     } else if (result === MinoResult.NO_CHANGE) {
       // if there was no change in minos, the piece is still falling. Update the lastStableGridWithPlacement to this frame
       this.stableGridWithPlacement = currentGrid.copy();
+      this.debug.logGrid("Stable Grid With Placement updated", this.stableGridWithPlacement);
 
       // keep polling next box to overwrite possibly bad previous next box values
       if (nextPieceType !== undefined) this.nextPieceType = nextPieceType;
