@@ -276,6 +276,7 @@ export class GameStateMachineService {
       }
 
       this.debug.addFrame(state.getGrid(), state.getNextPieceType());
+      this.debug.setStatus(this.currentGameStatus?.status!);
       
       // if both level and next box have invalid states, this is an invalid frame
       if (state.getNextPieceType() === undefined) {
@@ -327,7 +328,7 @@ export class GameStateMachineService {
     return detectedLevel !== currentLevel && detectedLevel !== currentLevel + 1;
   }
 
-  // return a new GamePlacement object encapsulating the previous placement's data, then update game state like score
+  // update the score/level/lines, then return a new GamePlacement object encapsulating the previous placement's data
   // return undefined if the placement is invalid
   private runGamePlacement(data: SpawnData): GamePlacement | undefined {
 
@@ -360,18 +361,19 @@ export class GameStateMachineService {
       return undefined;
     }
 
+    // update score/level/lines after placement
+    if (data.linesCleared > 0) {
+      this.currentGameStatus!.onLineClear(data.linesCleared);
+      this.debug.setStatus(this.currentGameStatus?.status!);
+    }
+
     // create new game placement
     const newPlacement = new GamePlacement(
       this.currentGameStatus!.copy(),
       data.gridWithoutPlacement,
       piece,
       data.nextPieceType
-    );
-
-    // update score/level/lines after placement
-    if (data.linesCleared > 0) {
-      this.currentGameStatus!.onLineClear(data.linesCleared);
-    }
+    );  
     
     return newPlacement;
 
@@ -394,7 +396,7 @@ export class GameStateMachineService {
     return this.gameStartLevel;
   }
 
-  public getCurrentGameStatus(): IGameStatus | undefined {
+  public getCurrentGameStatus(): SmartGameStatus | undefined {
     return this.currentGameStatus;
   }
 

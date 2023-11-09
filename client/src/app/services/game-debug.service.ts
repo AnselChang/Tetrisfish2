@@ -3,6 +3,7 @@ import DebugFrame from '../models/capture-models/debug-frame';
 import BinaryGrid from '../models/tetronimo-models/binary-grid';
 import { TetrominoType } from '../models/tetronimo-models/tetromino';
 import { GamePlacement } from '../models/game-models/game-placement';
+import GameStatus from '../models/tetronimo-models/game-status';
 
 /*
 Manages all the game debug frames
@@ -49,6 +50,10 @@ export class GameDebugService {
 
   public setPlacement(placement: GamePlacement) {
     this.last.placement = placement;
+  }
+
+  public setStatus(status: GameStatus) {
+    this.last.status = status.copy();
   }
 
 }

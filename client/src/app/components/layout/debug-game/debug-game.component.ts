@@ -75,4 +75,8 @@ export class DebugGameComponent {
     this.index = this.gameDebugService.numFrames() - 1;
   }
 
+  get status() {
+    return this.current.status;
+  }
+
 }

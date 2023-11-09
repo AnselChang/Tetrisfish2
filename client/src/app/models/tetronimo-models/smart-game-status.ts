@@ -37,6 +37,10 @@ export class SmartGameStatus implements IGameStatus {
     public get score(): number {
         return this.gameStatus.score;
     }
+    
+    public get status(): GameStatus {
+        return this.gameStatus;
+    }
 
     public copy(): SmartGameStatus {
         return new SmartGameStatus(this.startLevel, this.lines, this.score);

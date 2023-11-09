@@ -8,6 +8,13 @@
                     [grid]="current.grid"
                     [level]="18"
                 />
+
+            <app-tetris-panel-item>
+                <p>Score: {{status.score}}</p>
+                <p>Lines: {{status.lines}}</p>
+                <p>Level: {{status.level}}</p>
+            </app-tetris-panel-item>
+
             <app-tetris-panel-item>
                 <app-next-box [showBackground]="false" [level]="18" [type]="current.nextBoxType"></app-next-box>
             </app-tetris-panel-item>
