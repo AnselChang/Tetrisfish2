@@ -4,9 +4,10 @@ Exposes utility methods for checking if the tetromino is in bounds, and if it is
 other blocks.
 */
 
+import { block } from "core/tooltip";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import { BlockSet } from "../tetronimo-models/block";
-import { Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
+import { ALL_TETRONIMO_TYPES, Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
 
 
 export default class MoveableTetromino {
@@ -17,6 +18,28 @@ export default class MoveableTetromino {
         this.updateCurrentBlockSet()
     }
 
+    static doesBlocksetMatchMask(pieceMask: BinaryGrid, maskStartX: number, maskStartY: number, blockSet: BlockSet): boolean {
+        let exists = true;
+        blockSet.blocks.forEach(block => {
+            if (!pieceMask.exists(block.x + maskStartX, block.y + maskStartY)) {
+                exists = false;
+            }
+        });
+        return exists;
+    }
+
+    static getMTForPieceMask(pieceMask: BinaryGrid, maskStartX: number, maskStartY: number, pieceType: TetrominoType): MoveableTetromino | undefined {
+
+        const tetronimo = Tetromino.getPieceByType(pieceType);
+        for (let rot = 0; rot < tetronimo.numPossibleRotations(); rot++) {
+            const blockSet = tetronimo.getBlockSet(rot);
+            if (MoveableTetromino.doesBlocksetMatchMask(pieceMask, maskStartX, maskStartY, blockSet)) {
+                return new MoveableTetromino(pieceType, rot, maskStartX, maskStartY);
+            }
+        }
+        return undefined;
+    };
+
     // given grids without and with the piece, return a MoveableTetromino that represents the piece if found,
     // or undefined if not found
     // pieceType is unknown for first piece, but is known through previous placement's nextbox for subsequent pieces
@@ -25,11 +48,32 @@ export default class MoveableTetromino {
 
         if (pieceMask === undefined) return undefined;
         if (pieceMask.count() !== 4) return undefined;
-        
-        console.log("tetronimno type: ", pieceType);
-        pieceMask.print();
 
-        return new MoveableTetromino(TetrominoType.I_TYPE, 0, 0, 0); // DUMMY CODE
+        // find the location of the most top-left mino on the pieceMask
+        let minX = 10;
+        let minY = 20;
+        pieceMask.blocks.forEach((row, y) => {
+            row.forEach((block, x) => {
+                if (block === BlockType.FILLED) {
+                    minX = Math.min(minX, x);
+                    minY = Math.min(minY, y);
+                }
+            });
+        });
+        
+
+        let piecesToTry: TetrominoType[];
+        if (pieceType) piecesToTry = [pieceType];
+        else piecesToTry = ALL_TETRONIMO_TYPES;
+
+        for (let pieceType of piecesToTry) {
+            const mt = MoveableTetromino.getMTForPieceMask(pieceMask, minX, minY, pieceType);
+            if (mt) {
+                return mt;
+            }
+        }
+
+        return undefined;
     }
 
     private updateCurrentBlockSet(): void {
@@ -55,35 +99,22 @@ export default class MoveableTetromino {
     }
 
 
-    // Returns true if the tetromino is in bounds of the grid
-    public inBounds(): boolean {
-        return this.getCurrentBlockSet().blocks.every(block => block.inBounds());
-    }
-
     // Whether one of the minos of this tetromino is a the given position
     public isAtLocation(x: number, y: number): boolean {
         return this.getCurrentBlockSet().blocks.some(block => block.x === x && block.y === y);
     }
 
-    // whether the minos of this tetromino are colliding with the grid
-    public collidesWithGrid(grid: BinaryGrid): boolean {
-
-        if (!this.inBounds()) return true;
-
-        return this.getCurrentBlockSet().blocks.some(block => grid.at(block.x, block.y) === BlockType.FILLED);
-    }
-
     public blitToGrid(grid: BinaryGrid): BinaryGrid {
-        
-        if (this.collidesWithGrid(grid)) {
-            throw new Error('Cannot blit to grid if colliding with grid');
-        }
 
         const blockSet = this.getCurrentBlockSet();
-        return new BinaryGrid(grid.blocks.map((row, y) => {
-            return row.map((block, x) => {
-                return block === BlockType.FILLED || blockSet.blocks.some(block => block.x === x + 1 && block.y === y + 1) ? BlockType.FILLED : BlockType.EMPTY;
-            });
-        }));
+        blockSet.blocks.forEach(block => {
+            grid.setAt(block.x, block.y, BlockType.FILLED);
+        });
+        return grid;
+    }
+
+    public print() {
+        const mask = this.blitToGrid(new BinaryGrid());
+        mask.print();
     }
 }

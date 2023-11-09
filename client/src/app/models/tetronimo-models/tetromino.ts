@@ -12,6 +12,16 @@ export enum TetrominoType {
     Z_TYPE = 'Z'
 }
 
+export const ALL_TETRONIMO_TYPES: TetrominoType[] = [
+    TetrominoType.I_TYPE,
+    TetrominoType.J_TYPE,
+    TetrominoType.L_TYPE,
+    TetrominoType.O_TYPE,
+    TetrominoType.S_TYPE,
+    TetrominoType.T_TYPE,
+    TetrominoType.Z_TYPE
+];
+
 export enum TetrominoColorType {
     COLOR_WHITE = 'COLOR_WHITE',
     COLOR_FIRST = 'COLOR_FIRST',
@@ -52,140 +62,141 @@ export function getColorForTetrominoAndLevel(tetrominoType: TetrominoType, level
 
 // the four block sets for each rotation of the tetromino.
 // 0 = no rotation, 1 = 90 degrees clockwise, 2 = 180 degrees clockwise, 3 = 270 degrees clockwise
+// always positioned as leftmost and topmost as possible
 export class Tetromino {
 
     public static readonly I_PIECE: Tetromino = new Tetromino(TetrominoType.I_TYPE, [
         new BlockSet([
-            new BlockPosition(0, 1),
-            new BlockPosition(1, 1),
-            new BlockPosition(2, 1),
-            new BlockPosition(3, 1)
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
+            new BlockPosition(2, 0),
+            new BlockPosition(3, 0)
         ]),
         new BlockSet([
-            new BlockPosition(2, 0),
-            new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
-            new BlockPosition(2, 3)
+            new BlockPosition(0, 0),
+            new BlockPosition(0, 1),
+            new BlockPosition(0, 2),
+            new BlockPosition(0, 3)
         ]),
     ]);
 
     public static readonly J_PIECE: Tetromino = new Tetromino(TetrominoType.J_TYPE, [
         new BlockSet([
-            new BlockPosition(1, 1),
-            new BlockPosition(2, 1),
-            new BlockPosition(3, 1),
-            new BlockPosition(3, 2),
-        ]),
-        new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
             new BlockPosition(2, 0),
             new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
-            new BlockPosition(1, 2),
         ]),
         new BlockSet([
             new BlockPosition(1, 0),
             new BlockPosition(1, 1),
-            new BlockPosition(2, 1),
-            new BlockPosition(3, 1),
+            new BlockPosition(1, 2),
+            new BlockPosition(0, 2),
         ]),
         new BlockSet([
-            new BlockPosition(2, 0),
-            new BlockPosition(3, 0),
+            new BlockPosition(0, 0),
+            new BlockPosition(0, 1),
+            new BlockPosition(1, 1),
             new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
+        ]),
+        new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
+            new BlockPosition(0, 1),
+            new BlockPosition(0, 2),
         ]),
     ]);
 
     public static readonly L_PIECE: Tetromino = new Tetromino(TetrominoType.L_TYPE, [
         new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
+            new BlockPosition(2, 0),
+            new BlockPosition(0, 1),
+        ]),
+        new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
             new BlockPosition(1, 1),
-            new BlockPosition(2, 1),
-            new BlockPosition(3, 1),
             new BlockPosition(1, 2),
         ]),
         new BlockSet([
-            new BlockPosition(1, 0),
             new BlockPosition(2, 0),
-            new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
-        ]),
-        new BlockSet([
-            new BlockPosition(3, 0),
-            new BlockPosition(3, 1),
             new BlockPosition(2, 1),
             new BlockPosition(1, 1),
+            new BlockPosition(0, 1),
         ]),
         new BlockSet([
-            new BlockPosition(2, 0),
-            new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
-            new BlockPosition(3, 2),
+            new BlockPosition(0, 0),
+            new BlockPosition(0, 1),
+            new BlockPosition(0, 2),
+            new BlockPosition(1, 2),
         ]),
     ]);
 
     public static readonly O_PIECE: Tetromino = new Tetromino(TetrominoType.O_TYPE, [
         new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
+            new BlockPosition(0, 1),
             new BlockPosition(1, 1),
-            new BlockPosition(2, 1),
-            new BlockPosition(1, 2),
-            new BlockPosition(2, 2),
         ]),
     ]);
 
     public static readonly S_PIECE: Tetromino = new Tetromino(TetrominoType.S_TYPE, [
         new BlockSet([
-            new BlockPosition(2, 1),
-            new BlockPosition(3, 1),
-            new BlockPosition(2, 2),
-            new BlockPosition(1, 2),
+            new BlockPosition(1, 0),
+            new BlockPosition(2, 0),
+            new BlockPosition(1, 1),
+            new BlockPosition(0, 1),
         ]),
         new BlockSet([
-            new BlockPosition(2, 0),
-            new BlockPosition(2, 1),
-            new BlockPosition(3, 1),
-            new BlockPosition(3, 2),
+            new BlockPosition(0, 0),
+            new BlockPosition(0, 1),
+            new BlockPosition(1, 1),
+            new BlockPosition(1, 2),
         ]),
     ]);
 
     public static readonly Z_PIECE: Tetromino = new Tetromino(TetrominoType.T_TYPE, [
         new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
             new BlockPosition(1, 1),
             new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
-            new BlockPosition(3, 2),
         ]),
         new BlockSet([
-            new BlockPosition(3, 0),
-            new BlockPosition(3, 1),
-            new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
+            new BlockPosition(1, 0),
+            new BlockPosition(1, 1),
+            new BlockPosition(0, 1),
+            new BlockPosition(0, 2),
         ]),
     ]);
 
     public static readonly T_PIECE: Tetromino = new Tetromino(TetrominoType.T_TYPE, [
         new BlockSet([
-            new BlockPosition(1, 1),
-            new BlockPosition(2, 1),
-            new BlockPosition(3, 1),
-            new BlockPosition(2, 2),
-        ]),
-        new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(1, 0),
             new BlockPosition(2, 0),
-            new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
             new BlockPosition(1, 1),
         ]),
         new BlockSet([
-            new BlockPosition(2, 0),
+            new BlockPosition(1, 0),
             new BlockPosition(1, 1),
-            new BlockPosition(2, 1),
-            new BlockPosition(3, 1),
+            new BlockPosition(1, 2),
+            new BlockPosition(0, 1),
         ]),
         new BlockSet([
-            new BlockPosition(2, 0),
+            new BlockPosition(1, 0),
+            new BlockPosition(0, 1),
+            new BlockPosition(1, 1),
             new BlockPosition(2, 1),
-            new BlockPosition(2, 2),
-            new BlockPosition(3, 1),
+        ]),
+        new BlockSet([
+            new BlockPosition(0, 0),
+            new BlockPosition(0, 1),
+            new BlockPosition(0, 2),
+            new BlockPosition(1, 1),
         ]),
     ]);
 
@@ -211,6 +222,11 @@ export class Tetromino {
     public getColorForLevel(level: number): string {
         return getColorForTetrominoAndLevel(this.type, level);
     }
+
+    public numPossibleRotations(): number {
+        return this.blockSet.length;
+    }
+
 }
 
 /*

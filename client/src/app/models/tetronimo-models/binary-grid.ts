@@ -48,6 +48,8 @@ export default class BinaryGrid implements Grid {
     }
 
     public exists(x: number, y: number): boolean {
+        if (x < 0 || x >= this.numCols) return false;
+        if (y < 0 || y >= this.numRows) return false;
         return this.at(x, y) === BlockType.FILLED;
     }
 
