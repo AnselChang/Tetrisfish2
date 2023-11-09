@@ -1,0 +1,55 @@
+<div class="root">
+    <section class="main-grid">
+
+        <h1 class="padded">Current Frame</h1>
+
+        <app-tetris-panel>
+            <app-interactive-tetris-board
+                    [grid]="current.grid"
+                    [level]="18"
+                />
+            <app-tetris-panel-item>
+                <app-next-box [showBackground]="false" [level]="18" [type]="current.nextBoxType"></app-next-box>
+            </app-tetris-panel-item>
+
+            <app-tetris-panel-item class="debug-nav">
+                <app-button-small label="Prev -1" [buttonDisabled]="!hasPrevious()" (click)="previous()"></app-button-small>
+                <app-button-small label="Next +1" [buttonDisabled]="!hasNext()" (click)="next()"></app-button-small>
+            </app-tetris-panel-item>
+
+            <app-tetris-panel-item class="debug-nav">
+                <app-button-small label="Prev -20" [buttonDisabled]="!hasPrevious()" (click)="previous(20)"></app-button-small>
+                <app-button-small label="Next +20" [buttonDisabled]="!hasNext()" (click)="next(20)"></app-button-small>
+            </app-tetris-panel-item>
+
+            <app-tetris-panel-item class="debug-nav">
+                <app-button-small label="Prev P" (click)="previousPlacement()"></app-button-small>
+                <app-button-small label="Next P" (click)="nextPlacement()"></app-button-small>
+            </app-tetris-panel-item>
+
+            <app-tetris-panel-item class="debug-nav">
+                <app-button-small label="Start" (click)="start()"></app-button-small>
+                <app-button-small label="End" (click)="end()"></app-button-small>
+            </app-tetris-panel-item>
+
+        </app-tetris-panel>
+
+    </section>
+    <section class="info-section">
+        <h1 class="padded">Debug log</h1>
+
+        <app-subsection>
+            <p *ngFor="let log of current.log">{{log}}</p>
+        </app-subsection>
+
+        <app-subsection class="log-grid" *ngFor="let logGrid of current.logGrid">
+            <h3>{{logGrid[0]}}</h3>
+            <app-interactive-tetris-board
+                    [grid]="logGrid[1]"
+                    [level]="18"
+                />
+        </app-subsection>
+        
+    </section>
+
+</div>

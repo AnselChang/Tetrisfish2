@@ -8,6 +8,7 @@ import { block } from "core/tooltip";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import { BlockSet } from "../tetronimo-models/block";
 import { ALL_TETRONIMO_TYPES, Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
+import { GameDebugService } from "../../services/game-debug.service";
 
 
 export default class MoveableTetromino {
@@ -44,19 +45,23 @@ export default class MoveableTetromino {
     // given grids without and with the piece, return a MoveableTetromino that represents the piece if found,
     // or undefined if not found
     // pieceType is unknown for first piece, but is known through previous placement's nextbox for subsequent pieces
-    static computeMoveableTetronimo(gridWithoutPiece: BinaryGrid, gridWithPiece: BinaryGrid, pieceType?: TetrominoType): MoveableTetromino | undefined {
+    static computeMoveableTetronimo(debug: GameDebugService, gridWithoutPiece: BinaryGrid, gridWithPiece: BinaryGrid, pieceType?: TetrominoType): MoveableTetromino | undefined {
         const pieceMask = BinaryGrid.subtract(gridWithPiece, gridWithoutPiece);
 
 
         if (pieceMask === undefined) {
-            console.log("pieceMask undefined");
+            debug.log("pieceMask undefined");
             gridWithoutPiece.print();
             gridWithPiece.print();
             return undefined;
         }
 
         pieceMask.print();
-        if (pieceMask.count() !== 4) return undefined;
+        debug.logGrid("pieceMask", pieceMask);
+        if (pieceMask.count() !== 4) {
+            debug.log("pieceMask count not 4");
+            return undefined;
+        }
 
         // find the location of the most top-left mino on the pieceMask
         let minX = 10;
@@ -78,10 +83,12 @@ export default class MoveableTetromino {
         for (let pieceType of piecesToTry) {
             const mt = MoveableTetromino.getMTForPieceMask(pieceMask, minX, minY, pieceType);
             if (mt) {
+                debug.log(`found matching MoveableTetronimo ${mt.tetrominoType} at ${mt.translateX}, ${mt.translateY}`);
                 return mt;
             }
         }
 
+        debug.log("no matching MoveableTetronimo found");
         return undefined;
     }
 

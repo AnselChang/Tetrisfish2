@@ -9,6 +9,8 @@ import MoveableTetromino from '../../models/game-models/moveable-tetromino';
 import { TetrominoType } from '../../models/tetronimo-models/tetromino';
 import { SmartGameStatus } from '../../models/tetronimo-models/smart-game-status';
 import { Grid } from 'blockly';
+import DebugFrame from '../../models/capture-models/debug-frame';
+import { GameDebugService } from '../game-debug.service';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -41,7 +43,11 @@ class SpawnData {
   ) {}
 }
 
-// a class that stores the last stable mino count, and can imply state changes when mino count changes
+
+/*
+State machine with a lifetime of the duration of a game
+Stores the last stable mino count, and can imply state changes when mino count changes
+*/
 class GridStateMachine {
 
   // "stable" means the last placement frame, or before the very first frame of the game
@@ -56,6 +62,8 @@ class GridStateMachine {
 
   // the type of the next piece
   private nextPieceType?: TetrominoType;
+
+  constructor(private debug: GameDebugService) {}
 
   // return [result, linesCleared]
   private doesMinoCountSuggestPieceSpawn(currentMinoCount: number): [MinoResult, number] {
@@ -86,7 +94,8 @@ class GridStateMachine {
     currentGrid.print();
     const currentMinoCount = currentGrid.count();
     const [result, linesCleared] = this.doesMinoCountSuggestPieceSpawn(currentMinoCount);
-    console.log("Result:", result, "Lines Cleared:", linesCleared);
+    this.debug.log(`Current mino count: ${currentMinoCount}, Last Stable Mino Count: ${this.lastStableMinoCount}`);
+    this.debug.log(`Result: ${result}, Lines Cleared:, ${linesCleared}`);
 
     // if there might be a piece spawn, try to isolate the spawned piece
     // this should also trigger the first frame of the game where the spawned piece is fully visible
@@ -112,8 +121,13 @@ class GridStateMachine {
         spawnedMinos.forEach(({ x, y }) => this.nextStableGridWithoutPlacement!.setAt(x, y, BlockType.EMPTY));
 
         // no previous placement to register if this is the first spawned piece
-        if (this.lastStableGridWithoutPlacement === undefined) return [MinoResult.NO_CHANGE, undefined];
+        if (this.lastStableGridWithoutPlacement === undefined) {
+          this.debug.log("First piece spawned, no previous placement to register");
+          return [MinoResult.NO_CHANGE, undefined];
+        }
 
+        this.debug.logGrid("Last Stable Grid Without Placement", this.lastStableGridWithoutPlacement);
+        this.debug.logGrid("Stable Grid With Placement", this.stableGridWithPlacement);
         return [MinoResult.SPAWN, new SpawnData(this.lastStableGridWithoutPlacement, this.stableGridWithPlacement, this.nextPieceType, linesCleared)];
       }
     } else if (result === MinoResult.NO_CHANGE) {
@@ -126,6 +140,7 @@ class GridStateMachine {
       return [MinoResult.NO_CHANGE, undefined];
     } else { // result === MinoResult.LIMBO
       // if in limbo, then we skip this frame
+      this.debug.log("Unstable mino count");
       return [MinoResult.NO_CHANGE, undefined];
     }
   }
@@ -157,13 +172,17 @@ export class GameStateMachineService {
   private gameStartDetectionCount = 0;
   private readonly MIN_GAME_START_DETECTION = 10; // if this many game start detections in a row, start game
 
-  constructor(private extractedStateService: ExtractedStateService) { }
+  constructor(
+    private extractedStateService: ExtractedStateService,
+    private debug: GameDebugService,
+    ) { }
 
   public startGame(): void {
     console.log("Starting game");
-    this.gridSM = new GridStateMachine();
+    this.gridSM = new GridStateMachine(this.debug);
     this.playStatus = PlayStatus.PLAYING;
     this.placements = []; // clear placements
+    this.debug.resetNewGame();
     this.gameStartLevel = this.extractedStateService.get().getStatus().level;
     this.currentGameStatus = new SmartGameStatus(this.gameStartLevel); // reset game level/lines/score
   }
@@ -213,18 +232,22 @@ export class GameStateMachineService {
       if (state.getPaused()) {
         return;
       }
+
+      this.debug.addFrame(state.getGrid(), state.getNextPieceType());
       
       // if both level and next box have invalid states, this is an invalid frame
       if (state.getNextPieceType() === undefined) {
         this.invalidFrameCount++;
-        console.log(`Invalid Frame (${this.invalidFrameCount})`);
+        this.debug.log(`Invalid Frame (${this.invalidFrameCount})`);
 
         // if MAX_INVALID_FRAMES invalid frames in a row, end game
         if (this.invalidFrameCount >= this.MAX_INVALID_FRAMES) {
-          console.log(`Ended game due to ${this.MAX_INVALID_FRAMES} invalid frames in a row`);
+          this.debug.log(`Ended game due to ${this.MAX_INVALID_FRAMES} invalid frames in a row`);
           this.endGame();
-          return;
         }
+
+        // do not process invalid frame
+        return;
 
       } else {
         this.invalidFrameCount = 0;
@@ -241,14 +264,15 @@ export class GameStateMachineService {
         
         // if placement is invalid, exit game due to invalid state
         if (newPlacement === undefined) {
-          console.log("Ended game due to invalid placement state");
+          this.debug.log("Ended game due to invalid placement state");
           this.endGame();
           return;
         }
 
         // Otherwise, append placement to placements
         this.placements.push(newPlacement);
-        console.log("NEW PLACEMENT", newPlacement.status, newPlacement.nextPieceType);
+        this.debug.setPlacement(newPlacement);
+        this.debug.log(`NEW PLACEMENT  ${newPlacement.status} ${newPlacement.nextPieceType}`);
       }
       
     }
@@ -286,7 +310,7 @@ export class GameStateMachineService {
     }
 
     // find the piece type, orientation, and position for the placed piece
-    const piece = MoveableTetromino.computeMoveableTetronimo(data.gridWithoutPlacement, data.gridWithPlacement, this.getCurrentPieceType());
+    const piece = MoveableTetromino.computeMoveableTetronimo(this.debug, data.gridWithoutPlacement, data.gridWithPlacement, this.getCurrentPieceType());
 
     // if cannot find piece, then the placement is invalid
     if (piece === undefined) {

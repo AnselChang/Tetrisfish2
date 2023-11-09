@@ -38,6 +38,7 @@ import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-
 import { ThresholdInputComponent } from './components/layout/calibrate-components/threshold-input/threshold-input.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RatingSliderComponent } from './components/BLOCK/rating-slider/rating-slider.component';
+import { DebugGameComponent } from './components/layout/debug-game/debug-game.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,6 +74,7 @@ import { RatingSliderComponent } from './components/BLOCK/rating-slider/rating-s
     PlayCalibrateComponent,
     ThresholdInputComponent,
     RatingSliderComponent,
+    DebugGameComponent,
   ],
   imports: [
     BrowserModule,

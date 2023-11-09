@@ -67,7 +67,9 @@
             <div class="buttons">
                 <app-button-big label="Edit Calibration" icon="calibrate_button.svg" (click)="onSwitchMode.emit()"/>
                 <app-button-big label="Analyze" icon="analysis_button.svg" />
-                <app-button-big label="Debug" icon="debug_button.svg" />
+                <a routerLink="/debug" routerLinkActive="active">
+                    <app-button-big label="Debug" icon="debug_button.svg" />
+                </a>
             </div>
         </div>
     </div>
