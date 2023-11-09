@@ -29,7 +29,7 @@ export class VideoCaptureService {
   private isCanvasHidden: boolean = false;
 
   // if flag is set to false, then executeFrame() loop will terminate
-  public isCaptureRunning: boolean = false;
+  private isCaptureRunning: boolean = false;
 
   // how many times larger the canvas stored resolution is compared to display resolution
   // the higher the is, the more expensive OCR calculations are, but the more accurate they are
@@ -66,7 +66,6 @@ export class VideoCaptureService {
   }
 
   public isCapturing(): boolean {
-    console.log("isCapturing:", this.isCaptureRunning);
     return this.isCaptureRunning;
   }
 

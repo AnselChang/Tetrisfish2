@@ -8,6 +8,7 @@ import { IGameStatus } from '../../models/tetronimo-models/game-status';
 import MoveableTetromino from '../../models/game-models/moveable-tetromino';
 import { TetrominoType } from '../../models/tetronimo-models/tetromino';
 import { SmartGameStatus } from '../../models/tetronimo-models/smart-game-status';
+import { Grid } from 'blockly';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -59,6 +60,9 @@ class GridStateMachine {
   // return [result, linesCleared]
   private doesMinoCountSuggestPieceSpawn(currentMinoCount: number): [MinoResult, number] {
 
+    console.log("Count:", currentMinoCount);
+    console.log("Last Stable Count:", this.lastStableMinoCount);
+
     // +4 minos, suggests that a piece has spawned without a line clear
     if (currentMinoCount === this.lastStableMinoCount + 4) return [MinoResult.SPAWN, 0];
 
@@ -78,9 +82,11 @@ class GridStateMachine {
   // If new piece has spawned, return the grid without and with previous piece
   // otherwise, return undefined
   public processFrame(currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [MinoResult, SpawnData | undefined] {
-
+    console.log("NEW FRAME");
+    currentGrid.print();
     const currentMinoCount = currentGrid.count();
     const [result, linesCleared] = this.doesMinoCountSuggestPieceSpawn(currentMinoCount);
+    console.log("Result:", result, "Lines Cleared:", linesCleared);
 
     // if there might be a piece spawn, try to isolate the spawned piece
     // this should also trigger the first frame of the game where the spawned piece is fully visible
@@ -138,7 +144,7 @@ export class GameStateMachineService {
   private currentGameStatus?: SmartGameStatus;
 
   // handles mino changes / new piece detection
-  private gridSM = new GridStateMachine();
+  private gridSM?: GridStateMachine = undefined;
 
   // all the placements for the current game
   private placements: GamePlacement[] = [];
@@ -154,6 +160,8 @@ export class GameStateMachineService {
   constructor(private extractedStateService: ExtractedStateService) { }
 
   public startGame(): void {
+    console.log("Starting game");
+    this.gridSM = new GridStateMachine();
     this.playStatus = PlayStatus.PLAYING;
     this.placements = []; // clear placements
     this.gameStartLevel = this.extractedStateService.get().getStatus().level;
@@ -161,6 +169,8 @@ export class GameStateMachineService {
   }
 
   public endGame(): void {
+    console.log("Ending game");
+    this.gridSM = undefined;
     this.playStatus = PlayStatus.NOT_PLAYING;
   }
 
@@ -205,7 +215,7 @@ export class GameStateMachineService {
       }
       
       // if both level and next box have invalid states, this is an invalid frame
-      if (this.isInvalidLevel(state.getStatus().level) && state.getNextPieceType() === undefined) {
+      if (state.getNextPieceType() === undefined) {
         this.invalidFrameCount++;
         console.log(`Invalid Frame (${this.invalidFrameCount})`);
 
@@ -222,7 +232,7 @@ export class GameStateMachineService {
 
       // otherwise, process grid for mino changes and spawned piece detection
       // result is undefined if no piece spawn detected, or [gridWithoutPlacement, gridWithPlacement] if piece spawn detected
-      const [minoResult, data] = this.gridSM.processFrame(state.getGrid(), state.getNextPieceType());
+      const [minoResult, data] = this.gridSM!.processFrame(state.getGrid(), state.getNextPieceType());
 
       if (minoResult === MinoResult.SPAWN) {
 

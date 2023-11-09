@@ -1,6 +1,7 @@
 // video-capture.component.ts
-import { Component, OnInit, ElementRef, ViewChild, Renderer2, Input, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Renderer2, Input, AfterViewChecked, AfterViewInit, OnDestroy } from '@angular/core';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
+import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { VideoCaptureService } from 'client/src/app/services/capture/video-captu
   templateUrl: './video-capture.component.html',
   styleUrls: ['./video-capture.component.scss']
 })
-export class VideoCaptureComponent implements OnInit, AfterViewInit {
+export class VideoCaptureComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() captureVideoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
   public isMouseOnVideo: boolean = false;
@@ -21,15 +22,10 @@ export class VideoCaptureComponent implements OnInit, AfterViewInit {
   constructor(
     public captureServ: VideoCaptureService,
     public captureFrameService: CaptureFrameService,
+    private captureSettingsService: CaptureSettingsService,
     private renderer: Renderer2) {
 
-    this.captureFrameService.mode$.subscribe(mode => {
-      
-      // If enter special mode, listen for mouse clicks on the board
-      if (mode === CaptureMode.CLICK_ON_BOARD) {
-        this.mouseClickListener = this.renderer.listen('document', 'click', this.onMouseClick.bind(this));
-      }
-    });
+      this.mouseClickListener = this.renderer.listen('document', 'click', this.onMouseClick.bind(this));
 
   }
 
@@ -52,15 +48,11 @@ export class VideoCaptureComponent implements OnInit, AfterViewInit {
   public onMouseClick(): void {
 
     if (this.isMouseOnVideo && this.captureFrameService.mode$.getValue() === CaptureMode.CLICK_ON_BOARD) {
+      console.log("yes");
       this.captureFrameService.floodfillBoard(Math.floor(this.mouseX), Math.floor(this.mouseY));
     } else {
+      console.log("not");
       this.captureFrameService.resetCaptureMode();
-    }
-
-    // remove listener
-    if (this.mouseClickListener) {
-      this.mouseClickListener();
-      this.mouseClickListener = null;
     }
 
   }
@@ -74,6 +66,22 @@ export class VideoCaptureComponent implements OnInit, AfterViewInit {
 
   public isCaptureModeNormal(): boolean {
     return this.captureFrameService.mode$.getValue() === CaptureMode.NORMAL;
+  }
+
+  public isCalibrated(): boolean {
+    return this.captureSettingsService.get().isCalibrated();
+  }
+
+  public hasVideo(): boolean {
+    return this.captureServ.isCapturing();
+  }
+
+  ngOnDestroy(): void {
+    // remove listener
+    if (this.mouseClickListener) {
+      this.mouseClickListener();
+      this.mouseClickListener = null;
+    }
   }
 
 

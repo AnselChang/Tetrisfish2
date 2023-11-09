@@ -16,7 +16,7 @@ export enum CaptureMode {
 })
 export class CaptureFrameService implements PixelReader {
 
-  public mode$ = new BehaviorSubject<CaptureMode>(CaptureMode.NORMAL);
+  public mode$ = new BehaviorSubject<CaptureMode>(CaptureMode.CLICK_ON_BOARD);
 
   private frame?: Uint8ClampedArray;
   private width?: number;
@@ -104,7 +104,7 @@ export class CaptureFrameService implements PixelReader {
   }
 
   public resetCaptureMode(): void {
-    this.mode$.next(CaptureMode.NORMAL);
+    //this.mode$.next(CaptureMode.NORMAL);
   }
 
 }

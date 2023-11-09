@@ -59,7 +59,6 @@ export class ExtractedState {
         if (nextGrid === undefined) this.nextPieceType = undefined;
         else this.nextPieceType = TetronimoOCR.findMostSimilarPieceType(nextGrid);
 
-        console.log("next piece type: " + this.nextPieceType);
     }
 
     public setLevel(level: number, confidence: string): void {

@@ -13,7 +13,7 @@
   
 <video #videoElement autoplay style="display: none;"></video>
 <canvas #canvasElement
-[ngStyle]="{'border' : (isCaptureModeNormal() ? '1px solid #ccc' : '3px solid green')}"
+[ngStyle]="{'border' : hasVideo() ? (isCalibrated() ? '2px solid green' : '2px solid red') : '1px solid white'}"
 (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
 (mousemove)="onMouseMove($event)"
 [width]="captureServ.OCR_WIDTH" [height]="captureServ.OCR_HEIGHT"

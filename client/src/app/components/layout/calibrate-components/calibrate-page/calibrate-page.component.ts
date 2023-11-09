@@ -31,13 +31,6 @@ export class CalibratePageComponent {
     return this.extractedStateService.get();
   }
 
-  public determineBoundingBoxes(event: Event) {
-    if (this.captureFrameService.hasFrame()) {
-      event.stopPropagation();
-      this.captureFrameService.mode$.next(CaptureMode.CLICK_ON_BOARD);
-    }
-  }
-
   public isCalibrated(): boolean {
     return this.captureSettingsService.get().isCalibrated();
   }

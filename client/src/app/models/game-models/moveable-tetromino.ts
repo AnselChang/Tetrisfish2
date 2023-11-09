@@ -47,7 +47,15 @@ export default class MoveableTetromino {
     static computeMoveableTetronimo(gridWithoutPiece: BinaryGrid, gridWithPiece: BinaryGrid, pieceType?: TetrominoType): MoveableTetromino | undefined {
         const pieceMask = BinaryGrid.subtract(gridWithPiece, gridWithoutPiece);
 
-        if (pieceMask === undefined) return undefined;
+
+        if (pieceMask === undefined) {
+            console.log("pieceMask undefined");
+            gridWithoutPiece.print();
+            gridWithPiece.print();
+            return undefined;
+        }
+
+        pieceMask.print();
         if (pieceMask.count() !== 4) return undefined;
 
         // find the location of the most top-left mino on the pieceMask
