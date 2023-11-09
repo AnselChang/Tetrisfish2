@@ -239,8 +239,6 @@ export class GameStateMachineService {
         // Otherwise, append placement to placements
         this.placements.push(newPlacement);
         console.log("NEW PLACEMENT", newPlacement.status, newPlacement.nextPieceType);
-        data!.gridWithoutPlacement?.print();
-        data!.gridWithPlacement?.print();
       }
       
     }
@@ -278,7 +276,7 @@ export class GameStateMachineService {
     }
 
     // find the piece type, orientation, and position for the placed piece
-    const piece = MoveableTetromino.computeMoveableTetronimo(data.gridWithoutPlacement, data.gridWithPlacement);
+    const piece = MoveableTetromino.computeMoveableTetronimo(data.gridWithoutPlacement, data.gridWithPlacement, this.getCurrentPieceType());
 
     // if cannot find piece, then the placement is invalid
     if (piece === undefined) {
@@ -337,4 +335,8 @@ export class GameStateMachineService {
     return this.placements[this.placements.length - 1];
   }
 
+  // obtain the current piece as the next piece of last placement
+  public getCurrentPieceType(): TetrominoType | undefined {
+    return this.getMostRecentPlacement()?.nextPieceType;
+  }
 }

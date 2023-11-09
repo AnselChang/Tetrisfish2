@@ -19,7 +19,16 @@ export default class MoveableTetromino {
 
     // given grids without and with the piece, return a MoveableTetromino that represents the piece if found,
     // or undefined if not found
-    static computeMoveableTetronimo(gridWithoutPiece: BinaryGrid, gridWithPiece: BinaryGrid): MoveableTetromino | undefined {
+    // pieceType is unknown for first piece, but is known through previous placement's nextbox for subsequent pieces
+    static computeMoveableTetronimo(gridWithoutPiece: BinaryGrid, gridWithPiece: BinaryGrid, pieceType?: TetrominoType): MoveableTetromino | undefined {
+        const pieceMask = BinaryGrid.subtract(gridWithPiece, gridWithoutPiece);
+
+        if (pieceMask === undefined) return undefined;
+        if (pieceMask.count() !== 4) return undefined;
+        
+        console.log("tetronimno type: ", pieceType);
+        pieceMask.print();
+
         return new MoveableTetromino(TetrominoType.I_TYPE, 0, 0, 0); // DUMMY CODE
     }
 

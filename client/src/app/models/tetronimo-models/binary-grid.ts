@@ -71,6 +71,32 @@ export default class BinaryGrid implements Grid {
         return new BinaryGrid(newBlocks);
     }
 
+    // grid1 - grid2
+    // returns undefined if invalid operation
+    // returns a new BinaryGrid object, does not modify grid1 or grid2
+    public static subtract(grid1: BinaryGrid, grid2: BinaryGrid): BinaryGrid | undefined {
+            
+            if (grid1.numRows !== grid2.numRows || grid1.numCols !== grid2.numCols) {
+                return undefined;
+            }
+
+            const newGrid = grid1.copy();    
+            for (let i = 0; i < grid1.numRows; i++) {
+                for (let j = 0; j < grid1.numCols; j++) {
+                    if (grid2.at(j, i) === BlockType.FILLED) {
+                        if (newGrid.at(j, i) === BlockType.EMPTY) {
+                            return undefined;
+                        } else {
+                            newGrid.setAt(j, i, BlockType.EMPTY);
+                        }
+                    }
+                }
+            }
+    
+            return newGrid;
+        }
+
+
     public print(): void {
         console.log(this.blocks.map(row => row.map(block => block === BlockType.FILLED ? 'X' : '.').join('')).join('\n'));
     }
