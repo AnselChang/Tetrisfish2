@@ -29,8 +29,9 @@ export default class MoveableTetromino {
     }
 
     static getMTForPieceMask(pieceMask: BinaryGrid, maskStartX: number, maskStartY: number, pieceType: TetrominoType): MoveableTetromino | undefined {
-
         const tetronimo = Tetromino.getPieceByType(pieceType);
+        console.log("getmtf", pieceType);
+        console.log(tetronimo.numPossibleRotations());
         for (let rot = 0; rot < tetronimo.numPossibleRotations(); rot++) {
             const blockSet = tetronimo.getBlockSet(rot);
             if (MoveableTetromino.doesBlocksetMatchMask(pieceMask, maskStartX, maskStartY, blockSet)) {

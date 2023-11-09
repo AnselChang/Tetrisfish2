@@ -158,7 +158,7 @@ export class Tetromino {
         ]),
     ]);
 
-    public static readonly Z_PIECE: Tetromino = new Tetromino(TetrominoType.T_TYPE, [
+    public static readonly Z_PIECE: Tetromino = new Tetromino(TetrominoType.Z_TYPE, [
         new BlockSet([
             new BlockPosition(0, 0),
             new BlockPosition(1, 0),
@@ -206,7 +206,8 @@ export class Tetromino {
         Tetromino.L_PIECE,
         Tetromino.O_PIECE,
         Tetromino.S_PIECE, 
-        Tetromino.T_PIECE];
+        Tetromino.T_PIECE,
+        Tetromino.Z_PIECE];
 
     public static getPieceByType(type: TetrominoType): Tetromino {
         return Tetromino.ALL_PIECES.find(piece => piece.type === type)!;
