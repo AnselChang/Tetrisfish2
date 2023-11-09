@@ -53,6 +53,13 @@ class GridStateMachine {
   // "stable" means the last placement frame, or before the very first frame of the game
   private lastStableMinoCount = 0;
 
+  // "unstable" means previous DIFFERENT mino count
+  // we store this specifically for the use case where the mino count is decreasing
+  // but the mino count suggests a piece spawn. Here, this is a false alarm, as it could
+  // also indicate that a line clear is happening
+  private lastUnstableMinoCount = 0;
+  private minoDirection = true; // positive if increasing, negative if decreasing
+
   // the grid right after a spawned piece with the spawned piece masked out
   private lastStableGridWithoutPlacement?: BinaryGrid = new BinaryGrid();
   private nextStableGridWithoutPlacement?: BinaryGrid;
@@ -63,6 +70,7 @@ class GridStateMachine {
   // the type of the next piece
   private nextPieceType?: TetrominoType;
 
+
   constructor(private debug: GameDebugService) {}
 
   // return [result, linesCleared]
@@ -70,6 +78,15 @@ class GridStateMachine {
 
     console.log("Count:", currentMinoCount);
     console.log("Last Stable Count:", this.lastStableMinoCount);
+
+    // if mino count is the same, then no change
+    if (currentMinoCount === this.lastStableMinoCount) return [MinoResult.NO_CHANGE, -1];
+
+    // if mino count is decreasing, we should not look for spawn events
+    if (this.minoDirection === false) {
+      this.debug.log("Mino count decreasing, skipping spawn detection");
+      return [MinoResult.LIMBO, -1];
+    }
 
     // +4 minos, suggests that a piece has spawned without a line clear
     if (currentMinoCount === this.lastStableMinoCount + 4) return [MinoResult.SPAWN, 0];
@@ -79,9 +96,6 @@ class GridStateMachine {
     if (currentMinoCount === this.lastStableMinoCount - 16) return [MinoResult.SPAWN, 2];
     if (currentMinoCount === this.lastStableMinoCount - 26) return [MinoResult.SPAWN, 3];
     if (currentMinoCount === this.lastStableMinoCount - 36) return [MinoResult.SPAWN, 4];
-
-    // if mino count is the same, then no change
-    if (currentMinoCount === this.lastStableMinoCount) return [MinoResult.NO_CHANGE, -1];
 
     // otherwise, we are in limbo because we're not sure what's happening
     return [MinoResult.LIMBO, -1];
@@ -93,6 +107,13 @@ class GridStateMachine {
     console.log("NEW FRAME");
     currentGrid.print();
     const currentMinoCount = currentGrid.count();
+
+    if (this.lastUnstableMinoCount !== currentMinoCount) {
+      this.minoDirection = currentMinoCount > this.lastUnstableMinoCount;
+      this.lastUnstableMinoCount = currentMinoCount;
+      this.debug.log(`Mino count changed, ${this.minoDirection ? "increasing" : "decreasing"}`);
+    }
+
     const [result, linesCleared] = this.doesMinoCountSuggestPieceSpawn(currentMinoCount);
     this.debug.log(`Current mino count: ${currentMinoCount}, Last Stable Mino Count: ${this.lastStableMinoCount}`);
     this.debug.log(`Result: ${result}, Lines Cleared:, ${linesCleared}`);
@@ -101,7 +122,11 @@ class GridStateMachine {
     // this should also trigger the first frame of the game where the spawned piece is fully visible
     if (result === MinoResult.SPAWN) {
       const spawnedMinos = findFourConnectedComponent(currentGrid);
-      this.debug.log(`Spawned minos: ${spawnedMinos?.map(({ x, y }) => `(${x}, ${y})`).join(", ")})`);
+      if (this.debug) {
+        const spawnedMinosGrid = new BinaryGrid();
+        spawnedMinos?.forEach(({ x, y }) => spawnedMinosGrid.setAt(x, y, BlockType.FILLED));
+        this.debug.logGrid("Spawned Minos", spawnedMinosGrid);
+      }
 
       if (spawnedMinos === null && linesCleared > 0) {
         // if we can't isolate the spawned piece, then either the capture accidentally captured four extra minos,
