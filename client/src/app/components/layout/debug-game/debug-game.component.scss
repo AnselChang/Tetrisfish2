@@ -10,6 +10,13 @@
     gap: 5px;
 }
 
+.grids {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+}
+
 .log-grid {
     display: block;
     width: 150px;

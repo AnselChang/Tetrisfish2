@@ -18,8 +18,8 @@
             </app-tetris-panel-item>
 
             <app-tetris-panel-item class="debug-nav">
-                <app-button-small label="Prev -20" [buttonDisabled]="!hasPrevious()" (click)="previous(20)"></app-button-small>
-                <app-button-small label="Next +20" [buttonDisabled]="!hasNext()" (click)="next(20)"></app-button-small>
+                <app-button-small label="Prev -5" [buttonDisabled]="!hasPrevious()" (click)="previous(5)"></app-button-small>
+                <app-button-small label="Next +5" [buttonDisabled]="!hasNext()" (click)="next(5)"></app-button-small>
             </app-tetris-panel-item>
 
             <app-tetris-panel-item class="debug-nav">
@@ -42,13 +42,16 @@
             <p *ngFor="let log of current.log">{{log}}</p>
         </app-subsection>
 
-        <app-subsection class="log-grid" *ngFor="let logGrid of current.logGrid">
-            <h3>{{logGrid[0]}}</h3>
-            <app-interactive-tetris-board
-                    [grid]="logGrid[1]"
-                    [level]="18"
-                />
-        </app-subsection>
+        <div class="grids">
+            <app-subsection class="log-grid" *ngFor="let logGrid of current.logGrid">
+                <h3>{{logGrid[0]}}</h3>
+                <app-interactive-tetris-board
+                        [grid]="logGrid[1]"
+                        [level]="18"
+                    />
+            </app-subsection>
+        </div>
+        
         
     </section>
 
