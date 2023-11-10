@@ -5,7 +5,7 @@ import { GamePosition } from 'client/src/app/models/game-models/game-position';
 import { HZ_10 } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
 import GameStatus from 'client/src/app/models/tetronimo-models/game-status';
-import { evaluatePosition } from 'client/src/app/scripts/evaluation/evaluator';
+import { fetchMovelist } from 'client/src/app/scripts/evaluation/evaluator';
 
 @Component({
   selector: 'app-board-creation-page',
@@ -97,8 +97,8 @@ export class BoardCreationPageComponent {
     const status = new GameStatus(this.cache.level, 110, 123456);
     const position = new GamePosition(status, this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType);
     
-    const recommendations = await evaluatePosition(position, HZ_10, true);
-    console.log(recommendations);
+    const result = await fetchMovelist(position, HZ_10, true);
+    console.log("Result:", result);
   }
 
 }
