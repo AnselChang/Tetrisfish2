@@ -1,12 +1,12 @@
 import { Component, Renderer2 } from '@angular/core';
 import { BlockData, TetrisBoardMode } from '../../../tetris/interactive-tetris-board/interactive-tetris-board.component';
 import { BoardCreationCacheService } from 'client/src/app/services/board-creation-cache.service';
-import { GamePosition } from 'client/src/app/models/game-models/game-position';
 import { HZ_10 } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
 import GameStatus from 'client/src/app/models/tetronimo-models/game-status';
 import { fetchMovelist } from 'client/src/app/scripts/evaluation/evaluator';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
+import { SmartGameStatus } from 'client/src/app/models/tetronimo-models/smart-game-status';
 
 @Component({
   selector: 'app-board-creation-page',
@@ -95,8 +95,8 @@ export class BoardCreationPageComponent {
     console.log(this.cache);
 
 
-    const status = new GameStatus(this.cache.level, 110, 123456);
-    const position = new GamePlacement(this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType, status, undefined);
+    const status = new SmartGameStatus(this.cache.level, 110, 123456);
+    const position = new GamePlacement(this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType, status);
     
     const result = await fetchMovelist(position, HZ_10, true);
     console.log("Result:", result);

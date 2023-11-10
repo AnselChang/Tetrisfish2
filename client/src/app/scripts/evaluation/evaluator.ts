@@ -1,5 +1,4 @@
 import { GamePlacement } from "../../models/game-models/game-placement";
-import { GamePosition } from "../../models/game-models/game-position";
 import MoveableTetromino from "../../models/game-models/moveable-tetromino";
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
 import { Method, fetchServer } from "../fetch-server";
@@ -19,7 +18,7 @@ async function fetchStackRabbitURL(url: string): Promise<any> {
 export async function fetchMovelist(placement: GamePlacement, inputFrameTimeline: string, useNextBox: boolean): Promise<any> {
 
     // Generate the common portion of the URL
-    const params = generateStandardParams(placement.grid, placement.currentPieceType, placement.status!, inputFrameTimeline);
+    const params = generateStandardParams(placement.grid, placement.currentPieceType, placement.statusBeforePlacement!, inputFrameTimeline);
 
     // Make engine-movelist request
     const movelistURL = new EngineMovelistURL(params, useNextBox ? placement.nextPieceType : undefined).getURL();
@@ -30,7 +29,7 @@ export async function fetchMovelist(placement: GamePlacement, inputFrameTimeline
 export async function fetchRateMove(placement: GamePlacement, inputFrameTimeline: string, lookaheadDepth: LookaheadDepth) {
 
     // Generate the common portion of the URL
-    const params = generateStandardParams(placement.grid, placement.currentPieceType, placement.status!, inputFrameTimeline);
+    const params = generateStandardParams(placement.grid, placement.currentPieceType, placement.statusBeforePlacement!, inputFrameTimeline);
 
     // Make rate-move request
     const boardWithPlacement = placement.getGridWithPlacement();

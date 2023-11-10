@@ -3,7 +3,6 @@ The model for a full game, consisting of a list of placements optionally with ev
 */
 
 import BinaryGrid from "../tetronimo-models/binary-grid";
-import GameStatus from "../tetronimo-models/game-status";
 import { SmartGameStatus } from "../tetronimo-models/smart-game-status";
 import { TetrominoType } from "../tetronimo-models/tetromino";
 import { GamePlacement } from "./game-placement";
@@ -35,22 +34,22 @@ export class Game {
         return secondLastPosition;
     }
 
-    public addNewPosition(grid: BinaryGrid, currentPieceType: TetrominoType, nextPieceType: TetrominoType): GamePlacement {
+    public addNewPosition(grid: BinaryGrid, currentPieceType: TetrominoType, nextPieceType: TetrominoType, statusBeforePlacement: SmartGameStatus): GamePlacement {
         if (this.getLastPosition() && !this.getLastPosition()!.hasPlacement()) {
             throw new Error("Cannot add new position to game where the last state also had no placement");
         }
 
-        const newPlacement = new GamePlacement(grid, currentPieceType, nextPieceType, undefined, undefined);
+        const newPlacement = new GamePlacement(grid, currentPieceType, nextPieceType, statusBeforePlacement.copy());
         this.placements.push(newPlacement);
         return newPlacement;
     }
 
-    public setPlacementForLastPosition(moveableTetronimo: MoveableTetromino, statusAfterPlacement: GameStatus) {
+    public setPlacementForLastPosition(moveableTetronimo: MoveableTetromino, numLineClears: number) {
         
         if (!this.getLastPosition()) throw new Error("Game has no positions to set placement for");
         if (this.getLastPosition()!.hasPlacement()) throw new Error("Last placement already has a placement");
 
-        this.getLastPosition()!.setPlacement(moveableTetronimo, statusAfterPlacement.copy());
+        this.getLastPosition()!.setPlacement(moveableTetronimo, numLineClears);
     }
 
 }

@@ -351,17 +351,16 @@ export class GameStateMachineService {
       if (minoResult === MinoResult.FIRST_PIECE_SPAWN) {
         // if it's the first piece spawn, create the first position
         const grid = new BinaryGrid(); // first position is an empty board
-        const newPlacement = this.game!.addNewPosition(grid, spawnData!.spawnedPiece.tetrominoType, spawnData!.nextPieceType);
+        const newPlacement = this.game!.addNewPosition(
+          grid,
+          spawnData!.spawnedPiece.tetrominoType,
+          spawnData!.nextPieceType,
+          this.currentGameStatus!
+        );
         this.debug.setPlacement(newPlacement);
         this.debug.log("First piece spawned, added new position");
 
       } else if (minoResult === MinoResult.SPAWN) {
-
-        // First, update level/lines/score as a result of the placement
-        if (spawnData!.linesCleared > 0) {
-          this.currentGameStatus!.onLineClear(spawnData!.linesCleared);
-          this.debug.setStatus(this.currentGameStatus?.status!);
-        }
 
         // Set the placement for the last position of the game
         const placedPiece = this.extractPlacedPiece(spawnData!.lastStableGridWithoutPlacement!, spawnData!.stableGridWithPlacement!, spawnData!.previousPieceType!);
@@ -370,10 +369,21 @@ export class GameStateMachineService {
           this.endGame();
           return;
         }
-        this.game!.setPlacementForLastPosition(placedPiece, this.currentGameStatus!.status);
+        this.game!.setPlacementForLastPosition(placedPiece, spawnData!.linesCleared!);
 
-        // Then, add a new position to the game for the starting board without the spawned piece
-        const newPlacement = this.game!.addNewPosition(spawnData!.nextStableGridWithoutPlacement!, spawnData!.spawnedPiece.tetrominoType, spawnData!.nextPieceType);
+        // Then, update level/lines/score as a result of the placement
+        if (spawnData!.linesCleared > 0) {
+          this.currentGameStatus!.onLineClear(spawnData!.linesCleared);
+          this.debug.setStatus(this.currentGameStatus?.status!);
+        }
+
+        // Finally, add a new position to the game for the starting board without the spawned piece
+        const newPlacement = this.game!.addNewPosition(
+          spawnData!.nextStableGridWithoutPlacement!,
+          spawnData!.spawnedPiece.tetrominoType,
+          spawnData!.nextPieceType,
+          this.currentGameStatus!
+        );
         this.debug.setPlacement(newPlacement);
         this.debug.log("Set placement for last position, and added new position");
 

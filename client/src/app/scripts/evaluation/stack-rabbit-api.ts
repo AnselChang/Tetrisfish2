@@ -1,5 +1,4 @@
 import { Block } from "blockly";
-import { GamePosition } from "../../models/game-models/game-position";
 import BinaryGrid, { BlockType } from "../../models/tetronimo-models/binary-grid";
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
 import GameStatus from "../../models/tetronimo-models/game-status";

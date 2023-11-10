@@ -10,27 +10,35 @@ import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import MoveableTetromino from "./moveable-tetromino";
 import { Block } from "blockly";
 import PlacementAnalysis from "./placement-analysis";
+import { SmartGameStatus } from "../tetronimo-models/smart-game-status";
 
 export class GamePlacement {
 
     // stores all the optional analysis data from SR for this placement
     public readonly analysis = new PlacementAnalysis();
 
+    public statusAfterPlacement?: SmartGameStatus;
+    public piecePlacement?: MoveableTetromino; // compact way to store the pose of the current piece
+    public placementLineClears?: number;
+
     constructor(
         public grid: BinaryGrid, // DOES NOT INCLUDE CURRENT PIECE
         public currentPieceType: TetrominoType, // type of the current piece to be placed
         public nextPieceType: TetrominoType, // type of the next box piece
-        public status: GameStatus | undefined, // status of the game AFTER the placement
-        public piecePlacement: MoveableTetromino | undefined, // compact way to store the pose of the current piece
+        public statusBeforePlacement: SmartGameStatus, // status of the game AFTER the placement
     ) {}
 
     hasPlacement(): boolean {
         return this.piecePlacement !== undefined;
     }
 
-    setPlacement(piecePlacement: MoveableTetromino, statusAfterPlacement: GameStatus) {
+    setPlacement(piecePlacement: MoveableTetromino, lineClears: number) {
         this.piecePlacement = piecePlacement;
-        this.status = statusAfterPlacement;
+        this.placementLineClears = lineClears;
+
+        // calculate what score/level/lines would be after the plcaement
+        this.statusAfterPlacement = this.statusBeforePlacement.copy();
+        if (lineClears > 0) this.statusAfterPlacement.onLineClear(lineClears);
     }
 
     // create a grid that includes the current piece
