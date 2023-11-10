@@ -7,23 +7,34 @@ function dfs(grid: Grid, visited: boolean[][], start: Point, component: Point[])
 
     while (stack.length > 0) {
         const { x, y } = stack.pop()!;
-        if (visited[x][y]) {
+        if (visited[y][x]) {
             continue;
         }
 
-        visited[x][y] = true;
+        visited[y][x] = true;
         component.push({ x, y });
 
         for (const [dx, dy] of directions) {
             const newX = x + dx;
             const newY = y + dy;
 
-            if (newX >= 0 && newY >= 0 && newX < grid.numRows && newY < grid.numCols &&
-                !visited[newX][newY] && grid.exists(newX, newY)) {
+            if (newX >= 0 && newY >= 0 && newX < grid.numCols && newY < grid.numRows &&
+                !visited[newY][newX] && grid.exists(newX, newY)) {
                 stack.push({ x: newX, y: newY });
             }
         }
     }
+}
+
+export function printVisited(visited: boolean[][]): void {
+    let result = "";
+    for (let row = 0; row < visited.length; row++) {
+        for (let col = 0; col < visited[row].length; col++) {
+            result += visited[row][col] ? "1" : "0";
+        }
+        result += "\n";
+    }
+    console.log(result);
 }
 
 // Returns the first 4-connected component found in the grid
@@ -31,11 +42,11 @@ export function findFourConnectedComponent(grid: Grid): Point[] | null {
     const visited: boolean[][] = Array.from({ length: grid.numRows }, () => Array(grid.numCols).fill(false));
     let closestComponent: Point[] | null = null;
 
-    for (let i = 0; i < grid.numRows; i++) {
-        for (let j = 0; j < grid.numCols; j++) {
-            if (!visited[i][j] && grid.exists(i, j)) {
+    for (let row = 0; row < grid.numRows; row++) {
+        for (let col = 0; col < grid.numCols; col++) {
+            if (!visited[row][col] && grid.exists(col, row)) {
                 const component: Point[] = [];
-                dfs(grid, visited, { x: i, y: j }, component);
+                dfs(grid, visited, { x: col, y: row }, component);
 
                 if (component.length === 4) {
                     if (!closestComponent || closestComponent[0].x > component[0].x) {
