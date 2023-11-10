@@ -2,6 +2,8 @@
 Represents the game state for one placement of a tetromino on the board, involving
 the board, the placement, and the current/next pieces
 Useful for analysis, puzzle generation, etc.
+
+DEPRECATED: use GamePlacement with no optional MoveableTetromino/GameStatus instead
 */
 
 import GameStatus from "../tetronimo-models/game-status";
