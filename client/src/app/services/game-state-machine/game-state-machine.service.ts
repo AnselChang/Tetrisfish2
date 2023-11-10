@@ -83,8 +83,8 @@ class GridStateMachine {
     if (currentMinoCount === this.lastStableMinoCount) return [MinoResult.NO_CHANGE, -1];
 
     // if mino count is decreasing, we should not look for spawn events
-    if (this.minoDirection === false) {
-      this.debug.log("Mino count decreasing, skipping spawn detection");
+    if (this.minoDirection === false && currentMinoCount < this.lastStableMinoCount) {
+      this.debug.log("Mino count decreasing and below last stable mino count, skipping spawn detection");
       return [MinoResult.LIMBO, -1];
     }
 
