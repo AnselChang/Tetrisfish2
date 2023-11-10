@@ -1,6 +1,8 @@
 import { Block } from "blockly";
 import { GamePosition } from "../../models/game-models/game-position";
 import BinaryGrid, { BlockType } from "../../models/tetronimo-models/binary-grid";
+import { TetrominoType } from "../../models/tetronimo-models/tetromino";
+import GameStatus from "../../models/tetronimo-models/game-status";
 
 class StandardParams {
     constructor(
@@ -36,12 +38,17 @@ abstract class StackRabbitURL {
 
 }
 
+export enum LookaheadDepth {
+    DEEP = 1,
+    SHALLOW = 0,
+}
+
 export class RateMoveURL extends StackRabbitURL {
     constructor(
         public override params: StandardParams,
         public secondBoard: string,
         public nextPiece: string,
-        public lookaheadDepth: number, // 0 or 1
+        public lookaheadDepth: LookaheadDepth,
     ) {
         super(params, 'rate-move');
     }
@@ -53,18 +60,20 @@ export class RateMoveURL extends StackRabbitURL {
     }
 }
 
+// engine-movelist NB or NNB
 export class EngineMovelistURL extends StackRabbitURL {
     constructor(
         public override params: StandardParams,
-        public nextPiece: string,
+        public nextPiece: string | undefined,
     ) {
         super(params, 'engine-movelist');
     }
 
     override addParams(paramsObject: URLSearchParams): void {
-        paramsObject.append('nextPiece', this.nextPiece);
+        if (this.nextPiece !== undefined) {
+            paramsObject.append('nextPiece', this.nextPiece);
+        }
     }
-
 }
 
 // convert a BinaryGrid to a string formatted as 200 chars of 0s and 1s
@@ -78,12 +87,12 @@ export function boardToString(grid: BinaryGrid): string {
     return result;
 }
 
-export function generateStandardParamsForPosition(position: GamePosition, inputFrameTimeline: string): StandardParams {
+export function generateStandardParams(board: BinaryGrid, currentPieceType: TetrominoType, status: GameStatus, inputFrameTimeline: string): StandardParams {
     return new StandardParams(
-        boardToString(position.grid),
-        position.currentPieceType,
-        position.status.level,
-        position.status.lines,
+        boardToString(board),
+        currentPieceType,
+        status.level,
+        status.lines,
         inputFrameTimeline,
     );
 }

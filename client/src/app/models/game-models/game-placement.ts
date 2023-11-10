@@ -19,7 +19,7 @@ export class GamePlacement {
         public nextPieceType: TetrominoType // type of the next box piece
     ) {}
 
-    // create a grid that includes the current piece=
+    // create a grid that includes the current piece
     getGridWithPlacement(): BinaryGrid {
 
         // make a copy of the grid without placement to modify it

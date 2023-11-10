@@ -1,11 +1,11 @@
 import { Component, Renderer2 } from '@angular/core';
 import { BlockData, TetrisBoardMode } from '../../../tetris/interactive-tetris-board/interactive-tetris-board.component';
 import { BoardCreationCacheService } from 'client/src/app/services/board-creation-cache.service';
-import { EvaluatorService } from 'client/src/app/services/analysis/evaluator.service';
 import { GamePosition } from 'client/src/app/models/game-models/game-position';
-import { HZ_10 } from 'client/src/app/services/analysis/input-frame-timeline';
+import { HZ_10 } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
 import GameStatus from 'client/src/app/models/tetronimo-models/game-status';
+import { evaluatePosition } from 'client/src/app/scripts/evaluation/evaluator';
 
 @Component({
   selector: 'app-board-creation-page',
@@ -24,8 +24,7 @@ export class BoardCreationPageComponent {
   private mouseUpListener: Function | null = null;
 
 
-  constructor(private renderer: Renderer2, public cache: BoardCreationCacheService,
-    private evaluatorService: EvaluatorService
+  constructor(private renderer: Renderer2, public cache: BoardCreationCacheService
     ) {}
   
   public onBlockHover(block: BlockData) {
@@ -98,7 +97,7 @@ export class BoardCreationPageComponent {
     const status = new GameStatus(this.cache.level, 110, 123456);
     const position = new GamePosition(status, this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType);
     
-    const recommendations = await this.evaluatorService.evaluatePosition(position, HZ_10);
+    const recommendations = await evaluatePosition(position, HZ_10, true);
     console.log(recommendations);
   }
 
