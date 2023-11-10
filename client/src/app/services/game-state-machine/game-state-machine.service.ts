@@ -119,7 +119,6 @@ class GridStateMachine {
   // If new piece has spawned, return the grid without and with previous piece
   // otherwise, return undefined
   public processFrame(currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [MinoResult, SpawnData | undefined] {
-    currentGrid.print();
     const currentMinoCount = currentGrid.count();
 
     if (this.lastUnstableMinoCount !== currentMinoCount) {

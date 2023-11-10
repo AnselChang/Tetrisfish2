@@ -22,11 +22,18 @@ abstract class StackRabbitURL {
 
         const baseUrl = 'https://stackrabbit.herokuapp.com';
 
+        let sendLevel = this.params.level;
+        let sendLines = this.params.lines;
+        if (sendLevel < 18) {
+            sendLevel = 18; // SR doesn't support levels below 18
+            sendLines = 0;
+        }
+
         const queryParams = new URLSearchParams();
         queryParams.append('board', this.params.board);
         queryParams.append('currentPiece', this.params.currentPiece);
-        queryParams.append('level', this.params.level.toString());
-        queryParams.append('lines', this.params.lines.toString());
+        queryParams.append('level', sendLevel.toString());
+        queryParams.append('lines', sendLines.toString());
         queryParams.append('inputFrameTimeline', this.params.inputFrameTimeline);
 
         // add params specific to this URLParams subclass
