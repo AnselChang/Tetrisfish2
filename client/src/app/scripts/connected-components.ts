@@ -40,7 +40,6 @@ export function printVisited(visited: boolean[][]): void {
 // Returns the first 4-connected component found in the grid
 export function findFourConnectedComponent(grid: Grid): Point[] | null {
     const visited: boolean[][] = Array.from({ length: grid.numRows }, () => Array(grid.numCols).fill(false));
-    let closestComponent: Point[] | null = null;
 
     for (let row = 0; row < grid.numRows; row++) {
         for (let col = 0; col < grid.numCols; col++) {
@@ -49,13 +48,11 @@ export function findFourConnectedComponent(grid: Grid): Point[] | null {
                 dfs(grid, visited, { x: col, y: row }, component);
 
                 if (component.length === 4) {
-                    if (!closestComponent || closestComponent[0].x > component[0].x) {
-                        closestComponent = component;
-                    }
+                    return component;
                 }
             }
         }
     }
 
-    return closestComponent;
+    return null;
 }
