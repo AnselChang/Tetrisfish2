@@ -50,9 +50,13 @@ export class SmartGameStatus implements IGameStatus {
 
         if (numLines < 1 || numLines > 4) throw new Error("Invalid number of lines: " + numLines);
 
+        const lineTens = Math.floor(this.gameStatus.lines / 10);
+
         // calculate level and lines
         this.gameStatus.lines += numLines;
-        if (this.gameStatus.lines >= this.transitionLines) this.gameStatus.level++;
+
+        const newLineTens = Math.floor(this.gameStatus.lines / 10);
+        if (this.gameStatus.lines >= this.transitionLines && newLineTens > lineTens) this.gameStatus.level++;
 
         // calculate score
         this.gameStatus.score += SCORE_RATIO[numLines] * (this.gameStatus.level + 1);

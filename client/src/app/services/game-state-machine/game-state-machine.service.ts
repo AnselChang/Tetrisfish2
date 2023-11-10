@@ -128,13 +128,13 @@ class GridStateMachine {
         this.debug.logGrid("Spawned Minos", spawnedMinosGrid);
       }
 
-      if (spawnedMinos === null && linesCleared > 0) {
+      if (spawnedMinos === null) {
         // if we can't isolate the spawned piece, then either the capture accidentally captured four extra minos,
         // or the new piece is temporarily overlapping with other minos in the board.
         // HOWEVER, THIS ONLY MATTERS WHEN THERE'S A LINE CLEAR
         // Without a line clear, simply rollback to previous stable mino count grid to get the grid without placement
         // either way, we skip this frame and wait for a frame where the new piece is isolated
-        this.debug.log("Although SPAWN detected, Cannot isolate spawned piece and lines were cleared, skipping frame");
+        this.debug.log("Although SPAWN detected, Cannot isolate spawned piece, skipping frame");
         return [MinoResult.NO_CHANGE, undefined];
       } else {
 
