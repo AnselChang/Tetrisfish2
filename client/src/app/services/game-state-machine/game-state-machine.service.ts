@@ -83,8 +83,6 @@ class GridStateMachine {
   // return [result, linesCleared]
   private doesMinoCountSuggestPieceSpawn(currentMinoCount: number, nextPieceType?: TetrominoType): [MinoResult, number] {
 
-    console.log("Count:", currentMinoCount);
-    console.log("Last Stable Count:", this.lastStableMinoCount);
 
     // if mino count is the same, then no change
     if (currentMinoCount === this.lastStableMinoCount) return [MinoResult.NO_CHANGE, -1];
@@ -121,7 +119,6 @@ class GridStateMachine {
   // If new piece has spawned, return the grid without and with previous piece
   // otherwise, return undefined
   public processFrame(currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [MinoResult, SpawnData | undefined] {
-    console.log("NEW FRAME");
     currentGrid.print();
     const currentMinoCount = currentGrid.count();
 

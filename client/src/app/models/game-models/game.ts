@@ -2,6 +2,11 @@
 The model for a full game, consisting of a list of placements optionally with evaluations
 */
 
+import { fetchMovelist } from "../../scripts/evaluation/evaluator";
+import { HZ_30 } from "../../scripts/evaluation/input-frame-timeline";
+import EngineMovelistNB from "../analysis-models/engine-movelist-nb";
+import EngineMovelistNNB from "../analysis-models/engine-movelist-nnb";
+import { RateMoveDeep, RateMoveShallow } from "../analysis-models/rate-move";
 import BinaryGrid from "../tetronimo-models/binary-grid";
 import { SmartGameStatus } from "../tetronimo-models/smart-game-status";
 import { TetrominoType } from "../tetronimo-models/tetromino";
@@ -41,6 +46,17 @@ export class Game {
 
         const newPlacement = new GamePlacement(grid, currentPieceType, nextPieceType, statusBeforePlacement.copy());
         this.placements.push(newPlacement);
+
+        // non-blocking fetch SR engine-movelist NB, set to placement analysis when it's done fetching 
+        EngineMovelistNB.fetch(newPlacement, HZ_30).then(engineMovelistNB => {
+            newPlacement.analysis.setEngineMoveListNB(engineMovelistNB);
+        });
+
+        // non-blocking fetch SR engine-movelist NNB, set to placement analysis when it's done fetching
+        EngineMovelistNNB.fetch(newPlacement, HZ_30).then(engineMovelistNNB => {
+            newPlacement.analysis.setEngineMoveListNNB(engineMovelistNNB);
+        });
+
         return newPlacement;
     }
 
@@ -49,7 +65,18 @@ export class Game {
         if (!this.getLastPosition()) throw new Error("Game has no positions to set placement for");
         if (this.getLastPosition()!.hasPlacement()) throw new Error("Last placement already has a placement");
 
-        this.getLastPosition()!.setPlacement(moveableTetronimo, numLineClears);
+        const placement = this.getLastPosition()!;
+        placement.setPlacement(moveableTetronimo, numLineClears);
+
+        // non-blocking fetch the engine rate-move deep, set to placement analysis when it's done fetching
+        RateMoveDeep.fetch(placement, HZ_30).then(rateMoveDeep => {
+            placement.analysis.setRateMoveDeep(rateMoveDeep);
+        });
+
+        // non-blocking fetch the engine rate-move shallow, set to placement analysis when it's done fetching
+        RateMoveShallow.fetch(placement, HZ_30).then(rateMoveShallow => {
+            placement.analysis.setRateMoveShallow(rateMoveShallow);
+        });
     }
 
 }

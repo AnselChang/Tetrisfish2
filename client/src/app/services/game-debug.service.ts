@@ -32,7 +32,7 @@ export class GameDebugService {
 
   // log a message for the current frame
   public log(message: string): void {
-    console.log(message);
+    //console.log(message);
     this.last.log.push(message);
   }
 

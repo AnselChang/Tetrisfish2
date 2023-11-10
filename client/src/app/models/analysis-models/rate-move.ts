@@ -10,11 +10,28 @@ rate-move returns a dictionary of the form:
 }
 */
 
+import { fetchRateMove } from "../../scripts/evaluation/evaluator";
+import { LookaheadDepth } from "../../scripts/evaluation/stack-rabbit-api";
+import { GamePlacement } from "../game-models/game-placement";
+
 abstract class RateMove {
     constructor(dict: any) {
-        
+        console.log("rate move created", dict);
     }
 }
 
-export class RateMoveDeep extends RateMove {}
-export class RateMoveShallow extends RateMove {}
+export class RateMoveDeep extends RateMove {
+
+    static async fetch(placement: GamePlacement, inputFrameTimeline: string): Promise<RateMoveDeep> {
+        const response = await fetchRateMove(placement, inputFrameTimeline, LookaheadDepth.DEEP);
+        return new RateMoveDeep(response);
+    }
+}
+export class RateMoveShallow extends RateMove {
+
+    static async fetch(placement: GamePlacement, inputFrameTimeline: string): Promise<RateMoveShallow> {
+        const response = await fetchRateMove(placement, inputFrameTimeline, LookaheadDepth.SHALLOW);
+        return new RateMoveShallow(response);
+    }
+    
+}
