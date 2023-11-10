@@ -4,6 +4,8 @@ Binary because it only stores whether a block is filled or not, not any other in
 grid[y][x]
 */
 
+import { Block } from "blockly";
+
 export enum BlockType {
     EMPTY = 0,
     FILLED = 1
@@ -71,6 +73,53 @@ export default class BinaryGrid implements Grid {
         }
 
         return new BinaryGrid(newBlocks);
+    }
+
+    public isRowFull(y: number): boolean {
+        return this.blocks[y].every(block => block === BlockType.FILLED);
+    }
+
+    // modifies grid in place to delete line clears
+    public processLineClears() {
+        // remove all full rows
+        let y = this.numRows - 1;
+        let numLinesCleared = 0;
+        while (y >= 0) {
+            if (this.isRowFull(y)) {
+                this.blocks.splice(y, 1);
+                numLinesCleared++;
+            }
+            y--;
+        }
+
+        // insert new empty rows at the top
+        for (let i = 0; i < numLinesCleared; i++) {
+            this.blocks.unshift(new Array(this.numCols).fill(BlockType.EMPTY));
+        }
+    }
+
+    // given a string consisting of 200 0s and 1s, make the grid
+    public _setFromString(grid: string) {
+        this.blocks = [];
+        let i = 0;
+        for (let row = 0; row < 20; row++) {
+            this.blocks.push([]);
+            for (let col = 0; col < 10; col++) {
+                const fill = (grid[i] === '1') ? BlockType.FILLED : BlockType.EMPTY;
+                this.blocks[this.blocks.length-1].push(fill);
+                i++;
+            }
+        }
+    }
+
+    public _getAsString(): string {
+        let result = "";
+        for (let row = 0; row < 20; row++) {
+            for (let col = 0; col < 10; col++) {
+                result += this.blocks[row][col] === BlockType.FILLED ? "1" : "0";
+            }
+        }
+        return result;
     }
 
     // grid1 - grid2

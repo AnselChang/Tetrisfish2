@@ -85,6 +85,10 @@ export class BoardCreationPageComponent {
     this.hoveringOverBoard = false;
   }
 
+  public printBoard() {
+    console.log(this.cache.grid._getAsString());
+  }
+
   public async onAnalysis() {
 
     console.log("analyzing");

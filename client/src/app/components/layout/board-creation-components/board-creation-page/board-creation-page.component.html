@@ -38,7 +38,7 @@
             </div>
         </app-button>
 
-        <app-button [expandToFitWidth]="true">
+        <app-button [expandToFitWidth]="true" (click)="printBoard()">
             <div class="image-button">
                 <app-image [src]="'puzzle.png'" [widthPx]="50" />
                 <h2>Upload a puzzle</h2>
