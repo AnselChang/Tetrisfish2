@@ -127,8 +127,8 @@ export class PlayPageComponent implements AfterViewInit {
     return this.isInGame() ? TEXT_GREEN : TEXT_RED;
   }
 
-  public getLastPlacement(): GamePlacement | undefined {
-    return this.gameStateMachineService.getMostRecentPlacement();
+  public getLastPosition(): GamePlacement | undefined {
+    return this.gameStateMachineService.getLastPosition();
   }
 
 }

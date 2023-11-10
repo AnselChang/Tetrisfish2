@@ -35,16 +35,20 @@ export class Game {
         return secondLastPosition;
     }
 
-    public addNewPosition(grid: BinaryGrid, currentPieceType: TetrominoType, nextPieceType: TetrominoType) {
+    public addNewPosition(grid: BinaryGrid, currentPieceType: TetrominoType, nextPieceType: TetrominoType): GamePlacement {
         if (this.getLastPosition() && !this.getLastPosition()!.hasPlacement()) {
             throw new Error("Cannot add new position to game where the last state also had no placement");
         }
-        this.placements.push(new GamePlacement(grid, currentPieceType, nextPieceType, undefined, undefined));
+
+        const newPlacement = new GamePlacement(grid, currentPieceType, nextPieceType, undefined, undefined);
+        this.placements.push(newPlacement);
+        return newPlacement;
     }
 
     public setPlacementForLastPosition(moveableTetronimo: MoveableTetromino, statusAfterPlacement: GameStatus) {
         
-        if (!this.getLastPosition() || this.getLastPosition()!.hasPlacement()) throw new Error("No last placement to set placement for");
+        if (!this.getLastPosition()) throw new Error("Game has no positions to set placement for");
+        if (this.getLastPosition()!.hasPlacement()) throw new Error("Last placement already has a placement");
 
         this.getLastPosition()!.setPlacement(moveableTetronimo, statusAfterPlacement.copy());
     }

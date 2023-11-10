@@ -3,9 +3,8 @@
         <app-section class="analysis-board">
             <p>Analysis Board</p>
             <app-interactive-tetris-board
-                [grid]="getLastPlacement()?.grid"
-                [level]="getLastPlacement()?.status!.level"
-                [currentPiece]="getLastPlacement()?.piecePlacement"
+                [grid]="getLastPosition()?.grid"
+                [level]="18"
             />
         </app-section>
         <app-section class="best-move-info">

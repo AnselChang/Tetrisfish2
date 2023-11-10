@@ -219,7 +219,10 @@ class GridStateMachine {
       this.debug.logGrid("Stable Grid With Placement updated", this.stableGridWithPlacement);
 
       // keep polling next box to overwrite possibly bad previous next box values
-      if (nextPieceType !== undefined) this.nextPieceType = nextPieceType;
+      if (nextPieceType !== undefined) {
+        this.nextPieceType = nextPieceType;
+        this.debug.log(`Next piece type updated: ${nextPieceType}`);
+      }
 
       return [MinoResult.NO_CHANGE, undefined];
     } else { // result === MinoResult.LIMBO
@@ -348,7 +351,9 @@ export class GameStateMachineService {
       if (minoResult === MinoResult.FIRST_PIECE_SPAWN) {
         // if it's the first piece spawn, create the first position
         const grid = new BinaryGrid(); // first position is an empty board
-        this.game?.addNewPosition(grid, spawnData!.spawnedPiece.tetrominoType, spawnData!.nextPieceType);
+        const newPlacement = this.game!.addNewPosition(grid, spawnData!.spawnedPiece.tetrominoType, spawnData!.nextPieceType);
+        this.debug.setPlacement(newPlacement);
+        this.debug.log("First piece spawned, added new position");
 
       } else if (minoResult === MinoResult.SPAWN) {
 
@@ -365,11 +370,11 @@ export class GameStateMachineService {
           this.endGame();
           return;
         }
-        this.game?.setPlacementForLastPosition(placedPiece, this.currentGameStatus!.status);
+        this.game!.setPlacementForLastPosition(placedPiece, this.currentGameStatus!.status);
 
         // Then, add a new position to the game for the starting board without the spawned piece
-        this.game?.addNewPosition(spawnData!.nextStableGridWithoutPlacement!, spawnData!.spawnedPiece.tetrominoType, spawnData!.nextPieceType);
-
+        const newPlacement = this.game!.addNewPosition(spawnData!.nextStableGridWithoutPlacement!, spawnData!.spawnedPiece.tetrominoType, spawnData!.nextPieceType);
+        this.debug.setPlacement(newPlacement);
         this.debug.log("Set placement for last position, and added new position");
 
       }
@@ -436,12 +441,16 @@ export class GameStateMachineService {
     this.playCalibratePage = page;
   }
 
-  public getMostRecentPlacement(): GamePlacement | undefined {
+  public getLastPlacement(): GamePlacement | undefined {
     return this.game?.getLastPlacement();
+  }
+
+  public getLastPosition(): GamePlacement | undefined {
+    return this.game?.getLastPosition();
   }
 
   // obtain the current piece as the next piece of last placement
   public getCurrentPieceType(): TetrominoType | undefined {
-    return this.getMostRecentPlacement()?.nextPieceType;
+    return this.getLastPlacement()?.nextPieceType;
   }
 }

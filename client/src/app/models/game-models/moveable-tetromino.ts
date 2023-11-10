@@ -52,7 +52,6 @@ export default class MoveableTetromino {
             return undefined;
         }
 
-        debug.logGrid("pieceMask", pieceMask);
         if (pieceMask.count() !== 4) {
             debug.log("pieceMask count not 4");
             return undefined;

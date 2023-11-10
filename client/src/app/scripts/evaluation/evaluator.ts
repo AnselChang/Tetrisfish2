@@ -1,4 +1,3 @@
-import { MoveRecommendation } from "../../models/analysis-models/move-recommendation";
 import { GamePlacement } from "../../models/game-models/game-placement";
 import { GamePosition } from "../../models/game-models/game-position";
 import MoveableTetromino from "../../models/game-models/moveable-tetromino";
@@ -17,13 +16,13 @@ async function fetchStackRabbitURL(url: string): Promise<any> {
 }
 
 // returns the raw dictionary from the StackRabbit engine-movelist request
-export async function fetchMovelist(position: GamePosition, inputFrameTimeline: string, useNextBox: boolean): Promise<any> {
+export async function fetchMovelist(placement: GamePlacement, inputFrameTimeline: string, useNextBox: boolean): Promise<any> {
 
     // Generate the common portion of the URL
-    const params = generateStandardParams(position.grid, position.currentPieceType, position.status, inputFrameTimeline);
+    const params = generateStandardParams(placement.grid, placement.currentPieceType, placement.status!, inputFrameTimeline);
 
     // Make engine-movelist request
-    const movelistURL = new EngineMovelistURL(params, useNextBox ? position.nextPieceType : undefined).getURL();
+    const movelistURL = new EngineMovelistURL(params, useNextBox ? placement.nextPieceType : undefined).getURL();
     return fetchStackRabbitURL(movelistURL);
 }
 
@@ -31,7 +30,7 @@ export async function fetchMovelist(position: GamePosition, inputFrameTimeline: 
 export async function fetchRateMove(placement: GamePlacement, inputFrameTimeline: string, lookaheadDepth: LookaheadDepth) {
 
     // Generate the common portion of the URL
-    const params = generateStandardParams(placement.grid, placement.piecePlacement.tetrominoType, placement.status, inputFrameTimeline);
+    const params = generateStandardParams(placement.grid, placement.currentPieceType, placement.status!, inputFrameTimeline);
 
     // Make rate-move request
     const boardWithPlacement = placement.getGridWithPlacement();
