@@ -10,6 +10,7 @@ import BinaryGrid from 'client/src/app/models/tetronimo-models/binary-grid';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 import { MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist-nb';
+import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -133,8 +134,16 @@ export class PlayPageComponent implements AfterViewInit {
     return this.gameStateMachineService.getLastPosition();
   }
 
+  public getLastPlacement(): GamePlacement | undefined {
+    return this.gameStateMachineService.getLastPlacement();
+  }
+
   public getBestMove(): MoveRecommendation | undefined {
     return this.getLastPosition()?.analysis.getEngineMoveListNB()?.best;
+  }
+
+  public getMoveRating(): RateMoveDeep | undefined {
+    return this.getLastPlacement()?.analysis.getRateMoveDeep();
   }
 
 }

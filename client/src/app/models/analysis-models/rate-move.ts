@@ -12,11 +12,22 @@ rate-move returns a dictionary of the form:
 
 import { fetchRateMove } from "../../scripts/evaluation/evaluator";
 import { LookaheadDepth } from "../../scripts/evaluation/stack-rabbit-api";
+import { Rating, getRating } from "../evaluation-models/rating";
 import { GamePlacement } from "../game-models/game-placement";
 
 abstract class RateMove {
+
+    public playerNNB: number;
+    public playerNB: number;
+    public bestNNB: number;
+    public bestNB: number;
+
     constructor(dict: any) {
         console.log("rate move created", dict);
+        this.playerNNB = dict["playerMoveNoAdjustment"];
+        this.playerNB = dict["playerMoveAfterAdjustment"];
+        this.bestNNB = dict["bestMoveNoAdjustment"];
+        this.bestNB = dict["bestMoveAfterAdjustment"];
     }
 }
 
@@ -26,6 +37,14 @@ export class RateMoveDeep extends RateMove {
         const response = await fetchRateMove(placement, inputFrameTimeline, LookaheadDepth.DEEP);
         return new RateMoveDeep(response);
     }
+
+    public readonly rating: Rating;
+
+    constructor(dict: any) {
+        super(dict);
+        this.rating = getRating(this.playerNB, this.bestNB);
+    }
+
 }
 export class RateMoveShallow extends RateMove {
 
