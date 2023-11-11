@@ -17,12 +17,12 @@ export async function fetchServer(method: Method, urlStr: string, content: any =
         json = JSON.stringify(content);
     } else {
         for (const [key, value] of Object.entries(content)) {
-            console.log(key, value);
+            // console.log(key, value);
             url.searchParams.append(key, value as string);
         }
     }
 
-    console.log("fetching", url, json)
+    // console.log("fetching", url, json)
 
     const response = await fetch( url, {
         method: method.toString(),

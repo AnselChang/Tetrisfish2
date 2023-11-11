@@ -22,6 +22,7 @@ export class GamePlacement {
     public placementLineClears?: number;
 
     constructor(
+        public readonly index: number,
         public grid: BinaryGrid, // DOES NOT INCLUDE CURRENT PIECE
         public currentPieceType: TetrominoType, // type of the current piece to be placed
         public nextPieceType: TetrominoType, // type of the next box piece

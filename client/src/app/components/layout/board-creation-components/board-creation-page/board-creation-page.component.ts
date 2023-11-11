@@ -91,15 +91,6 @@ export class BoardCreationPageComponent {
 
   public async onAnalysis() {
 
-    console.log("analyzing");
-    console.log(this.cache);
-
-
-    const status = new SmartGameStatus(this.cache.level, 110, 123456);
-    const position = new GamePlacement(this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType, status);
-    
-    const result = await fetchMovelist(position, HZ_10, true);
-    console.log("Result:", result);
   }
 
 }

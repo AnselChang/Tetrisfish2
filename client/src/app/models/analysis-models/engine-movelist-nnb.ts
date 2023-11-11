@@ -14,6 +14,6 @@ export default class EngineMovelistNNB {
     }
 
     constructor(dict: any) {
-        console.log("engine movelist nnb created", dict);
+        // console.log("engine movelist nnb created", dict);
     }
 }

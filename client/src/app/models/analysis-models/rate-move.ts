@@ -23,7 +23,7 @@ abstract class RateMove {
     public bestNB: number;
 
     constructor(dict: any) {
-        console.log("rate move created", dict);
+        // console.log("rate move created", dict);
         this.playerNNB = dict["playerMoveNoAdjustment"];
         this.playerNB = dict["playerMoveAfterAdjustment"];
         this.bestNNB = dict["bestMoveNoAdjustment"];

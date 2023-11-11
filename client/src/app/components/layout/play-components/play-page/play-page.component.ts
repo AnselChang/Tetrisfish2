@@ -134,16 +134,12 @@ export class PlayPageComponent implements AfterViewInit {
     return this.gameStateMachineService.getLastPosition();
   }
 
-  public getLastPlacement(): GamePlacement | undefined {
-    return this.gameStateMachineService.getLastPlacement();
-  }
-
   public getBestMove(): MoveRecommendation | undefined {
-    return this.getLastPosition()?.analysis.getEngineMoveListNB()?.best;
+    return this.gameStateMachineService.getGame()!.lastEngineMovelistNB$.getValue()?.analysis.getEngineMoveListNB()!.best;
   }
 
   public getMoveRating(): RateMoveDeep | undefined {
-    return this.getLastPlacement()?.analysis.getRateMoveDeep();
+    return this.gameStateMachineService.getGame()!.lastRatingNB$.getValue()?.analysis.getRateMoveDeep();
   }
 
 }

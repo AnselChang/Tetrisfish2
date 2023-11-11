@@ -26,7 +26,7 @@ export default class EngineMovelistNB {
     private recommendations: MoveRecommendation[] = [];
 
     constructor(moves: any, placement: GamePlacement) {
-        console.log("engine movelist nb created", moves);
+        // console.log("engine movelist nb created", moves);
 
         let i = 0;
         for (const move of moves) {

@@ -455,6 +455,10 @@ export class GameStateMachineService {
     return this.game?.getLastPosition();
   }
 
+  public getGame(): Game | undefined {
+    return this.game;
+  }
+
   // obtain the current piece as the next piece of last placement
   public getCurrentPieceType(): TetrominoType | undefined {
     return this.getLastPlacement()?.nextPieceType;
