@@ -177,7 +177,7 @@ class GridStateMachine {
         this.currentPieceType = this.nextPieceType;
 
         // update mino count
-        this.lastStableMinoCount += linesCleared * 10 + 4;
+        this.lastStableMinoCount += linesCleared * (-10) + 4;
 
         // cache last stable grid without placement
         this.lastStableGridWithoutPlacement = this.nextStableGridWithoutPlacement;
