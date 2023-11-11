@@ -87,11 +87,11 @@ class GridStateMachine {
     // if mino count is the same, then no change
     if (currentMinoCount === this.lastStableMinoCount) return [MinoResult.NO_CHANGE, -1];
 
-    // if mino count is decreasing, we should not look for spawn events
-    if (this.minoDirection === false && currentMinoCount < this.lastStableMinoCount) {
-      this.debug.log("Mino count decreasing and below last stable mino count, skipping spawn detection");
-      return [MinoResult.LIMBO, -1];
-    }
+    // // if mino count is decreasing, we should not look for spawn events
+    // if (this.minoDirection === false && currentMinoCount < this.lastStableMinoCount) {
+    //   this.debug.log("Mino count decreasing and below last stable mino count, skipping spawn detection");
+    //   return [MinoResult.LIMBO, -1];
+    // }
 
     // if next box is unreadable, then this frame is unusauble and we delay spawn detection
     if (nextPieceType === undefined) {
