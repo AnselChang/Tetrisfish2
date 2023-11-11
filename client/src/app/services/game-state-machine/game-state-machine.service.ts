@@ -14,6 +14,7 @@ import { GameDebugService } from '../game-debug.service';
 import { Game } from '../../models/game-models/game';
 import { Binary } from '@angular/compiler';
 import { max } from 'rxjs';
+import { line } from 'core/utils/svg_paths';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -176,7 +177,7 @@ class GridStateMachine {
         this.currentPieceType = this.nextPieceType;
 
         // update mino count
-        this.lastStableMinoCount = currentMinoCount;
+        this.lastStableMinoCount + linesCleared * 10 + 4;
 
         // cache last stable grid without placement
         this.lastStableGridWithoutPlacement = this.nextStableGridWithoutPlacement;
