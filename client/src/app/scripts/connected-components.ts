@@ -38,16 +38,18 @@ export function printVisited(visited: boolean[][]): void {
 }
 
 // Returns the first 4-connected component found in the grid
-export function findFourConnectedComponent(grid: Grid): Point[] | null {
+export function findConnectedComponent(grid: Grid, numMinos: number = 4, maxRow?: number): Point[] | null {
     const visited: boolean[][] = Array.from({ length: grid.numRows }, () => Array(grid.numCols).fill(false));
 
-    for (let row = 0; row < grid.numRows; row++) {
+    if (maxRow === undefined) maxRow = grid.numRows;
+
+    for (let row = 0; row < maxRow; row++) {
         for (let col = 0; col < grid.numCols; col++) {
             if (!visited[row][col] && grid.exists(col, row)) {
                 const component: Point[] = [];
                 dfs(grid, visited, { x: col, y: row }, component);
 
-                if (component.length === 4) {
+                if (component.length === numMinos) {
                     return component;
                 }
             }
