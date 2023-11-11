@@ -64,9 +64,9 @@ export class CaptureFrameService implements PixelReader {
 
   // if each varies by less than 10, then they are similar
   public floodfillCondition(colorA: [number, number, number], colorB: [number, number, number]): boolean {
-    return Math.abs(colorA[0] - colorB[0]) < 10 &&
-      Math.abs(colorA[1] - colorB[1]) < 10 &&
-      Math.abs(colorA[2] - colorB[2]) < 10;
+    return Math.abs(colorA[0] - colorB[0]) < 30 &&
+      Math.abs(colorA[1] - colorB[1]) < 30 &&
+      Math.abs(colorA[2] - colorB[2]) < 30;
   }
 
   // run floodfill at given canvas location to determine board bounding box
