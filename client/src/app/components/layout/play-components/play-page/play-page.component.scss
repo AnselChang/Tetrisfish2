@@ -2,7 +2,7 @@
 
 .root {
     display: grid;
-    grid-template-columns: 3.5fr 1fr 9fr 9fr; // 1fr = 50px in figma
+    grid-template-columns: 3.8fr 0.5fr 9.5fr 9fr; // 1fr = 50px in figma
     column-gap: 10px;
     margin: 0 10px;
 }
@@ -76,4 +76,8 @@
 
 video {
     border: 1px solid white;
+}
+
+.best-move-info ::ng-deep section {
+    padding-bottom: 20px;
 }

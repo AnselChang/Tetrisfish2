@@ -15,7 +15,10 @@
         </app-section>
 
     </div>
-    <app-eval-bar class="col-eval-bar" />
+    <app-eval-bar class="col-eval-bar"
+    [playerEval]="getMoveRating()?.playerNB"
+    [bestEval]="getMoveRating()?.bestNB" 
+    [rating]="getMoveRating()?.rating"/>
     <app-section class="col-capture">
         <h1 class="padded">Live Capture Mode • <span [ngStyle]="{'color': getStatusColor()}">{{getStatusString()}}</span></h1>
 
