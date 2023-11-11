@@ -5,6 +5,7 @@
             <app-interactive-tetris-board
                 [grid]="getLastPosition()?.grid"
                 [level]="18"
+                [currentPiece]="getBestMove()?.thisPiece"
             />
         </app-section>
         <app-section class="best-move-info">

@@ -8,6 +8,8 @@ import { GameStateMachineService, PlayStatus } from 'client/src/app/services/gam
 import { TEXT_GREEN, TEXT_RED } from 'client/src/app/misc/colors';
 import BinaryGrid from 'client/src/app/models/tetronimo-models/binary-grid';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
+import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
+import { MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist-nb';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -129,6 +131,10 @@ export class PlayPageComponent implements AfterViewInit {
 
   public getLastPosition(): GamePlacement | undefined {
     return this.gameStateMachineService.getLastPosition();
+  }
+
+  public getBestMove(): MoveRecommendation | undefined {
+    return this.getLastPosition()?.analysis.getEngineMoveListNB()?.best;
   }
 
 }
