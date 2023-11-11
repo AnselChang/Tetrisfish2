@@ -23,7 +23,7 @@ export function convertSRPlacement(placement: SRPlacement, pieceType: TetrominoT
         if (rot == 3) {x += 2;}
     } else if (pieceType === TetrominoType.Z_TYPE) {
         if (rot == 0) { x += 1; y += 1;}
-        if (rot == 2) {x += 2;}
+        if (rot == 1) {x += 2;}
     } else if (pieceType === TetrominoType.S_TYPE) {
         if (rot == 0) { x += 1; y += 1;}
         if (rot == 1) { x += 2;}

@@ -52,10 +52,10 @@ export class Game {
             newPlacement.analysis.setEngineMoveListNB(engineMovelistNB);
         });
 
-        // non-blocking fetch SR engine-movelist NNB, set to placement analysis when it's done fetching
-        EngineMovelistNNB.fetch(newPlacement, HZ_30).then(engineMovelistNNB => {
-            newPlacement.analysis.setEngineMoveListNNB(engineMovelistNNB);
-        });
+        // // non-blocking fetch SR engine-movelist NNB, set to placement analysis when it's done fetching
+        // EngineMovelistNNB.fetch(newPlacement, HZ_30).then(engineMovelistNNB => {
+        //     newPlacement.analysis.setEngineMoveListNNB(engineMovelistNNB);
+        // });
 
         return newPlacement;
     }
@@ -74,9 +74,9 @@ export class Game {
         });
 
         // non-blocking fetch the engine rate-move shallow, set to placement analysis when it's done fetching
-        RateMoveShallow.fetch(placement, HZ_30).then(rateMoveShallow => {
-            placement.analysis.setRateMoveShallow(rateMoveShallow);
-        });
+        // RateMoveShallow.fetch(placement, HZ_30).then(rateMoveShallow => {
+        //     placement.analysis.setRateMoveShallow(rateMoveShallow);
+        // });
     }
 
 }
