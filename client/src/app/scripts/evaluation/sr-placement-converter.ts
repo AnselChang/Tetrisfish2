@@ -14,7 +14,7 @@ export function convertSRPlacement(placement: SRPlacement, pieceType: TetrominoT
     y -= 1;
 
     if (pieceType === TetrominoType.I_TYPE) {
-        if (rot == 0) y += 1;
+        if (rot == 0) y += 2;
         else if (rot == 1) x += 2; y -= 1;
     } else if (pieceType === TetrominoType.L_TYPE) {
         if (rot == 0) { x += 1; y += 1}
