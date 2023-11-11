@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { BlockData, TetrisBoardMode } from '../interactive-tetris-board/interactive-tetris-board.component';
+import { BlockData, BlockMode, TetrisBoardMode } from '../interactive-tetris-board/interactive-tetris-board.component';
 import { TetrominoColorType, getColorForLevel } from 'client/src/app/models/tetronimo-models/tetromino';
 
 enum BlockFillType {
@@ -56,12 +56,16 @@ export class TetrisBlockComponent implements OnInit, OnChanges {
 
     let mainColorType;
     if (this.blockData.color === TetrominoColorType.COLOR_WHITE) {
-      mainColorType = this.blockData.special ? TetrominoColorType.COLOR_SECOND : TetrominoColorType.COLOR_FIRST;
+      mainColorType = this.blockData.mode !== BlockMode.NORMAL ? TetrominoColorType.COLOR_SECOND : TetrominoColorType.COLOR_FIRST;
     } else {
       mainColorType = this.blockData.color;
     }
 
     this.mainColor = getColorForLevel(mainColorType, this.blockData.level);
+  }
+
+  public isNextPiece(): boolean {
+    return this.blockData.mode === BlockMode.NEXT_PIECE;
   }
 
   @HostListener('mouseover') onMouseOver() {

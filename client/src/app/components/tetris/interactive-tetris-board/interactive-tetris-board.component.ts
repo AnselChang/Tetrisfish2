@@ -20,6 +20,12 @@ const SVG_PADDING = 1;
 const SVG_BOARD_WIDTH = SVG_BLOCK_SIZE + (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) * 9 + SVG_PADDING * 2;
 const SVG_BOARD_HEIGHT = SVG_BLOCK_SIZE + (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) * 19 + SVG_PADDING * 2;
 
+export enum BlockMode {
+  NORMAL = "NORMAL",
+  THIS_PIECE = "THIS_PIECE",
+  NEXT_PIECE = "NEXT_PIECE",
+}
+
 export class BlockData {
   public readonly svgX: number;
   public readonly svgY: number;
@@ -31,7 +37,7 @@ export class BlockData {
     padding: number,
     public readonly level: number,
     public readonly color?: TetrominoColorType,
-    public readonly special: boolean = false, // if color is white and special, display the other border color
+    public readonly mode: BlockMode = BlockMode.NORMAL, // if color is white and special, display the other border color
   ) {
     this.svgSize = SVG_BLOCK_SIZE;
     this.svgX = (this.x) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
@@ -56,6 +62,8 @@ export class InteractiveTetrisBoardComponent {
   // will hover the piece at the mouse location
   @Input() currentPiece?: MoveableTetromino;
   @Output() currentPieceChange = new EventEmitter<MoveableTetromino | undefined>();
+
+  @Input() nextPiece?: MoveableTetromino;
 
 
   @Output() hoveredBlock = new EventEmitter<BlockData>();
@@ -108,10 +116,13 @@ export class InteractiveTetrisBoardComponent {
     // type is "SOLID" for solid design if mostly mainColor, "BORDER" for mostly whiteColor with mainColor border 
 
     let colorType;
-    let special = false;
+    let mode: BlockMode = BlockMode.NORMAL;
     if (this.currentPiece && this.currentPiece.isAtLocation(x,y)) {
       colorType = getColorTypeForTetromino(this.currentPiece.tetrominoType);
-      special = true;
+      mode = BlockMode.THIS_PIECE;
+    } else if (this.nextPiece && this.nextPiece.isAtLocation(x,y)) {
+      colorType = getColorTypeForTetromino(this.nextPiece.tetrominoType);
+      mode = BlockMode.NEXT_PIECE;
     } else if (this.grid && this.grid.at(x, y) === BlockType.FILLED) {
       colorType = TetrominoColorType.COLOR_WHITE;
     } else {
@@ -123,7 +134,7 @@ export class InteractiveTetrisBoardComponent {
       SVG_PADDING,
       this.level,
       colorType,
-      special
+      mode
     );
   }
 
