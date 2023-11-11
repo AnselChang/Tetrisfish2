@@ -1,5 +1,7 @@
 import * as express from 'express';
 import * as path from 'path';
+import * as morgan from 'morgan'; // Import Morgan
+
 //import * as livereload from 'livereload';
 //import * as connectLivereload from 'connect-livereload';
 
@@ -8,6 +10,9 @@ import { Express, Request, Response } from 'express';
 export default function createApp(): Express {
     const app = express();
     const clientDir = path.join(__dirname, '../public');
+
+    app.use(morgan('dev'));
+
 
     // In development, refresh Angular on save just like ng serve does
   let livereloadServer: any;
@@ -32,9 +37,14 @@ export default function createApp(): Express {
         console.log("Making request to Stack Rabbit API:", url);
 
         const result = await fetch(url as string);
-        const json = await result.json();
-        console.log("Result:", json);
-        res.send(json);
+
+        try {
+            const json = await result.json();
+            res.send(json);
+        } catch (e) {
+            console.log("Error parsing JSON from Stack Rabbit API:", e);
+        }
+        console.log(result.status);
     });
 
     // Catch all routes and return the index file

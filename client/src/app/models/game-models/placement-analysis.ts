@@ -23,10 +23,11 @@ export default class PlacementAnalysis {
     hasRateMoveDeep(): boolean { return this.rateMoveDeep !== undefined; }
     hasRateMoveShallow(): boolean { return this.rateMoveShallow !== undefined; }
 
-    setEngineMoveListNB(dict: any) { this.engineMovelistNB = new EngineMovelistNB(dict); }
-    setEngineMoveListNNB(dict: any) { this.engineMovelistNNB = new EngineMovelistNNB(dict); }
-    setRateMoveDeep(dict: any) { this.rateMoveDeep = new RateMoveDeep(dict); }
-    setRateMoveShallow(dict: any) { this.rateMoveShallow = new RateMoveShallow(dict); }
+    setEngineMoveListNB(engineMovelistNB: EngineMovelistNB) { this.engineMovelistNB = engineMovelistNB; }
+    setEngineMoveListNNB(engineMovelistNNB: EngineMovelistNNB) { this.engineMovelistNNB = engineMovelistNNB; }
+    setRateMoveDeep(rateMoveDeep: RateMoveDeep) { this.rateMoveDeep = rateMoveDeep; }
+    setRateMoveShallow(rateMoveShallow: RateMoveShallow) { this.rateMoveShallow = rateMoveShallow; }
+
 
     getEngineMoveListNB(): EngineMovelistNB | undefined { return this.engineMovelistNB; }
     getEngineMoveListNNB(): EngineMovelistNNB | undefined { return this.engineMovelistNNB; }

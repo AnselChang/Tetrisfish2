@@ -2,9 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const path = require("path");
+const morgan = require("morgan"); // Import Morgan
 function createApp() {
     const app = express();
     const clientDir = path.join(__dirname, '../public');
+    app.use(morgan('dev'));
     // In development, refresh Angular on save just like ng serve does
     let livereloadServer;
     if (process.env['NODE_ENV'] !== 'production') {
@@ -24,9 +26,14 @@ function createApp() {
         const url = req.query['url'];
         console.log("Making request to Stack Rabbit API:", url);
         const result = await fetch(url);
-        const json = await result.json();
-        console.log("Result:", json);
-        res.send(json);
+        try {
+            const json = await result.json();
+            res.send(json);
+        }
+        catch (e) {
+            console.log("Error parsing JSON from Stack Rabbit API:", e);
+        }
+        console.log(result.status);
     });
     // Catch all routes and return the index file
     app.get('/*', (req, res) => {
