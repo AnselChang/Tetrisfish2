@@ -135,11 +135,11 @@ export class PlayPageComponent implements AfterViewInit {
   }
 
   public getBestMove(): MoveRecommendation | undefined {
-    return this.gameStateMachineService.getGame()!.lastEngineMovelistNB$.getValue()?.analysis.getEngineMoveListNB()!.best;
+    return this.gameStateMachineService.getGame()?.lastEngineMovelistNB$.getValue()?.analysis.getEngineMoveListNB()!.best;
   }
 
   public getMoveRating(): RateMoveDeep | undefined {
-    return this.gameStateMachineService.getGame()!.lastRatingNB$.getValue()?.analysis.getRateMoveDeep();
+    return this.gameStateMachineService.getGame()?.lastRatingNB$.getValue()?.analysis.getRateMoveDeep();
   }
 
 }
