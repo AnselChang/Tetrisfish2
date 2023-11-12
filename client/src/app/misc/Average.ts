@@ -14,6 +14,11 @@ export class Average {
         return this.sum / this.numValues;
     }
 
+    public getSum(): number {
+        if (this.numValues === 0) return Number.NEGATIVE_INFINITY;
+        return this.sum;
+    }
+
     public hasValues(): boolean {
         return this.numValues > 0;
     }

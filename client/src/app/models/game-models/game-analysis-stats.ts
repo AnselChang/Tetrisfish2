@@ -1,5 +1,5 @@
 import { Average } from "../../misc/Average";
-import { ALL_GAME_SPEEDS, GAME_SPEED_TO_STRING, GameSpeed as GameSpeed, RATING_TO_COLOR, getRating, getSpeedFromLevel } from "../evaluation-models/rating";
+import { ALL_GAME_SPEEDS, GAME_SPEED_TO_STRING, GameSpeed as GameSpeed, RATING_TO_COLOR, evaluationToPercent, getRating, getSpeedFromLevel } from "../evaluation-models/rating";
 import { ALL_TETROMINO_TYPES, TetrominoType } from "../tetronimo-models/tetromino";
 import { GamePlacement } from "./game-placement";
 
@@ -14,7 +14,10 @@ export class GameAnalysisStats {
         // only store speed accuracies for speeds that are possible at the start level
         const startLevelSpeed = getSpeedFromLevel(startLevel);
         for (const speed of ALL_GAME_SPEEDS) {
-            if (speed >= startLevelSpeed) this.speedAccuracy.push([speed, new Average()]);
+            if (speed >= startLevelSpeed) {
+                this.speedAccuracy.push([speed, new Average()]);
+                console.log("Adding speed accuracy for speed " + speed);
+            }
         }
 
         // store averages for all piece types
@@ -48,12 +51,13 @@ export class GameAnalysisStats {
     }
 
     // return as a number like "44.35%" or - for no values
-    public getAccuracyString(accuracy: Average): string {
+    public getAccuracyString(accuracy: Average, round: number = 0): string {
 
-        if (!accuracy.hasValues()) return "-";
+        if (!accuracy.hasValues()) return "0%";
 
-        const value = accuracy.getAverage();
-        return (value * 100).toFixed(2) + "%";
+        const average = accuracy.getAverage();
+        const percent = evaluationToPercent(average);
+        return (percent * 100).toFixed(round) + "%";
     }
 
     public getAccuracyColor(accuracy: Average): string {
@@ -80,4 +84,13 @@ export class GameAnalysisStats {
         return this.pieceAccuracy[piece]!;
     }
 
+    public getPieceAccuracies(): [TetrominoType, Average][] {
+        const result: [TetrominoType, Average][] = [];
+        for (const piece of ALL_TETROMINO_TYPES) {
+            result.push([piece, this.getAccuracyForPiece(piece)]);
+        }
+        // sort descending on accuracy
+        result.sort((a, b) => b[1].getSum() - a[1].getSum());
+        return result;
+    }
 }

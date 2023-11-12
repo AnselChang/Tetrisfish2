@@ -1,38 +1,45 @@
-<section class="accuracy-section">
-    <h2>Accuracy ({{inputSpeed}}hz)</h2>
-
-    <h1 class="overall-accuracy-value" *ngIf="!stats">-</h1>
-    <h1 class="overall-accuracy-value" *ngIf="stats?.getOverallAccuracy() as overallAccuracy"
-    [style.color]="stats!.getAccuracyColor(overallAccuracy)"
-    >{{stats?.getAccuracyString(overallAccuracy)}}</h1>
-
-    <h2>Leaderboard*</h2>
-    <h1 class="leaderboard-value"
-    [style.color]="(leaderboardRank && leaderboardValid) ? 'white' : redColor"
-    >{{leaderboardRank ? leaderboardRank + '#' : 'None'}}</h1>
-    <p class="tiny">*If accuracy is maintained and game is eligible</p>
-
-    <hr>
-
-    <h2 *ngIf="!stats">18 speed: -</h2>
-    <h2 *ngIf="!stats">19 speed: -</h2>
-    <h2 *ngIf="!stats">29 speed: -</h2>
-    <h2 *ngFor="stats?.getSpeedAccuracies() as sa">
-        {{sa[0]}} speed: 
-        <span [style.color]="stats!.getAccuracyColor(sa[1])">{{stats!.getAccuracyString(sa[1])}}</span>
-    </h2>
-
-    <hr>
-
-    <div class="piece-accuracy-container" *ngFor="let type of ALL_TETROMINO_TYPES">
-        <p>{{type}}</p>
-        <p *ngIf="!stats">-</p>
-        <p *ngIf="stats?.getAccuracyForPiece(type) as pieceAccuracy"
-            [style.color]="stats!.getAccuracyColor(pieceAccuracy)">
-            {{stats!.getAccuracyString(pieceAccuracy)}}
-        </p>
-    </div>
+<app-section class="accuracy-section">
 
 
+    <app-subsection class="leaderboard">
+        <h2>Leaderboard</h2>
+        <h1 class="leaderboard-value"
+        [style.color]="( leaderboardValid || !leaderboardRank) ? 'white' : redColor"
+        >{{leaderboardRank ? leaderboardRank + '#' : 'None'}}</h1>
+        <p class="tiny"
+        [style.color]="( leaderboardValid || !leaderboardRank) ? 'white' : redColor"
+        >*If accuracy is maintained and game is eligible</p>
+    </app-subsection>
+    
+    <app-subsection class="overall-accuracy">
+        <h2>Accuracy ({{inputSpeed}}hz)</h2>
+        <h1 class="overall-accuracy-value" *ngIf="!stats">-</h1>
+        <h1 class="overall-accuracy-value" *ngIf="stats?.getOverallAccuracy() as overallAccuracy"
+        [style.color]="stats!.getAccuracyColor(overallAccuracy)"
+        >{{stats?.getAccuracyString(overallAccuracy, 2)}}</h1>
+    </app-subsection>
 
-</section>
+    <app-subsection class="speed-subsection">
+        <div *ngIf="!stats">
+            <h3 >18 speed:  -</h3>
+            <h3 >19 speed:  -</h3>
+            <h3 >29 speed:  -</h3>
+        </div>
+        <div class="speed-accuracy" *ngIf="stats">
+            <div class="speed-accuracy-container" *ngFor="let sa of stats.getSpeedAccuracies()">
+                <h3>{{sa[0]}} speed:  </h3>
+                <h3 [style.color]="stats.getAccuracyColor(sa[1])">{{stats.getAccuracyString(sa[1])}}</h3>
+            </div>
+        </div>
+    </app-subsection>
+
+    <app-subsection class="piece-accuracy">
+        <div class="piece-accuracy-container" *ngFor="let pa of stats?.getPieceAccuracies()">
+            <app-tag [piece]="pa[0]" />
+            <h3 [style.color]="stats!.getAccuracyColor(pa[1])">
+                {{stats!.getAccuracyString(pa[1])}}
+            </h3>
+        </div>
+    </app-subsection>
+
+</app-section>

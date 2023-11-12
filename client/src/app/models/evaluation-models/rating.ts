@@ -14,7 +14,7 @@ export const RATING_TO_COLOR: { [rating in Rating]: string } = {
     [Rating.RAPID] : "#63EAEA",
     [Rating.BEST] : "#58D774",
     [Rating.GOOD] : "#90D758",
-    [Rating.MEDIOCRE] : "#A1A1A1",
+    [Rating.MEDIOCRE] : "#B3B3B3",
     [Rating.INACCURACY] : "#E6DF3E",
     [Rating.MISTAKE] : "#D79558",
     [Rating.BLUNDER] : "#D75858",

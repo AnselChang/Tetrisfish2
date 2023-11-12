@@ -3,13 +3,15 @@
         <app-button-small label="Back to recording" [buttonDisabled]="!isCalibrated()" (click)="onSwitchMode.emit()" />
         
         <app-section class="calibrate-panel">
-            <h3>Set analysis input speed</h3>
-            <p>Note: Going over input speed risks leaderboard ineligibility.</p>
-            <select [(ngModel)]="settings.inputSpeed">
+            <h3 class="padded">Set analysis input speed</h3>
+            <p class="tiny">Note: Going over input speed risks leaderboard ineligibility.</p>
+            <select class="hz-dropdown" [(ngModel)]="settings.inputSpeed">
                 <option *ngFor="let speed of ALL_INPUT_SPEEDS" [ngValue]="speed">
                     {{speed}}hz
                 </option>
             </select>
+
+            <hr>
 
             <h3>Click on an empty part of the board</h3>
             <hr>

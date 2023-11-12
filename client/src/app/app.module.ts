@@ -42,6 +42,8 @@ import { DebugGameComponent } from './components/layout/debug-game/debug-game.co
 import { RatingSubsectionComponent } from './components/BLOCK/rating-subsection/rating-subsection.component';
 import { GameSummaryComponent } from './components/layout/play-components/game-summary/game-summary.component';
 import { AccuracyPanelComponent } from './components/layout/play-components/accuracy-panel/accuracy-panel.component';
+import { GameHistoryPanelComponent } from './components/layout/play-components/game-history-panel/game-history-panel.component';
+import { TagComponent } from './components/BLOCK/tag/tag.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,6 +83,8 @@ import { AccuracyPanelComponent } from './components/layout/play-components/accu
     RatingSubsectionComponent,
     GameSummaryComponent,
     AccuracyPanelComponent,
+    GameHistoryPanelComponent,
+    TagComponent,
   ],
   imports: [
     BrowserModule,
