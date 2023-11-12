@@ -1,3 +1,4 @@
+import { Subject } from "rxjs";
 import { Average } from "../../misc/Average";
 import { ALL_GAME_SPEEDS, GAME_SPEED_TO_STRING, GameSpeed as GameSpeed, RATING_TO_COLOR, evaluationToPercent, getRating, getSpeedFromLevel } from "../evaluation-models/rating";
 import { ALL_TETROMINO_TYPES, TetrominoType } from "../tetronimo-models/tetromino";
@@ -8,6 +9,9 @@ export class GameAnalysisStats {
     private overallAccuracy = new Average();
     private speedAccuracy: [GameSpeed, Average][] = [];
     private pieceAccuracy: Partial<Record<TetrominoType, Average>> = {};
+
+    public speedAccuracyCache: [string, Average][] = [];
+    public pieceAccuracyCache: [TetrominoType, Average][] = [];
     
     constructor(startLevel: number) {
 
@@ -48,6 +52,9 @@ export class GameAnalysisStats {
         // update accuracy for corresponding piece
         const piece = placement.currentPieceType;
         this.pieceAccuracy[piece]!.push(rating.diff);
+
+        this.calculateSpeedAccuracies();
+        this.calculatePieceAccuracies();
     }
 
     // return as a number like "44.35%" or - for no values
@@ -70,27 +77,26 @@ export class GameAnalysisStats {
         return this.overallAccuracy;
     }
 
-    // return [speed as a string, accuracy as a string]
-    public getSpeedAccuracies(): [string, Average][] {
+    public calculateSpeedAccuracies() {
 
         const result: [string, Average][] = [];
         for (const [speed, accuracy] of this.speedAccuracy) {
             result.push([GAME_SPEED_TO_STRING[speed], accuracy]);
         }
-        return result;
+        this.speedAccuracyCache = result;
     }
 
     public getAccuracyForPiece(piece: TetrominoType): Average {
         return this.pieceAccuracy[piece]!;
     }
 
-    public getPieceAccuracies(): [TetrominoType, Average][] {
+    public calculatePieceAccuracies() {
         const result: [TetrominoType, Average][] = [];
         for (const piece of ALL_TETROMINO_TYPES) {
             result.push([piece, this.getAccuracyForPiece(piece)]);
         }
         // sort descending on accuracy
         result.sort((a, b) => b[1].getSum() - a[1].getSum());
-        return result;
+        this.pieceAccuracyCache = result;
     }
 }
