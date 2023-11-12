@@ -134,12 +134,41 @@ export class PlayPageComponent implements AfterViewInit {
     return this.gameStateMachineService.getLastPosition();
   }
 
+  public getLastPlacement(): GamePlacement | undefined {
+    return this.gameStateMachineService.getLastPlacement();
+  }
+
   public getBestMove(): MoveRecommendation | undefined {
     return this.gameStateMachineService.getGame()?.lastEngineMovelistNB$.getValue()?.analysis.getEngineMoveListNB()!.best;
   }
 
   public getMoveRating(): RateMoveDeep | undefined {
-    return this.gameStateMachineService.getGame()?.lastRatingNB$.getValue()?.analysis.getRateMoveDeep();
+
+    const lastPlacement = this.getLastPlacement();
+    if (!lastPlacement) return undefined;
+    
+    // if SR has got back with player rating, return it
+    const rating = lastPlacement?.analysis.getRateMoveDeep();
+    if (rating) return rating;
+
+    // otherwise, check if player move is in SR move recommendations
+    // If so, we can derive rating from that
+    const engineMovelistNB = lastPlacement?.analysis.getEngineMoveListNB();
+    const recommendations = engineMovelistNB?.getRecommendations();
+    if (recommendations) {
+      for (const recommendation of recommendations) {
+        if (recommendation.thisPiece.equals(lastPlacement.piecePlacement!)) {
+          return new RateMoveDeep({
+            playerMoveNoAdjustment: -1,
+            playerMoveAfterAdjustment: recommendation.evaluation,
+            bestMoveNoAdjustment: -1,
+            bestMoveAfterAdjustment: engineMovelistNB!.best.evaluation,
+          });
+        }
+      }
+    }
+
+    return undefined;
   }
 
 }

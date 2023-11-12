@@ -123,8 +123,42 @@ export default class MoveableTetromino {
         return grid;
     }
 
+    public equals(other: MoveableTetromino): boolean {
+        if (this.tetrominoType !== other.tetrominoType) return false;
+        if (this.rotation !== other.rotation) return false;
+        if (this.translateX !== other.translateX) return false;
+        if (this.translateY !== other.translateY) return false;
+        return true;
+    }
+
+    // return in tetris notation
+    public toString(): string {
+
+        let string = "" + this.tetrominoType + "-";
+
+        // find all the columns that have blocks
+        const columns: number[] = [];
+        this.getCurrentBlockSet().blocks.forEach(block => {
+            if (!columns.includes(block.x)) {
+                columns.push(block.x);
+            }
+        });
+
+        // sort columns in ascending order
+        columns.sort((a, b) => a - b);
+
+        // assemble into string
+        columns.forEach(column => {
+            if (column === 10) string += "0";
+            else string += column;
+        });
+        
+        return string;
+    }
+
     public print() {
         const mask = this.blitToGrid(new BinaryGrid());
+        console.log(this.toString());
         mask.print();
     }
 }

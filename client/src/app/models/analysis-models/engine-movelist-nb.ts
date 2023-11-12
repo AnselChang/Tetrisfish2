@@ -14,6 +14,10 @@ export class MoveRecommendation {
         public nextPiece: MoveableTetromino,
         public evaluation: number,
     ) {}
+
+    public toString(): string {
+        return `(${this.evaluation}) ${this.thisPiece.toString()} ${this.nextPiece.toString()}`;
+    }
 }
 
 export default class EngineMovelistNB {
@@ -41,7 +45,6 @@ export default class EngineMovelistNB {
             this.recommendations.push(recommendation);
 
             i++;
-            if (i >= 5) break; // only take the top 5
         }
     }
 
@@ -49,4 +52,7 @@ export default class EngineMovelistNB {
         return this.recommendations[0];
     }
 
+    public getRecommendations(): MoveRecommendation[] {
+        return this.recommendations;
+    }
 }

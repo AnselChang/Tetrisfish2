@@ -1,4 +1,5 @@
 export enum Rating {
+    ERROR = -1,
     RAPID = 0,
     BEST = 1,
     GOOD = 2,
@@ -9,6 +10,7 @@ export enum Rating {
 }
 
 export const RATING_TO_COLOR: { [rating in Rating]: string } = {
+    [Rating.ERROR] : "grey",
     [Rating.RAPID] : "#63EAEA",
     [Rating.BEST] : "#58D774",
     [Rating.GOOD] : "#90D758",
@@ -19,6 +21,7 @@ export const RATING_TO_COLOR: { [rating in Rating]: string } = {
 };
 
 export const RATING_TO_STRING: { [rating in Rating]: string } = {
+    [Rating.ERROR] : "Error",
     [Rating.RAPID] : "Rather Rapid",
     [Rating.BEST] : "Best",
     [Rating.GOOD] : "Good",

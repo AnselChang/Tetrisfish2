@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import DebugFrame from 'client/src/app/models/capture-models/debug-frame';
+import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 import { GameDebugService } from 'client/src/app/services/game-debug.service';
 
 @Component({
@@ -17,6 +18,10 @@ export class DebugGameComponent {
 
   get current(): DebugFrame {
     return this.gameDebugService.getFrame(this.index);
+  }
+
+  get currentPlacement():  GamePlacement | undefined {
+    return this.current?.placement;
   }
 
   previous(increment: number = 1) {

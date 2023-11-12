@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { RateMoveDeep, RateMoveShallow } from 'client/src/app/models/analysis-models/rate-move';
 import { RATING_TO_COLOR, RATING_TO_STRING, Rating } from 'client/src/app/models/evaluation-models/rating';
 
 // Should always be inside a <subsection> for correct formatting
@@ -9,16 +10,23 @@ import { RATING_TO_COLOR, RATING_TO_STRING, Rating } from 'client/src/app/models
   styleUrls: ['./rating-subsection.component.scss']
 })
 export class RatingSubsectionComponent {
-  @Input() playerEval!: number;
-  @Input() moveNotation: string = "K-391";
-  @Input() rating!: Rating;
+  @Input() moveNotation: string | undefined = "K-391";
+  @Input() rating?: RateMoveDeep;
   @Input() feedback: string = "Feedback goes here";
 
   getColor(): string {
-    return RATING_TO_COLOR[this.rating];
+    if (!this.rating) return "grey";
+    return RATING_TO_COLOR[this.rating.rating];
   }
 
   getRatingString(): string {
-    return RATING_TO_STRING[this.rating];
+    if (!this.rating) return "-";
+    return RATING_TO_STRING[this.rating.rating];
   }
+
+  getPlayerEval(): string {
+    if (!this.rating) return "-";
+    return this.rating.playerNB.toString();
+  }
+
 }

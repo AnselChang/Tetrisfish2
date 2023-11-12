@@ -51,9 +51,9 @@
                 <app-next-box [showBackground]="false" [level]="extractedState.getStatus().level" [type]="extractedState.getNextPieceType()"></app-next-box>
             </app-tetris-panel-item>
             <app-tetris-panel-item>
-                <app-rating-subsection *ngIf="getMoveRating() as rateMoveDeep"
-                    [playerEval]="rateMoveDeep.playerNB"
-                    [rating]="rateMoveDeep.rating"
+                <app-rating-subsection
+                    [moveNotation]="getLastPlacement()?.piecePlacement!.toString()"
+                    [rating]="getMoveRating()"
                     >
                 </app-rating-subsection>
             </app-tetris-panel-item>

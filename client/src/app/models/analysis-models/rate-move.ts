@@ -17,28 +17,30 @@ import { GamePlacement } from "../game-models/game-placement";
 
 abstract class RateMove {
 
-    public playerNNB: number;
-    public playerNB: number;
-    public bestNNB: number;
-    public bestNB: number;
+    public playerNNB: number = -1;
+    public playerNB: number = -1;
+    public bestNNB: number = -1;
+    public bestNB: number = -1;
 
     constructor(dict: any) {
         // console.log("rate move created", dict);
-        this.playerNNB = dict["playerMoveNoAdjustment"];
-        this.playerNB = dict["playerMoveAfterAdjustment"];
-        this.bestNNB = dict["bestMoveNoAdjustment"];
-        this.bestNB = dict["bestMoveAfterAdjustment"];
+        if (dict) {
+            this.playerNNB = dict["playerMoveNoAdjustment"];
+            this.playerNB = dict["playerMoveAfterAdjustment"];
+            this.bestNNB = dict["bestMoveNoAdjustment"];
+            this.bestNB = dict["bestMoveAfterAdjustment"];
+        }
     }
 }
 
 export class RateMoveDeep extends RateMove {
 
+    public readonly rating;
+
     static async fetch(placement: GamePlacement, inputFrameTimeline: string): Promise<RateMoveDeep> {
         const response = await fetchRateMove(placement, inputFrameTimeline, LookaheadDepth.DEEP);
         return new RateMoveDeep(response);
     }
-
-    public readonly rating: Rating;
 
     constructor(dict: any) {
         super(dict);
