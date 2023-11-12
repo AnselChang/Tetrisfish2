@@ -56,7 +56,7 @@ export function getRatingFromAveragePercent(percent: number) {
 // https://www.desmos.com/calculator/iukck84fgd
 // Graph to convert RELATIVE evaluation to percent between 0 and 1
 export function relativeEvaluationToPercent(playerEvalMinusBestEval: number): number {
-    const percent = Math.pow(1.03, playerEvalMinusBestEval);
+    const percent = Math.pow(1.05, playerEvalMinusBestEval);
 
     // bound between 0 and 1
     return Math.min(1, Math.max(0, percent));

@@ -28,7 +28,7 @@
         <div class="speed-accuracy" *ngIf="stats">
             <div class="speed-accuracy-container" *ngFor="let sa of stats.speedAccuracyCache">
                 <h3>{{sa[0]}} speed:  </h3>
-                <h3 [style.color]="stats.getAccuracyColor(sa[1])">{{stats.getAccuracyString(sa[1])}}</h3>
+                <h3 [style.color]="stats.getAccuracyColor(sa[1])">{{stats.getAccuracyString(sa[1], 2)}}</h3>
             </div>
         </div>
     </app-subsection>
