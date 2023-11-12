@@ -4,6 +4,7 @@ The top 5 SR moves with 0 reaction time and both current/next piece
 */
 
 import { fetchMovelist } from "../../scripts/evaluation/evaluator";
+import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { convertSRPlacement } from "../../scripts/evaluation/sr-placement-converter";
 import { GamePlacement } from "../game-models/game-placement";
 import MoveableTetromino from "../game-models/moveable-tetromino";
@@ -22,8 +23,8 @@ export class MoveRecommendation {
 
 export default class EngineMovelistNB {
 
-    static async fetch(placement: GamePlacement, inputFrameTimeline: string): Promise<EngineMovelistNB> {
-        const response = await fetchMovelist(placement, inputFrameTimeline, true);
+    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNB> {
+        const response = await fetchMovelist(placement, inputSpeed, true);
         return new EngineMovelistNB(response, placement);
     }
 

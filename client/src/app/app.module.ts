@@ -41,6 +41,7 @@ import { RatingSliderComponent } from './components/BLOCK/rating-slider/rating-s
 import { DebugGameComponent } from './components/layout/debug-game/debug-game.component';
 import { RatingSubsectionComponent } from './components/BLOCK/rating-subsection/rating-subsection.component';
 import { GameSummaryComponent } from './components/layout/play-components/game-summary/game-summary.component';
+import { AccuracyPanelComponent } from './components/layout/play-components/accuracy-panel/accuracy-panel.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -79,6 +80,7 @@ import { GameSummaryComponent } from './components/layout/play-components/game-s
     DebugGameComponent,
     RatingSubsectionComponent,
     GameSummaryComponent,
+    AccuracyPanelComponent,
   ],
   imports: [
     BrowserModule,

@@ -12,7 +12,7 @@ export enum TetrominoType {
     Z_TYPE = 'Z'
 }
 
-export const ALL_TETRONIMO_TYPES: TetrominoType[] = [
+export const ALL_TETROMINO_TYPES: TetrominoType[] = [
     TetrominoType.I_TYPE,
     TetrominoType.J_TYPE,
     TetrominoType.L_TYPE,

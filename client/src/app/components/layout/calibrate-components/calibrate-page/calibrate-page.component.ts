@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { ThresholdType } from 'client/src/app/models/capture-models/capture-settings';
+import { ALL_INPUT_SPEEDS } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
@@ -15,6 +16,7 @@ export class CalibratePageComponent {
   @Input() captureVideoElement!: ElementRef<HTMLVideoElement>;
 
   readonly ThresholdType = ThresholdType;
+  readonly ALL_INPUT_SPEEDS = ALL_INPUT_SPEEDS;
 
   constructor(
     public videoCaptureService: VideoCaptureService,

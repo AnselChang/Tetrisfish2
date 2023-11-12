@@ -4,12 +4,13 @@ The best default move, as well as the best SR move for each of the 7 possible ne
 */
 
 import { fetchMovelist } from "../../scripts/evaluation/evaluator";
+import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { GamePlacement } from "../game-models/game-placement";
 
 export default class EngineMovelistNNB {
 
-    static async fetch(placement: GamePlacement, inputFrameTimeline: string): Promise<EngineMovelistNNB> {
-        const response = await fetchMovelist(placement, inputFrameTimeline, false);
+    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNNB> {
+        const response = await fetchMovelist(placement, inputSpeed, false);
         return new EngineMovelistNNB(response);
     }
 

@@ -1,0 +1,38 @@
+<section class="accuracy-section">
+    <h2>Accuracy ({{inputSpeed}}hz)</h2>
+
+    <h1 class="overall-accuracy-value" *ngIf="!stats">-</h1>
+    <h1 class="overall-accuracy-value" *ngIf="stats?.getOverallAccuracy() as overallAccuracy"
+    [style.color]="stats!.getAccuracyColor(overallAccuracy)"
+    >{{stats?.getAccuracyString(overallAccuracy)}}</h1>
+
+    <h2>Leaderboard*</h2>
+    <h1 class="leaderboard-value"
+    [style.color]="(leaderboardRank && leaderboardValid) ? 'white' : redColor"
+    >{{leaderboardRank ? leaderboardRank + '#' : 'None'}}</h1>
+    <p class="tiny">*If accuracy is maintained and game is eligible</p>
+
+    <hr>
+
+    <h2 *ngIf="!stats">18 speed: -</h2>
+    <h2 *ngIf="!stats">19 speed: -</h2>
+    <h2 *ngIf="!stats">29 speed: -</h2>
+    <h2 *ngFor="stats?.getSpeedAccuracies() as sa">
+        {{sa[0]}} speed: 
+        <span [style.color]="stats!.getAccuracyColor(sa[1])">{{stats!.getAccuracyString(sa[1])}}</span>
+    </h2>
+
+    <hr>
+
+    <div class="piece-accuracy-container" *ngFor="let type of ALL_TETROMINO_TYPES">
+        <p>{{type}}</p>
+        <p *ngIf="!stats">-</p>
+        <p *ngIf="stats?.getAccuracyForPiece(type) as pieceAccuracy"
+            [style.color]="stats!.getAccuracyColor(pieceAccuracy)">
+            {{stats!.getAccuracyString(pieceAccuracy)}}
+        </p>
+    </div>
+
+
+
+</section>

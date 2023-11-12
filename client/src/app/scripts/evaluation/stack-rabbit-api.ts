@@ -2,6 +2,7 @@ import { Block } from "blockly";
 import BinaryGrid, { BlockType } from "../../models/tetronimo-models/binary-grid";
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
 import GameStatus from "../../models/tetronimo-models/game-status";
+import { INPUT_SPEED_TO_TIMELINE, InputSpeed } from "./input-frame-timeline";
 
 class StandardParams {
     constructor(
@@ -93,12 +94,12 @@ export function boardToString(grid: BinaryGrid): string {
     return result;
 }
 
-export function generateStandardParams(board: BinaryGrid, currentPieceType: TetrominoType, status: GameStatus, inputFrameTimeline: string): StandardParams {
+export function generateStandardParams(board: BinaryGrid, currentPieceType: TetrominoType, status: GameStatus, inputSpeed: InputSpeed): StandardParams {
     return new StandardParams(
         boardToString(board),
         currentPieceType,
         status.level,
         status.lines,
-        inputFrameTimeline,
+        INPUT_SPEED_TO_TIMELINE[inputSpeed],
     );
 }

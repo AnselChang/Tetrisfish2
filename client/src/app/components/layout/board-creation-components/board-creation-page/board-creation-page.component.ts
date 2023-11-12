@@ -1,7 +1,6 @@
 import { Component, Renderer2 } from '@angular/core';
 import { BlockData, TetrisBoardMode } from '../../../tetris/interactive-tetris-board/interactive-tetris-board.component';
 import { BoardCreationCacheService } from 'client/src/app/services/board-creation-cache.service';
-import { HZ_10 } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
 import GameStatus from 'client/src/app/models/tetronimo-models/game-status';
 import { fetchMovelist } from 'client/src/app/scripts/evaluation/evaluator';

@@ -14,10 +14,6 @@
                 [nextPiece]="getBestMove()?.nextPiece"
             />
         </app-section>
-        <app-section class="best-move-info">
-            <h2 class="best-move">(+2.3)  S-890  L-12</h2>
-            <p class="best-move-explanation">An s-flat minimizes burns while keeping a stable board</p>
-        </app-section>
 
     </div>
     <app-eval-bar class="col-eval-bar"
@@ -65,29 +61,23 @@
 
         </app-tetris-panel>
     </app-section>
-    <div class="col-misc">
-        <video #videoElement autoplay></video>
-        <div class="col-misc-bottom">
-            <app-section class="time-notes">
-                <p class="padded">Time recorded</p>
-                <app-subsection>
-                    <h1>00:23:14</h1>
-                </app-subsection>
-                <p class="padded">Notes</p>
-                <app-subsection class="notes-section">
-                    <p class="notes">
-                        Trying to get colors with the help of tetrisfish stacking!
-                    </p>
-                </app-subsection>
-            </app-section>
-            <div class="buttons">
-                <app-button-big label="Edit Calibration" icon="calibrate_button.svg" (click)="onSwitchMode.emit()"/>
-                <app-button-big label="Analyze" icon="analysis_button.svg" />
-                <a routerLink="/debug" routerLinkActive="active">
-                    <app-button-big label="Debug" icon="debug_button.svg" />
-                </a>
-            </div>
+    <div class="col-dashboard">
+
+        <video class="facecam" #videoElement autoplay></video>
+            
+        <app-accuracy-panel class="accuracy-panel"
+            [inputSpeed]="settings.inputSpeed"
+            [stats]="game?.analysisStats">
+        </app-accuracy-panel>
+        
+        <div class="buttons">
+            <app-button-big label="Edit Calibration" icon="calibrate_button.svg" (click)="onSwitchMode.emit()"/>
+            <app-button-big label="Analyze" icon="analysis_button.svg" />
+            <a routerLink="/debug" routerLinkActive="active">
+                <app-button-big label="Debug" icon="debug_button.svg" />
+            </a>
         </div>
+
     </div>
 
 </div>

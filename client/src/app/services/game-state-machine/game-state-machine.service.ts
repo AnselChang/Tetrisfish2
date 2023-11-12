@@ -15,6 +15,8 @@ import { Game } from '../../models/game-models/game';
 import { Binary } from '@angular/compiler';
 import { max } from 'rxjs';
 import { line } from 'core/utils/svg_paths';
+import { CaptureSettings } from '../../models/capture-models/capture-settings';
+import { CaptureSettingsService } from '../capture/capture-settings.service';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -266,6 +268,7 @@ export class GameStateMachineService {
 
   constructor(
     private extractedStateService: ExtractedStateService,
+    private captureSettingsService: CaptureSettingsService,
     private debug: GameDebugService,
     ) { }
 
@@ -278,7 +281,8 @@ export class GameStateMachineService {
     this.debug.resetNewGame();
 
     const gameStartLevel = this.extractedStateService.get().getStatus().level;
-    this.game = new Game(gameStartLevel); // create a new game that will store all the placements
+    const inputSpeed = this.captureSettingsService.get().inputSpeed;
+    this.game = new Game(gameStartLevel, inputSpeed); // create a new game that will store all the placements
   }
 
   public endGame(): void {

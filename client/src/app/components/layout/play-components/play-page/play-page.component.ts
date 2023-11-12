@@ -176,4 +176,7 @@ export class PlayPageComponent implements AfterViewInit {
     return undefined;
   }
 
+  public getAccuracyColor(accuracy: number): string {
+    return "white";
+  }
 }

@@ -32,8 +32,8 @@ export const RATING_TO_STRING: { [rating in Rating]: string } = {
 };
 
 
-export function getRating(playerEval: number, bestEval: number) {
-    const diff = playerEval - bestEval;
+export function getRating(playerEvalMinusBestEval: number) {
+    const diff = playerEvalMinusBestEval;
     if (diff > 0) return Rating.RAPID;
     if (diff >= -1) return Rating.BEST;
     if (diff >= -5) return Rating.GOOD;
@@ -50,4 +50,32 @@ export function evaluationToPercent(evaluation: number): number {
     
     // bound between 0 and 1
     return Math.min(1, Math.max(0, percent));
+}
+
+export enum GameSpeed {
+    SPEED_UNDER_18 = 0,
+    SPEED_18 = 1,
+    SPEED_19 = 2,
+    SPEED_29 = 3,
+}
+
+export const ALL_GAME_SPEEDS = [
+    GameSpeed.SPEED_UNDER_18,
+    GameSpeed.SPEED_18,
+    GameSpeed.SPEED_19,
+    GameSpeed.SPEED_29,
+];
+
+export const GAME_SPEED_TO_STRING: { [speed in GameSpeed]: string } = {
+    [GameSpeed.SPEED_UNDER_18] : "<18",
+    [GameSpeed.SPEED_18] : "18",
+    [GameSpeed.SPEED_19] : "19",
+    [GameSpeed.SPEED_29] : "29",
+};
+
+export function getSpeedFromLevel(level: number): GameSpeed {
+    if (level < 18) return GameSpeed.SPEED_UNDER_18;
+    if (level === 18) return GameSpeed.SPEED_18;
+    if (level === 19) return GameSpeed.SPEED_19;
+    return GameSpeed.SPEED_29;
 }

@@ -4,7 +4,6 @@ The model for a full game, consisting of a list of placements optionally with ev
 
 import { BehaviorSubject } from "rxjs";
 import { fetchMovelist } from "../../scripts/evaluation/evaluator";
-import { HZ_30 } from "../../scripts/evaluation/input-frame-timeline";
 import EngineMovelistNB from "../analysis-models/engine-movelist-nb";
 import EngineMovelistNNB from "../analysis-models/engine-movelist-nnb";
 import { RateMoveDeep, RateMoveShallow } from "../analysis-models/rate-move";
@@ -14,6 +13,8 @@ import { TetrominoType } from "../tetronimo-models/tetromino";
 import { GamePlacement } from "./game-placement";
 import MoveableTetromino from "./moveable-tetromino";
 import { GameStats } from "./game-stats";
+import { GameAnalysisStats } from "./game-analysis-stats";
+import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 
 export class Game {
 
@@ -27,13 +28,16 @@ export class Game {
 
     public status: SmartGameStatus;
     public readonly stats = new GameStats();
+    public readonly analysisStats: GameAnalysisStats;
 
-    constructor(public readonly startLevel: number) {
+    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed) {
         this.status = new SmartGameStatus(startLevel);
 
         this.stats.trackTransitionLevel(startLevel + 1);
         if (startLevel < 18) this.stats.trackTransitionLevel(19);
         if (startLevel < 29) this.stats.trackTransitionLevel(29);
+
+        this.analysisStats = new GameAnalysisStats(this.startLevel);
 
     }
 
@@ -72,7 +76,7 @@ export class Game {
         this.placements.push(newPlacement);
 
         // non-blocking fetch SR engine-movelist NB, set to placement analysis when it's done fetching 
-        EngineMovelistNB.fetch(newPlacement, HZ_30).then(engineMovelistNB => {
+        EngineMovelistNB.fetch(newPlacement, this.inputSpeed).then(engineMovelistNB => {
             newPlacement.analysis.setEngineMoveListNB(engineMovelistNB);
 
             // update most recent placement with engine-movelist NB if it's higher than the current one
@@ -83,9 +87,9 @@ export class Game {
         });
 
         // // non-blocking fetch SR engine-movelist NNB, set to placement analysis when it's done fetching
-        // EngineMovelistNNB.fetch(newPlacement, HZ_30).then(engineMovelistNNB => {
-        //     newPlacement.analysis.setEngineMoveListNNB(engineMovelistNNB);
-        // });
+        EngineMovelistNNB.fetch(newPlacement, this.inputSpeed).then(engineMovelistNNB => {
+            newPlacement.analysis.setEngineMoveListNNB(engineMovelistNNB);
+        });
 
         return newPlacement;
     }
@@ -104,7 +108,7 @@ export class Game {
         this.calculateTransitionScores();
 
         // non-blocking fetch the engine rate-move deep, set to placement analysis when it's done fetching
-        RateMoveDeep.fetch(placement, HZ_30).then(rateMoveDeep => {
+        RateMoveDeep.fetch(placement, this.inputSpeed).then(rateMoveDeep => {
             placement.analysis.setRateMoveDeep(rateMoveDeep);
 
             // update most recent placement with rating NB if it's higher than the current one
@@ -112,12 +116,15 @@ export class Game {
             if (!lastPlacementRatingNB || lastPlacementRatingNB.index < placement.index) {
                 this.lastRatingNB$.next(placement);
             }
+
+            // update game analysis stats for placement
+            this.analysisStats.onRateMoveDeep(placement);
         });
 
-        // non-blocking fetch the engine rate-move shallow, set to placement analysis when it's done fetching
-        // RateMoveShallow.fetch(placement, HZ_30).then(rateMoveShallow => {
-        //     placement.analysis.setRateMoveShallow(rateMoveShallow);
-        // });
+        //non-blocking fetch the engine rate-move shallow, set to placement analysis when it's done fetching
+        RateMoveShallow.fetch(placement, this.inputSpeed).then(rateMoveShallow => {
+            placement.analysis.setRateMoveShallow(rateMoveShallow);
+        });
     }
 
     // if any of the flagged transition levels have been reached, set the transition score

@@ -3,11 +3,19 @@
         <app-button-small label="Back to recording" [buttonDisabled]="!isCalibrated()" (click)="onSwitchMode.emit()" />
         
         <app-section class="calibrate-panel">
-            <h3>1. Click on an empty part of the board</h3>
+            <h3>Set analysis input speed</h3>
+            <p>Note: Going over input speed risks leaderboard ineligibility.</p>
+            <select [(ngModel)]="settings.inputSpeed">
+                <option *ngFor="let speed of ALL_INPUT_SPEEDS" [ngValue]="speed">
+                    {{speed}}hz
+                </option>
+            </select>
+
+            <h3>Click on an empty part of the board</h3>
             <hr>
-            <app-threshold-input label="2. Set mino detection threshold" [type]="ThresholdType.MINO" />
+            <app-threshold-input label="Set mino detection threshold" [type]="ThresholdType.MINO" />
             <hr>
-            <app-threshold-input label="3. Set text detection threshold" [type]="ThresholdType.TEXT" />
+            <app-threshold-input label="Set text detection threshold" [type]="ThresholdType.TEXT" />
             <hr>
 
 

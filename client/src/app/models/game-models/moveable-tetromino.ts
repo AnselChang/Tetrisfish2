@@ -7,7 +7,7 @@ other blocks.
 import { block } from "core/tooltip";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import { BlockSet } from "../tetronimo-models/block";
-import { ALL_TETRONIMO_TYPES, Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
+import { ALL_TETROMINO_TYPES, Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
 import { GameDebugService } from "../../services/game-debug.service";
 
 
@@ -72,7 +72,7 @@ export default class MoveableTetromino {
 
         let piecesToTry: TetrominoType[];
         if (pieceType) piecesToTry = [pieceType];
-        else piecesToTry = ALL_TETRONIMO_TYPES;
+        else piecesToTry = ALL_TETROMINO_TYPES;
 
         for (let pieceType of piecesToTry) {
             const mt = MoveableTetromino.getMTForPieceMask(pieceMask, minX, minY, pieceType);

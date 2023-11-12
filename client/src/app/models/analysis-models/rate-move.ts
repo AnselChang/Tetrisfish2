@@ -11,6 +11,7 @@ rate-move returns a dictionary of the form:
 */
 
 import { fetchRateMove } from "../../scripts/evaluation/evaluator";
+import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { LookaheadDepth } from "../../scripts/evaluation/stack-rabbit-api";
 import { Rating, getRating } from "../evaluation-models/rating";
 import { GamePlacement } from "../game-models/game-placement";
@@ -36,22 +37,24 @@ abstract class RateMove {
 export class RateMoveDeep extends RateMove {
 
     public readonly rating;
+    public readonly diff;
 
-    static async fetch(placement: GamePlacement, inputFrameTimeline: string): Promise<RateMoveDeep> {
-        const response = await fetchRateMove(placement, inputFrameTimeline, LookaheadDepth.DEEP);
+    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<RateMoveDeep> {
+        const response = await fetchRateMove(placement, inputSpeed, LookaheadDepth.DEEP);
         return new RateMoveDeep(response);
     }
 
     constructor(dict: any) {
         super(dict);
-        this.rating = getRating(this.playerNB, this.bestNB);
+        this.diff = this.playerNB - this.bestNB;
+        this.rating = getRating(this.diff);
     }
 
 }
 export class RateMoveShallow extends RateMove {
 
-    static async fetch(placement: GamePlacement, inputFrameTimeline: string): Promise<RateMoveShallow> {
-        const response = await fetchRateMove(placement, inputFrameTimeline, LookaheadDepth.SHALLOW);
+    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<RateMoveShallow> {
+        const response = await fetchRateMove(placement, inputSpeed, LookaheadDepth.SHALLOW);
         return new RateMoveShallow(response);
     }
     

@@ -2,6 +2,7 @@
 Represents all the state for a frame after OCR
 */
 
+import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import BinaryGrid from "../tetronimo-models/binary-grid";
 import { Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
 import { BoardOCRBox, LevelOCRBox, LinesOCRBox, NextOCRBox } from "./ocr-box";
@@ -24,6 +25,8 @@ export class Threshold {
 }
 
 export class CaptureSettings {
+
+    public inputSpeed: InputSpeed = InputSpeed.HZ_30;
 
     public threshold: number = 5; 
 
