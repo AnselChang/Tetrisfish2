@@ -149,8 +149,8 @@ export default class MoveableTetromino {
 
         // assemble into string
         columns.forEach(column => {
-            if (column === 10) string += "0";
-            else string += column;
+            if (column === 9) string += "0";
+            else string += column + 1;
         });
         
         return string;

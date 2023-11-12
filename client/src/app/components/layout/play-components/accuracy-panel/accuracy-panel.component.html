@@ -8,7 +8,7 @@
         >{{leaderboardRank ? leaderboardRank + '#' : 'None'}}</h1>
         <p class="tiny"
         [style.color]="( leaderboardValid || !leaderboardRank) ? 'white' : redColor"
-        >*If accuracy is maintained and game is eligible</p>
+        >*If game is eligible and reaches 29, the overall accuracy at that point will be sent to leaderboards</p>
     </app-subsection>
     
     <app-subsection class="overall-accuracy">
