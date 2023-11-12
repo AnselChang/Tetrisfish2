@@ -256,8 +256,6 @@ export class GameStateMachineService {
   // the game data the state machine is writing to
   private game?: Game;
 
-  private currentGameStatus?: SmartGameStatus;
-
   // how many times a completely invalid frame has been detected consecutively
   private invalidFrameCount = 0;
   private readonly MAX_INVALID_FRAMES = 20; // if this many invalid frames in a row, end game
@@ -281,7 +279,6 @@ export class GameStateMachineService {
 
     const gameStartLevel = this.extractedStateService.get().getStatus().level;
     this.game = new Game(gameStartLevel); // create a new game that will store all the placements
-    this.currentGameStatus = new SmartGameStatus(gameStartLevel); // create a new game status that will track the score/level/lines
   }
 
   public endGame(): void {
@@ -332,7 +329,7 @@ export class GameStateMachineService {
       }
 
       this.debug.addFrame(state.getGrid(), state.getNextPieceType());
-      this.debug.setStatus(this.currentGameStatus!.status);
+      this.debug.setStatus(this.game!.status);
       
       // if both level and next box have invalid states, this is an invalid frame
       if (state.getNextPieceType() === undefined) {
@@ -362,8 +359,7 @@ export class GameStateMachineService {
         const newPlacement = this.game!.addNewPosition(
           grid,
           spawnData!.spawnedPieceType,
-          spawnData!.nextPieceType,
-          this.currentGameStatus!
+          spawnData!.nextPieceType
         );
         this.debug.setPlacement(newPlacement);
         this.debug.log("First piece spawned, added new position");
@@ -381,16 +377,14 @@ export class GameStateMachineService {
 
         // Then, update level/lines/score as a result of the placement
         if (spawnData!.linesCleared > 0) {
-          this.currentGameStatus!.onLineClear(spawnData!.linesCleared);
-          this.debug.setStatus(this.currentGameStatus?.status!);
+          this.debug.setStatus(this.game!.status);
         }
 
         // Finally, add a new position to the game for the starting board without the spawned piece
         const newPlacement = this.game!.addNewPosition(
           spawnData!.nextStableGridWithoutPlacement!,
           spawnData!.spawnedPieceType,
-          spawnData!.nextPieceType,
-          this.currentGameStatus!
+          spawnData!.nextPieceType
         );
         this.debug.setPlacement(newPlacement);
         this.debug.log("Set placement for last position, and added new position");
@@ -401,11 +395,6 @@ export class GameStateMachineService {
 
   }
 
-  // detected level can only be at or one higher than current level
-  private isInvalidLevel(detectedLevel: number): boolean {
-    const currentLevel = this.currentGameStatus!.level;
-    return detectedLevel !== currentLevel && detectedLevel !== currentLevel + 1;
-  }
 
   // Given spawn data, compare lastStableGridWithoutPlacement with stableGridWithPlacement
   // to determine where the piece was placed. return undefined if the placed piece is invalid
@@ -448,7 +437,7 @@ export class GameStateMachineService {
   }
 
   public getCurrentGameStatus(): SmartGameStatus | undefined {
-    return this.currentGameStatus;
+    return this.game!.status;
   }
 
   public getPlayCalibratePage(): PlayCalibratePage {

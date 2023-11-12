@@ -8,13 +8,9 @@
     <h2>{{stats ? stats.getLinesBurned() : "-"}}</h2>
 </div>
 
-<hr>
+<hr *ngIf="stats">
 
-<div class="item">
-    <p>18 Trans.</p>
-    <h2>123456</h2>
-</div>
-<div class="item">
-    <p>19 Trans.</p>
-    <h2>-</h2>
+<div class="item" *ngFor="let transition of (stats ? stats.getTransitionScores() : [])">
+    <p>Trans. to {{transition.level}}</p>
+    <h2>{{transition.score ? transition.score : "-"}}</h2>
 </div>

@@ -48,6 +48,7 @@ export class SmartGameStatus implements IGameStatus {
 
     public onLineClear(numLines: number): void {
 
+        if (numLines === 0) return;
         if (numLines < 1 || numLines > 4) throw new Error("Invalid number of lines: " + numLines);
 
         const lineTens = Math.floor(this.gameStatus.lines / 10);
