@@ -11,6 +11,7 @@ import { GamePlacement } from 'client/src/app/models/game-models/game-placement'
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 import { MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist-nb';
 import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
+import { Game } from 'client/src/app/models/game-models/game';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -75,6 +76,10 @@ export class PlayPageComponent implements AfterViewInit {
 
   public get settings() {
     return this.captureSettingsService.get();
+  }
+
+  public get game(): Game | undefined {
+    return this.gameStateMachineService.getGame();
   }
 
   public getScoreString(): string | number {

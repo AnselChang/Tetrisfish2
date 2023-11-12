@@ -13,6 +13,7 @@ import { SmartGameStatus } from "../tetronimo-models/smart-game-status";
 import { TetrominoType } from "../tetronimo-models/tetromino";
 import { GamePlacement } from "./game-placement";
 import MoveableTetromino from "./moveable-tetromino";
+import { GameStats } from "./game-stats";
 
 export class Game {
 
@@ -23,6 +24,8 @@ export class Game {
     
     // the most recent placement that has been evaluated with engine-movelist
     public lastEngineMovelistNB$ = new BehaviorSubject<GamePlacement | undefined>(undefined);
+
+    public readonly stats = new GameStats();
 
     constructor(public readonly startLevel: number) {
     }
@@ -87,6 +90,9 @@ export class Game {
 
         const placement = this.getLastPosition()!;
         placement.setPlacement(moveableTetronimo, numLineClears);
+
+        // update game stats for placement
+        this.stats.onLineClears(numLineClears);
 
         // non-blocking fetch the engine rate-move deep, set to placement analysis when it's done fetching
         RateMoveDeep.fetch(placement, HZ_30).then(rateMoveDeep => {

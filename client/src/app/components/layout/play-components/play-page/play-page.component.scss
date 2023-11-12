@@ -2,7 +2,7 @@
 
 .root {
     display: grid;
-    grid-template-columns: 3.8fr 0.7fr 9.5fr 9fr; // 1fr = 50px in figma
+    grid-template-columns: 3.8fr 1fr 9.5fr 9fr; // 1fr = 50px in figma
     column-gap: 10px;
     margin: 0 10px;
 }
@@ -17,7 +17,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    min-width: 250px;
+    min-width: 200px;
 }
 
 .best-move {

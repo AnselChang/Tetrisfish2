@@ -43,11 +43,10 @@ export function getRating(playerEval: number, bestEval: number) {
     return Rating.BLUNDER;
 }
 
-// https://www.desmos.com/calculator/uu6r1csmee
+// https://www.desmos.com/calculator/qrfk3vmily
 // Graph to convert evaluation to between 0 and 1. 
-// 40 eval is around 1, -83 eval is around 0.5
 export function evaluationToPercent(evaluation: number): number {
-    const percent = 1.4 / (1 + Math.exp(-0.02 * evaluation));
+    const percent = 1.4 / (1 + Math.exp(-0.01 * (evaluation+25)));
     
     // bound between 0 and 1
     return Math.min(1, Math.max(0, percent));

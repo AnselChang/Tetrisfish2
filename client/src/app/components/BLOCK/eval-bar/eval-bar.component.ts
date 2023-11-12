@@ -26,7 +26,7 @@ export class EvalBarComponent implements OnInit, OnChanges {
   recalculateEvalBar() {
     if (this.playerEval) this.playerHeight = this.evalToPercentString(this.playerEval);
     if (this.bestEval) this.srHeight = this.evalToPercentString(this.bestEval);
-    this.color = this.rating ? RATING_TO_COLOR[this.rating] : "grey";
+    if (this.rating) this.color = RATING_TO_COLOR[this.rating];
   }
 
   private evalToPercentString(evaluation: number): string {
