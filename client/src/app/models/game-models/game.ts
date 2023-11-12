@@ -3,9 +3,6 @@ The model for a full game, consisting of a list of placements optionally with ev
 */
 
 import { BehaviorSubject } from "rxjs";
-import { fetchMovelist } from "../../scripts/evaluation/evaluator";
-import EngineMovelistNB from "../analysis-models/engine-movelist-nb";
-import EngineMovelistNNB from "../analysis-models/engine-movelist-nnb";
 import { RateMoveDeep, RateMoveShallow } from "../analysis-models/rate-move";
 import BinaryGrid from "../tetronimo-models/binary-grid";
 import { SmartGameStatus } from "../tetronimo-models/smart-game-status";
@@ -15,6 +12,7 @@ import MoveableTetromino from "./moveable-tetromino";
 import { GameStats } from "./game-stats";
 import { GameAnalysisStats } from "./game-analysis-stats";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
+import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-movelist";
 
 export class Game {
 

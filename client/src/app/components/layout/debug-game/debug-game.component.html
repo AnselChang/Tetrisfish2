@@ -46,16 +46,24 @@
         <h1 class="padded">Debug log</h1>
 
         <app-subsection *ngIf="currentPlacement?.analysis?.getEngineMoveListNB() as engineMovelistNB">
-            <h2>Engine Movelist</h2>
+            <h2>Engine Movelist NB</h2>
             <p *ngFor="let recommendation of engineMovelistNB.getRecommendations()">{{recommendation.toString()}}</p>
         </app-subsection>
 
         <app-subsection *ngIf="currentPlacement?.analysis?.getRateMoveDeep() as ratingDeep">
-            <h2>Player move rating</h2>
+            <h2>Player move rating (Deep)</h2>
             <p>playerNB: {{ratingDeep.playerNB}}</p>
             <p>playerNNB: {{ratingDeep.playerNNB}}</p>
             <p>bestNB: {{ratingDeep.bestNB}}</p>
             <p>bestNNB: {{ratingDeep.bestNNB}}</p>
+        </app-subsection>
+
+        <app-subsection *ngIf="currentPlacement?.analysis?.getRateMoveShallow() as ratingShallow">
+            <h2>Player move rating (Shallow)</h2>
+            <p>playerNB: {{ratingShallow.playerNB}}</p>
+            <p>playerNNB: {{ratingShallow.playerNNB}}</p>
+            <p>bestNB: {{ratingShallow.bestNB}}</p>
+            <p>bestNNB: {{ratingShallow.bestNNB}}</p>
         </app-subsection>
 
         <app-subsection>

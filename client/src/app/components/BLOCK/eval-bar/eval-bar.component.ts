@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { RATING_TO_COLOR, Rating, evaluationToPercent } from 'client/src/app/models/evaluation-models/rating';
+import { RATING_TO_COLOR, Rating, absoluteEvaluationToPercent } from 'client/src/app/models/evaluation-models/rating';
 
 @Component({
   selector: 'app-eval-bar',
@@ -30,7 +30,7 @@ export class EvalBarComponent implements OnInit, OnChanges {
   }
 
   private evalToPercentString(evaluation: number): string {
-    const percent = evaluationToPercent(evaluation);
+    const percent = absoluteEvaluationToPercent(evaluation);
     return `${percent * 100}%`;
   }
 }

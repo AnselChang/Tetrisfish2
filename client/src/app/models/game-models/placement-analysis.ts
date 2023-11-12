@@ -8,8 +8,7 @@ These are all optional, as we support lazy-loading of analysis data. Only the lo
 be shown.
 */
 
-import EngineMovelistNB from "../analysis-models/engine-movelist-nb";
-import EngineMovelistNNB from "../analysis-models/engine-movelist-nnb";
+import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-movelist";
 import { RateMoveDeep, RateMoveShallow } from "../analysis-models/rate-move";
 
 export default class PlacementAnalysis {

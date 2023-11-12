@@ -9,7 +9,7 @@ import { TEXT_GREEN, TEXT_RED } from 'client/src/app/misc/colors';
 import BinaryGrid from 'client/src/app/models/tetronimo-models/binary-grid';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
-import { MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist-nb';
+import { MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist';
 import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
 import { Game } from 'client/src/app/models/game-models/game';
 

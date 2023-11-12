@@ -13,7 +13,7 @@ rate-move returns a dictionary of the form:
 import { fetchRateMove } from "../../scripts/evaluation/evaluator";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { LookaheadDepth } from "../../scripts/evaluation/stack-rabbit-api";
-import { Rating, getRating } from "../evaluation-models/rating";
+import { Rating, getRatingFromRelativeEval } from "../evaluation-models/rating";
 import { GamePlacement } from "../game-models/game-placement";
 
 abstract class RateMove {
@@ -47,7 +47,7 @@ export class RateMoveDeep extends RateMove {
     constructor(dict: any) {
         super(dict);
         this.diff = this.playerNB - this.bestNB;
-        this.rating = getRating(this.diff);
+        this.rating = getRatingFromRelativeEval(this.diff);
     }
 
 }

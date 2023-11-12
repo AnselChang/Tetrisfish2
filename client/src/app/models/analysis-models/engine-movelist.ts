@@ -21,12 +21,7 @@ export class MoveRecommendation {
     }
 }
 
-export default class EngineMovelistNB {
-
-    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNB> {
-        const response = await fetchMovelist(placement, inputSpeed, true);
-        return new EngineMovelistNB(response, placement);
-    }
+export abstract class EngineMovelist {
 
     private recommendations: MoveRecommendation[] = [];
 
@@ -55,5 +50,21 @@ export default class EngineMovelistNB {
 
     public getRecommendations(): MoveRecommendation[] {
         return this.recommendations;
+    }
+}
+
+export class EngineMovelistNB extends EngineMovelist {
+
+    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNB> {
+        const response = await fetchMovelist(placement, inputSpeed, true);
+        return new EngineMovelistNB(response, placement);
+    }
+}
+
+export class EngineMovelistNNB {
+
+    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNNB> {
+        const response = await fetchMovelist(placement, inputSpeed, false);
+        return new EngineMovelistNNB();
     }
 }
