@@ -1,0 +1,44 @@
+@import "../../../../../styles.scss";
+
+.list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 10px;
+    overflow: scroll;
+}
+
+.element {
+    width: 100%;
+    margin: 0px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 0.8fr 2fr 0.5fr 0.5fr;
+
+    padding: 5px;
+    text-wrap: nowrap;
+}
+
+.average {
+    background-color: $layer-2-color;
+    border-radius: 5px;
+    margin-bottom: 3px;
+}
+
+.level {
+    text-align: left;
+}
+
+.date {
+    text-align: center;
+}
+
+.score {
+    text-align: right;
+}
+.accuracy {
+    text-align: right;
+}

@@ -15,6 +15,8 @@ import { Binary } from '@angular/compiler';
 import { max } from 'rxjs';
 import { CaptureSettings } from '../../models/capture-models/capture-settings';
 import { CaptureSettingsService } from '../capture/capture-settings.service';
+import { GameHistoryService } from '../game-history.service';
+import { HistoricalGame } from '../../models/game-models/game-history';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -266,6 +268,7 @@ export class GameStateMachineService {
   constructor(
     private extractedStateService: ExtractedStateService,
     private captureSettingsService: CaptureSettingsService,
+    private gameHistoryService: GameHistoryService,
     private debug: GameDebugService,
     ) { }
 
@@ -287,6 +290,21 @@ export class GameStateMachineService {
     this.gridSM = undefined;
     this.playStatus = PlayStatus.NOT_PLAYING;
     // NOTE: do not set this.game to undefined, as we want to keep the game data for analysis
+
+    // if game has at least five placements, add to game history
+    if (this.game && this.game.numPlacements >= 5) {
+      const historicalGame = new HistoricalGame(
+        new Date(),
+        this.game.startLevel,
+        this.game.status.score,
+        this.game.status.level,
+        this.game.status.lines,
+        this.game.analysisStats.getOverallAccuracy().getAverage(),
+        undefined
+      )
+      this.gameHistoryService.get().addGame(historicalGame);
+    }
+
   }
 
   // executes once per frame to update state machine. Main method for this class
