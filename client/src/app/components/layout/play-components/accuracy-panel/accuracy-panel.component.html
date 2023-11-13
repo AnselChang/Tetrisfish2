@@ -1,8 +1,8 @@
 <app-section class="accuracy-section">
 
-    
+    <h2 class="title">Accuracy ({{inputSpeed}}hz)</h2>
+
     <app-subsection class="overall-accuracy">
-        <h2>Accuracy ({{inputSpeed}}hz)</h2>
         <h1 class="overall-accuracy-value" *ngIf="!stats">-</h1>
         <h1 class="overall-accuracy-value" *ngIf="stats?.getOverallAccuracy() as overallAccuracy"
         [style.color]="stats!.getAccuracyColor(overallAccuracy)"
