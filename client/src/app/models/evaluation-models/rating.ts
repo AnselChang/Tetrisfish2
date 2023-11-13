@@ -32,8 +32,11 @@ export const RATING_TO_STRING: { [rating in Rating]: string } = {
 };
 
 // compute rating for a single move
-export function getRatingFromRelativeEval(playerEvalMinusBestEval: number) {
-    const diff = playerEvalMinusBestEval;
+export function getRatingFromRelativeEval(playerEvalMinusBestEval: number | undefined) {
+
+    if (playerEvalMinusBestEval === undefined) return Rating.ERROR;
+
+    const diff = playerEvalMinusBestEval!;
     if (diff > 0) return Rating.RAPID;
     if (diff >= -1) return Rating.BEST;
     if (diff >= -4) return Rating.GOOD;

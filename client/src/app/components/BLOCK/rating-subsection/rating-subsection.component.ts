@@ -26,6 +26,7 @@ export class RatingSubsectionComponent {
 
   getPlayerEval(): string {
     if (!this.rating) return "-";
+    if (!this.rating.playerNB) return "-";
     return this.rating.playerNB.toString();
   }
 

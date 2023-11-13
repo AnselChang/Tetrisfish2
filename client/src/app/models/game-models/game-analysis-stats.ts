@@ -43,6 +43,7 @@ export class GameAnalysisStats {
         if (!rating) throw new Error("onPlacementEvaluated() called on placement without rating");
 
         // calculate the scaled accuracy from 0-1 for the rating
+        if (rating.diff === undefined) return; // if undefined, meaning SR didn't recognize the move, skip this move
         const accuracy = relativeEvaluationToPercent(rating.diff);
 
         // update overall accuracy

@@ -18,26 +18,31 @@ import { GamePlacement } from "../game-models/game-placement";
 
 abstract class RateMove {
 
-    public playerNNB: number = -1;
-    public playerNB: number = -1;
+    public playerNNB: number | undefined = -1;
+    public playerNB: number | undefined = -1;
     public bestNNB: number = -1;
     public bestNB: number = -1;
 
     constructor(dict: any) {
         // console.log("rate move created", dict);
         if (dict) {
-            this.playerNNB = dict["playerMoveNoAdjustment"];
-            this.playerNB = dict["playerMoveAfterAdjustment"];
-            this.bestNNB = dict["bestMoveNoAdjustment"];
-            this.bestNB = dict["bestMoveAfterAdjustment"];
+
+            const playerNNB = Number(dict["playerMoveNoAdjustment"]);
+            this.playerNNB = isNaN(playerNNB) ? undefined : playerNNB;
+
+            const playerNB = Number(dict["playerMoveAfterAdjustment"]);
+            this.playerNB = isNaN(playerNB) ? undefined : playerNB;
+
+            this.bestNNB = Number(dict["bestMoveNoAdjustment"]);
+            this.bestNB = Number(dict["bestMoveAfterAdjustment"]);
         }
     }
 }
 
 export class RateMoveDeep extends RateMove {
 
-    public readonly rating;
-    public readonly diff;
+    public readonly rating: Rating;
+    public readonly diff: number | undefined;
 
     static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<RateMoveDeep> {
         const response = await fetchRateMove(placement, inputSpeed, LookaheadDepth.DEEP);
@@ -46,7 +51,7 @@ export class RateMoveDeep extends RateMove {
 
     constructor(dict: any) {
         super(dict);
-        this.diff = this.playerNB - this.bestNB;
+        this.diff = this.playerNB ? (this.playerNB - this.bestNB) : undefined;
         this.rating = getRatingFromRelativeEval(this.diff);
     }
 
