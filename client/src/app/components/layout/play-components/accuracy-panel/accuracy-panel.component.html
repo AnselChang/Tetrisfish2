@@ -10,7 +10,7 @@
         <p class="tiny" *ngIf="stats && stats.startLevel < 29">*Excludes 29 accuracy</p>
     </app-subsection>
 
-    <app-subsection class="speed-subsection">
+    <app-subsection class="speed-subsection" *ngIf="stats && stats.startLevel < 29">
         <div *ngIf="!stats">
             <h3 >18 speed:  -</h3>
             <h3 >19 speed:  -</h3>
