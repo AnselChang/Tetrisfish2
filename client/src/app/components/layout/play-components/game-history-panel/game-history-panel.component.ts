@@ -29,7 +29,7 @@ export class GameHistoryPanelComponent {
   }
 
   formatScore(score: number): string {
-    return numberWithCommas(score);
+    return numberWithCommas(Math.round(score));
   }
 
   formatAccuracy(accuracy: number): string {
