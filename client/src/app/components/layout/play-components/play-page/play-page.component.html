@@ -8,10 +8,9 @@
         <app-section class="analysis-board">
             <p class="padded">Analysis Board</p>
             <app-interactive-tetris-board
-                [grid]="getLastPosition()?.grid"
+                [grid]="getLastPlacement()?.grid"
                 [level]="18"
                 [currentPiece]="getBestMove()?.thisPiece"
-                [nextPiece]="getBestMove()?.nextPiece"
             />
         </app-section>
 

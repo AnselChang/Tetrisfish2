@@ -144,7 +144,7 @@ export class PlayPageComponent implements AfterViewInit {
   }
 
   public getBestMove(): MoveRecommendation | undefined {
-    return this.gameStateMachineService.getGame()?.lastEngineMovelistNB$.getValue()?.analysis.getEngineMoveListNB()!.best;
+    return this.getLastPlacement()?.analysis.getEngineMoveListNB()!.best;
   }
 
   public getMoveRating(): RateMoveDeep | undefined {
