@@ -17,6 +17,7 @@
         <h1 class="overall-accuracy-value" *ngIf="stats?.getOverallAccuracy() as overallAccuracy"
         [style.color]="stats!.getAccuracyColor(overallAccuracy)"
         >{{stats?.getAccuracyString(overallAccuracy, 2)}}</h1>
+        <p class="tiny" *ngIf="stats && stats.startLevel < 29">*Excludes 29 accuracy</p>
     </app-subsection>
 
     <app-subsection class="speed-subsection">

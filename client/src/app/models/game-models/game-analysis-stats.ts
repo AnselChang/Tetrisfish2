@@ -13,7 +13,7 @@ export class GameAnalysisStats {
     public speedAccuracyCache: [string, Average][] = [];
     public pieceAccuracyCache: [TetrominoType, Average][] = [];
     
-    constructor(startLevel: number) {
+    constructor(public readonly startLevel: number) {
 
         // only store speed accuracies for speeds that are possible at the start level
         const startLevelSpeed = getSpeedFromLevel(startLevel);
@@ -39,6 +39,7 @@ export class GameAnalysisStats {
 
     // update averages for accuracies for different aggregations
     public onRateMoveDeep(placement: GamePlacement) {
+
         const rating = placement.analysis.getRateMoveDeep();
         if (!rating) throw new Error("onPlacementEvaluated() called on placement without rating");
 
@@ -47,8 +48,11 @@ export class GameAnalysisStats {
         const accuracy = relativeEvaluationToPercent(rating.diff);
 
         // update overall accuracy
-        this.overallAccuracy.push(accuracy);
-
+        if (placement.statusBeforePlacement.level < 29 || this.startLevel >= 29) {
+            // 29 accuracy does not count for games that start under 29
+            this.overallAccuracy.push(accuracy);
+        }
+        
         // update accuracy for corresponding speed
         const speed = getSpeedFromLevel(placement.statusBeforePlacement.level);
         this.getSpeedAccuracy(speed).push(accuracy);

@@ -14,8 +14,8 @@ export class SmartGameStatus implements IGameStatus {
     private gameStatus: GameStatus;
     private transitionLines: number;
 
-    constructor(public readonly startLevel: number, initialLines: number = 0, initialScore: number = 0) {
-        this.gameStatus = new GameStatus(startLevel, initialLines, initialScore);
+    constructor(public readonly startLevel: number, initialLines: number = 0, initialScore: number = 0, initialLevel?: number) {
+        this.gameStatus = new GameStatus(initialLevel ? initialLevel : startLevel, initialLines, initialScore);
 
         // calculate transition lines
         if (startLevel <= 9) this.transitionLines = (startLevel + 1) * 10;
@@ -43,7 +43,7 @@ export class SmartGameStatus implements IGameStatus {
     }
 
     public copy(): SmartGameStatus {
-        return new SmartGameStatus(this.startLevel, this.lines, this.score);
+        return new SmartGameStatus(this.startLevel, this.lines, this.score, this.level);
     }
 
     public onLineClear(numLines: number): void {
