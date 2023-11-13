@@ -1,10 +1,8 @@
 /*
-Represents the 10x20 grid of blocks. 
+Represents the 10x20 grid of blocks.
 Binary because it only stores whether a block is filled or not, not any other information.
 grid[y][x]
 */
-
-import { Block } from "blockly";
 
 export enum BlockType {
     EMPTY = 0,
@@ -57,8 +55,8 @@ export default class BinaryGrid implements Grid {
 
     // returns how many minos exist in the grid
     public count(): number {
-        return this.blocks.reduce((acc, row) => 
-            acc + row.reduce((rowAcc, block) => 
+        return this.blocks.reduce((acc, row) =>
+            acc + row.reduce((rowAcc, block) =>
                 rowAcc + (block === BlockType.FILLED ? 1 : 0), 0), 0);
     }
 
@@ -126,12 +124,12 @@ export default class BinaryGrid implements Grid {
     // returns undefined if invalid operation
     // returns a new BinaryGrid object, does not modify grid1 or grid2
     public static subtract(grid1: BinaryGrid, grid2: BinaryGrid): BinaryGrid | undefined {
-            
+
             if (grid1.numRows !== grid2.numRows || grid1.numCols !== grid2.numCols) {
                 return undefined;
             }
 
-            const newGrid = grid1.copy();    
+            const newGrid = grid1.copy();
             for (let i = 0; i < grid1.numRows; i++) {
                 for (let j = 0; j < grid1.numCols; j++) {
                     if (grid2.at(j, i) === BlockType.FILLED) {
@@ -143,7 +141,7 @@ export default class BinaryGrid implements Grid {
                     }
                 }
             }
-    
+
             return newGrid;
         }
 

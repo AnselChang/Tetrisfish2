@@ -8,13 +8,11 @@ import { IGameStatus } from '../../models/tetronimo-models/game-status';
 import MoveableTetromino from '../../models/game-models/moveable-tetromino';
 import { TetrominoType } from '../../models/tetronimo-models/tetromino';
 import { SmartGameStatus } from '../../models/tetronimo-models/smart-game-status';
-import { Grid } from 'blockly';
 import DebugFrame from '../../models/capture-models/debug-frame';
 import { GameDebugService } from '../game-debug.service';
 import { Game } from '../../models/game-models/game';
 import { Binary } from '@angular/compiler';
 import { max } from 'rxjs';
-import { line } from 'core/utils/svg_paths';
 import { CaptureSettings } from '../../models/capture-models/capture-settings';
 import { CaptureSettingsService } from '../capture/capture-settings.service';
 
@@ -144,18 +142,18 @@ class GridStateMachine {
       // At spawn frame, there is a distinction between nextPieceType and this.nextPieceType
       // this.nextPieceType should be the type of the SPAWN piece (the nextbox BEFORE the SPAWN piece)
       // nextPieceType should be the type of the NEXT box AFTER the SPAWN piece
-      
+
       // find the spawned piece by running connected components algorithm
       // if first placement, we search entire grid for matching tetronimo
       // otherwise, we search first few rows for any connected component with matching mino count
       const maxRow = this.isFirstPlacement() ? undefined : 4;
       const spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, maxRow);
-      
+
       // blit spawned piece into a binary grid to be determiend as a MoveableTetronimo
       const spawnedMinosGrid = new BinaryGrid();
       if (spawnedMinos) spawnedMinos?.forEach(({ x, y }) => spawnedMinosGrid.setAt(x, y, BlockType.FILLED));
       this.debug.logGrid("Spawned Minos", spawnedMinosGrid);
-  
+
       // determine MoveableTetronmio if it exists. If not, then we ignore this frame
       // if it's the first placement, nextPieceType is undefined so we have to check all seven tetronimo types
       // but if it's not the first placement, check if it matches the nextbox of the previous placement
@@ -201,7 +199,7 @@ class GridStateMachine {
         this.debug.log(`Previous piece type: ${previousPieceType}`);
         this.debug.log(`Spawned piece type: ${spawnPieceType}`);
         this.debug.log(`Next piece type: ${nextPieceType}`);
-        
+
         // no previous placement to register if this is the first spawned piece
         if (this.isFirstPlacement()) {
           this.debug.log("First piece spawned, no previous placement to register");
@@ -242,7 +240,7 @@ class GridStateMachine {
     }
   }
 }
-  
+
 
 @Injectable({
   providedIn: 'root'
@@ -326,7 +324,7 @@ export class GameStateMachineService {
         this.endGame();
         return
       }
-      
+
       // if paused, do nothing
       if (state.getPaused()) {
         return;
@@ -334,7 +332,7 @@ export class GameStateMachineService {
 
       this.debug.addFrame(state.getGrid(), state.getNextPieceType());
       this.debug.setStatus(this.game!.status);
-      
+
       // if both level and next box have invalid states, this is an invalid frame
       if (state.getNextPieceType() === undefined) {
         this.invalidFrameCount++;
@@ -394,7 +392,7 @@ export class GameStateMachineService {
         this.debug.log("Set placement for last position, and added new position");
 
       }
-      
+
     }
 
   }

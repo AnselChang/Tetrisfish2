@@ -4,8 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "node ./dist/api/bin/www",
+    "build": "npm run build:client && npm run build:server",
     "build:client": "ng build",
     "build:server": "tsc -p ./server/tsconfig.api.json",
+    "deploy": "gh-pages -d dist -e dist -b build -f -o local && git push heroku build:main",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "clean": "rm -rf ./dist/api && rm -rf ./dist/public/",
@@ -42,7 +44,9 @@
     "@types/jasmine": "~4.3.0",
     "@types/livereload": "^0.9.4",
     "@types/morgan": "^1.9.9",
+    "concurrently": "^8.2.2",
     "connect-livereload": "^0.6.1",
+    "gh-pages": "^6.0.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -50,6 +54,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "livereload": "^0.9.3",
+    "nodemon": "^3.0.1",
     "typescript": "~5.1.3"
   }
 }

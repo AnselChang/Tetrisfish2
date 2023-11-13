@@ -4,7 +4,6 @@ Exposes utility methods for checking if the tetromino is in bounds, and if it is
 other blocks.
 */
 
-import { block } from "core/tooltip";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import { BlockSet } from "../tetronimo-models/block";
 import { ALL_TETROMINO_TYPES, Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
@@ -68,7 +67,7 @@ export default class MoveableTetromino {
                 }
             });
         });
-        
+
 
         let piecesToTry: TetrominoType[];
         if (pieceType) piecesToTry = [pieceType];
@@ -152,7 +151,7 @@ export default class MoveableTetromino {
             if (column === 9) string += "0";
             else string += column + 1;
         });
-        
+
         return string;
     }
 

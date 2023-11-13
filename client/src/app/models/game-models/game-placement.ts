@@ -8,7 +8,6 @@ import GameStatus from "../tetronimo-models/game-status";
 import { TetrominoType } from "../tetronimo-models/tetromino";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import MoveableTetromino from "./moveable-tetromino";
-import { Block } from "blockly";
 import PlacementAnalysis from "./placement-analysis";
 import { SmartGameStatus } from "../tetronimo-models/smart-game-status";
 
