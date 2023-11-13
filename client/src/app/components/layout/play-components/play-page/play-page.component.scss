@@ -98,3 +98,15 @@ video {
 .best-move-info ::ng-deep section {
     padding-bottom: 20px;
 }
+
+.drought-container {
+    background-color: #D75858;
+}
+.drought {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: $blunder-color !important;
+}

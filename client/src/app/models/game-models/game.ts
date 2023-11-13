@@ -70,6 +70,8 @@ export class Game {
             throw new Error("Cannot add new position to game where the last state also had no placement");
         }
 
+        this.stats.onPieceSpawn(currentPieceType);
+
         const newPlacement = new GamePlacement(this.placements.length, grid, currentPieceType, nextPieceType, this.status.copy());
         this.placements.push(newPlacement);
 

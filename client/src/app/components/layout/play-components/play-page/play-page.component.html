@@ -51,6 +51,12 @@
             <app-tetris-panel-item>
                 <app-next-box [showBackground]="false" [level]="extractedState.getStatus().level" [type]="extractedState.getNextPieceType()"></app-next-box>
             </app-tetris-panel-item>
+            <app-tetris-panel-item class="drought-container" *ngIf="game?.stats?.getDroughtCount() as droughtCount">
+                <div class="drought">
+                    <h2 class="bold">Drought:</h2>
+                    <h1>{{droughtCount}}</h1>
+                </div>
+            </app-tetris-panel-item>
             <app-tetris-panel-item>
                 <app-rating-subsection
                     [moveNotation]="getLastPlacement()?.piecePlacement!.toString()"
