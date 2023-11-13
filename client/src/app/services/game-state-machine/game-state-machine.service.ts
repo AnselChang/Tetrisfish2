@@ -258,7 +258,7 @@ export class GameStateMachineService {
 
   // how many times a completely invalid frame has been detected consecutively
   private invalidFrameCount = 0;
-  private readonly MAX_INVALID_FRAMES = 20; // if this many invalid frames in a row, end game
+  private readonly MAX_INVALID_FRAMES = 8; // if this many invalid frames in a row, end game
 
   // how many times successfully game start detection has been detected consecutively
   private gameStartDetectionCount = 0;
