@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node ./dist/api/bin/www",
+    "build": "npm run build:client && npm run build:server",
     "build:client": "ng build",
     "build:server": "tsc -p ./server/tsconfig.api.json",
     "deploy": "gh-pages -d dist -e dist -b build -f -o local && git push heroku build:main",
