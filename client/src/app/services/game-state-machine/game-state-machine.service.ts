@@ -344,6 +344,7 @@ export class GameStateMachineService {
 
       // if paused, do nothing
       if (state.getPaused()) {
+        this.game!.eligibility.onPiecePause();
         return;
       }
 
