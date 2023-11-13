@@ -1,15 +1,5 @@
 <app-section class="accuracy-section">
 
-
-    <app-subsection class="leaderboard">
-        <h2>Leaderboard</h2>
-        <h1 class="leaderboard-value"
-        [style.color]="( leaderboardValid || !leaderboardRank) ? 'white' : redColor"
-        >{{leaderboardRank ? leaderboardRank + '#' : 'None'}}</h1>
-        <p class="tiny"
-        [style.color]="( leaderboardValid || !leaderboardRank) ? 'white' : redColor"
-        >*If game is eligible and reaches 29, the overall accuracy at that point will be sent to leaderboards</p>
-    </app-subsection>
     
     <app-subsection class="overall-accuracy">
         <h2>Accuracy ({{inputSpeed}}hz)</h2>

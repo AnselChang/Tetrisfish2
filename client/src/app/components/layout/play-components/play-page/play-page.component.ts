@@ -12,6 +12,7 @@ import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetrom
 import { MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist';
 import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
 import { Game } from 'client/src/app/models/game-models/game';
+import GameEligibility from 'client/src/app/models/game-models/game-eligibility';
 
 enum PanelMode {
   PLAY = "PLAY",
@@ -41,6 +42,9 @@ export class PlayPageComponent implements AfterViewInit {
 
   public logStatus: LogMessage = new LogMessage("Not recording", false);
   public logs: LogMessage[];
+
+  // eligibility when not in game
+  private readonly defaultEligibility = new GameEligibility(-1);
 
   constructor(
     public videoCaptureService: VideoCaptureService,
@@ -178,5 +182,9 @@ export class PlayPageComponent implements AfterViewInit {
 
   public getAccuracyColor(accuracy: number): string {
     return "white";
+  }
+
+  public getEligibility(): GameEligibility {
+    return this.gameStateMachineService.getGame()?.eligibility ?? this.defaultEligibility;
   }
 }

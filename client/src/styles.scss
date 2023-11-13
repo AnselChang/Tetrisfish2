@@ -58,6 +58,10 @@ h2 {
     font-weight: 500;
 }
 
+h2.padded {
+    margin-bottom: 10px;
+}
+
 h2.bold {
     font-weight: 600;
 }
@@ -65,6 +69,10 @@ h2.bold {
 h3 {
     font-size: 0.8rem;
     font-weight: 500;
+}
+
+h3.padded-bottom {
+    margin-bottom: 10px;
 }
 
 p {

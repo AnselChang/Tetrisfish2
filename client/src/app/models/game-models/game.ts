@@ -13,6 +13,7 @@ import { GameStats } from "./game-stats";
 import { GameAnalysisStats } from "./game-analysis-stats";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-movelist";
+import GameEligibility from "./game-eligibility";
 
 export class Game {
 
@@ -28,6 +29,8 @@ export class Game {
     public readonly stats = new GameStats();
     public readonly analysisStats: GameAnalysisStats;
 
+    public eligibility: GameEligibility;
+
     constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed) {
         this.status = new SmartGameStatus(startLevel);
 
@@ -36,6 +39,7 @@ export class Game {
         if (startLevel < 29) this.stats.trackTransitionLevel(29);
 
         this.analysisStats = new GameAnalysisStats(this.startLevel);
+        this.eligibility = new GameEligibility(this.startLevel);
 
     }
 

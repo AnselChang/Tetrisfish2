@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { EvaluationRating } from 'client/src/app/misc/colors';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
+import TagAssigner, { SimplePlacement } from 'client/src/app/models/tag-models/tag-assigner';
 import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
-import { Tetromino } from 'client/src/app/models/tetronimo-models/tetromino';
+import { Tetromino, TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
 import { findConnectedComponent } from 'client/src/app/scripts/connected-components';
 
 @Component({
@@ -13,12 +14,16 @@ import { findConnectedComponent } from 'client/src/app/scripts/connected-compone
 export class PuzzlesPageComponent {
 
   constructor() {
-    const grid = new BinaryGrid();
-    grid._setFromString("00001100000000011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011000000001100000000000000000011000000001100000001000000000000011001101001100110000");
-    const spawnedMinos = findConnectedComponent(grid);
-    const spawnedMinosGrid = new BinaryGrid();
-    spawnedMinos?.forEach(({ x, y }) => spawnedMinosGrid.setAt(x, y, BlockType.FILLED));
-    spawnedMinosGrid.print();
+    
+    const placement = new SimplePlacement(
+      new BinaryGrid(),
+      new MoveableTetromino(TetrominoType.T_TYPE, 0, 0, 0),
+      new MoveableTetromino(TetrominoType.T_TYPE, 0, 0, 0),
+    );
+    
+    const tags = TagAssigner.assignTagsFor(placement);
+    console.log(tags);
+
   }
 
 }

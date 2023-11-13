@@ -1,0 +1,17 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+p {
+    text-wrap: nowrap;
+}

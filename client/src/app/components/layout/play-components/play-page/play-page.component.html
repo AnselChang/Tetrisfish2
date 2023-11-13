@@ -73,9 +73,14 @@
             [stats]="game?.analysisStats">
         </app-accuracy-panel>
 
-        <div class="facecam-buttons">
+        <div class="leaderboard-buttons">
 
-            <video class="facecam" #videoElement autoplay></video>
+            <app-leaderboard-panel
+                [eligibility]="getEligibility()"
+                [leaderboardRank]="undefined"
+                [maxLeaderboardRank]="100"
+                [inputSpeed]="settings.inputSpeed"
+            />
 
             <div class="buttons">
                 <app-button-big label="Edit Calibration" icon="calibrate_button.svg" (click)="onSwitchMode.emit()"/>

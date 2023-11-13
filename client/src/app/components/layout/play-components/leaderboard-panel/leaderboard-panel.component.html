@@ -1,0 +1,28 @@
+<app-section class="leaderboard">
+    <h2 class="title">{{getLeaderboardName()}}</h2>
+    <h1 class="leaderboard-value padded">{{getRankString()}}</h1>
+
+    <app-subsection class="eligibility">
+        <h3 class="padded-bottom">Eligibility</h3>
+        <div class="items">
+            <app-eligibility-item
+                [isEligible]="eligibility.isStartLevelAllowed()"
+                [text]="'Level 18/19/29 Start'"
+            />
+            <app-eligibility-item
+                [isEligible]="eligibility.isNumPiecesOverHzAllowed()"
+                [text]="getHzEligibilityText()"
+            />
+            <app-eligibility-item
+                [isEligible]="!eligibility.getHasPaused()"
+                [text]="'No pausing during game'"
+            />
+        </div>
+    </app-subsection>
+
+    <div>
+        <p class="tiny">*For overall leaderboards, game needs to reach 230 lines.</p>
+        <p class="tiny">29 leaderboards have a 100 line minimum.</p>
+    </div>
+
+</app-section>
