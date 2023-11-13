@@ -7,7 +7,7 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "ng build",
     "build:server": "tsc -p ./server/tsconfig.api.json && npm run cp:www",
-    "deploy": "gh-pages -d dist -e dist -b build -f -o local && git push heroku build:main -f",
+    "deploy": "npm run build && gh-pages -d dist -e dist -b build -f -o local && git push heroku build:main -f",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "clean": "rm -rf ./dist/api && rm -rf ./dist/public/",
