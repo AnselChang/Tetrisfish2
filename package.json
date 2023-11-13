@@ -6,6 +6,7 @@
     "start": "node ./dist/api/bin/www",
     "build:client": "ng build",
     "build:server": "tsc -p ./server/tsconfig.api.json",
+    "deploy": "gh-pages -d dist -e dist -b build -f -o local && git push heroku build:main",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "clean": "rm -rf ./dist/api && rm -rf ./dist/public/",
