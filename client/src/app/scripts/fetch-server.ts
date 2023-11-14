@@ -13,18 +13,20 @@ export async function fetchServer(method: Method, urlStr: string, content: any =
     let url = new URL(urlStr, getBaseURL());
     let json = undefined;
 
-    if (method === Method.POST) {
-        json = JSON.stringify(content);
-    } else {
-        for (const [key, value] of Object.entries(content)) {
-            // console.log(key, value);
-            url.searchParams.append(key, value as string);
+    if (content) {
+        if (method === Method.POST) {
+            json = JSON.stringify(content);
+        } else {
+            for (const [key, value] of Object.entries(content)) {
+                // console.log(key, value);
+                url.searchParams.append(key, value as string);
+            }
         }
     }
+    
+    console.log("fetching", url.toString(), json)
 
-    // console.log("fetching", url, json)
-
-    const response = await fetch( url, {
+    const response = await fetch( url.toString(), {
         method: method.toString(),
         headers: {'Content-Type': 'application/json'},
         body: json

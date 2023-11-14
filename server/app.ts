@@ -7,6 +7,10 @@ import * as morgan from 'morgan'; // Import Morgan
 
 
 import { Express, Request, Response } from 'express';
+import { auth, authCallback } from './routes/auth';
+
+require('dotenv').config();
+
 export default function createApp(): Express {
     const app = express();
     const clientDir = path.join(__dirname, '../public');
@@ -46,6 +50,9 @@ export default function createApp(): Express {
         }
         console.log(result.status);
     });
+
+    app.get('/api/auth', auth);
+    app.get('/api/auth/callback', authCallback);
 
     // Catch all routes and return the index file
     app.get('/*', (req, res) => {
