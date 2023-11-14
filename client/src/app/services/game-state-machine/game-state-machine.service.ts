@@ -121,7 +121,7 @@ class GridStateMachine {
 
   // If new piece has spawned, return the grid without and with previous piece
   // otherwise, return undefined
-  public processFrame(isFirstPlacement: boolean, currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [MinoResult, SpawnData | undefined] {
+  public processFrame(isFirstPlacement: boolean, currentLevel: number, currentGrid: BinaryGrid, nextPieceType?: TetrominoType): [MinoResult, SpawnData | undefined] {
     const currentMinoCount = currentGrid.count();
 
     if (this.lastUnstableMinoCount !== currentMinoCount) {
@@ -145,7 +145,8 @@ class GridStateMachine {
       // find the spawned piece by running connected components algorithm
       // if first placement, we search entire grid for matching tetronimo
       // otherwise, we search first few rows for any connected component with matching mino count
-      const maxRow = isFirstPlacement ? undefined : 4;
+      const topRows = currentLevel >= 29 ? 8 : 4;
+      const maxRow = isFirstPlacement ? undefined : topRows;
       const spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, maxRow);
 
       // blit spawned piece into a binary grid to be determiend as a MoveableTetronimo
@@ -371,7 +372,13 @@ export class GameStateMachineService {
 
       // otherwise, process grid for mino changes and spawned piece detection
       // result is undefined if no piece spawn detected, or [gridWithoutPlacement, gridWithPlacement] if piece spawn detected
-      const [minoResult, spawnData] = this.gridSM!.processFrame(this.game?.numPlacements === 0, state.getGrid(), state.getNextPieceType());
+      const currentLevel = this.game!.status.level;
+      const [minoResult, spawnData] = this.gridSM!.processFrame(
+        this.game?.numPlacements === 0,
+        currentLevel,
+        state.getGrid(),
+        state.getNextPieceType()
+      );
 
       if (minoResult === MinoResult.FIRST_PIECE_SPAWN) {
         // if it's the first piece spawn, create the first position
