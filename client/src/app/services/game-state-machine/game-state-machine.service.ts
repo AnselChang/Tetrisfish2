@@ -265,6 +265,9 @@ export class GameStateMachineService {
   // how many times successfully game start detection has been detected consecutively
   private gameStartDetectionCount = 0;
   private readonly MIN_GAME_START_DETECTION = 10; // if this many game start detections in a row, start game
+  
+  private pauseCountInGame = 0;
+  private readonly MAX_PAUSE_COUNT_IN_GAME = 10; // if this many pauses in a row, send onPause() event
 
   constructor(
     private extractedStateService: ExtractedStateService,
@@ -345,8 +348,16 @@ export class GameStateMachineService {
 
       // if paused, do nothing
       if (state.getPaused()) {
-        this.game!.eligibility.onPiecePause();
+
+        this.pauseCountInGame++;
+        this.debug.log(`Paused (${this.pauseCountInGame})`);
+        if (this.pauseCountInGame >= this.MAX_PAUSE_COUNT_IN_GAME) {
+          this.game!.eligibility.onPiecePause();
+          this.debug.log("Sending onPause() event");
+        }
         return;
+      } else {
+        this.pauseCountInGame = 0;
       }
 
       this.debug.addFrame(state.getGrid(), state.getNextPieceType());
