@@ -4,19 +4,15 @@ import { ExtractedState } from '../../models/capture-models/extracted-state';
 import BinaryGrid, { BlockType } from '../../models/tetronimo-models/binary-grid';
 import { GamePlacement } from '../../models/game-models/game-placement';
 import { findConnectedComponent } from '../../scripts/connected-components';
-import { IGameStatus } from '../../models/tetronimo-models/game-status';
 import MoveableTetromino from '../../models/game-models/moveable-tetromino';
 import { TetrominoType } from '../../models/tetronimo-models/tetromino';
 import { SmartGameStatus } from '../../models/tetronimo-models/smart-game-status';
-import DebugFrame from '../../models/capture-models/debug-frame';
 import { GameDebugService } from '../game-debug.service';
 import { Game } from '../../models/game-models/game';
-import { Binary } from '@angular/compiler';
-import { max } from 'rxjs';
-import { CaptureSettings } from '../../models/capture-models/capture-settings';
 import { CaptureSettingsService } from '../capture/capture-settings.service';
 import { GameHistoryService } from '../game-history.service';
 import { HistoricalGame } from '../../models/game-models/game-history';
+import { Point } from '../../models/capture-models/point';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -118,6 +114,11 @@ class GridStateMachine {
     return [MinoResult.LIMBO, -1, -1];
   }
 
+  private getSpawnedMinosAsGrid(minos: Point[] | null): BinaryGrid {
+    const spawnedMinosGrid = new BinaryGrid();
+    if (minos) minos.forEach(({ x, y }) => spawnedMinosGrid.setAt(x, y, BlockType.FILLED));
+    return spawnedMinosGrid;
+  }
 
   // If new piece has spawned, return the grid without and with previous piece
   // otherwise, return undefined
@@ -146,28 +147,46 @@ class GridStateMachine {
       // if first placement, we search entire grid for matching tetronimo
       // otherwise, we search first few rows for any connected component with matching mino count
       const topRows = currentLevel >= 29 ? 8 : 4;
-      const maxRow = isFirstPlacement ? undefined : topRows;
-      const spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, maxRow);
+      let spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, topRows);
+      let spawnedMinosGrid = this.getSpawnedMinosAsGrid(spawnedMinos);
+      let spawnedPiece: MoveableTetromino | undefined = undefined;
+      
+      // if we can't find the spawned piece in the first few rows, we try a second pass with full grid
+      // but the piece has to match
+      if (spawnedMinos === null) {
+        this.debug.log("Finding CC on top rows failed.");
 
-      // blit spawned piece into a binary grid to be determiend as a MoveableTetronimo
-      const spawnedMinosGrid = new BinaryGrid();
-      if (spawnedMinos) spawnedMinos?.forEach(({ x, y }) => spawnedMinosGrid.setAt(x, y, BlockType.FILLED));
+        if (numMinosSpawned === 4) {
+          this.debug.log(`+4, so we an try a second pass to find piece match of type ${this.nextPieceType}`);
+          spawnedMinos = findConnectedComponent(currentGrid, 4);
+          spawnedMinosGrid = this.getSpawnedMinosAsGrid(spawnedMinos);
+          spawnedPiece = MoveableTetromino.computeMoveableTetronimo(this.debug, spawnedMinosGrid, this.nextPieceType);
+          
+          // if we can't find spawned piece, we have to discard this pass as well and revert
+          if (spawnedPiece === undefined) {
+            this.debug.log("Second pass failed to find piece match.");
+            spawnedMinos = null;
+          } else {
+            this.debug.log("Second pass succeeded to find piece match.");
+          }
+        } else {
+          this.debug.log("Not +4, so we can't try a second pass to find piece match.");
+        }
+
+      } else {
+        this.debug.log(`Finding CC on top rows succeeded. Finding piece match of type ${this.nextPieceType}`);
+        spawnedPiece = MoveableTetromino.computeMoveableTetronimo(this.debug, spawnedMinosGrid, this.nextPieceType);
+      }
+
       this.debug.logGrid("Spawned Minos", spawnedMinosGrid);
-
-      // determine MoveableTetronmio if it exists. If not, then we ignore this frame
-      // if it's the first placement, nextPieceType is undefined so we have to check all seven tetronimo types
-      // but if it's not the first placement, check if it matches the nextbox of the previous placement
-      const spawnedPiece = MoveableTetromino.computeMoveableTetronimo(this.debug, spawnedMinosGrid, this.nextPieceType);
-
+      this.debug.log(`Spawned Piece: ${spawnedPiece?.tetrominoType}`);
 
       if (isFirstPlacement && spawnedPiece === undefined) {
         this.debug.log("Although SPAWN detected, for the FIRST placement spawned piece needs to be a valid tetromino type");
-        this.debug.logGrid("Spawned Minos", spawnedMinosGrid);
         return [MinoResult.NO_CHANGE, undefined];
 
       } else if (spawnedMinos === null) {
         this.debug.log(`Although spawn detected, detected spawn piece does not have ${numMinosSpawned} minos`);
-        this.debug.logGrid("Spawned Minos", spawnedMinosGrid);
         return [MinoResult.NO_CHANGE, undefined];
 
       } else {
