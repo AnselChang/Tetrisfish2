@@ -147,7 +147,7 @@ class GridStateMachine {
       // if first placement, we search entire grid for matching tetronimo
       // otherwise, we search first few rows for any connected component with matching mino count
       const topRows = currentLevel >= 29 ? 8 : 4;
-      let spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, topRows);
+      let spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, isFirstPlacement ? undefined : topRows);
       let spawnedMinosGrid = this.getSpawnedMinosAsGrid(spawnedMinos);
       let spawnedPiece: MoveableTetromino | undefined = undefined;
       
@@ -156,7 +156,7 @@ class GridStateMachine {
       if (spawnedMinos === null) {
         this.debug.log("Finding CC on top rows failed.");
 
-        if (numMinosSpawned === 4) {
+        if (numMinosSpawned === 4 && false) {
           this.debug.log(`+4, so we an try a second pass to find piece match of type ${this.nextPieceType}`);
           spawnedMinos = findConnectedComponent(currentGrid, 4);
           spawnedMinosGrid = this.getSpawnedMinosAsGrid(spawnedMinos);
