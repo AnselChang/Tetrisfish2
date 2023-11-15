@@ -11,6 +11,7 @@ import { auth, authCallback } from './routes/auth';
 
 import * as session from 'express-session';
 import { SessionState } from './models/session-state';
+import { Database } from './services/database';
 declare module 'express-session' {
     export interface SessionData {
       state?: SessionState; // Add your custom session properties here
@@ -19,7 +20,7 @@ declare module 'express-session' {
 
 require('dotenv').config();
 
-export default function createApp(): Express {
+export default async function createApp(): Promise<Express> {
     const app = express();
     const clientDir = path.join(__dirname, '../public');
 
@@ -32,23 +33,26 @@ export default function createApp(): Express {
         cookie: { secure: true } // for HTTPS. set secure to false if using HTTP
     }));
 
+    // connct to MongoDB
+    await Database.connect();
 
-    // In development, refresh Angular on save just like ng serve does
-  let livereloadServer: any;
-  if (process.env['NODE_ENV'] !== 'production') {
 
-      import('livereload').then(livereload => {
-            const livereloadServer = livereload.createServer();
-            livereloadServer.watch(clientDir);
-            livereloadServer.once('connection', () => {
-                setTimeout(() => livereloadServer.refresh('/'), 100);
+        // In development, refresh Angular on save just like ng serve does
+    let livereloadServer: any;
+    if (process.env['NODE_ENV'] !== 'production') {
+
+        import('livereload').then(livereload => {
+                const livereloadServer = livereload.createServer();
+                livereloadServer.watch(clientDir);
+                livereloadServer.once('connection', () => {
+                    setTimeout(() => livereloadServer.refresh('/'), 100);
+                });
             });
-        });
 
-        import('connect-livereload').then(connectLivereload => {
-            app.use(connectLivereload());
-        });
-  }
+            import('connect-livereload').then(connectLivereload => {
+                app.use(connectLivereload());
+            });
+    }
 
     app.use(express.static(clientDir));
     app.get('/api/stackrabbit', async (req: Request, res: Response) => {
