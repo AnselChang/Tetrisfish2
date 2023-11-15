@@ -56,6 +56,10 @@ export class VideoCaptureService {
     this.videoElement = videoElement;
   }
 
+  public getVideoElement(): ElementRef<HTMLVideoElement> {
+    return this.videoElement;
+  }
+
   public registerCanvas(canvasElement: ElementRef<HTMLCanvasElement>, isCanvasHidden: boolean): void {
     this.canvasElement = canvasElement;
     this.isCanvasHidden = isCanvasHidden;

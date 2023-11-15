@@ -9,9 +9,9 @@ import { GameStateMachineService, PlayCalibratePage } from 'client/src/app/servi
   templateUrl: './play-calibrate.component.html',
   styleUrls: ['./play-calibrate.component.scss']
 })
-export class PlayCalibrateComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('videoElement') captureVideoElement!: ElementRef<HTMLVideoElement>;
+export class PlayCalibrateComponent implements OnInit, AfterViewInit {
 
+  public captureVideoElement!: ElementRef<HTMLVideoElement>;
   
   constructor(
     private videoCaptureService: VideoCaptureService,
@@ -21,18 +21,12 @@ export class PlayCalibrateComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit(): void {
-    this.videoCaptureService.initVideoDevices();
-
     const page = this.videoCaptureService.isCapturing() ? PlayCalibratePage.PLAY : PlayCalibratePage.CALIBRATE;
     this.gameService.setPlayCalibratePage(page);
   }
 
   ngAfterViewInit(): void {
-      this.videoCaptureService.registerVideo(this.captureVideoElement);
-  }
-
-  ngOnDestroy(): void {
-      this.videoCaptureService.stopCapture();
+    this.captureVideoElement = this.videoCaptureService.getVideoElement();
   }
 
   // defaults to calibration page unless capture is running
