@@ -12,14 +12,13 @@ export class RootComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('videoElement') captureVideoElement!: ElementRef<HTMLVideoElement>;
 
   public pages = [
+    ["/home", "Home"],
     ["/play", "Play"],
     ["/analysis", "Analysis"],
     ["/puzzles", "Puzzles"],
     ["/leaderboard", "Leaderboard"],
     ["/more", "More..."]
   ];
-
-  public username = "Ansel"
 
   constructor(
     public authService: UserService,
