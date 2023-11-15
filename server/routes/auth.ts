@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
-import { SessionState } from '../models/session-state';
+import { SessionState } from '../database/session-state';
+import { createNewUser, doesUserExist } from '../database/user/user-service';
 
 const DISCORD_API_ENDPOINT = 'https://discord.com/api/v10';
 
@@ -99,11 +100,24 @@ export async function authCallback(req: Request, res: Response) {
     const token = await exchangeCode(req, code);
     console.log("Discord token", token);
 
+    // store the token in the session
     req.session.state = new SessionState(token['access_token'], token['refresh_token']);
     
+    // make API request to discord to get user info
     const discordUser = await getSessionAuthDiscordUser(req);
+    const discordID = discordUser['id'] as string;
+    const displayName = discordUser['global_name'] as string;
 
-    const redirectURL = `${getBaseURL(req)}/home`;
+    // check if user exists in database
+    const userExists = await doesUserExist(discordID);
+
+    // if not, create new user
+    if (!userExists) {
+        await createNewUser(discordID, displayName);
+    }
+    
+    // redirect to home page, specifying if user is new
+    const redirectURL = `${getBaseURL(req)}/home?new-user=${userExists ?'false':'true'}`;
     res.redirect(redirectURL);
 
 }

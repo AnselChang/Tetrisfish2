@@ -10,7 +10,7 @@ import { Express, Request, Response } from 'express';
 import { auth, authCallback } from './routes/auth';
 
 import * as session from 'express-session';
-import { SessionState } from './models/session-state';
+import { SessionState } from './database/session-state';
 import { Database } from './services/database';
 declare module 'express-session' {
     export interface SessionData {
