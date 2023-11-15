@@ -34,7 +34,6 @@ import { CalibratePageComponent } from './components/layout/calibrate-components
 import { TetrisPanelComponent } from './components/BLOCK/tetris-panel/tetris-panel.component';
 import { TetrisPanelItemComponent } from './components/BLOCK/tetris-panel-item/tetris-panel-item.component';
 import { EvalBarComponent } from './components/BLOCK/eval-bar/eval-bar.component';
-import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
 import { ThresholdInputComponent } from './components/layout/calibrate-components/threshold-input/threshold-input.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RatingSliderComponent } from './components/BLOCK/rating-slider/rating-slider.component';
@@ -78,7 +77,6 @@ import { EligibilityItemComponent } from './components/layout/play-components/el
     TetrisPanelComponent,
     TetrisPanelItemComponent,
     EvalBarComponent,
-    PlayCalibrateComponent,
     ThresholdInputComponent,
     RatingSliderComponent,
     DebugGameComponent,

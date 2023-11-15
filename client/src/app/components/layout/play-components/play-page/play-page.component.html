@@ -83,7 +83,9 @@
             />
 
             <div class="buttons">
-                <app-button-big color="#626EDF" label="Edit Calibration" icon="calibrate_button.svg" (click)="onSwitchMode.emit()"/>
+                <a routerLink="/calibrate" routerLinkActive="active">
+                    <app-button-big color="#626EDF" label="Edit Calibration" icon="calibrate_button.svg"/>
+                </a>
                 <app-button-big color="#9162DF" label="Analyze" icon="analysis_button.svg" />
                 <a routerLink="/debug" routerLinkActive="active">
                     <app-button-big color="#DF6262" label="Debug" icon="debug_button.svg" />
