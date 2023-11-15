@@ -203,17 +203,10 @@ class GridStateMachine {
         // cache last stable grid without placement
         this.lastStableGridWithoutPlacement = this.nextStableGridWithoutPlacement;
 
-        if (linesCleared > 0) {
-          // we can't simply use the last stable grid with placement because the line clear would have removed minos
-          // instead, we can derive what the grid looks like without the spawned piece by removing the minos of the spawned piece from current grid
-          this.nextStableGridWithoutPlacement = currentGrid.copy();
-          spawnedMinos!.forEach(({ x, y }) => this.nextStableGridWithoutPlacement!.setAt(x, y, BlockType.EMPTY));
-          this.debug.log("Lines cleared, set nextStableGridWithoutPlacement by removing spawned minos from current grid")
-        } else {
-          // if no lines were cleared, we can just use the last stableGridWithPlacement
-          this.nextStableGridWithoutPlacement = this.stableGridWithPlacement!.copy();
-          this.debug.log("No lines cleared, set nextStableGridWithoutPlacement by copying previous stableGridWithPlacement")
-        }
+        // we get the new start position of the board by removing the minos of the spawned piece from current grid
+        this.nextStableGridWithoutPlacement = currentGrid.copy();
+        spawnedMinos!.forEach(({ x, y }) => this.nextStableGridWithoutPlacement!.setAt(x, y, BlockType.EMPTY));
+        this.debug.log("Lines cleared, set nextStableGridWithoutPlacement by removing spawned minos from current grid")
 
         const spawnPieceType = isFirstPlacement ? spawnedPiece!.tetrominoType : this.currentPieceType!;
 
@@ -369,10 +362,8 @@ export class GameStateMachineService {
       if (state.getPaused()) {
 
         this.pauseCountInGame++;
-        this.debug.log(`Paused (${this.pauseCountInGame})`);
         if (this.pauseCountInGame >= this.MAX_PAUSE_COUNT_IN_GAME) {
           this.game!.eligibility.onPiecePause();
-          this.debug.log("Sending onPause() event");
         }
         return;
       } else {
