@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
+import { SessionState } from '../models/session-state';
 
 const DISCORD_API_ENDPOINT = 'https://discord.com/api/v10';
 
@@ -16,13 +17,13 @@ function getCallbackURL(req: Request) {
 
 async function exchangeCode(req: Request, code: string): Promise<any> {
     const data = new URLSearchParams({
-      'grant_type': 'authorization_code',
-      'code': code,
-      'redirect_uri': getCallbackURL(req),
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': getCallbackURL(req),
     });
   
     const headers = {
-      'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
     };
 
     const clientID = process.env['DISCORD_CLIENT_ID']!;
@@ -35,23 +36,38 @@ async function exchangeCode(req: Request, code: string): Promise<any> {
 
   
     try {
-      const response = await axios.post(uri, data, {
-        headers: headers,
-        auth: {
-          username: clientID,
-          password: clientSecret
-        }
-      });
+        const response = await axios.post(uri, data, {
+            headers: headers,
+            auth: {
+                username: clientID,
+                password: clientSecret
+            }
+        });
   
       return response.data;
     } catch (error: any) {
-      if (axios.isAxiosError(error)) {
+        if (axios.isAxiosError(error)) {
         throw new Error(`Error in exchangeCode: ${error.message}`);
-      } else {
+        } else {
         throw new Error(`An unexpected error occurred: ${error}`);
-      }
+        }
     }
-  }
+}
+
+// for the session, get the discord user info
+async function getSessionAuthDiscordUser(req: Request) {
+    const accessToken = req.session.state?.accessToken;
+    if (!accessToken) throw new Error("Not in session");
+
+    const uri = `${DISCORD_API_ENDPOINT}/users/@me`;
+    const response = await fetch(uri, {
+        method: 'GET',
+        headers: {'Authorization': `Bearer ${accessToken}`}
+    });
+    const discordUser = await response.json();
+    console.log("Discord user", discordUser);
+    return discordUser;
+}
 
 export async function auth(req: Request, res: Response) {
 
@@ -81,7 +97,11 @@ export async function authCallback(req: Request, res: Response) {
         "scope": "identify"
     } */
     const token = await exchangeCode(req, code);
-    console.log(token);
+    console.log("Discord token", token);
+
+    req.session.state = new SessionState(token['access_token'], token['refresh_token']);
+    
+    const discordUser = await getSessionAuthDiscordUser(req);
 
     const redirectURL = `${getBaseURL(req)}/home`;
     res.redirect(redirectURL);

@@ -9,6 +9,14 @@ import * as morgan from 'morgan'; // Import Morgan
 import { Express, Request, Response } from 'express';
 import { auth, authCallback } from './routes/auth';
 
+import * as session from 'express-session';
+import { SessionState } from './models/session-state';
+declare module 'express-session' {
+    export interface SessionData {
+      state?: SessionState; // Add your custom session properties here
+    }
+  }
+
 require('dotenv').config();
 
 export default function createApp(): Express {
@@ -16,6 +24,13 @@ export default function createApp(): Express {
     const clientDir = path.join(__dirname, '../public');
 
     app.use(morgan('dev'));
+
+    app.use(session({
+        secret: process.env['SESSION_SECRET']!,
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: true } // for HTTPS. set secure to false if using HTTP
+    }));
 
 
     // In development, refresh Angular on save just like ng serve does
