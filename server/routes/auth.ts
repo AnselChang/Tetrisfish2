@@ -55,10 +55,8 @@ async function exchangeCode(req: Request, code: string): Promise<any> {
     }
 }
 
-// for the session, get the discord user info
-async function getSessionAuthDiscordUser(req: Request) {
-    const accessToken = req.session.state?.accessToken;
-    if (!accessToken) throw new Error("Not in session");
+// from the access token during auth, get the discord user info
+async function getUserFromAuth(accessToken: string) {
 
     const uri = `${DISCORD_API_ENDPOINT}/users/@me`;
     const response = await fetch(uri, {
@@ -99,21 +97,21 @@ export async function authCallback(req: Request, res: Response) {
     } */
     const token = await exchangeCode(req, code);
     console.log("Discord token", token);
-
-    // store the token in the session
-    req.session.state = new SessionState(token['access_token'], token['refresh_token']);
     
     // make API request to discord to get user info
-    const discordUser = await getSessionAuthDiscordUser(req);
+    const discordUser = await getUserFromAuth(token['access_token']);
     const discordID = discordUser['id'] as string;
-    const displayName = discordUser['global_name'] as string;
+    const username = discordUser['global_name'] as string;
+
+    // store in session
+    req.session.state = new SessionState(discordID, username);
 
     // check if user exists in database
     const userExists = await doesUserExist(discordID);
 
     // if not, create new user
     if (!userExists) {
-        await createNewUser(discordID, displayName);
+        await createNewUser(discordID, username);
     }
     
     // redirect to home page, specifying if user is new

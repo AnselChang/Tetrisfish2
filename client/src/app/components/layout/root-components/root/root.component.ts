@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Method, fetchServer, getBaseURL } from 'client/src/app/scripts/fetch-server';
-import { AuthService } from 'client/src/app/services/auth.service';
+import { UserService } from 'client/src/app/services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -19,12 +19,8 @@ export class RootComponent {
 
   public username = "Ansel"
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: UserService) {
 
-  async login() {
-    const baseURL = getBaseURL();
-    const url = `${baseURL}/api/auth`;
-    window.location.href = url;
   }
 
 }

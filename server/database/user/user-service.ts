@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 import DBUser from "./user-schema";
 
-export async function createNewUser(discordID: string, displayName: string): Promise<mongoose.Types.ObjectId> {
+export async function createNewUser(discordID: string, username: string): Promise<mongoose.Types.ObjectId> {
 
     const user = new DBUser({
         discordID: discordID,
-        displayName: displayName,
+        username: username,
         isProUser: false,
         playstyle: "unknown",
         games: []

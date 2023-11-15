@@ -51,7 +51,7 @@
         </div>
         <div>
             <a class = "login-link" routerLink="/home" routerLinkActive="active">
-                <app-button class="discord-button">
+                <app-button class="discord-button" (click)="login()">
                     <img class="discord-logo" src="./assets/img/discord_logo.svg">
                     <h3>Sign in with Discord</h3>
                 </app-button>

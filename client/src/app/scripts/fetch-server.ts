@@ -24,14 +24,12 @@ export async function fetchServer(method: Method, urlStr: string, content: any =
         }
     }
     
-    console.log("fetching", url.toString(), json)
-
     const response = await fetch( url.toString(), {
         method: method.toString(),
         headers: {'Content-Type': 'application/json'},
         body: json
     });
-
+    
     const result = await response.json();
     return {status: response.status, content: result};
 }

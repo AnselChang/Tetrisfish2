@@ -12,6 +12,7 @@ import { auth, authCallback } from './routes/auth';
 import * as session from 'express-session';
 import { SessionState } from './database/session-state';
 import { Database } from './services/database';
+import { username } from './routes/user-info';
 declare module 'express-session' {
     export interface SessionData {
       state?: SessionState; // Add your custom session properties here
@@ -30,8 +31,11 @@ export default async function createApp(): Promise<Express> {
         secret: process.env['SESSION_SECRET']!,
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: true } // for HTTPS. set secure to false if using HTTP
+        cookie: { secure: false } // for HTTPS. set secure to false if using HTTP
     }));
+
+    // set response to json
+    app.use(express.json());
 
     // connct to MongoDB
     await Database.connect();
@@ -72,6 +76,12 @@ export default async function createApp(): Promise<Express> {
 
     app.get('/api/auth', auth);
     app.get('/api/auth/callback', authCallback);
+    app.get('/api/username', username) // FAST, does not require database lookup
+
+    // catch all invalid api routes
+    app.get('/api/*', (req, res) => {
+        res.status(404).send("Invalid API route");
+    });
 
     // Catch all routes and return the index file
     app.get('/*', (req, res) => {
