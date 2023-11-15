@@ -21,8 +21,7 @@ export class SmartGameStatus implements IGameStatus {
         if (startLevel <= 9) this.transitionLines = (startLevel + 1) * 10;
         else if (startLevel <= 15) this.transitionLines = 100;
         else if (startLevel <= 19) this.transitionLines = (startLevel - 5) * 10;
-        else if (startLevel == 29) this.transitionLines = 200;
-        else throw new Error("Invalid start level: " + startLevel);
+        else this.transitionLines = 200;
 
     }
 
