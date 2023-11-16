@@ -2,24 +2,33 @@
 /**
  * Module dependencies.
  */
-const app = require('../app').default();
-const debug = require('debug')('NameApp:server');
-const http = require('http');
-/**
- * Get port from environment and store in Express.
- */
-const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
-/**
- * Create HTTP server.
- */
-const server = http.createServer(app);
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port, () => console.log(`Application is listening on port ${ port }`));
-server.on('error', onError);
-server.on('listening', onListening);
+require('../app').default().then(app => {
+
+  const debug = require('debug')('NameApp:server');
+  const http = require('http');
+  /**
+   * Get port from environment and store in Express.
+   */
+  const port = normalizePort(process.env.PORT || '3000');
+  app.set('port', port);
+  /**
+   * Create HTTP server.
+   */
+
+
+  const server = http.createServer(app);
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+  server.listen(port, () => console.log(`Application is listening on port ${ port }`));
+  server.on('error', onError);
+  server.on('listening', () => onListening(server, debug));
+
+}).catch(err => {
+  console.error(err);
+  process.exit(1);
+});
+
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -62,7 +71,7 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-function onListening() {
+function onListening(server, debug) {
   const addr = server.address();
   const bind = typeof addr === 'string'
     ? 'pipe ' + addr

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
@@ -14,10 +14,6 @@ import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
 import { Game } from 'client/src/app/models/game-models/game';
 import GameEligibility from 'client/src/app/models/game-models/game-eligibility';
 
-enum PanelMode {
-  PLAY = "PLAY",
-  CALIBRATE = "CALIBRATE"
-}
 
 export class LogMessage {
   constructor(
@@ -31,12 +27,12 @@ export class LogMessage {
   templateUrl: './play-page.component.html',
   styleUrls: ['./play-page.component.scss']
 })
-export class PlayPageComponent implements AfterViewInit {
-  @Input() videoElement!: ElementRef<HTMLVideoElement>;
-  @Output() onSwitchMode = new EventEmitter<void>();
+export class PlayPageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
+
+  public videoElement!: ElementRef<HTMLVideoElement>;
+
   
-  public panelMode: PanelMode = PanelMode.PLAY;
   public showBoundingBoxes: boolean = true;
   public showMinoIndicators: boolean = true;
 
@@ -67,12 +63,15 @@ export class PlayPageComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-      this.videoCaptureService.registerCanvas(this.canvasElement, true);
+    this.videoElement = this.videoCaptureService.getVideoElement();
+    this.videoCaptureService.registerCanvas(this.canvasElement, true);
+    this.videoCaptureService.onEnterPlayPage();
   }
 
-  public get panelCalibrateMode(): boolean {
-    return this.panelMode === PanelMode.CALIBRATE;
+  ngOnDestroy(): void {
+      this.videoCaptureService.onLeavePlayPage();
   }
+
 
   public get extractedState() {
     return this.extractedStateService.get();
@@ -103,14 +102,6 @@ export class PlayPageComponent implements AfterViewInit {
 
   public isInGame(): boolean {
     return this.gameStateMachineService.getGameStatus() === PlayStatus.PLAYING;
-  }
-
-  public goToCalibratePanel() {
-    this.panelMode = PanelMode.CALIBRATE;
-  }
-
-  public exitCalibratePanel() {
-    this.panelMode = PanelMode.PLAY;
   }
 
   public determineBoundingBoxes(event: Event) {

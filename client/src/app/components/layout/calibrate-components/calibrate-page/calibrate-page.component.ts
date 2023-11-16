@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ThresholdType } from 'client/src/app/models/capture-models/capture-settings';
 import { ALL_INPUT_SPEEDS } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
@@ -11,9 +11,10 @@ import { VideoCaptureService } from 'client/src/app/services/capture/video-captu
   templateUrl: './calibrate-page.component.html',
   styleUrls: ['./calibrate-page.component.scss']
 })
-export class CalibratePageComponent {
+export class CalibratePageComponent implements AfterViewInit, OnDestroy {
   @Output() onSwitchMode = new EventEmitter<void>();
-  @Input() captureVideoElement!: ElementRef<HTMLVideoElement>;
+  
+  public captureVideoElement!: ElementRef<HTMLVideoElement>;
 
   readonly ThresholdType = ThresholdType;
   readonly ALL_INPUT_SPEEDS = ALL_INPUT_SPEEDS;
@@ -24,6 +25,15 @@ export class CalibratePageComponent {
     private extractedStateService: ExtractedStateService,
     private captureFrameService: CaptureFrameService
     ) {}
+
+  ngAfterViewInit(): void {
+    this.captureVideoElement = this.videoCaptureService.getVideoElement();
+    this.videoCaptureService.onEnterCalibratePage();
+  }
+
+  ngOnDestroy(): void {
+    this.videoCaptureService.onLeaveCalibratePage();
+  }
 
   public get settings() {
     return this.captureSettingsService.get();

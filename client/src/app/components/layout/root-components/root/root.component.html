@@ -1,3 +1,6 @@
+<!-- hidden video capture element -->
+<video #videoElement autoplay style="display: none;"></video>
+
 <div id="root">
 <nav>
     <div class="left-nav">
@@ -17,7 +20,7 @@
     <div *ngIf="!this.authService.isLoggedIn()" class="right-nav">
         <a routerLink="/login" routerLinkActive="active">
             <app-button-small label="Login" />
-        </a> 
+        </a>
     </div>
 
 

@@ -6,7 +6,7 @@ import { Rectangle } from '../../models/capture-models/capture-settings';
 import { Point } from '../../models/capture-models/point';
 import BinaryGrid from '../../models/tetronimo-models/binary-grid';
 import { OCRBox } from '../../models/capture-models/ocr-box';
-import { GameStateMachineService, PlayCalibratePage } from '../game-state-machine/game-state-machine.service';
+import { GameStateMachineService } from '../game-state-machine/game-state-machine.service';
 
 export enum VideoPauseStatus {
   PLAYING = "PLAYING",
@@ -30,6 +30,9 @@ export class VideoCaptureService {
 
   // if flag is set to false, then executeFrame() loop will terminate
   private isCaptureRunning: boolean = false;
+
+  private onPlayPage: boolean = false;
+  private onCalibratePage: boolean = false;
 
   // how many times larger the canvas stored resolution is compared to display resolution
   // the higher the is, the more expensive OCR calculations are, but the more accurate they are
@@ -56,6 +59,10 @@ export class VideoCaptureService {
     this.videoElement = videoElement;
   }
 
+  public getVideoElement(): ElementRef<HTMLVideoElement> {
+    return this.videoElement;
+  }
+
   public registerCanvas(canvasElement: ElementRef<HTMLCanvasElement>, isCanvasHidden: boolean): void {
     this.canvasElement = canvasElement;
     this.isCanvasHidden = isCanvasHidden;
@@ -67,6 +74,31 @@ export class VideoCaptureService {
 
   public isCapturing(): boolean {
     return this.isCaptureRunning;
+  }
+
+  public isOnPlayPage(): boolean {
+    return this.onPlayPage;
+  }
+
+  public onEnterPlayPage(): void {
+    this.onPlayPage = true;
+  }
+
+  public onLeavePlayPage(): void {
+    this.onPlayPage = false;
+    this.gameStateMachineService.onLeavePlayPage();
+  }
+
+  public onEnterCalibratePage(): void {
+    this.onCalibratePage = true;
+  }
+
+  public onLeaveCalibratePage(): void {
+    this.onCalibratePage = false;
+  }
+
+  public isOnCalibratePage(): boolean {
+    return this.onCalibratePage;
   }
 
   public togglePause(): void {
@@ -181,7 +213,7 @@ export class VideoCaptureService {
     /*
      STEP 4: Draw all overlays if on calibrate page
     */
-    if (this.gameStateMachineService.getPlayCalibratePage() === PlayCalibratePage.CALIBRATE) {
+    if (this.isOnCalibratePage()) {
       this.drawCanvasOverlays(ctx);
     }
 

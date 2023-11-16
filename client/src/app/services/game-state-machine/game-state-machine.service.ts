@@ -24,12 +24,6 @@ export enum PlayStatus {
   NOT_PLAYING = "NOT_PLAYING"
 }
 
-
-export enum PlayCalibratePage {
-  PLAY = "PLAY",
-  CALIBRATE = "CALIBRATE"
-}
-
 enum MinoResult {
   NO_CHANGE = "NO_CHANGE",
   SPAWN = "SPAWN",
@@ -261,7 +255,6 @@ class GridStateMachine {
 })
 export class GameStateMachineService {
 
-  private playCalibratePage: PlayCalibratePage = PlayCalibratePage.PLAY;
   private playStatus: PlayStatus = PlayStatus.NOT_PLAYING;
 
   // handles mino changes / new piece detection
@@ -323,17 +316,16 @@ export class GameStateMachineService {
 
   }
 
+  public onLeavePlayPage(): void {
+    this.endGame();
+  }
+
   // executes once per frame to update state machine. Main method for this class
   public tick(): void {
 
     const state = this.extractedStateService.get();
 
     if (this.playStatus === PlayStatus.NOT_PLAYING) {
-
-      // in calibrate page, cannot start game
-      if (this.playCalibratePage === PlayCalibratePage.CALIBRATE) {
-        return
-      }
 
       // if game start detected, then start game
       if (this.detectGameStart(state)) {
@@ -350,13 +342,6 @@ export class GameStateMachineService {
       }
 
     } else if (this.playStatus === PlayStatus.PLAYING) {
-
-      // If user switched to calibrate page, end game
-      if (this.playCalibratePage === PlayCalibratePage.CALIBRATE) {
-        console.log("Ended game due to user switch to calibrate page");
-        this.endGame();
-        return
-      }
 
       // if paused, do nothing
       if (state.getPaused()) {
@@ -486,14 +471,6 @@ export class GameStateMachineService {
 
   public getCurrentGameStatus(): SmartGameStatus | undefined {
     return this.game!.status;
-  }
-
-  public getPlayCalibratePage(): PlayCalibratePage {
-    return this.playCalibratePage;
-  }
-
-  public setPlayCalibratePage(page: PlayCalibratePage): void {
-    this.playCalibratePage = page;
   }
 
   public getLastPlacement(): GamePlacement | undefined {

@@ -1,6 +1,8 @@
 <div class="root">
     <div class="calibrate">
-        <app-button-small label="Back to recording" (click)="onSwitchMode.emit()" />
+        <a routerLink="/play" routerLinkActive="active">
+            <app-button-small label="Back to recording" />
+        </a>
         
         <app-section class="calibrate-panel">
             <h3 class="padded">Set analysis input speed</h3>
