@@ -5,14 +5,13 @@ import { createNewUser, doesUserExist } from '../database/user/user-service';
 
 const DISCORD_API_ENDPOINT = 'https://discord.com/api/v10';
 
-function getBaseURL(req: Request) {
-    const protocol = req.protocol;
-    const host = req.get('host');
-    return `${protocol}://${host}`;
+function getBaseURL(req: Request): string {
+    return process.env['BASE_URL']!;
 }
 
 function getCallbackURL(req: Request) {
     const baseUrl = getBaseURL(req);
+    console.log("Base URL:", baseUrl);
     return baseUrl + "/api/auth/callback";
 }
 
