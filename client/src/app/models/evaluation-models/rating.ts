@@ -99,6 +99,6 @@ export const GAME_SPEED_TO_STRING: { [speed in GameSpeed]: string } = {
 export function getSpeedFromLevel(level: number): GameSpeed {
     if (level < 18) return GameSpeed.SPEED_UNDER_18;
     if (level === 18) return GameSpeed.SPEED_18;
-    if (level === 19) return GameSpeed.SPEED_19;
+    if (level < 29) return GameSpeed.SPEED_19;
     return GameSpeed.SPEED_29;
 }
