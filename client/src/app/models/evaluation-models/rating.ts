@@ -1,6 +1,6 @@
 export enum Rating {
     ERROR = -1,
-    RAPID = 0,
+    BRILLIANT = 0,
     BEST = 1,
     GOOD = 2,
     MEDIOCRE = 3,
@@ -11,10 +11,10 @@ export enum Rating {
 
 export const RATING_TO_COLOR: { [rating in Rating]: string } = {
     [Rating.ERROR] : "grey",
-    [Rating.RAPID] : "#63EAEA",
+    [Rating.BRILLIANT] : "#B658D7",
     [Rating.BEST] : "#58D774",
     [Rating.GOOD] : "#90D758",
-    [Rating.MEDIOCRE] : "#B3B3B3",
+    [Rating.MEDIOCRE] : "#5892D7",
     [Rating.INACCURACY] : "#E6DF3E",
     [Rating.MISTAKE] : "#D79558",
     [Rating.BLUNDER] : "#D75858",
@@ -22,7 +22,7 @@ export const RATING_TO_COLOR: { [rating in Rating]: string } = {
 
 export const RATING_TO_STRING: { [rating in Rating]: string } = {
     [Rating.ERROR] : "Error",
-    [Rating.RAPID] : "Rather Rapid",
+    [Rating.BRILLIANT] : "Brilliant",
     [Rating.BEST] : "Best",
     [Rating.GOOD] : "Good",
     [Rating.MEDIOCRE] : "Mediocre",
@@ -37,7 +37,7 @@ export function getRatingFromRelativeEval(playerEvalMinusBestEval: number | unde
     if (playerEvalMinusBestEval === undefined) return Rating.ERROR;
 
     const diff = playerEvalMinusBestEval!;
-    if (diff > 0) return Rating.RAPID;
+    // if (diff > 0) return Rating.RAPID;
     if (diff >= -1) return Rating.BEST;
     if (diff >= -4) return Rating.GOOD;
     if (diff >= -10) return Rating.MEDIOCRE;
@@ -48,7 +48,8 @@ export function getRatingFromRelativeEval(playerEvalMinusBestEval: number | unde
 
 // compute rating given an average of percent from 0-1
 export function getRatingFromAveragePercent(percent: number) {
-    if (percent >= 0.90) return Rating.BEST;
+    if (percent >= 0.95) return Rating.BRILLIANT;
+    else if (percent >= 0.90) return Rating.BEST;
     else if (percent >= 0.80) return Rating.GOOD;
     else if (percent >= 0.70) return Rating.MEDIOCRE;
     else if (percent >= 0.60) return Rating.INACCURACY;
