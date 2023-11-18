@@ -33,7 +33,7 @@ export async function sendBugReportRoute(discordBot: DiscordBot, req: Request, r
     await addBugReport(gameID, { username, description, data });
 
     // assemble url. make sure client handles the same url format
-    const url = `https://tetrisfish.com/debug/?id=${gameID}`;
+    const url = `https://www.tetrisfish.com/debug/?id=${gameID}`;
 
     // Send the bug report to the discord channel
     await discordBot.sendBugReport(username, description, url);

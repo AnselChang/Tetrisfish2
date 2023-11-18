@@ -1,5 +1,4 @@
 import DBBugReport, { BugReport } from "./bug-report-schema";
-import { v4 as uuidv4 } from 'uuid';
 
 // adds a new bug report to the database and returns the id
 export async function addBugReport(gameID: string, data: any) {
