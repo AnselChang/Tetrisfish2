@@ -1,23 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import DebugFrame from 'client/src/app/models/capture-models/debug-frame';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
+import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { GameDebugService } from 'client/src/app/services/game-debug.service';
+import { UserService } from 'client/src/app/services/user.service';
 
 @Component({
   selector: 'app-debug-game',
   templateUrl: './debug-game.component.html',
   styleUrls: ['./debug-game.component.scss']
 })
-export class DebugGameComponent {
+export class DebugGameComponent implements OnInit {
 
   private index = 0;
 
   constructor(
-    private gameDebugService: GameDebugService
+    public gameDebugService: GameDebugService,
+    private route: ActivatedRoute,
   ) {}
 
+  // if there is a route parameters for a specific game, load it
+  ngOnInit() {
+    // Subscribe to paramMap to get the route parameters
+    this.route.paramMap.subscribe(params => {
+      // Get a specific parameter by name
+      const gameID = params.get('game');
+      console.log("GameID:", gameID);
+
+      if (gameID) this.gameDebugService.loadAndDeserialize(gameID);      
+    });
+  }
   get current(): DebugFrame {
     return this.gameDebugService.getFrame(this.index);
+  }
+
+  exists(): boolean {
+    return this.gameDebugService.exists();
   }
 
   get currentPlacement():  GamePlacement | undefined {

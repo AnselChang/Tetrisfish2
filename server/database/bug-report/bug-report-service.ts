@@ -1,17 +1,25 @@
-import DBBugReport from "./bug-report-schema";
+import DBBugReport, { BugReport } from "./bug-report-schema";
 import { v4 as uuidv4 } from 'uuid';
 
 // adds a new bug report to the database and returns the id
-export async function addBugReport(data: any) {
+export async function addBugReport(gameID: string, data: any) {
     const bugReport = new DBBugReport({
-        id: uuidv4(),
+        id: gameID,
         data: data
     });
     await bugReport.save();
-    return bugReport.id;
 }
 
-export async function getBugReport(id: string) {
+export async function doesBugReportExist(id: string): Promise<boolean> {
+    const count = await DBBugReport.countDocuments({id: id});
+    return count > 0;
+}
+
+export async function getBugReport(id: string): Promise<BugReport | undefined> {
     const bugReport = await DBBugReport.findOne({id: id});
+    if (!bugReport) {
+        console.error("Bug report not found:", id);
+        return undefined;
+    }
     return bugReport;
 }

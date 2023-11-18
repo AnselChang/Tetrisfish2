@@ -287,11 +287,11 @@ export class GameStateMachineService {
     this.gridSM = new GridStateMachine(this.debug);
     this.playStatus = PlayStatus.PLAYING;
 
-    this.debug.resetNewGame();
-
     const gameStartLevel = this.extractedStateService.get().getStatus().level;
     const inputSpeed = this.captureSettingsService.get().inputSpeed;
     this.game = new Game(gameStartLevel, inputSpeed); // create a new game that will store all the placements
+
+    this.debug.resetNewGame(this.game);
   }
 
   public endGame(): void {

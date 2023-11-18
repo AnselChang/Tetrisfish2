@@ -4,6 +4,9 @@ import BinaryGrid from '../models/tetronimo-models/binary-grid';
 import { TetrominoType } from '../models/tetronimo-models/tetromino';
 import { GamePlacement } from '../models/game-models/game-placement';
 import GameStatus from '../models/tetronimo-models/game-status';
+import { UserService } from './user.service';
+import { Method, fetchServer } from '../scripts/fetch-server';
+import { Game } from '../models/game-models/game';
 
 /*
 Manages all the game debug frames
@@ -15,18 +18,77 @@ Manages all the game debug frames
 export class GameDebugService {
 
   private frames: DebugFrame[] = [];
+  private game?: Game;
 
-  constructor() { }
+  private bugReportSubmitted = false;
 
-  public resetNewGame(): void {
+  constructor(private userService: UserService) { }
+
+  public serialize(): any {
+
+  }
+
+  public async loadAndDeserialize(gameID: string) {
+
+    this.bugReportSubmitted = false;
+
+    const {status, content} = await fetchServer(Method.GET, "/api/get-bug-report", { id: gameID });
+    console.log("Bug report:", status, content);
+
+    if (status === 404) {
+      console.log("Bug report does not exist:", gameID);
+      alert("Bug report does not exist.");
+      return;
+    }
+
+    console.log("Loading", content);
+
+  }
+
+  async submitBugReport() {
+
+    if (!this.game || this.frames.length === 0) {
+      alert("No game to submit.");
+      return;
+    }
+
+    const request = {
+      gameID: this.game!.gameID,
+      username: this.userService.getUsername(),
+      startlevel: this.first.status.level,
+      endLines: this.last.status.lines,
+      endScore: this.last.status.score,
+      data: this.serialize(),
+    };
+
+    await fetchServer(Method.POST, "/api/send-bug-report", request);
+
+    this.bugReportSubmitted = true;
+  }
+
+  public isBugReportSubmitted(): boolean {
+    return this.bugReportSubmitted;
+  }
+
+  public resetNewGame(game: Game): void {
     this.frames = [];
+    this.game = game;
+    this.bugReportSubmitted = false;
+  }
+
+  public exists(): boolean {
+    return this.frames.length > 0;
   }
 
   public addFrame(grid: BinaryGrid, nextBoxType: TetrominoType | undefined) {
     this.frames.push(new DebugFrame(this.frames.length, grid.copy(), nextBoxType));
   }
 
-  private get last(): DebugFrame {
+  public get first(): DebugFrame {
+    return this.frames[0];
+  }
+
+  public get last(): DebugFrame {
     return this.frames[this.frames.length - 1];
   }
 

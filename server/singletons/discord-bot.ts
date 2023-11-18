@@ -25,7 +25,7 @@ export default class DiscordBot {
 
         const embed = new EmbedBuilder()
             .setColor(0x0099FF)
-            .setTitle('Frame-by-frame Bug Report')
+            .setTitle('Frame-by-frame bug report')
             .setURL(url)
             .setAuthor({ name: username })
             .setDescription(description)

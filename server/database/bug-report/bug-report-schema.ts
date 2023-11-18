@@ -14,5 +14,10 @@ const bugReportSchema = new Schema({
     }
 });
 
+export interface BugReport {
+    id: string;
+    data: any;
+}
+
 const DBBugReport = mongoose.model('DBBugReport', bugReportSchema);
 export default DBBugReport;

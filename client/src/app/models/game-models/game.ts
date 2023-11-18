@@ -14,8 +14,12 @@ import { GameAnalysisStats } from "./game-analysis-stats";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-movelist";
 import GameEligibility from "./game-eligibility";
+import { v4 as uuidv4 } from 'uuid';
 
 export class Game {
+
+    // uuid v4 randomly generated id to uniquely identify the game
+    public readonly gameID: string;
 
     private placements: GamePlacement[] = [];
 
@@ -32,6 +36,9 @@ export class Game {
     public eligibility: GameEligibility;
 
     constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed) {
+
+        this.gameID = uuidv4();
+
         this.status = new SmartGameStatus(startLevel);
 
         this.stats.trackTransitionLevel(startLevel + 1);

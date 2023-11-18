@@ -84,7 +84,7 @@ export default async function createApp(): Promise<Express> {
     app.get('/api/auth/callback', authCallback);
     app.get('/api/username', username) // FAST, does not require database lookup
 
-    app.post('api/send-bug-report', (req: Request, res: Response) => sendBugReportRoute(discordBot, req, res));
+    app.post('/api/send-bug-report', (req: Request, res: Response) => sendBugReportRoute(discordBot, req, res));
     app.get('/api/get-bug-report', (req: Request, res: Response) => getBugReportRoute(req, res));
 
     // catch all invalid api routes

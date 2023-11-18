@@ -1,5 +1,8 @@
 <div class="root">
-    <section class="main-grid">
+    <section *ngIf="!exists()" class="dne">
+        <h1>No game data to debug</h1>
+    </section>
+    <section *ngIf="exists()" class="main-grid">
 
         <h1 class="padded">Current Frame</h1>
 
@@ -41,8 +44,14 @@
 
         </app-tetris-panel>
 
+        <app-button-big
+        [label]="gameDebugService.isBugReportSubmitted() ? 'Bug Report Submitted' : 'Submit Bug Report'"
+        icon="bug.svg" (click)="gameDebugService.submitBugReport()"
+        [buttonDisabled]="gameDebugService.isBugReportSubmitted()"
+        ></app-button-big>
+
     </section>
-    <section class="info-section">
+    <section *ngIf="exists()" class="info-section">
         <h1 class="padded">Debug log</h1>
 
         <app-subsection *ngIf="currentPlacement?.analysis?.getEngineMoveListNB() as engineMovelistNB">

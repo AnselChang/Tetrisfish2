@@ -4,6 +4,12 @@
     column-gap: 10px;
 }
 
+.dne {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .debug-nav {
     display: flex;
     flex-direction: row;
