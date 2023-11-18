@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { addBugReport, getBugReport } from 'server/database/bug-report/bug-report-service';
-import DiscordBot from 'server/singletons/discord-bot';
+import { addBugReport, getBugReport } from '../database/bug-report/bug-report-service';
+import DiscordBot from '../singletons/discord-bot';
 
 // returns the username for the active session. Does not require database lookup
 // req.body = {
