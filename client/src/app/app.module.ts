@@ -45,6 +45,7 @@ import { GameHistoryPanelComponent } from './components/layout/play-components/g
 import { TagComponent } from './components/BLOCK/tag/tag.component';
 import { LeaderboardPanelComponent } from './components/layout/play-components/leaderboard-panel/leaderboard-panel.component';
 import { EligibilityItemComponent } from './components/layout/play-components/eligibility-item/eligibility-item.component';
+import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -87,6 +88,7 @@ import { EligibilityItemComponent } from './components/layout/play-components/el
     TagComponent,
     LeaderboardPanelComponent,
     EligibilityItemComponent,
+    PlayCalibrateComponent,
   ],
   imports: [
     BrowserModule,
