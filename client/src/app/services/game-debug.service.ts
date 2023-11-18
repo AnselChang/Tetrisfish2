@@ -18,7 +18,7 @@ Manages all the game debug frames
 export class GameDebugService {
 
   private frames: DebugFrame[] = [];
-  private game?: Game;
+  private gameID?: string;
 
   private bugReportSubmitted = false;
 
@@ -47,13 +47,13 @@ export class GameDebugService {
 
   async submitBugReport() {
 
-    if (!this.game || this.frames.length === 0) {
+    if (!this.gameID || this.frames.length === 0) {
       alert("No game to submit.");
       return;
     }
 
     const request = {
-      gameID: this.game!.gameID,
+      gameID: this.gameID!,
       username: this.userService.getUsername(),
       startlevel: this.first.status.level,
       endLines: this.last.status.lines,
@@ -70,9 +70,9 @@ export class GameDebugService {
     return this.bugReportSubmitted;
   }
 
-  public resetNewGame(game: Game): void {
+  public resetNewGame(gameID: string): void {
     this.frames = [];
-    this.game = game;
+    this.gameID = gameID;
     this.bugReportSubmitted = false;
   }
 

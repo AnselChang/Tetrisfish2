@@ -291,7 +291,7 @@ export class GameStateMachineService {
     const inputSpeed = this.captureSettingsService.get().inputSpeed;
     this.game = new Game(gameStartLevel, inputSpeed); // create a new game that will store all the placements
 
-    this.debug.resetNewGame(this.game);
+    this.debug.resetNewGame(this.game.gameID);
   }
 
   public endGame(): void {
