@@ -23,9 +23,9 @@ export class DebugGameComponent implements OnInit {
   // if there is a route parameters for a specific game, load it
   ngOnInit() {
     // Subscribe to paramMap to get the route parameters
-    this.route.paramMap.subscribe(params => {
+    this.route.queryParams.subscribe(params => {
       // Get a specific parameter by name
-      const gameID = params.get('game');
+      const gameID = params['id'];
       console.log("GameID:", gameID);
 
       if (gameID) this.gameDebugService.loadAndDeserialize(gameID);      
