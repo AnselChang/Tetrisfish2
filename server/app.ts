@@ -11,8 +11,10 @@ import { auth, authCallback } from './routes/auth';
 
 import * as session from 'express-session';
 import { SessionState } from './database/session-state';
-import { Database } from './services/database';
 import { username } from './routes/user-info';
+import { getBugReportRoute, sendBugReportRoute } from './routes/bug-report';
+import { Database } from './singletons/database';
+import DiscordBot from './singletons/discord-bot';
 declare module 'express-session' {
     export interface SessionData {
       state?: SessionState; // Add your custom session properties here
@@ -38,7 +40,11 @@ export default async function createApp(): Promise<Express> {
     app.use(express.json());
 
     // connct to MongoDB
-    await Database.connect();
+    const database = new Database();
+    await database.connect();
+
+    // connect to discord
+    const discordBot = new DiscordBot();
 
 
         // In development, refresh Angular on save just like ng serve does
@@ -77,6 +83,9 @@ export default async function createApp(): Promise<Express> {
     app.get('/api/auth', auth);
     app.get('/api/auth/callback', authCallback);
     app.get('/api/username', username) // FAST, does not require database lookup
+
+    app.post('api/send-bug-report', (req: Request, res: Response) => sendBugReportRoute(discordBot, req, res));
+    app.get('/api/get-bug-report', (req: Request, res: Response) => getBugReportRoute(req, res));
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {

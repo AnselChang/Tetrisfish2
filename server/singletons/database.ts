@@ -1,8 +1,10 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
-export namespace Database {
+export class Database {
 
-    function getConnectionString() {
+    constructor() {}
+
+    getConnectionString() {
 
         const username = process.env['MONGODB_USERNAME']!;
         const password = process.env['MONGODB_PASSWORD']!;
@@ -13,8 +15,8 @@ export namespace Database {
     }
 
     // must call this function to initialize the MongoDB connection
-    export async function connect() {
-        const connectionString = getConnectionString();
+    async connect() {
+        const connectionString = this.getConnectionString();
         console.log("Connecting to MongoDB instance:", connectionString);
 
         try {
@@ -25,5 +27,4 @@ export namespace Database {
         }
         
     }
-
 }
