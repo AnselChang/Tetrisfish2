@@ -22,6 +22,7 @@ export class GameDebugService {
   private gameID?: string;
 
   private bugReportSubmitted = false;
+  private submittingBugReport = false;
 
   constructor(private userService: UserService) { }
 
@@ -85,13 +86,17 @@ export class GameDebugService {
     // get the index of second to last placement
     let secondToLastIndex = 0;
     let lastIndex = 0;
-    for (const frame of this.frames) {
-      if (frame.placement) {
+    for (let index = 0; index < this.frames.length; index++) {
+      const frame = this.frames[index];
+      if (frame.placement !== undefined) {
         secondToLastIndex = lastIndex;
-        lastIndex = frame.placement.index;
+        lastIndex = index;
       }
     }
     
+    console.log("Second to last index:", secondToLastIndex);
+    console.log(this.getFrame(secondToLastIndex));
+
     // only send the frames from the second to last placement onward, and cap to 500 frames to reduce server load
     const clippedFrames = this.frames.slice(secondToLastIndex, this.frames.length).slice(0, 500);
 
@@ -114,9 +119,13 @@ export class GameDebugService {
   }
 
   // given a gameID, load the bug report from the server and update the game debug state to that game
-  public async loadAndDeserialize(gameID: string) {
+  public async loadAndDeserialize(gameID: string | undefined) {
 
-    this.bugReportSubmitted = false;
+    if (!gameID) {
+      console.log("No gameID provided. Not loading bug report from server.");
+      this.bugReportSubmitted = false;
+      return;
+    }
 
     const {status, content} = await fetchServer(Method.GET, "/api/get-bug-report", { id: gameID });
     console.log("Bug report:", status, content);
@@ -128,10 +137,13 @@ export class GameDebugService {
     }
 
     this.deserialize(content);
+    this.bugReportSubmitted = true;
 
   }
 
   async submitBugReport() {
+
+    this.submittingBugReport = true;
 
     if (!this.gameID || this.frames.length === 0) {
       alert("No game to submit.");
@@ -150,6 +162,11 @@ export class GameDebugService {
     await fetchServer(Method.POST, "/api/send-bug-report", request);
 
     this.bugReportSubmitted = true;
+    this.submittingBugReport = false;
+  }
+
+  public isSubmittingBugReport(): boolean {
+    return this.submittingBugReport;
   }
 
   public isBugReportSubmitted(): boolean {
@@ -176,6 +193,10 @@ export class GameDebugService {
 
   public get last(): DebugFrame {
     return this.frames[this.frames.length - 1];
+  }
+
+  public getGameID(): string | undefined {
+    return this.gameID;
   }
 
   // log a message for the current frame

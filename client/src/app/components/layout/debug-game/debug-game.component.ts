@@ -28,7 +28,7 @@ export class DebugGameComponent implements OnInit {
       const gameID = params['id'];
       console.log("GameID:", gameID);
 
-      if (gameID) this.gameDebugService.loadAndDeserialize(gameID);      
+      this.gameDebugService.loadAndDeserialize(gameID); 
     });
   }
   get current(): DebugFrame {

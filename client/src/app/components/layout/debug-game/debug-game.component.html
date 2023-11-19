@@ -4,7 +4,7 @@
     </section>
     <section *ngIf="exists()" class="main-grid">
 
-        <h1 class="padded">Current Frame</h1>
+        <h1 class="padded">{{current.placement === undefined ? '' : 'Placement '}}Frame ({{current.index}})</h1>
 
         <app-tetris-panel>
             <app-interactive-tetris-board
@@ -44,10 +44,13 @@
 
         </app-tetris-panel>
 
+        <p>Game ID: {{gameDebugService.getGameID()}}</p>
         <app-button-big
-        [label]="gameDebugService.isBugReportSubmitted() ? 'Bug Report Submitted' : 'Submit Bug Report'"
+        [label]="
+        gameDebugService.isBugReportSubmitted() ? 'Bug Report Submitted' :
+        gameDebugService.isSubmittingBugReport() ? 'Submitting...' : 'Submit Bug Report'"
         icon="bug.svg" (click)="gameDebugService.submitBugReport()"
-        [buttonDisabled]="gameDebugService.isBugReportSubmitted()"
+        [buttonDisabled]="gameDebugService.isSubmittingBugReport() || gameDebugService.isBugReportSubmitted()"
         ></app-button-big>
 
     </section>
