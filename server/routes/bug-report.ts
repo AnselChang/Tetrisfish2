@@ -30,7 +30,7 @@ export async function sendBugReportRoute(discordBot: DiscordBot, req: Request, r
 
     // Save the bug report to the database and get the id
     const description = `Level ${startlevel} start game ended with score of ${endScore} at ${endLines} ${endLines === 1 ? 'line' : 'lines'}`;
-    await addBugReport(gameID, { username, description, data });
+    await addBugReport(gameID, data);
 
     // assemble url. make sure client handles the same url format
     const url = `https://www.tetrisfish.com/debug/?id=${gameID}`;
@@ -54,5 +54,11 @@ export async function getBugReportRoute(req: Request, res: Response) {
     }
 
     const bugReport = await getBugReport(id);
-    res.status(200).send(bugReport);
+    if (!bugReport) {
+        console.error("Bug report not found:", id);
+        res.status(404).send({error : "Bug report not found"});
+        return;
+    }
+
+    res.status(200).send(bugReport.data);
 }

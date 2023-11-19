@@ -53,6 +53,8 @@ export class GameDebugService {
       } : undefined,
     };
 
+    return serializedFrame;
+
   }
 
   private deserializeFrame(data: any): DebugFrame {
@@ -80,9 +82,22 @@ export class GameDebugService {
   // take the game debug state and serialize it into json
   public serialize(): any {
 
+    // get the index of second to last placement
+    let secondToLastIndex = 0;
+    let lastIndex = 0;
+    for (const frame of this.frames) {
+      if (frame.placement) {
+        secondToLastIndex = lastIndex;
+        lastIndex = frame.placement.index;
+      }
+    }
+    
+    // only send the frames from the second to last placement onward, and cap to 500 frames to reduce server load
+    const clippedFrames = this.frames.slice(secondToLastIndex, this.frames.length).slice(0, 500);
+
     const data = {
       id: this.gameID,
-      frames: this.frames.map(frame => this.serializeFrame(frame)),
+      frames: clippedFrames.map(frame => this.serializeFrame(frame)),
     }
 
     console.log("Saving", data);
