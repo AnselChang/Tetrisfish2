@@ -7,6 +7,7 @@ import GameStatus from '../models/tetronimo-models/game-status';
 import { UserService } from './user.service';
 import { Method, fetchServer } from '../scripts/fetch-server';
 import { Game } from '../models/game-models/game';
+import { SmartGameStatus } from '../models/tetronimo-models/smart-game-status';
 
 /*
 Manages all the game debug frames
@@ -24,10 +25,80 @@ export class GameDebugService {
 
   constructor(private userService: UserService) { }
 
-  public serialize(): any {
+  // take a single frame and serialize it into json
+  private serializeFrame(frame: DebugFrame): any {
+    const serializedFrame = {
+      index: frame.index,
+      grid: frame.grid._getAsString(),
+      nextBoxType: frame.nextBoxType,
+      log: frame.log,
+      logGrid: frame.logGrid.map(([title, grid]) => [title, grid ? grid._getAsString() : undefined]),
+      status: {
+        level: frame.status.level,
+        score: frame.status.score,
+        lines: frame.status.lines,
+      },
+      placement: frame.placement ? {
+        index: frame.placement.index,
+        grid: frame.placement.grid._getAsString(),
+        currentPieceType: frame.placement.currentPieceType,
+        nextPieceType: frame.placement.nextPieceType,
+        statusBeforePlacement: {
+          startLevel: frame.placement.statusBeforePlacement.startLevel,
+          level: frame.placement.statusBeforePlacement.level,
+          score: frame.placement.statusBeforePlacement.score,
+          lines: frame.placement.statusBeforePlacement.lines,
+        },
+
+      } : undefined,
+    };
 
   }
 
+  private deserializeFrame(data: any): DebugFrame {
+    const frame = new DebugFrame(data["index"], BinaryGrid.fromString(data["grid"]), data["nextBoxType"]);
+    frame.log = data["log"];
+
+    const logGrid = data["logGrid"] as [string, string | undefined][];
+    frame.logGrid = logGrid.map(([title, grid]) => [title, grid ? BinaryGrid.fromString(grid) : undefined]);
+    frame.status = new GameStatus(data["status"]["level"], data["status"]["lines"], data["status"]["score"]);
+
+    const placement = data["placement"];
+    if (placement) {
+      frame.placement = new GamePlacement(
+        placement["index"],
+        BinaryGrid.fromString(placement["grid"]),
+        placement["currentPieceType"],
+        placement["nextPieceType"],
+        new SmartGameStatus(placement["startLevel"], placement["lines"], placement["score"], placement["level"])
+      );
+    }
+
+    return frame;
+  }
+
+  // take the game debug state and serialize it into json
+  public serialize(): any {
+
+    const data = {
+      id: this.gameID,
+      frames: this.frames.map(frame => this.serializeFrame(frame)),
+    }
+
+    console.log("Saving", data);
+    return data;
+  }
+
+  // take serialized game debug data and load it into the game debug state
+  public deserialize(data: any) {
+    console.log("Loading", data);
+
+    this.resetNewGame(data["id"]);
+    this.frames = data["frames"].map((frameData: any) => this.deserializeFrame(frameData));
+
+  }
+
+  // given a gameID, load the bug report from the server and update the game debug state to that game
   public async loadAndDeserialize(gameID: string) {
 
     this.bugReportSubmitted = false;
@@ -41,7 +112,7 @@ export class GameDebugService {
       return;
     }
 
-    console.log("Loading", content);
+    this.deserialize(content);
 
   }
 
