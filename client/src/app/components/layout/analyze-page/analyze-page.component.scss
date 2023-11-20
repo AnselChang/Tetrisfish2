@@ -4,17 +4,27 @@
     display: flex;
     flex-direction: column;
     width: auto;
-    padding: 10px;
-}
-
-.test-section ::ng-deep section {
-    display: flex;
-    flex-direction: row;
+    padding: 15px 30px;
     gap: 10px;
 }
 
-.test-section-2 ::ng-deep section {
+.game-history-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px 20px;
+}
+
+.element {
+    width: 100%;
+    margin: 0px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr 3fr 3fr 2fr 2fr 2fr 2.5fr;
+
+    padding: 5px;
+    text-wrap: nowrap;
 }

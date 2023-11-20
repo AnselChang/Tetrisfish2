@@ -40,3 +40,11 @@ export async function doesGameExist(gameID: string): Promise<boolean> {
     const game = await DBGame.findOne({gid: gameID});
     return game !== null;
 }
+
+export async function getGameWithID(gameID: string) {
+    return await DBGame.findOne({gid: gameID});
+}
+
+export async function getAllGamesByPlayer(discordID: string) {
+    return await DBGame.find({uid: discordID});
+}

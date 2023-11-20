@@ -1,37 +1,27 @@
-<h1>Header 1</h1>
-<h2>Header 2</h2>
-<p>Paragraph</p>
-<p class="tag">Tag</p>
-<p class="nav-link">Nav Link</p>
-
-<app-button-small label="Button Small"></app-button-small>
-<app-button-small icon="puzzle_white.svg" label="Button Small"></app-button-small>
-<app-button-big icon="puzzle_white.svg" label="Button Big"></app-button-big>
-<app-button-big icon="puzzle_white.svg" label="Button Big" description="type description here"></app-button-big>
-
-<app-section class="test-section">
-    <app-subsection>
-        <app-button-small icon="puzzle_white.svg" label="Button Small"></app-button-small>
-        <app-button-big icon="puzzle_white.svg" label="Button Big"></app-button-big>
-    </app-subsection>
-    <app-subsection>
-        <h1>Header 1</h1>
-        <h2>Header 2</h2>
-        <p>Paragraph</p>
-        <p class="tag">Tag</p>
-        <p class="nav-link">Nav Link</p>
-    </app-subsection>
-</app-section>
-<app-section class="test-section-2">
-    <app-subsection>
-        <app-button-small icon="puzzle_white.svg" label="Button Small"></app-button-small>
-        <app-button-big icon="puzzle_white.svg" label="Button Big"></app-button-big>
-    </app-subsection>
-    <app-subsection>
-        <h1>Header 1</h1>
-        <h2>Header 2</h2>
-        <p>Paragraph</p>
-        <p class="tag">Tag</p>
-        <p class="nav-link">Nav Link</p>
-    </app-subsection>
+<h1>Browse your full game history</h1>
+<app-section>
+    <div class="game-history-list">
+        <div class="element top-element">
+            <h3></h3>
+            <h3>Start</h3>
+            <h3>Score</h3>
+            <h3>Level 18</h3>
+            <h3>Level 19</h3>
+            <h3>In Drought</h3>
+            <h3>Tetris Ready</h3>
+            <h3>I-Piece Efficiency</h3>
+            <h3>Overall Accuracy</h3>
+        </div>
+        <div class="element" *ngFor="let game of gameHistory">
+            <p>{{getTimeString(game.timestamp)}}</p>
+            <p>lvl {{game.startLevel}}</p>
+            <p>{{game.finalScore}} • lvl {{game.finalLevel}}</p>
+            <p><span [style.color]="getAccuracyColor(game.accuracy18)">{{formatAccuracy(game.accuracy18)}}</span> • {{game.score19 ?? '-'}}</p>
+            <p><span [style.color]="getAccuracyColor(game.accuracy18)">{{formatAccuracy(game.accuracy19)}}</span> • {{game.score29 ?? '-'}}</p>
+            <p>{{formatAccuracy(game.droughtPercent)}}</p>
+            <p>{{formatAccuracy(game.tetrisReadiness)}}</p>
+            <p>{{formatAccuracy(game.iPieceEfficiency)}}</p>
+            <h3 [style.color]="getAccuracyColor(game.accuracy18)">{{formatAccuracy(game.overallAccuracy)}}</h3>
+        </div>
+    </div>
 </app-section>
