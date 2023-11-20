@@ -158,4 +158,20 @@ export class Game {
             }
         }
     }
+
+    public getCurrentScore(): number {
+        return this.status.score;
+    }
+
+    public getCurrentLevel(): number {
+        return this.status.level;
+    }
+
+    public getCurrentLines(): number {
+        return this.status.lines;
+    }
+
+    public getAllPlacements(): GamePlacement[] {
+        return this.placements;
+    }
 }

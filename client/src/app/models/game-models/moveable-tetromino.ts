@@ -94,6 +94,18 @@ export default class MoveableTetromino {
         return this.currentBlockSet;
     }
 
+    public getRotation(): number {
+        return this.rotation;
+    }
+
+    public getTranslateX(): number {
+        return this.translateX;
+    }
+
+    public getTranslateY(): number {
+        return this.translateY;
+    }
+
     public updatePose(rotation: number | undefined, translateX: number | undefined, translateY: number | undefined): void {
         if (rotation !== undefined) {
             this.rotation = rotation;

@@ -139,7 +139,7 @@ export class GameStats {
         return this.droughtStats.getDroughtCount();
     }
 
-    public percentInDrought(): number {
+    public getPercentInDrought(): number {
         return this.droughtStats.percentInDrought(this.numPlacements);
     }
 
@@ -149,6 +149,14 @@ export class GameStats {
 
     public getTetrisReadiness(): number {
         return this.tetrisReadinessStats.getTetrisReadiness(this.numPlacements);
+    }
+
+    public getScoreAtTransitionTo19(): number | undefined {
+        return this.transitionScores.find(ts => ts.level === 19)?.score;
+    }
+
+    public getScoreAtTransitionTo29(): number | undefined {
+        return this.transitionScores.find(ts => ts.level === 29)?.score;
     }
 
 }

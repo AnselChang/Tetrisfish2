@@ -16,7 +16,7 @@ export class GameSummaryComponent {
 
   percentInDroughtString(): string {
     if (!this.stats) return "-";
-    const percent = this.stats.percentInDrought();
+    const percent = this.stats.getPercentInDrought();
     return Math.round(percent * 100) + "%";
   }
 

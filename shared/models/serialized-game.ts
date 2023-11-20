@@ -5,50 +5,62 @@
 // but for individual accuracies, not stored in server, but rederived client-side
 // for future-proofing in case we want to add/modify more accuracy stats later
 
-export default class SerializedGame {
+export interface SerializedGame {
 
-    constructor(
 
-        // the game's unique id
-        public readonly gameID: string,
+    // the game's unique id
+    readonly gameID: string,
 
-        // all the placements in the game, as compressed as possible
+    // all the placements in the game, as compressed as possible
+    readonly placements: SerializedPlacement[];
 
-        // general game info
-        public readonly startLevel: number,
-        public readonly inputSpeed: number,
-        public readonly playstyle: string,
-        public readonly eligibleForLeaderboard: boolean,
+    // general game info
+    readonly startLevel: number,
+    readonly inputSpeed: number,
+    readonly playstyle: string,
+    readonly eligibleForLeaderboard: boolean,
 
-        // score/level/lines
-        public readonly scoreAtTransitionTo19: number,
-        public readonly scoreAtTransitionTo29: number,
-        public readonly finalScore: number,
-        public readonly finalLevel: number,
-        public readonly finalLines: number,
+    // score/level/lines
+    readonly scoreAtTransitionTo19: number | undefined,
+    readonly scoreAtTransitionTo29: number | undefined,
+    readonly finalScore: number,
+    readonly finalLevel: number,
+    readonly finalLines: number,
 
-        // non-accuracy-related game statistics
-        public readonly tetrisRate: number, // as percent 0-1
-        public readonly droughtPercent: number, // % in drought as percent 0-1
-        public readonly tetrisReadiness: number, // as percent 0-1
-        public readonly iPieceEfficiency: number, // as percent 0-1
+    // non-accuracy-related game statistics
+    readonly tetrisRate: number, // as percent 0-1
+    readonly droughtPercent: number, // % in drought as percent 0-1
+    readonly tetrisReadiness: number, // as percent 0-1
+    readonly iPieceEfficiency: number, // as percent 0-1
 
-        // accuracy-related game statistics
-        public readonly accuraciesForAllPlacements: number[], // accuracy as a percent 0-1 for every placement in the game used for 10,000 placement calculations
-        public readonly numMissedAdjustments: number, // number of times the player missed an adjustment
-        public readonly overallAccuracy: number, // overall accuracy as a percent 0-1
-        public readonly accuracy18: number, // accuracy as a percent 0-1 for 18 speed, or -1 if no placements at 18
-        public readonly accuracy19: number, // accuracy as a percent 0-1 for 19 speed, or -1 if no placements at 19
-        public readonly accuracy29: number, // accuracy as a percent 0-1 for 29 speed, or -1 if no placements at 29
-        public readonly accuracyI: number, // accuracy as a percent 0-1 for I piece, or -1 if no placements with I piece
-        public readonly accuracyJ: number, // accuracy as a percent 0-1 for J piece, or -1 if no placements with J piece
-        public readonly accuracyL: number, // accuracy as a percent 0-1 for L piece, or -1 if no placements with L piece
-        public readonly accuracyO: number, // accuracy as a percent 0-1 for O piece, or -1 if no placements with O piece
-        public readonly accuracyS: number, // accuracy as a percent 0-1 for S piece, or -1 if no placements with S piece
-        public readonly accuracyT: number, // accuracy as a percent 0-1 for T piece, or -1 if no placements with T piece
-        public readonly accuracyZ: number, // accuracy as a percent 0-1 for Z piece, or -1 if no placements with Z piece
-        
+    // accuracy-related game statistics
+    readonly accuraciesForAllPlacements: number[], // accuracy as a percent 0-1 for every placement in the game used for 10,000 placement calculations
+    readonly numMissedAdjustments: number, // number of times the player missed an adjustment
+    readonly overallAccuracy: number, // overall accuracy as a percent 0-1
+    readonly accuracy18: number | undefined, // accuracy as a percent 0-1 for 18 speed
+    readonly accuracy19: number | undefined, // accuracy as a percent 0-1 for 19 speed
+    readonly accuracy29: number | undefined, // accuracy as a percent 0-1 for 29 speed
+    readonly accuracyI: number | undefined, // accuracy as a percent 0-1 for I piece
+    readonly accuracyJ: number | undefined, // accuracy as a percent 0-1 for J piece
+    readonly accuracyL: number | undefined, // accuracy as a percent 0-1 for L piece
+    readonly accuracyO: number | undefined, // accuracy as a percent 0-1 for O piece
+    readonly accuracyS: number | undefined, // accuracy as a percent 0-1 for S piece
+    readonly accuracyT: number | undefined, // accuracy as a percent 0-1 for T piece
+    readonly accuracyZ: number | undefined, // accuracy as a percent 0-1 for Z piece
+}
 
-    ) {}
+// serialized JSON for a placement.
+// since will be sending hundreds of these in a request, need to compress as much as possible
+// minimize key names
+// index and score/level/lines and be rederived when converting back to a GamePlacement
+export interface SerializedPlacement {
+
+    readonly b: string, // board encoded as a string
+    readonly c: string, // type of current piece as a character
+    readonly n: string, // type of next piece as a character
+    readonly r: number, // placement rotation of current piece
+    readonly x: number, // placement x position of current piece
+    readonly y: number, // placement y position of current piece
+    readonly l: number, // number of line clears from placement
 
 }

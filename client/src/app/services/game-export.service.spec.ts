@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UserService } from './user.service';
+import { GameExportService } from './game-export.service';
 
-describe('AuthService', () => {
-  let service: UserService;
+describe('GameExportService', () => {
+  let service: GameExportService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(UserService);
+    service = TestBed.inject(GameExportService);
   });
 
   it('should be created', () => {

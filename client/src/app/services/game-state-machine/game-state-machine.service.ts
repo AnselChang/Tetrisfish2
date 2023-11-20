@@ -14,6 +14,7 @@ import { GameHistoryService } from '../game-history.service';
 import { HistoricalGame } from '../../models/game-models/game-history';
 import { Point } from '../../models/capture-models/point';
 import { first } from 'rxjs';
+import { GameExportService } from '../game-export.service';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -279,6 +280,7 @@ export class GameStateMachineService {
     private extractedStateService: ExtractedStateService,
     private captureSettingsService: CaptureSettingsService,
     private gameHistoryService: GameHistoryService,
+    private exportService: GameExportService,
     private debug: GameDebugService,
     ) { }
 
@@ -301,6 +303,7 @@ export class GameStateMachineService {
 
     if (!this.game) throw new Error("Game is undefined");
 
+    // push to session game history
     const historicalGame = new HistoricalGame(
       new Date(),
       this.game.startLevel,
@@ -311,6 +314,9 @@ export class GameStateMachineService {
       undefined
     )
     this.gameHistoryService.get().addGame(historicalGame);
+
+    // export and send to server
+    this.exportService.export(this.game);
   }
 
   public endGame(): void {

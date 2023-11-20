@@ -56,9 +56,9 @@ export class GameAnalysisStats {
 
     }
 
-    private getSpeedAccuracy(speed: GameSpeed): Average {
+    public getSpeedAccuracy(speed: GameSpeed): Average | undefined {
         const accuracy = this.speedAccuracy.find(sa => sa[0] === speed);
-        if (!accuracy) throw new Error("No accuracy found for speed " + speed);
+        if (!accuracy) return undefined;
         return accuracy[1];
     }
 
@@ -73,7 +73,7 @@ export class GameAnalysisStats {
 
         // calculate the scaled accuracy from 0-1 for the rating
         if (rating.diff === undefined) return; // if undefined, meaning SR didn't recognize the move, skip this move
-        const accuracy = relativeEvaluationToPercent(rating.diff);
+        const accuracy = rating.accuracy!;
 
         // update overall accuracy
         if (placement.statusBeforePlacement.level < 29 || this.startLevel >= 29) {
@@ -83,7 +83,7 @@ export class GameAnalysisStats {
         
         // update accuracy for corresponding speed
         const speed = getSpeedFromLevel(placement.statusBeforePlacement.level);
-        this.getSpeedAccuracy(speed).push(accuracy);
+        this.getSpeedAccuracy(speed)!.push(accuracy);
 
         // update accuracy for corresponding piece
         const piece = placement.currentPieceType;
