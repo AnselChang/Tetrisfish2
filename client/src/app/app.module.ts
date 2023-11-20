@@ -24,7 +24,6 @@ import { PageButtonComponent } from './components/layout/more-components/page-bu
 import { BoardCreationPageComponent } from './components/layout/board-creation-components/board-creation-page/board-creation-page.component';
 import { NextBoxComponent } from './components/tetris/next-box/next-box.component';
 import { CheckboxComponent } from './components/BLOCK/checkbox/checkbox.component';
-import { LogComponent } from './components/layout/play-components/log/log.component';
 import { ButtonSmallComponent } from './components/BLOCK/button-small/button-small.component';
 import { FixedSizeImageComponent } from './components/BLOCK/fixed-size-image/fixed-size-image.component';
 import { ButtonBigComponent } from './components/BLOCK/button-big/button-big.component';
@@ -69,7 +68,6 @@ import { RatingTotalsComponent } from './components/layout/play-components/ratin
     BoardCreationPageComponent,
     NextBoxComponent,
     CheckboxComponent,
-    LogComponent,
     ButtonSmallComponent,
     FixedSizeImageComponent,
     ButtonBigComponent,
