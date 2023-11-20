@@ -15,13 +15,6 @@ import { Game } from 'client/src/app/models/game-models/game';
 import GameEligibility from 'client/src/app/models/game-models/game-eligibility';
 
 
-export class LogMessage {
-  constructor(
-    public message: string,
-    public good: boolean
-  ) {}
-}
-
 @Component({
   selector: 'app-play-page',
   templateUrl: './play-page.component.html',
@@ -36,8 +29,6 @@ export class PlayPageComponent implements AfterViewInit, OnDestroy {
   public showBoundingBoxes: boolean = true;
   public showMinoIndicators: boolean = true;
 
-  public logStatus: LogMessage = new LogMessage("Not recording", false);
-  public logs: LogMessage[];
 
   // eligibility when not in game
   private readonly defaultEligibility = new GameEligibility(-1);
@@ -49,17 +40,7 @@ export class PlayPageComponent implements AfterViewInit, OnDestroy {
     private gameStateMachineService: GameStateMachineService,
     private captureFrameService: CaptureFrameService
     ) {
-    this.logs = [
-      new LogMessage("Messagasfdsfsda fsdfasdfasdfe 1", true),
-      new LogMessage("Messaasdf sdffge 2", false),
-      new LogMessage("Mesasdfasdfa sdfafdasfs dfaffdfasfdafssage 3", true),
-      new LogMessage("Messagasfdsfsda fsdfasdfasdfe 1", true),
-      new LogMessage("Messaasdf sdffge 2", false),
-      new LogMessage("Mesasdfasdfa sdfafdasfs dfaffdfasfdafssage 3", true),
-      new LogMessage("Messagasfdsfsda fsdfasdfasdfe 1", true),
-      new LogMessage("Messaasdf sdffge 2", false),
-      new LogMessage("Mesasdfasdfa sdfafdasfs dfaffdfasfdafssage 3", true),
-    ];
+ 
   }
 
   ngAfterViewInit(): void {

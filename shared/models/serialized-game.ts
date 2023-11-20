@@ -37,16 +37,26 @@ export interface SerializedGame {
     readonly accuraciesForAllPlacements: number[], // accuracy as a percent 0-1 for every placement in the game used for 10,000 placement calculations
     readonly numMissedAdjustments: number, // number of times the player missed an adjustment
     readonly overallAccuracy: number, // overall accuracy as a percent 0-1
-    readonly accuracy18: number | undefined, // accuracy as a percent 0-1 for 18 speed
-    readonly accuracy19: number | undefined, // accuracy as a percent 0-1 for 19 speed
-    readonly accuracy29: number | undefined, // accuracy as a percent 0-1 for 29 speed
-    readonly accuracyI: number | undefined, // accuracy as a percent 0-1 for I piece
-    readonly accuracyJ: number | undefined, // accuracy as a percent 0-1 for J piece
-    readonly accuracyL: number | undefined, // accuracy as a percent 0-1 for L piece
-    readonly accuracyO: number | undefined, // accuracy as a percent 0-1 for O piece
-    readonly accuracyS: number | undefined, // accuracy as a percent 0-1 for S piece
-    readonly accuracyT: number | undefined, // accuracy as a percent 0-1 for T piece
-    readonly accuracyZ: number | undefined, // accuracy as a percent 0-1 for Z piece
+    readonly accuracy18: number, // accuracy as a percent 0-1 for 18 speed
+    readonly num18: number, // number of placements at 18 speed
+    readonly accuracy19: number, // accuracy as a percent 0-1 for 19 speed
+    readonly num19: number, // number of placements at 19 speed
+    readonly accuracy29: number, // accuracy as a percent 0-1 for 29 speed
+    readonly num29: number, // number of placements at 29 speed
+    readonly accuracyI: number, // accuracy as a percent 0-1 for I piece
+    readonly numI: number, // number of placements with I piece
+    readonly accuracyJ: number, // accuracy as a percent 0-1 for J piece
+    readonly numJ: number, // number of placements with J piece
+    readonly accuracyL: number, // accuracy as a percent 0-1 for L piece
+    readonly numL: number, // number of placements with L piece
+    readonly accuracyO: number, // accuracy as a percent 0-1 for O piece
+    readonly numO: number, // number of placements with O piece
+    readonly accuracyS: number, // accuracy as a percent 0-1 for S piece
+    readonly numS: number, // number of placements with S piece
+    readonly accuracyT: number, // accuracy as a percent 0-1 for T piece
+    readonly numT: number, // number of placements with T piece
+    readonly accuracyZ: number, // accuracy as a percent 0-1 for Z piece
+    readonly numZ: number, // number of placements with Z piece
 }
 
 // serialized JSON for a placement.

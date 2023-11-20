@@ -344,7 +344,7 @@ export class GameStateMachineService {
   }
 
   public onLeavePlayPage(): void {
-    this.endGame();
+    if (this.playStatus === PlayStatus.PLAYING) this.endGame();
   }
 
   // executes once per frame to update state machine. Main method for this class

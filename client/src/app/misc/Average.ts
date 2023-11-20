@@ -19,6 +19,10 @@ export class Average {
         return this.sum;
     }
 
+    public getNumValues(): number {
+        return this.numValues;
+    }
+
     public hasValues(): boolean {
         return this.numValues > 0;
     }

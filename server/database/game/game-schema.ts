@@ -74,10 +74,6 @@ const gameSchema = new Schema({
         type: Number,
         required: true,
     },
-    adj : { // num missed adjustments
-        type: Number,
-        required: true,
-    },
     aAll: { // overall accuracy
         type: Number,
         required: true,
@@ -93,35 +89,7 @@ const gameSchema = new Schema({
     a29: { // accuracy at 29
         type: Number,
         required: false,
-    },
-    aI: { // accuracy for i piece
-        type: Number,
-        required: false,
-    },
-    aJ: { // accuracy for j piece
-        type: Number,
-        required: false,
-    },
-    aL: { // accuracy for l piece
-        type: Number,
-        required: false,
-    },
-    aO: { // accuracy for o piece
-        type: Number,
-        required: false,
-    },
-    aS: { // accuracy for s piece
-        type: Number,
-        required: false,
-    },
-    aT: { // accuracy for t piece
-        type: Number,
-        required: false,
-    },
-    aZ: { // accuracy for z piece
-        type: Number,
-        required: false,
-    },
+    }
 });
 
 const DBGame = mongoose.model('DBGame', gameSchema);

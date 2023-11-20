@@ -32,6 +32,17 @@ export class GameExportService {
   }
 
   private serialize(game: Game): SerializedGame {
+
+    const average18 = game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_18);
+    const average19 = game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_19);
+    const average29 = game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_29);
+    const averageI = game.analysisStats.getAccuracyForPiece(TetrominoType.I_TYPE);
+    const averageJ = game.analysisStats.getAccuracyForPiece(TetrominoType.J_TYPE);
+    const averageL = game.analysisStats.getAccuracyForPiece(TetrominoType.L_TYPE);
+    const averageO = game.analysisStats.getAccuracyForPiece(TetrominoType.O_TYPE);
+    const averageS = game.analysisStats.getAccuracyForPiece(TetrominoType.S_TYPE);
+    const averageT = game.analysisStats.getAccuracyForPiece(TetrominoType.T_TYPE);
+    const averageZ = game.analysisStats.getAccuracyForPiece(TetrominoType.Z_TYPE);
     
     return {
       gameID: game.gameID,
@@ -56,16 +67,27 @@ export class GameExportService {
       accuraciesForAllPlacements: game.getAllPlacements().map(placement => placement.analysis.getRateMoveDeep()!.accuracy!),
       numMissedAdjustments: -1, // TODO
       overallAccuracy: game.analysisStats.getOverallAccuracy().getAverage(),
-      accuracy18: game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_18)?.getAverage(),
-      accuracy19: game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_19)?.getAverage(),
-      accuracy29: game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_29)?.getAverage(),
-      accuracyI: game.analysisStats.getAccuracyForPiece(TetrominoType.I_TYPE).getAverage(),
-      accuracyJ: game.analysisStats.getAccuracyForPiece(TetrominoType.J_TYPE).getAverage(),
-      accuracyL: game.analysisStats.getAccuracyForPiece(TetrominoType.L_TYPE).getAverage(),
-      accuracyO: game.analysisStats.getAccuracyForPiece(TetrominoType.O_TYPE).getAverage(),
-      accuracyS: game.analysisStats.getAccuracyForPiece(TetrominoType.S_TYPE).getAverage(),
-      accuracyT: game.analysisStats.getAccuracyForPiece(TetrominoType.T_TYPE).getAverage(),
-      accuracyZ: game.analysisStats.getAccuracyForPiece(TetrominoType.Z_TYPE).getAverage(),
+
+      accuracy18: average18?.getAverage() ?? -1,
+      num18: average18?.getNumValues() ?? 0,
+      accuracy19: average19?.getAverage() ?? -1,
+      num19: average19?.getNumValues() ?? 0,
+      accuracy29: average29?.getAverage() ?? -1,
+      num29: average29?.getNumValues() ?? 0,
+      accuracyI: averageI?.getAverage() ?? -1,
+      numI: averageI?.getNumValues() ?? 0,
+      accuracyJ: averageJ?.getAverage() ?? -1,
+      numJ: averageJ?.getNumValues() ?? 0,
+      accuracyL: averageL?.getAverage() ?? -1,
+      numL: averageL?.getNumValues() ?? 0,
+      accuracyO: averageO?.getAverage() ?? -1,
+      numO: averageO?.getNumValues() ?? 0,
+      accuracyS: averageS?.getAverage() ?? -1,
+      numS: averageS?.getNumValues() ?? 0,
+      accuracyT: averageT?.getAverage() ?? -1,
+      numT: averageT?.getNumValues() ?? 0,
+      accuracyZ: averageZ?.getAverage() ?? -1,
+      numZ: averageZ?.getNumValues() ?? 0,
     }
   }
 

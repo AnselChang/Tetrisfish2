@@ -54,7 +54,7 @@ export class RateMoveDeep extends RateMove {
         super(dict);
         this.diff = this.playerNB ? (this.playerNB - this.bestNB) : undefined;
         this.rating = getRatingFromRelativeEval(this.diff);
-        this.accuracy = this.diff ? relativeEvaluationToPercent(this.diff) : undefined;
+        this.accuracy = (this.diff !== undefined) ? relativeEvaluationToPercent(this.diff) : undefined;
     }
 
 }

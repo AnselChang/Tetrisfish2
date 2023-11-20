@@ -25,18 +25,10 @@ export async function addGameToDatabase(discordID: string, game: SerializedGame)
         tre: game.tetrisReadiness,
         ipe: game.iPieceEfficiency,
 
-        adj: game.numMissedAdjustments,
         aAll: game.overallAccuracy,
         a18: game.accuracy18,
         a19: game.accuracy19,
         a29: game.accuracy29,
-        aI: game.accuracyI,
-        aJ: game.accuracyJ,
-        aL: game.accuracyL,
-        aO: game.accuracyO,
-        aS: game.accuracyS,
-        aT: game.accuracyT,
-        aZ: game.accuracyZ,
     });
 
     await dbGame.save();

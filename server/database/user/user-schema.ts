@@ -30,7 +30,7 @@ const gameSchema = new Schema({
 // Schema for a tetrisfish user
 const userSchema = new Schema({
     discordID: String,
-    usernmae: String,
+    username: String,
     isProUser: Boolean,
     playstyle: String,
     games: [gameSchema],

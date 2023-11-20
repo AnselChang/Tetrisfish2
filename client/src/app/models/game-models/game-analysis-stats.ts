@@ -74,6 +74,7 @@ export class GameAnalysisStats {
         // calculate the scaled accuracy from 0-1 for the rating
         if (rating.diff === undefined) return; // if undefined, meaning SR didn't recognize the move, skip this move
         const accuracy = rating.accuracy!;
+        console.log("Accuracy: " + accuracy + " for rating " + rating.rating + " with diff " + rating.diff);
 
         // update overall accuracy
         if (placement.statusBeforePlacement.level < 29 || this.startLevel >= 29) {
