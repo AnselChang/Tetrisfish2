@@ -13,6 +13,7 @@ import { BoardCreationPageComponent } from './components/layout/board-creation-c
 import { CalibratePageComponent } from './components/layout/calibrate-components/calibrate-page/calibrate-page.component';
 import { DebugGameComponent } from './components/layout/debug-game/debug-game.component';
 import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
+import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginPageComponent},
@@ -23,6 +24,7 @@ const routes: Routes = [
       { path: 'home', component: HomePageComponent },
       { path: 'play', component: PlayPageComponent } ,
       { path: 'calibrate', component: CalibratePageComponent },
+      { path: 'how-to-play', component: HowToPlayComponent },
       { path: 'play-calibrate', component: PlayCalibrateComponent },
       { path: 'analysis', component: AnalyzePageComponent },
       { path: 'puzzles', component: PuzzlesPageComponent },

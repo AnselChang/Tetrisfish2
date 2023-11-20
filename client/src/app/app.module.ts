@@ -46,6 +46,8 @@ import { LeaderboardPanelComponent } from './components/layout/play-components/l
 import { EligibilityItemComponent } from './components/layout/play-components/eligibility-item/eligibility-item.component';
 import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
 import { RatingTotalsComponent } from './components/layout/play-components/rating-totals/rating-totals.component';
+import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
+import { DiscordButtonComponent } from './components/BLOCK/discord-button/discord-button.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -89,6 +91,8 @@ import { RatingTotalsComponent } from './components/layout/play-components/ratin
     EligibilityItemComponent,
     PlayCalibrateComponent,
     RatingTotalsComponent,
+    HowToPlayComponent,
+    DiscordButtonComponent,
   ],
   imports: [
     BrowserModule,

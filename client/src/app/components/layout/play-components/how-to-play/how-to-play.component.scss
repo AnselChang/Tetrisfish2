@@ -1,0 +1,72 @@
+@import "../../../../../styles.scss";
+
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+section {
+    border-radius: 7px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    background-color: $layer-1-color;
+    width: 90%;
+    max-width: 1020px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    padding: 20px 40px;
+}
+
+.step-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.instructions {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+img {
+    width: 300px;
+    border-radius: 5px;
+    border: 1px solid #7E7D82;
+    box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.25);
+}
+
+h1 {
+    font-size: 35px;
+    padding: 10px;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+p {
+    font-size: 15px;
+}
+
+header > p {
+    padding: 0 10%;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}

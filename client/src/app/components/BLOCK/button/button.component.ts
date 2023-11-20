@@ -13,7 +13,7 @@ export class ButtonComponent implements AfterViewInit, OnChanges {
   @Input() buttonDisabled: boolean = false;
 
 
-  constructor(private colorService: ColorService, private el: ElementRef, private renderer: Renderer2) {
+  constructor(private colorService: ColorService, private el: ElementRef) {
   }
 
   private updateCSS() {
