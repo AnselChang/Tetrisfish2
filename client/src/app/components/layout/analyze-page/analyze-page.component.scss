@@ -27,4 +27,41 @@
 
     padding: 5px;
     text-wrap: nowrap;
+    border-radius: 5px;
+}
+
+.element:hover {
+    background-color: $layer-2-color;
+    cursor: pointer;
+}
+
+.element:active {
+    background-color: $layer-3-color;
+}
+
+.element:hover:first-of-type {
+    background-color: $layer-1-color;
+    cursor: default;
+}
+
+.element:active:first-of-type {
+    background-color: $layer-1-color;
+}
+
+@media (max-width: 1200px) {
+    .element {
+        grid-template-columns: 2fr 1fr 3fr 3fr 3fr 2.5fr;
+    }
+    .hide-1 {
+        display: none;
+    }
+}
+
+@media (max-width: 800px) {
+    .element {
+        grid-template-columns: 2fr 1fr 3fr 2.5fr;
+    }
+    .hide-2 {
+        display: none;
+    }
 }

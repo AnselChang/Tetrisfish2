@@ -2,25 +2,25 @@
 <app-section>
     <div class="game-history-list">
         <div class="element top-element">
-            <h3></h3>
+            <h3>Time</h3>
             <h3>Start</h3>
             <h3>Score</h3>
-            <h3>Level 18</h3>
-            <h3>Level 19</h3>
-            <h3>In Drought</h3>
-            <h3>Tetris Ready</h3>
-            <h3>I-Piece Efficiency</h3>
+            <h3 class="hide-2">Level 18</h3>
+            <h3 class="hide-2">Level 19</h3>
+            <h3 class="hide-1">In Drought</h3>
+            <h3 class="hide-1">Tetris Ready</h3>
+            <h3 class="hide-1">I-Piece Efficiency</h3>
             <h3>Overall Accuracy</h3>
         </div>
         <div class="element" *ngFor="let game of gameHistory">
             <p>{{getTimeString(game.timestamp)}}</p>
             <p>lvl {{game.startLevel}}</p>
             <p>{{game.finalScore}} • lvl {{game.finalLevel}}</p>
-            <p><span [style.color]="getAccuracyColor(game.accuracy18)">{{formatAccuracy(game.accuracy18)}}</span> • {{game.score19 ?? '-'}}</p>
-            <p><span [style.color]="getAccuracyColor(game.accuracy18)">{{formatAccuracy(game.accuracy19)}}</span> • {{game.score29 ?? '-'}}</p>
-            <p>{{formatAccuracy(game.droughtPercent)}}</p>
-            <p>{{formatAccuracy(game.tetrisReadiness)}}</p>
-            <p>{{formatAccuracy(game.iPieceEfficiency)}}</p>
+            <p class="hide-2"><span [style.color]="getAccuracyColor(game.accuracy18)">{{formatAccuracy(game.accuracy18)}}</span> • {{game.score19 ?? '-'}}</p>
+            <p class="hide-2"><span [style.color]="getAccuracyColor(game.accuracy18)">{{formatAccuracy(game.accuracy19)}}</span> • {{game.score29 ?? '-'}}</p>
+            <p class="hide-1">{{formatAccuracy(game.droughtPercent)}}</p>
+            <p class="hide-1">{{formatAccuracy(game.tetrisReadiness)}}</p>
+            <p class="hide-1">{{formatAccuracy(game.iPieceEfficiency)}}</p>
             <h3 [style.color]="getAccuracyColor(game.accuracy18)">{{formatAccuracy(game.overallAccuracy)}}</h3>
         </div>
     </div>
