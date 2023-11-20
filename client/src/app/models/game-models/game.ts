@@ -60,6 +60,17 @@ export class Game {
         return this.placements[index];
     }
 
+    // pop last position if its placement is undefined.
+    // called at end of game to make sure all placements are defined
+    public popLastPositionIfUndefined(): void {
+        if (this.getLastPosition() && !this.getLastPosition()!.hasPlacement()) {
+            this.placements.pop();
+            console.log("Popped last position because it had no placement");
+        } else {
+            console.log("Did not pop last position because it had a placement");
+        }
+    }
+
     // get the last position, which does not necessarily have a placement
     public getLastPosition(): GamePlacement | undefined {
         return this.placements[this.placements.length - 1];

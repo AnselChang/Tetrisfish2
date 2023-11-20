@@ -8,6 +8,7 @@ These are all optional, as we support lazy-loading of analysis data. Only the lo
 be shown.
 */
 
+import { BehaviorSubject, Subject } from "rxjs";
 import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-movelist";
 import { RateMoveDeep, RateMoveShallow } from "../analysis-models/rate-move";
 
@@ -17,15 +18,32 @@ export default class PlacementAnalysis {
     private rateMoveDeep?: RateMoveDeep;
     private rateMoveShallow?: RateMoveShallow;
 
+    // subscribe to this to know when all four analysis requests are done
+    public onFinishAnalysis$ = new BehaviorSubject<boolean>(false);
+
+    private isFinishedAnalysis = false;
+
+    private updateAnalysisObservable() {
+        if (this.isFinishedAnalysis) return;
+
+        const finished = this.hasEngineMovelistNB() && this.hasEngineMovelistNNB() && this.hasRateMoveDeep() && this.hasRateMoveShallow();
+        if (finished) {
+            this.isFinishedAnalysis = true;
+            this.onFinishAnalysis$.next(true);
+        }
+    }
+
+    public isAnalyisFinished(): boolean { return this.isFinishedAnalysis; }
+
     hasEngineMovelistNB(): boolean { return this.engineMovelistNB !== undefined; }
     hasEngineMovelistNNB(): boolean { return this.engineMovelistNNB !== undefined; }
     hasRateMoveDeep(): boolean { return this.rateMoveDeep !== undefined; }
     hasRateMoveShallow(): boolean { return this.rateMoveShallow !== undefined; }
 
-    setEngineMoveListNB(engineMovelistNB: EngineMovelistNB) { this.engineMovelistNB = engineMovelistNB; }
-    setEngineMoveListNNB(engineMovelistNNB: EngineMovelistNNB) { this.engineMovelistNNB = engineMovelistNNB; }
-    setRateMoveDeep(rateMoveDeep: RateMoveDeep) { this.rateMoveDeep = rateMoveDeep; }
-    setRateMoveShallow(rateMoveShallow: RateMoveShallow) { this.rateMoveShallow = rateMoveShallow; }
+    setEngineMoveListNB(engineMovelistNB: EngineMovelistNB) { this.engineMovelistNB = engineMovelistNB; this.updateAnalysisObservable(); }
+    setEngineMoveListNNB(engineMovelistNNB: EngineMovelistNNB) { this.engineMovelistNNB = engineMovelistNNB; this.updateAnalysisObservable(); }
+    setRateMoveDeep(rateMoveDeep: RateMoveDeep) { this.rateMoveDeep = rateMoveDeep; this.updateAnalysisObservable(); }
+    setRateMoveShallow(rateMoveShallow: RateMoveShallow) { this.rateMoveShallow = rateMoveShallow; this.updateAnalysisObservable(); }
 
 
     getEngineMoveListNB(): EngineMovelistNB | undefined { return this.engineMovelistNB; }

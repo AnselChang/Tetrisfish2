@@ -13,6 +13,7 @@ import { CaptureSettingsService } from '../capture/capture-settings.service';
 import { GameHistoryService } from '../game-history.service';
 import { HistoricalGame } from '../../models/game-models/game-history';
 import { Point } from '../../models/capture-models/point';
+import { first } from 'rxjs';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -294,24 +295,44 @@ export class GameStateMachineService {
     this.debug.resetNewGame(this.game.gameID);
   }
 
+  // this function handles pushing to game history and sending game to server once complete
+  // precondition: game is fully analyzed
+  public onGameFinishedAndAnalyzed() {
+
+    if (!this.game) throw new Error("Game is undefined");
+
+    const historicalGame = new HistoricalGame(
+      new Date(),
+      this.game.startLevel,
+      this.game.status.score,
+      this.game.status.level,
+      this.game.status.lines,
+      this.game.analysisStats.getOverallAccuracy().getAverage(),
+      undefined
+    )
+    this.gameHistoryService.get().addGame(historicalGame);
+  }
+
   public endGame(): void {
     console.log("Ending game");
     this.gridSM = undefined;
     this.playStatus = PlayStatus.NOT_PLAYING;
     // NOTE: do not set this.game to undefined, as we want to keep the game data for analysis
 
+
     // if game has at least five placements, add to game history
     if (this.game && this.game.numPlacements >= 5) {
-      const historicalGame = new HistoricalGame(
-        new Date(),
-        this.game.startLevel,
-        this.game.status.score,
-        this.game.status.level,
-        this.game.status.lines,
-        this.game.analysisStats.getOverallAccuracy().getAverage(),
-        undefined
-      )
-      this.gameHistoryService.get().addGame(historicalGame);
+
+      // delete last placement if placement is undefined
+      this.game.popLastPositionIfUndefined();
+      if (!this.game.getLastPosition()!.hasPlacement()) throw new Error("Last position has no placement");
+
+      // when last placement is finished analyzing, call onGameFinishedAndAnalyzed()
+      this.game.getLastPosition()!.analysis.onFinishAnalysis$.pipe(
+        first(isAnalysisComplete => isAnalysisComplete)
+      ).subscribe(() => {
+        this.onGameFinishedAndAnalyzed();
+      });
     }
 
   }
