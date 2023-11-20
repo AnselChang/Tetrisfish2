@@ -67,7 +67,7 @@ async function getUserFromAuth(accessToken: string) {
     return discordUser;
 }
 
-export async function auth(req: Request, res: Response) {
+export async function authRoute(req: Request, res: Response) {
 
     const clientID = process.env['DISCORD_CLIENT_ID'];
     console.log("Client ID:", clientID);
@@ -81,7 +81,7 @@ export async function auth(req: Request, res: Response) {
 
 }
 
-export async function authCallback(req: Request, res: Response) {
+export async function authCallbackRoute(req: Request, res: Response) {
     console.log("Auth callback", req.query);
 
     // do auth things

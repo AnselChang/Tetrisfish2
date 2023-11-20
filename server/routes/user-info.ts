@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 // returns the username for the active session. Does not require database lookup
-export async function username(req: Request, res: Response) {
+export async function usernameRoute(req: Request, res: Response) {
 
     console.log("Session state:", req.session?.state);
     const username = req.session?.state?.username;

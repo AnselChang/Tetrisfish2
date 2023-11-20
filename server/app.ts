@@ -7,14 +7,15 @@ import * as morgan from 'morgan'; // Import Morgan
 
 
 import { Express, Request, Response } from 'express';
-import { auth, authCallback } from './routes/auth';
+import { authRoute, authCallbackRoute } from './routes/auth';
 
 import * as session from 'express-session';
 import { SessionState } from './database/session-state';
-import { username } from './routes/user-info';
+import { usernameRoute } from './routes/user-info';
 import { getBugReportRoute, sendBugReportRoute } from './routes/bug-report';
 import { Database } from './singletons/database';
 import DiscordBot from './singletons/discord-bot';
+import { sendGameRoute } from './routes/game';
 declare module 'express-session' {
     export interface SessionData {
       state?: SessionState; // Add your custom session properties here
@@ -80,12 +81,14 @@ export default async function createApp(): Promise<Express> {
         console.log(result.status);
     });
 
-    app.get('/api/auth', auth);
-    app.get('/api/auth/callback', authCallback);
-    app.get('/api/username', username) // FAST, does not require database lookup
+    app.get('/api/auth', authRoute);
+    app.get('/api/auth/callback', authCallbackRoute);
+    app.get('/api/username', usernameRoute) // FAST, does not require database lookup
 
     app.post('/api/send-bug-report', (req: Request, res: Response) => sendBugReportRoute(discordBot, req, res));
     app.get('/api/get-bug-report', (req: Request, res: Response) => getBugReportRoute(req, res));
+
+    app.post('/api/send-game', (req: Request, res: Response) => sendGameRoute(req, res));
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {
