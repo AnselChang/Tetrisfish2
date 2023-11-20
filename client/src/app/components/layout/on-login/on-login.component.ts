@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from 'client/src/app/services/user.service';
 
 @Component({
   selector: 'app-on-login',
@@ -8,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class OnLoginComponent {
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router, private user: UserService) {
   }
 
   ngOnInit() {
@@ -17,12 +18,14 @@ export class OnLoginComponent {
 
     this.route.queryParams.subscribe(params => {
       const redirect = params['redirect'] as string | undefined;
-      const newUser = params['newUser'] as boolean | undefined;
+      const newUser = params['new-user'] as boolean | undefined;
 
       console.log("Redirect:", redirect);
       console.log("New User:", newUser);
 
-      if (redirect) this.router.navigateByUrl('/' + redirect);
+      this.user.updateFromServer().then(() => {
+        if (redirect) this.router.navigateByUrl('/' + redirect);
+      });
 
     });
   }

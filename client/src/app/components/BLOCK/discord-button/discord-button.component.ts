@@ -1,8 +1,9 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { getBaseURL } from 'client/src/app/scripts/fetch-server';
 import { ButtonComponent } from '../button/button.component';
 import { ColorService } from 'client/src/app/services/color.service';
 import { Router } from '@angular/router';
+import { loginWithDiscord } from 'client/src/app/scripts/login';
 
 @Component({
   selector: 'app-discord-button',
@@ -10,21 +11,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./discord-button.component.scss']
 })
 export class DiscordButtonComponent extends ButtonComponent {
+  @Input() icon: string = 'discord_logo.svg';
+  @Input() label: string = "Sign in with Discord";
 
   constructor(colorService: ColorService, el: ElementRef, private router: Router) {
     super(colorService, el);
-    this.color = '#5865F2';
 
   }
 
   // redirects to discord login page
   async login() {
-
-    const redirect = this.router.url.slice(1); // Remove the leading '/'
-
-    const baseURL = getBaseURL();
-    const url = `${baseURL}/api/auth?redirect=${redirect}`;
-    window.location.href = url;
+    loginWithDiscord(this.router);
   }
 
 }

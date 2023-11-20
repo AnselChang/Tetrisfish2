@@ -1,17 +1,20 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { ThresholdType } from 'client/src/app/models/capture-models/capture-settings';
 import { ALL_INPUT_SPEEDS } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
+import { LoginStatus, UserService } from 'client/src/app/services/user.service';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-calibrate-page',
   templateUrl: './calibrate-page.component.html',
   styleUrls: ['./calibrate-page.component.scss']
 })
-export class CalibratePageComponent implements AfterViewInit, OnDestroy {
+export class CalibratePageComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onSwitchMode = new EventEmitter<void>();
   
   public captureVideoElement!: ElementRef<HTMLVideoElement>;
@@ -23,8 +26,23 @@ export class CalibratePageComponent implements AfterViewInit, OnDestroy {
     public videoCaptureService: VideoCaptureService,
     private captureSettingsService: CaptureSettingsService,
     private extractedStateService: ExtractedStateService,
-    private captureFrameService: CaptureFrameService
+    private userService: UserService,
+    private router: Router,
     ) {}
+
+    ngOnInit(): void {
+      this.userService.loginStatus$.pipe(
+        filter(status => status !== LoginStatus.LIMBO), // ignore unknown login status events
+        take(1) // Take only the first value that passes the filter
+      ).subscribe(status => {
+  
+        const loggedIn = status === LoginStatus.LOGGED_IN;
+        if (!loggedIn) {
+          this.router.navigate(['/how-to-play']);
+        }
+      });
+    }
+  
 
   ngAfterViewInit(): void {
     this.captureVideoElement = this.videoCaptureService.getVideoElement();

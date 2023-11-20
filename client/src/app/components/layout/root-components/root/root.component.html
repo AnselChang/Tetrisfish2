@@ -9,18 +9,16 @@
     </div>
 
     <!-- If logged in, display profile name and picture -->
-    <div *ngIf="this.authService.isLoggedIn()" class="right-nav">
-        <h3>{{this.authService.getUsername()}}</h3>
+    <div *ngIf="this.userService.isLoggedIn()" class="right-nav">
+        <h3>{{this.userService.getUsername()}}</h3>
         <a routerLink="/profile" routerLinkActive="active">
             <app-image class="profile-pic" [src]="'profile.svg'" [widthPx]="27" />
         </a> 
     </div>
 
     <!-- Otherwise, display login button -->
-    <div *ngIf="!this.authService.isLoggedIn()" class="right-nav">
-        <a routerLink="/login" routerLinkActive="active">
-            <app-button-small label="Login" />
-        </a>
+    <div *ngIf="!this.userService.isLoggedIn()" class="right-nav">
+        <app-button-small label="Login" (click)="login()"/>
     </div>
 
 

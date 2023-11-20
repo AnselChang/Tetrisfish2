@@ -16,7 +16,6 @@ import { LeaderboardPageComponent } from './components/layout/leaderboard-page/l
 import { ProfilePageComponent } from './components/layout/profile-page/profile-page.component';
 import { HomePageComponent } from './components/layout/home-page/home-page.component';
 import { PageLinkComponent } from './components/layout/root-components/page-link/page-link.component';
-import { LoginPageComponent } from './components/layout/login-page/login-page.component';
 import { ButtonComponent } from './components/BLOCK/button/button.component';
 import { ImageComponent } from './components/BLOCK/image/image.component';
 import { MorePageComponent } from './components/layout/more-components/more-page/more-page.component';
@@ -63,7 +62,6 @@ import { OnLoginComponent } from './components/layout/on-login/on-login.componen
     ProfilePageComponent,
     HomePageComponent,
     PageLinkComponent,
-    LoginPageComponent,
     ButtonComponent,
     ImageComponent,
     MorePageComponent,

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
@@ -13,6 +13,9 @@ import { MoveRecommendation } from 'client/src/app/models/analysis-models/engine
 import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
 import { Game } from 'client/src/app/models/game-models/game';
 import GameEligibility from 'client/src/app/models/game-models/game-eligibility';
+import { LoginStatus, UserService } from 'client/src/app/services/user.service';
+import { Router } from '@angular/router';
+import { filter, take } from 'rxjs';
 
 
 @Component({
@@ -20,7 +23,7 @@ import GameEligibility from 'client/src/app/models/game-models/game-eligibility'
   templateUrl: './play-page.component.html',
   styleUrls: ['./play-page.component.scss']
 })
-export class PlayPageComponent implements AfterViewInit, OnDestroy {
+export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
 
   public videoElement!: ElementRef<HTMLVideoElement>;
@@ -38,9 +41,24 @@ export class PlayPageComponent implements AfterViewInit, OnDestroy {
     public extractedStateService: ExtractedStateService,
     public captureSettingsService: CaptureSettingsService,
     private gameStateMachineService: GameStateMachineService,
-    private captureFrameService: CaptureFrameService
+    private captureFrameService: CaptureFrameService,
+    private userService: UserService,
+    private router: Router,
     ) {
  
+  }
+
+  ngOnInit(): void {
+    this.userService.loginStatus$.pipe(
+      filter(status => status !== LoginStatus.LIMBO), // ignore unknown login status events
+      take(1) // Take only the first value that passes the filter
+    ).subscribe(status => {
+
+      const loggedIn = status === LoginStatus.LOGGED_IN;
+      if (!loggedIn) {
+        this.router.navigate(['/how-to-play']);
+      }
+    });
   }
 
   ngAfterViewInit(): void {

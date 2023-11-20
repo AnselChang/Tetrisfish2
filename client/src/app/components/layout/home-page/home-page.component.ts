@@ -12,9 +12,7 @@ export class HomePageComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   async ngOnInit() {
-    
-    await this.userService.updateFromServer();
-
+    console.log("HomePageComponent");
   }
 
   public onClick(): void {

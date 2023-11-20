@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
-import { UserService } from 'client/src/app/services/user.service';
+import { LoginStatus, UserService } from 'client/src/app/services/user.service';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-play-calibrate',
@@ -25,12 +26,22 @@ export class PlayCalibrateComponent implements OnInit {
   // redirect to the calibration or play page depending on the state of the capture
   ngOnInit(): void {
 
-    let route;
-    if (!this.userService.isLoggedIn()) route = '/how-to-play';
-    else if (this.shouldLoadCalibrationFirst()) route = '/calibrate'
-    else route = '/play';
-    
-    this.router.navigate([route]);
+    this.userService.loginStatus$.pipe(
+      filter(status => status !== LoginStatus.LIMBO), // ignore unknown login status events
+      take(1) // Take only the first value that passes the filter
+    ).subscribe(status => {
+
+      const loggedIn = status === LoginStatus.LOGGED_IN;
+
+      console.log("Logged in?", loggedIn);
+
+      let route;
+      if (!loggedIn) route = '/how-to-play';
+      else if (this.shouldLoadCalibrationFirst()) route = '/calibrate'
+      else route = '/play';
+
+      this.router.navigate([route]);
+    });
   }
 
 

@@ -7,7 +7,6 @@ import { AnalyzePageComponent } from './components/layout/analyze-page/analyze-p
 import { PuzzlesPageComponent } from './components/layout/puzzles-page/puzzles-page.component';
 import { LeaderboardPageComponent } from './components/layout/leaderboard-page/leaderboard-page.component';
 import { ProfilePageComponent } from './components/layout/profile-page/profile-page.component';
-import { LoginPageComponent } from './components/layout/login-page/login-page.component';
 import { MorePageComponent } from './components/layout/more-components/more-page/more-page.component';
 import { BoardCreationPageComponent } from './components/layout/board-creation-components/board-creation-page/board-creation-page.component';
 import { CalibratePageComponent } from './components/layout/calibrate-components/calibrate-page/calibrate-page.component';
@@ -17,7 +16,7 @@ import { HowToPlayComponent } from './components/layout/play-components/how-to-p
 import { OnLoginComponent } from './components/layout/on-login/on-login.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginPageComponent},
+  // { path: 'login', component: LoginPageComponent},
   {
     path: '',
     component: RootComponent,
