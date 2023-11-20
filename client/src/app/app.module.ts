@@ -48,6 +48,7 @@ import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-
 import { RatingTotalsComponent } from './components/layout/play-components/rating-totals/rating-totals.component';
 import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
 import { DiscordButtonComponent } from './components/BLOCK/discord-button/discord-button.component';
+import { OnLoginComponent } from './components/layout/on-login/on-login.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,6 +94,7 @@ import { DiscordButtonComponent } from './components/BLOCK/discord-button/discor
     RatingTotalsComponent,
     HowToPlayComponent,
     DiscordButtonComponent,
+    OnLoginComponent,
   ],
   imports: [
     BrowserModule,

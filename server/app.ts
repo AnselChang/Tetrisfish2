@@ -19,6 +19,7 @@ import { sendGameRoute } from './routes/game';
 declare module 'express-session' {
     export interface SessionData {
       state?: SessionState; // Add your custom session properties here
+      redirect?: string;
     }
   }
 

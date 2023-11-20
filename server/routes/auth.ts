@@ -72,6 +72,9 @@ export async function authRoute(req: Request, res: Response) {
     const clientID = process.env['DISCORD_CLIENT_ID'];
     console.log("Client ID:", clientID);
 
+    const userRedirect = req.query['redirect'] as string;
+    req.session.redirect = userRedirect;
+
     const redirectURL = getCallbackURL(req);
     console.log("After discord, redirect to URL:", redirectURL);
 
@@ -114,7 +117,8 @@ export async function authCallbackRoute(req: Request, res: Response) {
     }
     
     // redirect to home page, specifying if user is new
-    const redirectURL = `${getBaseURL(req)}/home?new-user=${userExists ?'false':'true'}`;
+    const userRedirect = req.session.redirect;
+    const redirectURL = `${getBaseURL(req)}/on-login?redirect=${userRedirect}&new-user=${userExists ?'false':'true'}`;
     res.redirect(redirectURL);
 
 }

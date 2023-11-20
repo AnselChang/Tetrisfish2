@@ -14,6 +14,7 @@ import { CalibratePageComponent } from './components/layout/calibrate-components
 import { DebugGameComponent } from './components/layout/debug-game/debug-game.component';
 import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
 import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
+import { OnLoginComponent } from './components/layout/on-login/on-login.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginPageComponent},
@@ -33,6 +34,7 @@ const routes: Routes = [
       { path: 'more', component: MorePageComponent },
       { path: 'board-creation', component: BoardCreationPageComponent },
       { path: 'debug', component: DebugGameComponent },
+      { path: 'on-login', component: OnLoginComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: '**', redirectTo: 'home' },
     ]
