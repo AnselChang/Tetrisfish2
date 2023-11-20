@@ -8,8 +8,18 @@
     <h2>{{stats ? stats.getLinesBurned() : "-"}}</h2>
 </div>
 <div class="item">
-    <p>Max Drought</p>
-    <h2>{{stats?.getMaxDroughtCount() ?? "-"}}</h2>
+    <p>In Drought</p>
+    <h2>{{percentInDroughtString()}}</h2>
+</div>
+
+<hr>
+<div class="item">
+    <p>Tetris Readiness</p>
+    <h2>{{tetrisReadinessString()}}</h2>
+</div>
+<div class="item">
+    <p>I-piece Efficiency</p>
+    <h2>{{iPieceEfficiencyString()}}</h2>
 </div>
 
 <hr *ngIf="stats">

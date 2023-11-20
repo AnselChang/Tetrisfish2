@@ -1,8 +1,31 @@
 import { Subject } from "rxjs";
 import { Average } from "../../misc/Average";
-import { ALL_GAME_SPEEDS, GAME_SPEED_TO_STRING, GameSpeed as GameSpeed, RATING_TO_COLOR, absoluteEvaluationToPercent, getRatingFromAveragePercent, getRatingFromRelativeEval, getSpeedFromLevel, relativeEvaluationToPercent } from "../evaluation-models/rating";
+import { ALL_GAME_SPEEDS, GAME_SPEED_TO_STRING, GameSpeed as GameSpeed, RATING_TO_COLOR, Rating, absoluteEvaluationToPercent, getRatingFromAveragePercent, getRatingFromRelativeEval, getSpeedFromLevel, relativeEvaluationToPercent } from "../evaluation-models/rating";
 import { ALL_TETROMINO_TYPES, TetrominoType } from "../tetronimo-models/tetromino";
 import { GamePlacement } from "./game-placement";
+
+// stores totals for each rating
+export class RatingAggregator {
+
+    private ratingTotals: Record<Rating, number> = {
+        [Rating.ERROR]: 0,
+        [Rating.BRILLIANT]: 0,
+        [Rating.BEST]: 0,
+        [Rating.GOOD]: 0,
+        [Rating.MEDIOCRE]: 0,
+        [Rating.INACCURACY]: 0,
+        [Rating.MISTAKE]: 0,
+        [Rating.BLUNDER]: 0,
+    };
+
+    public onRating(rating: Rating) {
+        this.ratingTotals[rating]++;
+    }
+
+    public getRatingTotal(rating: Rating): number {
+        return this.ratingTotals[rating];
+    }
+}
 
 export class GameAnalysisStats {
 
@@ -12,6 +35,8 @@ export class GameAnalysisStats {
 
     public speedAccuracyCache: [string, Average][] = [];
     public pieceAccuracyCache: [TetrominoType, Average][] = [];
+
+    public readonly ratingAggregator = new RatingAggregator();
     
     constructor(public readonly startLevel: number) {
 
@@ -42,6 +67,9 @@ export class GameAnalysisStats {
 
         const rating = placement.analysis.getRateMoveDeep();
         if (!rating) throw new Error("onPlacementEvaluated() called on placement without rating");
+
+        // update rating aggregator
+        this.ratingAggregator.onRating(rating.rating);
 
         // calculate the scaled accuracy from 0-1 for the rating
         if (rating.diff === undefined) return; // if undefined, meaning SR didn't recognize the move, skip this move

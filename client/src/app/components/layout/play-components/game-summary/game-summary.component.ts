@@ -14,4 +14,25 @@ export class GameSummaryComponent {
     return Math.round(this.stats.getTetrisRate() * 100) + "%";
   }
 
+  percentInDroughtString(): string {
+    if (!this.stats) return "-";
+    const percent = this.stats.percentInDrought();
+    return Math.round(percent * 100) + "%";
+  }
+
+  tetrisReadinessString(): string {
+
+    if (true) return '?'; // TODO
+
+    if (!this.stats) return "-";
+    const readiness = this.stats!.getTetrisReadiness();
+    return Math.round(readiness * 100) + "%";
+  }
+
+  iPieceEfficiencyString(): string {
+    if (!this.stats) return "-";
+    const efficiency = this.stats.getIPieceEfficiency();
+    return Math.round(efficiency * 100) + "%";
+  }
+
 }

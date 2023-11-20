@@ -5,14 +5,18 @@
             <app-game-summary [stats]="this.game?.stats" />
         </app-section>
 
-        <app-section class="analysis-board">
+        <app-section class="rating-totals">
+            <app-rating-totals [ratings]="this.game?.analysisStats?.ratingAggregator" />
+        </app-section>
+
+        <!-- <app-section class="analysis-board">
             <p class="padded">Analysis Board</p>
             <app-interactive-tetris-board
                 [grid]="getLastPlacement()?.grid"
                 [level]="18"
                 [currentPiece]="getBestMove()?.thisPiece"
             />
-        </app-section>
+        </app-section> -->
 
     </div>
     <app-eval-bar class="col-eval-bar"

@@ -1,0 +1,5 @@
+<h2 class="title">Rating Totals</h2>
+<div class="item" *ngFor="let rating of ALL_RATINGS">
+    <p [style.color]="getColorForRating(rating)">{{getNameForRating(rating)}}</p>
+    <h2 [style.color]="getColorForRating(rating)">{{getRatingCount(rating)}}</h2>
+</div>

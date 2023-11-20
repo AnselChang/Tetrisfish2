@@ -1,0 +1,32 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.title {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%;
+}
+
+.item > * {
+    text-align: center;
+}
+
+.item > *:first-child {
+    flex-basis: 60%;
+}
+
+.item > *:last-child {
+    flex-basis: 40%;
+}

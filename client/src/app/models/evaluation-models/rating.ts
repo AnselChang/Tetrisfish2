@@ -9,6 +9,16 @@ export enum Rating {
     BLUNDER = 6,
 }
 
+export const ALL_VALID_RATINGS = [
+    Rating.BRILLIANT,
+    Rating.BEST,
+    Rating.GOOD,
+    Rating.MEDIOCRE,
+    Rating.INACCURACY,
+    Rating.MISTAKE,
+    Rating.BLUNDER,
+];
+
 export const RATING_TO_COLOR: { [rating in Rating]: string } = {
     [Rating.ERROR] : "grey",
     [Rating.BRILLIANT] : "#B658D7",

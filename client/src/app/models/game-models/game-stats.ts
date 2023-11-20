@@ -1,4 +1,6 @@
+import BinaryGrid from "../tetronimo-models/binary-grid";
 import { TetrominoType } from "../tetronimo-models/tetromino";
+import { GamePlacement } from "./game-placement";
 
 // transition TO this level
 export class TransitionScore {
@@ -8,26 +10,43 @@ export class TransitionScore {
     ) {}
 }
 
-export class GameStats {
-    private linesBurned: number = 0;
-    private numTetrises: number = 0;
-    private transitionScores: TransitionScore[] = [];
-    private droughtCount: number = 0;
-    private maxDroughtCount: number = 0;
+class TetrisReadinessStats {
+    private numPositionsTetrisReady: number = 0;
 
-    // on piece spawn, handle drought count
-    public onPieceSpawn(pieceType: TetrominoType): void {
-        if (pieceType === TetrominoType.I_TYPE) {
-            this.droughtCount = 0;
-        }
-        else {
-            this.droughtCount++;
-        }
+    // the grid without any placement. determine if tetris ready and increment numPositionsTetrisReady if so
+    public updateTetrisReadiness(grid: BinaryGrid): void {
 
-        this.maxDroughtCount = Math.max(this.maxDroughtCount, this.droughtCount);
     }
 
-    public onLineClears(linesBurned: number): void {
+    public getTetrisReadiness(totalPositions: number): number {
+        if (totalPositions === 0) return 0;
+        return this.numPositionsTetrisReady / totalPositions;
+    }
+}
+
+// stats for I-piece effiency
+class EfficiencyStats {
+    private numIPieces: number = 0;
+    private numTetrises: number = 0;
+
+    public updateIPieceEfficiency(pieceType: TetrominoType, linesBurned: number): void {
+        if (pieceType === TetrominoType.I_TYPE) {
+            this.numIPieces++;
+            if (linesBurned === 4) this.numTetrises++;
+        }
+    }
+
+    public getIPieceEfficiency(): number {
+        if (this.numIPieces === 0) return 0;
+        return this.numTetrises / this.numIPieces;
+    }
+}
+
+class LineClearStats {
+    private linesBurned: number = 0;
+    private numTetrises: number = 0;
+
+    public updateBurnedLinesAndTetrises(linesBurned: number): void {
         if (linesBurned === 4) {
             this.numTetrises++;
         } else {
@@ -44,9 +63,72 @@ export class GameStats {
         const tetrisLines = this.numTetrises * 4;
         return tetrisLines / (this.linesBurned + tetrisLines);
     }
+}
 
-    public trackTransitionLevel(level: number): void {
-        this.transitionScores.push(new TransitionScore(level, undefined));
+class DroughtStats {
+    private droughtCount: number = 0;
+    private timesInDrought: number = 0;
+
+    public updateDroughtCount(pieceType: TetrominoType): void {
+        if (pieceType === TetrominoType.I_TYPE) {
+            this.droughtCount = 0;
+        }
+        else {
+            this.droughtCount++;
+        }
+
+        if (this.isInDrought()) {
+            this.timesInDrought++;
+        }
+    }
+
+    public isInDrought(): boolean {
+        return this.droughtCount >= 14;
+    }
+
+    public getDroughtCount(): number | undefined {
+        return this.isInDrought() ? this.droughtCount : undefined;
+    }
+
+    public percentInDrought(totalPositions: number): number {
+        if (totalPositions === 0) return 0;
+        return this.timesInDrought / totalPositions;
+    }
+
+} 
+
+export class GameStats {
+
+    private transitionScores: TransitionScore[] = [];
+
+    private readonly droughtStats: DroughtStats = new DroughtStats();
+    private readonly lineClearStats: LineClearStats = new LineClearStats();
+    private readonly efficiencyStats: EfficiencyStats = new EfficiencyStats();
+    private readonly tetrisReadinessStats: TetrisReadinessStats = new TetrisReadinessStats();
+
+    private numPlacements: number = 0;
+
+    constructor(transitionLevelsToTrack: number[]) {
+        transitionLevelsToTrack.forEach(level => {
+            this.transitionScores.push(new TransitionScore(level, undefined));
+        });
+    }
+
+    public onPiecePlacement(placement: GamePlacement, linesBurned: number): void {
+        this.droughtStats.updateDroughtCount(placement.currentPieceType);
+        this.lineClearStats.updateBurnedLinesAndTetrises(linesBurned);
+        this.efficiencyStats.updateIPieceEfficiency(placement.currentPieceType, linesBurned);
+        this.tetrisReadinessStats.updateTetrisReadiness(placement.grid);
+
+        this.numPlacements++;
+    }
+
+    public getLinesBurned(): number {
+        return this.lineClearStats.getLinesBurned();
+    }
+
+    public getTetrisRate(): number {
+        return this.lineClearStats.getTetrisRate();
     }
 
     public getTransitionScores(): TransitionScore[] {
@@ -54,11 +136,19 @@ export class GameStats {
     }
 
     public getDroughtCount(): number | undefined {
-        return (this.droughtCount >= 14) ? this.droughtCount : undefined;
+        return this.droughtStats.getDroughtCount();
     }
 
-    public getMaxDroughtCount(): number | undefined {
-        return (this.maxDroughtCount >= 14) ? this.maxDroughtCount : undefined;
+    public percentInDrought(): number {
+        return this.droughtStats.percentInDrought(this.numPlacements);
+    }
+
+    public getIPieceEfficiency(): number {
+        return this.efficiencyStats.getIPieceEfficiency();
+    }
+
+    public getTetrisReadiness(): number {
+        return this.tetrisReadinessStats.getTetrisReadiness(this.numPlacements);
     }
 
 }

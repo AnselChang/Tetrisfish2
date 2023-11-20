@@ -30,7 +30,7 @@ export class Game {
     public lastEngineMovelistNB$ = new BehaviorSubject<GamePlacement | undefined>(undefined);
 
     public status: SmartGameStatus;
-    public readonly stats = new GameStats();
+    public readonly stats: GameStats;
     public readonly analysisStats: GameAnalysisStats;
 
     public eligibility: GameEligibility;
@@ -41,9 +41,11 @@ export class Game {
 
         this.status = new SmartGameStatus(startLevel);
 
-        this.stats.trackTransitionLevel(startLevel + 1);
-        if (startLevel < 18) this.stats.trackTransitionLevel(19);
-        if (startLevel < 29) this.stats.trackTransitionLevel(29);
+        let transitionLevelsToTrack = [startLevel+1];
+        if (startLevel < 18) transitionLevelsToTrack.push(19);
+        if (startLevel < 29) transitionLevelsToTrack.push(29);
+        if (startLevel < 39) transitionLevelsToTrack.push(39);
+        this.stats = new GameStats(transitionLevelsToTrack);
 
         this.analysisStats = new GameAnalysisStats(this.startLevel);
         this.eligibility = new GameEligibility(this.startLevel);
@@ -81,8 +83,6 @@ export class Game {
             throw new Error("Cannot add new position to game where the last state also had no placement");
         }
 
-        this.stats.onPieceSpawn(currentPieceType);
-
         const newPlacement = new GamePlacement(this.placements.length, grid, currentPieceType, nextPieceType, this.status.copy());
         this.placements.push(newPlacement);
 
@@ -114,8 +114,8 @@ export class Game {
         placement.setPlacement(moveableTetronimo, numLineClears);
 
         // update game stats for placement
+        this.stats.onPiecePlacement(placement, numLineClears);
         this.status.onLineClear(numLineClears);
-        this.stats.onLineClears(numLineClears);
         this.calculateTransitionScores();
 
         // non-blocking fetch the engine rate-move deep, set to placement analysis when it's done fetching
