@@ -66,7 +66,7 @@ const gameSchema = new Schema({
         type: Number,
         required: true,
     },
-    trd : { // tetris readiness
+    tre : { // tetris readiness
         type: Number,
         required: true,
     },

@@ -13,7 +13,7 @@ export async function sendGameRoute(req: Request, res: Response) {
     }
 
     const game = req.body as SerializedGame;
-    console.log("Recieved game from user:", userID, game);
+    console.log("Recieved game from user:", userID, game.gameID, game.finalScore);
 
     if (await doesGameExist(game.gameID)) {
         console.error("Game already exists:", game.gameID);
