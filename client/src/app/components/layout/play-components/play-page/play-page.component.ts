@@ -16,6 +16,7 @@ import GameEligibility from 'client/src/app/models/game-models/game-eligibility'
 import { LoginStatus, UserService } from 'client/src/app/services/user.service';
 import { Router } from '@angular/router';
 import { filter, take } from 'rxjs';
+import { InputSpeed } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 
 
 @Component({
@@ -34,7 +35,7 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   // eligibility when not in game
-  private readonly defaultEligibility = new GameEligibility(-1);
+  private readonly defaultEligibility = new GameEligibility(-1, InputSpeed.HZ_30);
 
   constructor(
     public videoCaptureService: VideoCaptureService,

@@ -9,7 +9,7 @@
                 [isEligible]="eligibility.isStartLevelAllowed()"
                 [text]="'Level 18/19/29 Start'"
             />
-            <app-eligibility-item
+            <app-eligibility-item *ngIf="!is30Hz()"
                 [isEligible]="eligibility.isNumPiecesOverHzAllowed()"
                 [text]="getHzEligibilityText()"
             />

@@ -48,7 +48,7 @@ export class Game {
         this.stats = new GameStats(transitionLevelsToTrack);
 
         this.analysisStats = new GameAnalysisStats(this.startLevel);
-        this.eligibility = new GameEligibility(this.startLevel);
+        this.eligibility = new GameEligibility(this.startLevel, inputSpeed);
 
     }
 
@@ -128,6 +128,10 @@ export class Game {
         this.stats.onPiecePlacement(placement, numLineClears);
         this.status.onLineClear(numLineClears);
         this.calculateTransitionScores();
+
+        if (this.startLevel < 29 && this.status.level >= 29) {
+            this.eligibility.lockEligibility();
+        }
 
         // non-blocking fetch the engine rate-move deep, set to placement analysis when it's done fetching
         RateMoveDeep.fetch(placement, this.inputSpeed).then(rateMoveDeep => {

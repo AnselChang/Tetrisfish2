@@ -1,3 +1,4 @@
+import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { LeaderboardType } from "../leaderboard-models/leaderboards";
 
 export default class GameEligibility {
@@ -6,14 +7,17 @@ export default class GameEligibility {
 
     private numPiecesOverHz: number = 0;
     private hasPaused: boolean = false;
+    private locked: boolean = false;
 
-    constructor(private startLevel: number) {}
+    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed) {}
 
     public onPieceOverHz(): void {
+        if (this.locked) return;
         this.numPiecesOverHz++;
     }
 
     public onPiecePause(): void {
+        if (this.locked) return;
         this.hasPaused = true;
     }
 
@@ -26,6 +30,7 @@ export default class GameEligibility {
     }
 
     public isNumPiecesOverHzAllowed(): boolean {
+        if (this.inputSpeed === InputSpeed.HZ_30) return true;
         return this.numPiecesOverHz <= this.MAX_PIECES_OVER_HZ_ALLOWED;
     }
 
@@ -49,6 +54,11 @@ export default class GameEligibility {
 
         if (this.startLevel === 29) return LeaderboardType.TWENTY_NINE;
         else return LeaderboardType.OVERALL;
+    }
+
+    // cannot change eligibility once locked
+    public lockEligibility(): void {
+        this.locked = true;
     }
 
 }

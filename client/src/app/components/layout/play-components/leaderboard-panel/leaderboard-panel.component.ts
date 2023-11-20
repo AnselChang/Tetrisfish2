@@ -43,6 +43,10 @@ export class LeaderboardPanelComponent {
     return str;
   }
 
+  is30Hz() {
+    return this.eligibility.inputSpeed === InputSpeed.HZ_30;
+  }
+
   constructor() {
     this.redColor = RATING_TO_COLOR[Rating.BLUNDER];
   }
