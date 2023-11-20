@@ -26,7 +26,7 @@ require('dotenv').config();
 
 export default async function createApp(): Promise<Express> {
     const app = express();
-    const clientDir = path.join(__dirname, '../public');
+    const clientDir = path.join(__dirname, '../../public');
 
     app.use(morgan('dev'));
 

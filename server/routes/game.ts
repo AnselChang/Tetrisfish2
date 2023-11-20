@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { addGameToDatabase, doesGameExist } from 'server/database/game/game-service';
-import { SerializedGame } from 'shared/models/serialized-game';
+import { addGameToDatabase, doesGameExist } from '../database/game/game-service';
+import { SerializedGame } from '../../shared/models/serialized-game';
 
 export async function sendGameRoute(req: Request, res: Response) {
 

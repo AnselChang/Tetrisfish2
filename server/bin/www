@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-require('../app').default().then(app => {
+require('../server/app').default().then(app => {
 
   const debug = require('debug')('NameApp:server');
   const http = require('http');
