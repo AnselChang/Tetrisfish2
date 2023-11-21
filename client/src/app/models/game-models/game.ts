@@ -90,7 +90,7 @@ export class Game {
         return secondLastPosition;
     }
 
-    public addNewPosition(grid: BinaryGrid, currentPieceType: TetrominoType, nextPieceType: TetrominoType): GamePlacement {
+    public addNewPosition(grid: BinaryGrid, currentPieceType: TetrominoType, nextPieceType: TetrominoType, runAnalysis: boolean = true): GamePlacement {
         if (this.getLastPosition() && !this.getLastPosition()!.hasPlacement()) {
             throw new Error("Cannot add new position to game where the last state also had no placement");
         }
@@ -98,26 +98,35 @@ export class Game {
         const newPlacement = new GamePlacement(this.placements.length, grid, currentPieceType, nextPieceType, this.status.copy());
         this.placements.push(newPlacement);
 
+        if (runAnalysis) this.runPositionAnalysis(newPlacement);
+
+        return newPlacement;
+
+    }
+
+    public runPositionAnalysis(position: GamePlacement) {
+
+        // mark position as started analysis
+        position.analysis.flagStartedAnalysis();
+
         // non-blocking fetch SR engine-movelist NB, set to placement analysis when it's done fetching 
-        EngineMovelistNB.fetch(newPlacement, this.inputSpeed).then(engineMovelistNB => {
-            newPlacement.analysis.setEngineMoveListNB(engineMovelistNB);
+        EngineMovelistNB.fetch(position, this.inputSpeed).then(engineMovelistNB => {
+            position.analysis.setEngineMoveListNB(engineMovelistNB);
 
             // update most recent placement with engine-movelist NB if it's higher than the current one
             const lastPlacementMovelistNB = this.lastEngineMovelistNB$.getValue();
-            if (!lastPlacementMovelistNB || lastPlacementMovelistNB.index < newPlacement.index) {
-                this.lastEngineMovelistNB$.next(newPlacement);
+            if (!lastPlacementMovelistNB || lastPlacementMovelistNB.index < position.index) {
+                this.lastEngineMovelistNB$.next(position);
             }
         });
 
         // // non-blocking fetch SR engine-movelist NNB, set to placement analysis when it's done fetching
-        EngineMovelistNNB.fetch(newPlacement, this.inputSpeed).then(engineMovelistNNB => {
-            newPlacement.analysis.setEngineMoveListNNB(engineMovelistNNB);
+        EngineMovelistNNB.fetch(position, this.inputSpeed).then(engineMovelistNNB => {
+            position.analysis.setEngineMoveListNNB(engineMovelistNNB);
         });
-
-        return newPlacement;
     }
 
-    public setPlacementForLastPosition(moveableTetronimo: MoveableTetromino, numLineClears: number) {
+    public setPlacementForLastPosition(moveableTetronimo: MoveableTetromino, numLineClears: number, runAnalysis: boolean = true) {
         
         if (!this.getLastPosition()) throw new Error("Game has no positions to set placement for");
         if (this.getLastPosition()!.hasPlacement()) throw new Error("Last placement already has a placement");
@@ -133,6 +142,13 @@ export class Game {
         if (this.startLevel < 29 && this.status.level >= 29) {
             this.eligibility.lockEligibility();
         }
+
+        // run placement analysis
+        if (runAnalysis) this.runPlacementAnalysis(placement);
+
+    }
+
+    public runPlacementAnalysis(placement: GamePlacement): void {
 
         // non-blocking fetch the engine rate-move deep, set to placement analysis when it's done fetching
         RateMoveDeep.fetch(placement, this.inputSpeed).then(rateMoveDeep => {
@@ -152,6 +168,11 @@ export class Game {
         RateMoveShallow.fetch(placement, this.inputSpeed).then(rateMoveShallow => {
             placement.analysis.setRateMoveShallow(rateMoveShallow);
         });
+    }
+
+    public runFullAnalysis(placement: GamePlacement): void {
+        this.runPositionAnalysis(placement);
+        this.runPlacementAnalysis(placement);
     }
 
     // if any of the flagged transition levels have been reached, set the transition score

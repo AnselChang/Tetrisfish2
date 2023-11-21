@@ -22,6 +22,7 @@ export default class PlacementAnalysis {
     public onFinishAnalysis$ = new BehaviorSubject<boolean>(false);
 
     private isFinishedAnalysis = false;
+    private isStartedAnalysis = false;
 
     private updateAnalysisObservable() {
         if (this.isFinishedAnalysis) return;
@@ -33,6 +34,8 @@ export default class PlacementAnalysis {
         }
     }
 
+    public flagStartedAnalysis() { this.isStartedAnalysis = true; }
+    public isAnalysisStarted(): boolean { return this.isStartedAnalysis; }
     public isAnalyisFinished(): boolean { return this.isFinishedAnalysis; }
 
     hasEngineMovelistNB(): boolean { return this.engineMovelistNB !== undefined; }

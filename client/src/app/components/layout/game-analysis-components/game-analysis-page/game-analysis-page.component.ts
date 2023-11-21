@@ -90,9 +90,9 @@ export class GameAnalysisPageComponent implements OnInit {
     // add placements
     dbGame.placements.forEach(placement => {
       const grid = BinaryGrid.fromCompressedString(placement.b);
-      game.addNewPosition(grid, placement.c as TetrominoType, placement.n as TetrominoType);
+      game.addNewPosition(grid, placement.c as TetrominoType, placement.n as TetrominoType, false);
       const mt = new MoveableTetromino(placement.c as TetrominoType, placement.r, placement.x, placement.y);
-      game.setPlacementForLastPosition(mt, placement.l);
+      game.setPlacementForLastPosition(mt, placement.l, false);
     });
 
     // set game object
@@ -103,6 +103,13 @@ export class GameAnalysisPageComponent implements OnInit {
 
     this.notifier.hide("game-loading");
 
+    // start analyzing first placement
+    this.game!.runFullAnalysis(this.game.getPlacementAt(0));
+
+    // start analyzing first 10 placements after a second
+    setTimeout(() => {
+      this.setPlacement(0);
+    }, 1000);
   }
 
   getPosition(): GamePlacement {
@@ -124,7 +131,7 @@ export class GameAnalysisPageComponent implements OnInit {
 
   previous() {
     if (this.hasPrevious()) {
-      this.placementIndex--;
+      this.setPlacement(this.placementIndex - 1);
     }
   }
 
@@ -134,9 +141,23 @@ export class GameAnalysisPageComponent implements OnInit {
 
   next() {
     if (this.hasNext()) {
-      this.placementIndex++;
+      this.setPlacement(this.placementIndex + 1);
     }
   }
+
+  private setPlacement(index: number) {
+    this.placementIndex = index;
+
+    // start analyzing next ten placements including this if not analyzed
+    for (let i = index; i < Math.min(index + 10, this.game!.numPlacements); i++) {
+      const placement = this.game!.getPlacementAt(i);
+      if (!placement.analysis.isAnalysisStarted()) {
+        this.game!.runFullAnalysis(placement);
+      }
+    }
+
+  }
+
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
