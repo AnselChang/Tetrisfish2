@@ -14,7 +14,7 @@ import { SmartGameStatus } from "../tetronimo-models/smart-game-status";
 export class GamePlacement {
 
     // stores all the optional analysis data from SR for this placement
-    public readonly analysis = new PlacementAnalysis();
+    public readonly analysis: PlacementAnalysis;
 
     public statusAfterPlacement?: SmartGameStatus;
     public piecePlacement?: MoveableTetromino; // compact way to store the pose of the current piece
@@ -26,7 +26,9 @@ export class GamePlacement {
         public currentPieceType: TetrominoType, // type of the current piece to be placed
         public nextPieceType: TetrominoType, // type of the next box piece
         public statusBeforePlacement: SmartGameStatus, // status of the game AFTER the placement
-    ) {}
+    ) {
+        this.analysis = new PlacementAnalysis(index);
+    }
 
     hasPlacement(): boolean {
         return this.piecePlacement !== undefined;

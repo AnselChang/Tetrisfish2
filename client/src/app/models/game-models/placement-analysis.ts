@@ -24,12 +24,15 @@ export default class PlacementAnalysis {
     private isFinishedAnalysis = false;
     private isStartedAnalysis = false;
 
+    constructor(private readonly index: number) { }
+
     private updateAnalysisObservable() {
         if (this.isFinishedAnalysis) return;
 
         const finished = this.hasEngineMovelistNB() && this.hasEngineMovelistNNB() && this.hasRateMoveDeep() && this.hasRateMoveShallow();
         if (finished) {
             this.isFinishedAnalysis = true;
+            console.log("Finished analysis for placement", this.index+1);
             this.onFinishAnalysis$.next(true);
         }
     }
