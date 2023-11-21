@@ -1,0 +1,30 @@
+.number-slot {
+    height: 50px;
+    // width: 30px;
+    text-align: center;
+    overflow: hidden;
+    // border: 1px solid white;
+  }
+  .number-slot .number {
+    position: relative;
+  }
+  
+  @keyframes moveNumberOut {
+    0% {margin-top: 0em; opacity: 1;}
+    30% {margin-top: -40px; opacity: 0;}
+    100% {margin-top: -40px; opacity: 0;}
+  }
+  .move-number-out {
+      animation: moveNumberOut 1.5s;
+      animation-fill-mode: forwards;
+  }
+
+  .digit {
+    text-align: center;
+    font-family: 'Montserrat';
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    transform: translateY(-9px);
+}

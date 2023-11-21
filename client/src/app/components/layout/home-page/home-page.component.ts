@@ -9,12 +9,19 @@ import { UserService } from 'client/src/app/services/user.service';
 })
 export class HomePageComponent implements OnInit {
 
+  public value = 0;
+
   constructor(private userService: UserService) {}
 
   async ngOnInit() {
     console.log("HomePageComponent");
-  }
 
+    // every two seconds, increment counter
+    setInterval(() => {
+      this.value += 1000;
+    }, 200);
+  }
+  
   public onClick(): void {
     console.log("clicked");
   }

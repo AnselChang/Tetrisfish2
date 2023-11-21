@@ -1,1 +1,33 @@
-<p>home-page works!</p>
+<header>
+    <div class="brand">
+        <img src="./assets/img/tetrisfish_logo_shadow.svg">
+        <h1 class="brand-name">tetrisfish</h1>
+    </div>
+    <h2 class="brand-subtitle">Stack like a champion.</h2>
+</header>
+
+<section class="global-game-stats">
+    <div class="global-game-stat">
+        <div class="stat-value-icon">
+            <h1 class="stat-value">35.4M</h1>
+            <app-fixed-size-image class="stat-icon" src="analysis.png" [width]="53"></app-fixed-size-image>
+        </div>
+        <h2 class="stat-label">Positions Analyzed</h2>
+    </div>
+    <div class="global-game-stat">
+        <div class="stat-value-icon">
+            <h1 class="stat-value">35.4M</h1>
+            <app-fixed-size-image class="stat-icon" src="analysis.png" [width]="53"></app-fixed-size-image>
+        </div>
+        <h2 class="stat-label">Positions Analyzed</h2>
+    </div>
+    <div class="global-game-stat">
+        <div class="stat-value-icon">
+            <h1 class="stat-value">35.4M</h1>
+            <app-fixed-size-image class="stat-icon" src="analysis.png" [width]="53"></app-fixed-size-image>
+        </div>
+        <h2 class="stat-label">Positions Analyzed</h2>
+    </div>
+</section>
+
+<app-animated-counter [value]="value"></app-animated-counter>

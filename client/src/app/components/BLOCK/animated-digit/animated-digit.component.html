@@ -1,0 +1,5 @@
+<div class="number-slot"
+[style.width]="getWidth() + 'px'">
+    <div *ngIf="animate" class="number move-number-out"><h1 class="digit">{{currentDigit}}</h1></div>
+    <div class="number"><h1 class="digit">{{nextDigit}}</h1></div>
+</div>

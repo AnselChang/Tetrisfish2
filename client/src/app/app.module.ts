@@ -48,6 +48,8 @@ import { RatingTotalsComponent } from './components/layout/play-components/ratin
 import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
 import { DiscordButtonComponent } from './components/BLOCK/discord-button/discord-button.component';
 import { OnLoginComponent } from './components/layout/on-login/on-login.component';
+import { AnimatedDigitComponent } from './components/BLOCK/animated-digit/animated-digit.component';
+import { AnimatedCounterComponent } from './components/BLOCK/animated-counter/animated-counter.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,6 +95,8 @@ import { OnLoginComponent } from './components/layout/on-login/on-login.componen
     HowToPlayComponent,
     DiscordButtonComponent,
     OnLoginComponent,
+    AnimatedDigitComponent,
+    AnimatedCounterComponent,
   ],
   imports: [
     BrowserModule,
