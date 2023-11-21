@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { loginWithDiscord } from 'client/src/app/scripts/login';
 import { GlobalStats } from 'server/database/global-stats/global-stats-schema';
@@ -32,7 +33,7 @@ export class HomePageComponent implements OnInit {
     }
   ]
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private notifier: NotifierService) {}
 
   ngOnInit() {
 

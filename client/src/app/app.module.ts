@@ -50,6 +50,49 @@ import { DiscordButtonComponent } from './components/BLOCK/discord-button/discor
 import { OnLoginComponent } from './components/layout/on-login/on-login.component';
 import { AnimatedDigitComponent } from './components/BLOCK/animated-digit/animated-digit.component';
 import { AnimatedCounterComponent } from './components/BLOCK/animated-counter/animated-counter.component';
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
+
+const customNotifierOptions: NotifierOptions = {
+  position: {
+    horizontal: {
+      position: 'right',
+      distance: 12,
+    },
+    vertical: {
+      position: 'bottom',
+      distance: 12,
+      gap: 10,
+    },
+  },
+  theme: 'material',
+  behaviour: {
+    autoHide: 4000,
+    onClick: 'hide',
+    onMouseover: 'pauseAutoHide',
+    showDismissButton: true,
+    stacking: 4,
+  },
+  animations: {
+    enabled: true,
+    show: {
+      preset: 'slide',
+      speed: 300,
+      easing: 'ease',
+    },
+    hide: {
+      preset: 'fade',
+      speed: 300,
+      easing: 'ease',
+      offset: 50,
+    },
+    shift: {
+      speed: 300,
+      easing: 'ease',
+    },
+    overlap: 150,
+  },
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -102,6 +145,7 @@ import { AnimatedCounterComponent } from './components/BLOCK/animated-counter/an
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    NotifierModule.withConfig(customNotifierOptions),
     HttpClientModule,
     BrowserAnimationsModule,
     MatSliderModule,

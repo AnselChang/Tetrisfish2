@@ -15,6 +15,7 @@ import { HistoricalGame } from '../../models/game-models/game-history';
 import { Point } from '../../models/capture-models/point';
 import { first } from 'rxjs';
 import { GameExportService } from '../game-export.service';
+import { NotifierService } from 'angular-notifier';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -282,6 +283,7 @@ export class GameStateMachineService {
     private gameHistoryService: GameHistoryService,
     private exportService: GameExportService,
     private debug: GameDebugService,
+    private notifier: NotifierService,
     ) { }
 
   public startGame(): void {
@@ -295,6 +297,7 @@ export class GameStateMachineService {
     this.game = new Game(gameStartLevel, inputSpeed); // create a new game that will store all the placements
 
     this.debug.resetNewGame(this.game.gameID);
+    this.notifier.notify("success", `Game started on level ${gameStartLevel}`);
   }
 
   // this function handles pushing to game history and sending game to server once complete
@@ -316,7 +319,10 @@ export class GameStateMachineService {
     this.gameHistoryService.get().addGame(historicalGame);
 
     // export and send to server
-    this.exportService.export(this.game);
+    this.exportService.export(this.game).then(() => {
+      const accuracy = Math.round(this.game!.analysisStats.getOverallAccuracy().getAverage() * 10000) / 100;
+      this.notifier.notify("success", `Game successfully saved with ${this.game!.status.score} points at ${accuracy}% accuracy.`);
+    });
   }
 
   public endGame(): void {
@@ -339,6 +345,8 @@ export class GameStateMachineService {
       ).subscribe(() => {
         this.onGameFinishedAndAnalyzed();
       });
+    } else {
+      this.notifier.notify("warning", "Game discarded. Games under 5 placements are not saved.")
     }
 
   }
