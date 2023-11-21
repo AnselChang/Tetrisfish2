@@ -51,6 +51,7 @@ import { OnLoginComponent } from './components/layout/on-login/on-login.componen
 import { AnimatedDigitComponent } from './components/BLOCK/animated-digit/animated-digit.component';
 import { AnimatedCounterComponent } from './components/BLOCK/animated-counter/animated-counter.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
+import { GameAnalysisPageComponent } from './components/layout/game-analysis-components/game-analysis-page/game-analysis-page.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -140,6 +141,7 @@ const customNotifierOptions: NotifierOptions = {
     OnLoginComponent,
     AnimatedDigitComponent,
     AnimatedCounterComponent,
+    GameAnalysisPageComponent,
   ],
   imports: [
     BrowserModule,

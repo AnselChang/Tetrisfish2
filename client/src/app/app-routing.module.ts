@@ -14,6 +14,7 @@ import { DebugGameComponent } from './components/layout/debug-game/debug-game.co
 import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
 import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
 import { OnLoginComponent } from './components/layout/on-login/on-login.component';
+import { GameAnalysisPageComponent } from './components/layout/game-analysis-components/game-analysis-page/game-analysis-page.component';
 
 const routes: Routes = [
   // { path: 'login', component: LoginPageComponent},
@@ -27,6 +28,7 @@ const routes: Routes = [
       { path: 'how-to-play', component: HowToPlayComponent },
       { path: 'play-calibrate', component: PlayCalibrateComponent },
       { path: 'analysis', component: AnalyzePageComponent },
+      { path: 'analyze-game', component: GameAnalysisPageComponent },
       { path: 'puzzles', component: PuzzlesPageComponent },
       { path: 'leaderboard', component: LeaderboardPageComponent },
       { path: 'profile', component: ProfilePageComponent },

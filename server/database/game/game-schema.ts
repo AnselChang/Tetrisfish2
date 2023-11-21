@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { SerializedPlacement } from "shared/models/serialized-game";
 
 // Schema for a played game.
 // Since this will be a large database, we use value (attribute name) optimization

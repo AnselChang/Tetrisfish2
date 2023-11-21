@@ -1,4 +1,5 @@
 import { SerializedGame } from "shared/models/serialized-game";
+import { GameFromDatabase } from "shared/models/game-from-database";
 import DBGame from "./game-schema";
 
 export async function addGameToDatabase(discordID: string, game: SerializedGame) {
@@ -42,8 +43,22 @@ export async function doesGameExist(gameID: string): Promise<boolean> {
     return game !== null;
 }
 
-export async function getGameWithID(gameID: string) {
-    return await DBGame.findOne({gid: gameID});
+export async function getGameWithID(gameID: string): Promise<GameFromDatabase | undefined> {
+    const game = await DBGame.findOne({gid: gameID});
+
+    if (!game) {
+        return undefined;
+    }
+
+    return {
+        timestamp: game.ts.toISOString(),
+        discordID: game.uid,
+        gameID: game.gid,
+        placements: game.pm,
+        startLevel: game.sl,
+        inputSpeed: game.is,
+        playstyle: game.ps,
+    };
 }
 
 export async function getAllGamesByPlayer(discordID: string) {

@@ -1,0 +1,6 @@
+.main {
+    display: grid;
+    grid-template-columns: 35px 5fr 2.3fr 5fr; // 1fr = 50px in figma
+    column-gap: 10px;
+    margin: 0 10px;
+}

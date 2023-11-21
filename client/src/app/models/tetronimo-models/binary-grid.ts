@@ -122,6 +122,12 @@ export default class BinaryGrid implements Grid {
         return newGrid;
     }
 
+    public static fromCompressedString(grid: string): BinaryGrid {
+        const newGrid = new BinaryGrid();
+        newGrid._setFromCompressedString(grid);
+        return newGrid;
+    }
+
     public _getAsString(): string {
         let result = "";
         for (let row = 0; row < 20; row++) {
