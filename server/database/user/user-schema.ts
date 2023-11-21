@@ -1,39 +1,31 @@
 import mongoose, { Schema } from "mongoose";
 
-const speedAccuracySchema = new Schema({
-    speed: Number,
-    accuracy: Number,
-    count: Number,
-});
-
-const pieceAccuracySchema = new Schema({
-    piece: String,
-    accuracy: Number,
-    count: Number,
-});
-
-
-const gameSchema = new Schema({
-    timestamp: Date,
-    gameData: String,
-    title: String,
-    inputSpeed: Number,
-    startLevel: Number,
-    endScore: Number,
-    endLevel: Number,
-    endLines: Number,
-    overallAccuracy: Number, // does not include 29+ accuracy, except at 29+ start
-    speedAccuracy: [speedAccuracySchema],
-    pieceAccuracy: [pieceAccuracySchema],
-});
+export interface User {
+    discordID: string,
+    username: string,
+    isProUser: boolean,
+    playstyle: string,
+}
 
 // Schema for a tetrisfish user
 const userSchema = new Schema({
-    discordID: String,
-    username: String,
-    isProUser: Boolean,
-    playstyle: String,
-    games: [gameSchema],
+    discordID: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    username: {
+        type: String,
+        required: true,
+    },
+    isProUser: {
+        type: Boolean,
+        required: true,
+    },
+    playstyle: {
+        type: String,
+        required: true,
+    }
 });
 
 const DBUser = mongoose.model('DBUser', userSchema);

@@ -19,6 +19,7 @@ import { NotifierService } from 'angular-notifier';
 import { GameCacheService } from '../game-cache.service';
 import { GameHistoryCacheService } from '../game-history-cache.service';
 import { GameSpeed } from '../../models/evaluation-models/rating';
+import { UserService } from '../user.service';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -289,6 +290,7 @@ export class GameStateMachineService {
     private notifier: NotifierService,
     private gameCacheService: GameCacheService,
     private gameHistoryCacheService: GameHistoryCacheService,
+    private user: UserService,
     ) { }
 
   public startGame(): void {
@@ -299,7 +301,7 @@ export class GameStateMachineService {
 
     const gameStartLevel = this.extractedStateService.get().getStatus().level;
     const inputSpeed = this.captureSettingsService.get().inputSpeed;
-    this.game = new Game(gameStartLevel, inputSpeed); // create a new game that will store all the placements
+    this.game = new Game(gameStartLevel, inputSpeed, this.user.getUsername()!); // create a new game that will store all the placements
 
     this.debug.resetNewGame(this.game.gameID);
     this.notifier.notify("success", `Game started on level ${gameStartLevel}`);
@@ -311,12 +313,14 @@ export class GameStateMachineService {
 
     if (!this.game) throw new Error("Game is undefined");
 
+    this.game.setTimestamp(new Date());
+
     // add to cache
     this.gameCacheService.cacheGame(this.game);
 
     // push to session game history
     const historicalGame = new HistoricalGame(
-      new Date(),
+      this.game.getTimestamp()!,
       this.game.startLevel,
       this.game.status.score,
       this.game.status.level,
@@ -329,7 +333,7 @@ export class GameStateMachineService {
     // push to full game history cache if it exists
     if (this.gameHistoryCacheService.hasCache()) {
       this.gameHistoryCacheService.pushGameToCache({
-        timestamp: (new Date()).toISOString(),
+        timestamp: this.game.getTimestamp()!.toISOString(),
         gameID: this.game.gameID,
         startLevel: this.game.startLevel,
         score19: this.game.stats.getScoreAtTransitionTo19(),

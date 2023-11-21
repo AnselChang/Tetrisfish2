@@ -13,11 +13,6 @@ import { GameCacheService } from 'client/src/app/services/game-cache.service';
 import formatDistanceStrict from 'date-fns/formatDistanceStrict';
 import { GameFromDatabase } from 'shared/models/game-from-database';
 
-class GameInfo {
-  playerName: string = "(unknown)";
-  timestamp: Date = new Date();
-  playstyle: string = "unknown";
-}
 
 @Component({
   selector: 'app-game-analysis-page',
@@ -27,7 +22,6 @@ class GameInfo {
 export class GameAnalysisPageComponent implements OnInit {
 
   public game?: Game;
-  public gameInfo: GameInfo = new GameInfo();
 
   public placementIndex: number = 0;
 
@@ -58,6 +52,7 @@ export class GameAnalysisPageComponent implements OnInit {
         // if game is cached, load it
         this.game = this.gameCacheService.getGame(gameID);
         console.log("Loaded cached game", gameID);
+        
       
       } else {
 
@@ -85,7 +80,8 @@ export class GameAnalysisPageComponent implements OnInit {
     console.log("Loading game", dbGame);
 
     // create game object to store placements. will be assigned to this.game after all placements are loaded
-    const game = new Game(dbGame.startLevel, dbGame.inputSpeed as InputSpeed, dbGame.gameID);
+    const game = new Game(dbGame.startLevel, dbGame.inputSpeed as InputSpeed, dbGame.playerName, dbGame.gameID);
+    game.setTimestamp(new Date(dbGame.timestamp));
 
     // add placements
     dbGame.placements.forEach(placement => {
@@ -112,6 +108,7 @@ export class GameAnalysisPageComponent implements OnInit {
     }, 1000);
   }
 
+
   getPosition(): GamePlacement {
     return this.game!.getPlacementAt(this.placementIndex);
   }
@@ -121,7 +118,9 @@ export class GameAnalysisPageComponent implements OnInit {
   }
 
   getRelativeTime(): string {
-    const result = formatDistanceStrict(this.gameInfo.timestamp, new Date());
+    if (!this.game) return "";
+    if (!this.game.getTimestamp()) return "";
+    const result = formatDistanceStrict(this.game!.getTimestamp()!, new Date());
     return result + " ago";
   }
 

@@ -6,7 +6,7 @@
     [rating]="getPlayerRating()?.rating"/>
 
     <app-section class="col-capture">
-        <h2 class="header">Played by {{gameInfo.playerName}} {{getRelativeTime()}} with playstyle: {{gameInfo.playstyle}}</h2>
+        <h2 class="header">Played by {{game?.playerName ?? "unknown"}} {{getRelativeTime()}} with playstyle: unknown</h2>
 
         <app-tetris-panel>
             <app-interactive-tetris-board

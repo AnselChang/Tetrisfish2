@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import DBUser from "./user-schema";
+import DBUser, { User } from "./user-schema";
 
 export async function createNewUser(discordID: string, username: string): Promise<mongoose.Types.ObjectId> {
 
@@ -19,4 +19,19 @@ export async function createNewUser(discordID: string, username: string): Promis
 export async function doesUserExist(discordID: string): Promise<boolean> {
     const user = await DBUser.findOne({discordID: discordID});
     return user !== null;
+}
+
+export async function getUserByID(discordID: string): Promise<User | undefined> {
+    const user = await DBUser.findOne({discordID: discordID});
+
+    if (!user) {
+        return undefined;
+    }
+
+    return {
+        discordID: user.discordID,
+        username: user.username,
+        isProUser: user.isProUser,
+        playstyle: user.playstyle,
+    };
 }

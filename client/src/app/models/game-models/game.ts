@@ -21,6 +21,8 @@ export class Game {
     // uuid v4 randomly generated id to uniquely identify the game
     public readonly gameID: string;
 
+    private timestamp?: Date;
+
     private placements: GamePlacement[] = [];
 
     // the most recent placement that has a rating
@@ -35,7 +37,7 @@ export class Game {
 
     public eligibility: GameEligibility;
 
-    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed, existingGameID?: string) {
+    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed, public readonly playerName: string, existingGameID?: string) {
 
         // if not recreating an existing game, generate a new uuid
         this.gameID = existingGameID ?? uuidv4();
@@ -59,6 +61,14 @@ export class Game {
 
     public getPlacementAt(index: number): GamePlacement {
         return this.placements[index];
+    }
+
+    public setTimestamp(timestamp: Date): void {
+        this.timestamp = timestamp;
+    }
+
+    public getTimestamp(): Date | undefined {
+        return this.timestamp;
     }
 
     // pop last position if its placement is undefined.

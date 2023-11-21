@@ -1,6 +1,7 @@
 import { SerializedGame } from "shared/models/serialized-game";
 import { GameFromDatabase } from "shared/models/game-from-database";
 import DBGame from "./game-schema";
+import { getUserByID } from "../user/user-service";
 
 export async function addGameToDatabase(discordID: string, game: SerializedGame) {
 
@@ -50,9 +51,13 @@ export async function getGameWithID(gameID: string): Promise<GameFromDatabase | 
         return undefined;
     }
 
+    const player = await getUserByID(game.uid);
+    const playerName = player ? player.username : "unknown";
+
     return {
         timestamp: game.ts.toISOString(),
         discordID: game.uid,
+        playerName: playerName,
         gameID: game.gid,
         placements: game.pm,
         startLevel: game.sl,
