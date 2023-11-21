@@ -7,27 +7,21 @@
 </header>
 
 <section class="global-game-stats">
-    <div class="global-game-stat">
+    <div class="global-game-stat" *ngFor="let stat of globalStatInfo">
         <div class="stat-value-icon">
-            <h1 class="stat-value">35.4M</h1>
-            <app-fixed-size-image class="stat-icon" src="analysis.png" [width]="53"></app-fixed-size-image>
+            <app-animated-counter class="stat-value" [value]="stat.value"></app-animated-counter>
+            <app-fixed-size-image class="stat-icon" [src]="stat.icon" [width]="53"></app-fixed-size-image>
         </div>
-        <h2 class="stat-label">Positions Analyzed</h2>
-    </div>
-    <div class="global-game-stat">
-        <div class="stat-value-icon">
-            <h1 class="stat-value">35.4M</h1>
-            <app-fixed-size-image class="stat-icon" src="analysis.png" [width]="53"></app-fixed-size-image>
-        </div>
-        <h2 class="stat-label">Positions Analyzed</h2>
-    </div>
-    <div class="global-game-stat">
-        <div class="stat-value-icon">
-            <h1 class="stat-value">35.4M</h1>
-            <app-fixed-size-image class="stat-icon" src="analysis.png" [width]="53"></app-fixed-size-image>
-        </div>
-        <h2 class="stat-label">Positions Analyzed</h2>
+        <h2 class="stat-label">{{stat.title}}</h2>
     </div>
 </section>
 
-<app-animated-counter [value]="value"></app-animated-counter>
+<section class="info">
+    <h1 class="info-title">1989 Tetris meets modern technology...</h1>
+    <p class="info-text">
+        Transform your NES Tetris game! Powered by StackRabbit AI, this tool offers in-depth analysis,
+        various puzzle training modes, and real-time feedback. Compete in the leaderboards and track your 
+        progress. Elevate your play with Tetrisfish - where every placement counts!
+    </p>
+    <app-discord-button (click)="login()"></app-discord-button>
+</section>

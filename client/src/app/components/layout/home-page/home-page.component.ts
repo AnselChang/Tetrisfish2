@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
-import { UserService } from 'client/src/app/services/user.service';
+import { loginWithDiscord } from 'client/src/app/scripts/login';
+import { GlobalStats } from 'server/database/global-stats/global-stats-schema';
+
 
 @Component({
   selector: 'app-home-page',
@@ -11,19 +14,55 @@ export class HomePageComponent implements OnInit {
 
   public value = 0;
 
-  constructor(private userService: UserService) {}
+  public globalStatInfo = [
+    {
+      title: "Positions Analyzed",
+      icon: "analysis.png",
+      value: 0,
+    },
+    {
+      title: "Games Played",
+      icon: "games.png",
+      value: 0,
+    },
+    {
+      title: "Puzzles Solved",
+      icon: "puzzle.png",
+      value: 0,
+    }
+  ]
 
-  async ngOnInit() {
-    console.log("HomePageComponent");
+  constructor(private router: Router) {}
 
-    // every two seconds, increment counter
+  ngOnInit() {
+
+    this.syncGlobalStats();
+
+    // every 5 seconds, sync global stats
     setInterval(() => {
-      this.value += 1000;
-    }, 200);
+      this.syncGlobalStats();
+    }, 5000);
   }
-  
-  public onClick(): void {
-    console.log("clicked");
+
+  public syncGlobalStats() {
+    fetchServer(Method.GET, "/api/get-global-stats").then(({ status, content}) => {
+      if (status === 200) {
+        const globalStats = content as GlobalStats;
+        console.log(globalStats);
+
+        this.globalStatInfo[0].value = globalStats.placementCount;
+        this.globalStatInfo[1].value = globalStats.gameCount;
+        this.globalStatInfo[2].value = globalStats.puzzleCount;
+
+      } else {
+        console.log("error");
+      }
+    });
   }
+
+  login() {
+    loginWithDiscord(this.router);
+  }
+
 
 }

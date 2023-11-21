@@ -9,6 +9,7 @@ header {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    gap: 8px;
 }
 
 .brand-name {
@@ -28,6 +29,8 @@ header {
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+    margin-top: -10px;
+    margin-left: 35px;
 }
 
 .global-game-stats {
@@ -49,7 +52,7 @@ header {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
 }
 
 .stat-value-icon {
@@ -59,15 +62,6 @@ header {
     gap: 6px;
 }
 
-.stat-value {
-    text-align: center;
-    font-family: 'Montserrat';
-    font-size: 40px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-}
-
 .stat-label {
     text-align: center;
     font-family: 'Montserrat';
@@ -75,4 +69,37 @@ header {
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+}
+
+.stat-value {
+    margin-top: 7px;
+}
+
+.info {
+    background-color: #50418D;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    padding: 0 15% 30px 15%;
+    margin-top: 40px;
+}
+
+.info-title {
+    text-align: center;
+    font-family: Londrina Solid;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-top: 20px;
+}
+
+.info-text {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.5;
 }
