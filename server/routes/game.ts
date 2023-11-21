@@ -43,7 +43,7 @@ export async function getGamesByPlayerRoute(req: Request, res: Response) {
 
     const dbGames = await getAllGamesByPlayer(userID);
     const games: GameHistoryGame[] = dbGames.map(dbGame => ({
-            timestamp: dbGame.ts,
+            timestamp: dbGame.ts.toISOString(),
             gameID: dbGame.gid,
             startLevel: dbGame.sl,
             score19: dbGame.s19,
