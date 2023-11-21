@@ -97,13 +97,12 @@ export class GameAnalysisPageComponent implements OnInit {
     // cache game
     this.gameCacheService.cacheGame(game);
 
-    this.notifier.hide("game-loading");
-
     // start analyzing first placement
     this.game!.runFullAnalysis(this.game.getPlacementAt(0));
 
     // start analyzing first 10 placements after a second
     setTimeout(() => {
+      this.notifier.hide("game-loading");
       this.setPlacement(0);
     }, 1000);
   }
