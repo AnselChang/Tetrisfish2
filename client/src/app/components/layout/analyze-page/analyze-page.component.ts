@@ -51,12 +51,12 @@ export class AnalyzePageComponent implements OnInit {
   }
 
   formatAccuracy(accuracy: number | null | undefined): string {
-    if (accuracy === null || accuracy === undefined) return "-";
+    if (accuracy === null || accuracy === undefined || accuracy < 0) return "-";
     return Math.round(accuracy * 10000) / 100 + "%";
   }
 
   getAccuracyColor(accuracy: number | null | undefined): string {
-    if (accuracy === null || accuracy === undefined) "white";
+    if (accuracy === null || accuracy === undefined || accuracy < 0) return "white";
     const rating = getRatingFromAveragePercent(accuracy!);
     return RATING_TO_COLOR[rating];
   }
