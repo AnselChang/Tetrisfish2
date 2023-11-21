@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
@@ -11,7 +11,7 @@ import { GlobalStats } from 'server/database/global-stats/global-stats-schema';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss']
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent implements OnInit, OnDestroy {
 
   public value = 0;
 
@@ -33,6 +33,8 @@ export class HomePageComponent implements OnInit {
     }
   ]
 
+  private intervalID!: any;
+
   constructor(private router: Router, private notifier: NotifierService) {}
 
   ngOnInit() {
@@ -40,7 +42,7 @@ export class HomePageComponent implements OnInit {
     this.syncGlobalStats();
 
     // every 5 seconds, sync global stats
-    setInterval(() => {
+    this.intervalID = setInterval(() => {
       this.syncGlobalStats();
     }, 5000);
   }
@@ -63,6 +65,12 @@ export class HomePageComponent implements OnInit {
 
   login() {
     loginWithDiscord(this.router);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalID) {
+      clearInterval(this.intervalID);
+    }
   }
 
 
