@@ -1,0 +1,9 @@
+<h3 class="sortable"
+(click)="sortBy(key)"
+[style.fontWeight]='isSortedBy(key) ? 800 : 500'>{{label}}</h3>
+
+<app-fixed-size-image
+*ngIf="isSortedBy(key)"
+[src]="isSortedDescending() ? 'sort_down.svg' : 'sort_up.svg'"
+[width]="10"
+></app-fixed-size-image>

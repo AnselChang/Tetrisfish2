@@ -2,17 +2,17 @@
 <app-section>
     <div class="game-history-list">
         <div class="element top-element">
-            <h3>Time</h3>
-            <h3>Start</h3>
-            <h3>Score</h3>
-            <h3 class="hide-2">Level 18</h3>
-            <h3 class="hide-2">Level 19</h3>
-            <h3 class="hide-1">In Drought</h3>
-            <h3 class="hide-1">Tetris Ready</h3>
-            <h3 class="hide-1">I-Piece Efficiency</h3>
-            <h3>Overall Accuracy</h3>
+            <app-sortable key="timestamp" label="Time"></app-sortable>
+            <app-sortable key="startLevel" label="Start"></app-sortable>
+            <app-sortable key="finalScore" label="Score"></app-sortable>
+            <app-sortable class="hide-2" key="accuracy18" label="Level 18"></app-sortable>
+            <app-sortable class="hide-2" key="accuracy19" label="Level 19"></app-sortable>
+            <app-sortable class="hide-1" key="droughtPercent" label="In Drought"></app-sortable>
+            <app-sortable class="hide-1" key="tetrisReadiness" label="Tetris Ready"></app-sortable>
+            <app-sortable class="hide-1" key="iPieceEfficiency" label="I-Piece Efficiency"></app-sortable>
+            <app-sortable key="overallAccuracy" label="Overall Accuracy"></app-sortable>
         </div>
-        <div class="element" *ngFor="let game of gameHistory" (click)="onClickGame(game)">
+        <div class="element" *ngFor="let game of getGameHistory()" (click)="onClickGame(game)">
             <p>{{getTimeString(game.timestamp)}}</p>
             <p>lvl {{game.startLevel}}</p>
             <p>{{game.finalScore}} • lvl {{game.finalLevel}}</p>

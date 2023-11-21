@@ -1,0 +1,17 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.sortable:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.sortable:active {
+    cursor: pointer;
+    opacity: 0.7;
+}

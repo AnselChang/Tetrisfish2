@@ -16,7 +16,6 @@ import { GameHistoryGame } from 'shared/models/game-history-game';
 })
 export class AnalyzePageComponent implements OnInit {
 
-  public gameHistory: GameHistoryGame[] = [];
   private now: Date;
 
   constructor(private userService: UserService, private router: Router, private gameHistoryCache: GameHistoryCacheService) {
@@ -26,7 +25,6 @@ export class AnalyzePageComponent implements OnInit {
   ngOnInit(): void {
 
     if (this.gameHistoryCache.hasCache()) {
-      this.gameHistory = this.gameHistoryCache.get()!;
       console.log("Got game history from cache:");
       return;
     }
@@ -43,9 +41,8 @@ export class AnalyzePageComponent implements OnInit {
         
         fetchServer(Method.GET, "/api/get-games-by-player").then(({status, content}) => {
           if (status === 200) {
-            this.gameHistory = content;
-            this.gameHistoryCache.set(this.gameHistory);
-            console.log("Got game history:", this.gameHistory);
+            this.gameHistoryCache.set(content);
+            console.log("Recieved game history from server");
           }
         });
       }
@@ -73,6 +70,11 @@ export class AnalyzePageComponent implements OnInit {
   // redirect to game analysis page
   onClickGame(game: GameHistoryGame) {
     this.router.navigate(['/analyze-game'], { queryParams: { id: game.gameID } });
+  }
+
+  getGameHistory(): GameHistoryGame[] {
+    const games = this.gameHistoryCache.get();
+    return games ? games : [];
   }
 
 }
