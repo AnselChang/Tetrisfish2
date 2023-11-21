@@ -5,6 +5,7 @@ import TagAssigner, { SimplePlacement } from 'client/src/app/models/tag-models/t
 import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
 import { Tetromino, TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
 import { findConnectedComponent } from 'client/src/app/scripts/connected-components';
+import { compressGridStringToBase64, decompressBase64ToGridString } from 'shared/scripts/compress-grid';
 
 @Component({
   selector: 'app-puzzles-page',
@@ -15,14 +16,20 @@ export class PuzzlesPageComponent {
 
   constructor() {
     
-    const placement = new SimplePlacement(
-      new BinaryGrid(),
-      new MoveableTetromino(TetrominoType.T_TYPE, 0, 0, 0),
-      new MoveableTetromino(TetrominoType.T_TYPE, 0, 0, 0),
-    );
-    
-    const tags = TagAssigner.assignTagsFor(placement);
-    console.log(tags);
+    // create binary grid with random blocks
+    const grid = new BinaryGrid();
+    for (let x = 0; x < 10; x++) {
+      for (let y = 0; y < 20; y++) {
+        grid.setAt(x, y, Math.random() < 0.5 ? BlockType.FILLED : BlockType.EMPTY);
+      }
+    }
+
+    const gridString = grid._getAsString();
+    console.log("start", gridString);
+    const compressed = compressGridStringToBase64(gridString);
+    console.log("compressed", compressed);
+    const decompressed = decompressBase64ToGridString(compressed);
+    console.log("decompressed", decompressed);
 
   }
 

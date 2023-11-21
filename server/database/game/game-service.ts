@@ -8,6 +8,7 @@ export async function addGameToDatabase(discordID: string, game: SerializedGame)
         uid: discordID,
         gid: game.gameID,
         pm: game.placements,
+        npm: game.placements.length,
 
         sl: game.startLevel,
         is: game.inputSpeed,

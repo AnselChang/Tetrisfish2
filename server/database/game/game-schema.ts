@@ -22,6 +22,10 @@ const gameSchema = new Schema({
         type: Schema.Types.Mixed,
         required: true,
     },
+    npm : { // number of placements
+        type: Number,
+        required: true,
+    },
     sl : { // start level
         type: Number,
         required: true,

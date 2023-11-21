@@ -20,7 +20,7 @@ export class GameExportService {
   private serializePlacement(placement: GamePlacement): SerializedPlacement {
 
     return {
-      b: placement.grid._getAsString(),
+      b: placement.grid._getAsCompressedString(),
       c: placement.currentPieceType,
       n: placement.nextPieceType,
       r: placement.piecePlacement!.getRotation(),

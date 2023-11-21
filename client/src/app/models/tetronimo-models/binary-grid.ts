@@ -4,6 +4,8 @@ Binary because it only stores whether a block is filled or not, not any other in
 grid[y][x]
 */
 
+import { compressGridStringToBase64, decompressBase64ToGridString } from "shared/scripts/compress-grid";
+
 export enum BlockType {
     EMPTY = 0,
     FILLED = 1
@@ -110,6 +112,10 @@ export default class BinaryGrid implements Grid {
         }
     }
 
+    public _setFromCompressedString(grid: string) {
+        this._setFromString(decompressBase64ToGridString(grid));
+    }
+
     public static fromString(grid: string): BinaryGrid {
         const newGrid = new BinaryGrid();
         newGrid._setFromString(grid);
@@ -124,6 +130,10 @@ export default class BinaryGrid implements Grid {
             }
         }
         return result;
+    }
+
+    public _getAsCompressedString(): string {
+        return compressGridStringToBase64(this._getAsString());
     }
 
     // grid1 - grid2
