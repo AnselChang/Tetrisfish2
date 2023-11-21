@@ -15,7 +15,7 @@ import { usernameRoute } from './routes/user-info';
 import { getBugReportRoute, sendBugReportRoute } from './routes/bug-report';
 import { Database } from './singletons/database';
 import DiscordBot from './singletons/discord-bot';
-import { getGamesByPlayerRoute, sendGameRoute } from './routes/game';
+import { getGameRoute, getGamesByPlayerRoute, sendGameRoute } from './routes/game';
 import { getGlobalStatsRoute } from './routes/global-stats';
 declare module 'express-session' {
     export interface SessionData {
@@ -91,6 +91,7 @@ export default async function createApp(): Promise<Express> {
     app.get('/api/get-bug-report', (req: Request, res: Response) => getBugReportRoute(req, res));
 
     app.post('/api/send-game', (req: Request, res: Response) => sendGameRoute(req, res));
+    app.get('/api/get-game', (req: Request, res: Response) => getGameRoute(req, res));
     app.get('/api/get-games-by-player', (req: Request, res: Response) => getGamesByPlayerRoute(req, res));
 
     app.get('/api/get-global-stats', async (req: Request, res: Response) => getGlobalStatsRoute(req, res));

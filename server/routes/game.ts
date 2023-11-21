@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addGameToDatabase, doesGameExist, getAllGamesByPlayer } from '../database/game/game-service';
+import { addGameToDatabase, doesGameExist, getAllGamesByPlayer, getGameWithID } from '../database/game/game-service';
 import { SerializedGame } from '../../shared/models/serialized-game';
 import { GameHistoryGame } from '../../shared/models/game-history-game';
 import { GlobalStats } from '../database/global-stats/global-stats-schema';
@@ -38,6 +38,23 @@ export async function sendGameRoute(req: Request, res: Response) {
     console.log("Incremented global stats to ", await getCounts());
     
     res.status(200).send({success: true});
+
+}
+
+export async function getGameRoute(req: Request, res: Response) {
+
+    const gameID = req.query['id'] as string;
+    console.log("Recieved request for game:", gameID);
+
+    const game = await getGameWithID(gameID);
+
+    if (!game) {
+        console.error("Game does not exist:", gameID);
+        res.status(404).send({error : "Game does not exist"});
+        return;
+    }
+
+    res.status(200).send(game);
 
 }
 
