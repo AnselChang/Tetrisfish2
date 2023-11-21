@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import GameHistory from '../models/game-models/game-history';
+import GameSessionHistory from '../models/game-models/game-session-history';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GameHistoryService {
+export class GameSessionHistoryService {
 
-  private readonly gameHistory = new GameHistory();
+  private readonly gameHistory = new GameSessionHistory();
   private now = new Date();
 
   constructor() {
@@ -16,7 +16,7 @@ export class GameHistoryService {
     }, 1000 * 10);
   }
 
-  public get(): GameHistory {
+  public get(): GameSessionHistory {
     return this.gameHistory;
   }
 

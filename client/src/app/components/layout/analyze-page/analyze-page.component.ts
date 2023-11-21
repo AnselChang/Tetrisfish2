@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { EVALUATION_RATING_TO_COLOR } from 'client/src/app/misc/colors';
 import { RATING_TO_COLOR, getRatingFromAveragePercent } from 'client/src/app/models/evaluation-models/rating';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
+import { GameHistoryCacheService } from 'client/src/app/services/game-history-cache.service';
 import { LoginStatus, UserService } from 'client/src/app/services/user.service';
 import formatDistanceStrict from 'date-fns/formatDistanceStrict';
 import { filter, take } from 'rxjs';
@@ -18,11 +19,20 @@ export class AnalyzePageComponent implements OnInit {
   public gameHistory: GameHistoryGame[] = [];
   private now: Date;
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(private userService: UserService, private router: Router, private gameHistoryCache: GameHistoryCacheService) {
     this.now = new Date();
   }
 
   ngOnInit(): void {
+
+    if (this.gameHistoryCache.hasCache()) {
+      this.gameHistory = this.gameHistoryCache.get()!;
+      console.log("Got game history from cache:");
+      return;
+    }
+
+    console.log("Getting game history from server...");
+
     this.userService.loginStatus$.pipe(
       filter(status => status !== LoginStatus.LIMBO), // ignore unknown login status events
       take(1) // Take only the first value that passes the filter
@@ -34,6 +44,7 @@ export class AnalyzePageComponent implements OnInit {
         fetchServer(Method.GET, "/api/get-games-by-player").then(({status, content}) => {
           if (status === 200) {
             this.gameHistory = content;
+            this.gameHistoryCache.set(this.gameHistory);
             console.log("Got game history:", this.gameHistory);
           }
         });

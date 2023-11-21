@@ -11,7 +11,7 @@ This way, analysis doesn't have to be re-run when the user navigates back to a g
 })
 export class GameCacheService {
 
-  public readonly CACHE_SIZE = 3;
+  public readonly CACHE_SIZE = 5;
 
   private games: Game[] = [];
 

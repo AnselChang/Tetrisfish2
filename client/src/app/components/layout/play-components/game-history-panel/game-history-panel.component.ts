@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RATING_TO_COLOR, getRatingFromAveragePercent } from 'client/src/app/models/evaluation-models/rating';
 import { numberWithCommas } from 'client/src/app/scripts/utilities';
-import { GameHistoryService } from 'client/src/app/services/game-history.service';
+import { GameSessionHistoryService } from 'client/src/app/services/game-session-history.service';
 import { formatDistanceStrict } from 'date-fns'
 
 @Component({
@@ -11,7 +11,7 @@ import { formatDistanceStrict } from 'date-fns'
 })
 export class GameHistoryPanelComponent {
 
-  constructor(public gameHistoryService: GameHistoryService) {
+  constructor(public gameHistoryService: GameSessionHistoryService) {
 
   }
 

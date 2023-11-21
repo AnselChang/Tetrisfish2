@@ -10,13 +10,15 @@ import { SmartGameStatus } from '../../models/tetronimo-models/smart-game-status
 import { GameDebugService } from '../game-debug.service';
 import { Game } from '../../models/game-models/game';
 import { CaptureSettingsService } from '../capture/capture-settings.service';
-import { GameHistoryService } from '../game-history.service';
-import { HistoricalGame } from '../../models/game-models/game-history';
+import { GameSessionHistoryService } from '../game-session-history.service';
+import { HistoricalGame } from '../../models/game-models/game-session-history';
 import { Point } from '../../models/capture-models/point';
 import { first } from 'rxjs';
 import { GameExportService } from '../game-export.service';
 import { NotifierService } from 'angular-notifier';
 import { GameCacheService } from '../game-cache.service';
+import { GameHistoryCacheService } from '../game-history-cache.service';
+import { GameSpeed } from '../../models/evaluation-models/rating';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -281,11 +283,12 @@ export class GameStateMachineService {
   constructor(
     private extractedStateService: ExtractedStateService,
     private captureSettingsService: CaptureSettingsService,
-    private gameHistoryService: GameHistoryService,
+    private gameHistoryService: GameSessionHistoryService,
     private exportService: GameExportService,
     private debug: GameDebugService,
     private notifier: NotifierService,
     private gameCacheService: GameCacheService,
+    private gameHistoryCacheService: GameHistoryCacheService,
     ) { }
 
   public startGame(): void {
@@ -322,6 +325,25 @@ export class GameStateMachineService {
       undefined
     )
     this.gameHistoryService.get().addGame(historicalGame);
+
+    // push to full game history cache if it exists
+    if (this.gameHistoryCacheService.hasCache()) {
+      this.gameHistoryCacheService.pushGameToCache({
+        timestamp: (new Date()).toISOString(),
+        gameID: this.game.gameID,
+        startLevel: this.game.startLevel,
+        score19: this.game.stats.getScoreAtTransitionTo19(),
+        score29: this.game.stats.getScoreAtTransitionTo29(),
+        finalScore: this.game.status.score,
+        finalLevel: this.game.status.level,
+        overallAccuracy: this.game.analysisStats.getOverallAccuracy().getAverage(),
+        accuracy18: this.game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_18)?.getAverage(),
+        accuracy19: this.game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_19)?.getAverage(),
+        droughtPercent: this.game.stats.getPercentInDrought(),
+        tetrisReadiness: this.game.stats.getTetrisReadiness(),
+        iPieceEfficiency: this.game.stats.getIPieceEfficiency(),
+      });
+    }
 
     // export and send to server
     this.exportService.export(this.game).then(() => {

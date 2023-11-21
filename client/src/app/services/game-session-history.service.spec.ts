@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GameHistoryService } from './game-history.service';
+import { GameSessionHistoryService } from './game-session-history.service';
 
 describe('GameHistoryService', () => {
-  let service: GameHistoryService;
+  let service: GameSessionHistoryService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(GameHistoryService);
+    service = TestBed.inject(GameSessionHistoryService);
   });
 
   it('should be created', () => {

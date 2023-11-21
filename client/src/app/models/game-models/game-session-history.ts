@@ -12,7 +12,7 @@ export class HistoricalGame {
 }
 
 // Stores a list of historical games
-export default class GameHistory {
+export default class GameSessionHistory {
 
     private games: HistoricalGame[] = [];
     private readonly GAME_AVERAGE_COUNT = 5;
