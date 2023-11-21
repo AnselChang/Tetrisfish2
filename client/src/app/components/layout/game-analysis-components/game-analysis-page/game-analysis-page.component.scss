@@ -1,6 +1,45 @@
+@import "../../../../../styles.scss";
+
 .main {
     display: grid;
-    grid-template-columns: 35px 5fr 2.3fr 5fr; // 1fr = 50px in figma
+    grid-template-columns: 50px 5fr 2.3fr 5fr; // 1fr = 50px in figma
     column-gap: 10px;
     margin: 0 10px;
+}
+
+.level-lines {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+h2.header {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.arrow-button:hover {
+    opacity: 0.9;
+}
+
+.arrow-button:active {
+    opacity: 0.8;
+}
+
+.arrow-button.disabled {
+    opacity: 0.2;
 }

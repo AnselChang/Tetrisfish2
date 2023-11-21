@@ -12,7 +12,7 @@
             <h3 class="hide-1">I-Piece Efficiency</h3>
             <h3>Overall Accuracy</h3>
         </div>
-        <div class="element" *ngFor="let game of gameHistory">
+        <div class="element" *ngFor="let game of gameHistory" (click)="onClickGame(game)">
             <p>{{getTimeString(game.timestamp)}}</p>
             <p>lvl {{game.startLevel}}</p>
             <p>{{game.finalScore}} • lvl {{game.finalLevel}}</p>

@@ -1,1 +1,54 @@
-<p>game-analysis-page works!</p>
+<div class="main" *ngIf="game">
+
+    <app-eval-bar class="col-eval-bar"
+    [playerEval]="getPlayerRating()?.playerNB"
+    [bestEval]="getPlayerRating()?.bestNB" 
+    [rating]="getPlayerRating()?.rating"/>
+
+    <app-section class="col-capture">
+        <h2 class="header">Played by {{gameInfo.playerName}} {{getRelativeTime()}} with playstyle: {{gameInfo.playstyle}}</h2>
+
+        <app-tetris-panel>
+            <app-interactive-tetris-board
+                    [grid]="getPosition().grid"
+                    [level]="getPosition().statusBeforePlacement.level"
+                    [currentPiece]="getPosition().piecePlacement"
+                />
+            <app-tetris-panel-item>
+                <h2>Score</h2>
+                <h1>{{getPosition().statusBeforePlacement.score}}</h1>
+            </app-tetris-panel-item>
+            <div class="level-lines">
+                <app-tetris-panel-item>
+                    <h2>Lines</h2>
+                    <h1>{{getPosition().statusBeforePlacement.level}}</h1>
+                </app-tetris-panel-item>
+                <app-tetris-panel-item>
+                    <h2>Level</h2>
+                    <h1>{{getPosition().statusBeforePlacement.level}}</h1>
+                </app-tetris-panel-item>
+            </div>
+            <app-tetris-panel-item>
+                <app-next-box [showBackground]="false" [level]="getPosition().statusBeforePlacement.level" [type]="getPosition().nextPieceType"></app-next-box>
+            </app-tetris-panel-item>
+
+            <app-tetris-panel-item>
+                <h2>Position #{{placementIndex + 1}}</h2>
+                <div class="nav-buttons">
+                    <app-fixed-size-image src="arrow_left.svg" class="arrow-button" [ngClass]="{'disabled': !hasPrevious()}" [width]="25" (click)="previous()"></app-fixed-size-image>
+                    <app-fixed-size-image src="arrow_right.svg" class="arrow-button" [ngClass]="{'disabled': !hasNext()}" [width]="25" (click)="next()"></app-fixed-size-image>
+                </div>
+            </app-tetris-panel-item>
+
+            <app-tetris-panel-item>
+                <app-rating-subsection
+                    [moveNotation]="getPosition().piecePlacement!.toString()"
+                    [rating]="getPlayerRating()"
+                    >
+                </app-rating-subsection>
+            </app-tetris-panel-item>
+
+        </app-tetris-panel>
+    </app-section>
+
+</div>

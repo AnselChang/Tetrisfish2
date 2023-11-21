@@ -35,9 +35,10 @@ export class Game {
 
     public eligibility: GameEligibility;
 
-    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed) {
+    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed, existingGameID?: string) {
 
-        this.gameID = uuidv4();
+        // if not recreating an existing game, generate a new uuid
+        this.gameID = existingGameID ?? uuidv4();
 
         this.status = new SmartGameStatus(startLevel);
 

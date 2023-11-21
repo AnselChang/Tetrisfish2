@@ -16,6 +16,7 @@ import { Point } from '../../models/capture-models/point';
 import { first } from 'rxjs';
 import { GameExportService } from '../game-export.service';
 import { NotifierService } from 'angular-notifier';
+import { GameCacheService } from '../game-cache.service';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -284,6 +285,7 @@ export class GameStateMachineService {
     private exportService: GameExportService,
     private debug: GameDebugService,
     private notifier: NotifierService,
+    private gameCacheService: GameCacheService,
     ) { }
 
   public startGame(): void {
@@ -305,6 +307,9 @@ export class GameStateMachineService {
   public onGameFinishedAndAnalyzed() {
 
     if (!this.game) throw new Error("Game is undefined");
+
+    // add to cache
+    this.gameCacheService.cacheGame(this.game);
 
     // push to session game history
     const historicalGame = new HistoricalGame(
