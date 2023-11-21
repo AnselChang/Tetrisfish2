@@ -16,6 +16,7 @@ import { getBugReportRoute, sendBugReportRoute } from './routes/bug-report';
 import { Database } from './singletons/database';
 import DiscordBot from './singletons/discord-bot';
 import { getGamesByPlayerRoute, sendGameRoute } from './routes/game';
+import { getGlobalStatsRoute } from './routes/global-stats';
 declare module 'express-session' {
     export interface SessionData {
       state?: SessionState; // Add your custom session properties here
@@ -91,6 +92,8 @@ export default async function createApp(): Promise<Express> {
 
     app.post('/api/send-game', (req: Request, res: Response) => sendGameRoute(req, res));
     app.get('/api/get-games-by-player', (req: Request, res: Response) => getGamesByPlayerRoute(req, res));
+
+    app.get('/api/get-global-stats', async (req: Request, res: Response) => getGlobalStatsRoute(req, res));
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {

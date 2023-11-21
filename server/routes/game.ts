@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { addGameToDatabase, doesGameExist, getAllGamesByPlayer } from '../database/game/game-service';
 import { SerializedGame } from '../../shared/models/serialized-game';
-import { GameHistoryGame } from 'shared/models/game-history-game';
+import { GameHistoryGame } from '../../shared/models/game-history-game';
+import { GlobalStats } from '../database/global-stats/global-stats-schema';
+import { getCounts, incrementCounts } from '../database/global-stats/global-stats-service';
 
 export async function sendGameRoute(req: Request, res: Response) {
 
@@ -25,6 +27,16 @@ export async function sendGameRoute(req: Request, res: Response) {
     // add the game to the database
     await addGameToDatabase(userID, game);
 
+    // increment global state counts
+    const increment: GlobalStats = {
+        placementCount: game.placements.length,
+        gameCount: 1,
+        puzzleCount: 0
+    };
+    await incrementCounts(increment);
+    console.log("Placements:", game.placements.length);
+    console.log("Incremented global stats to ", await getCounts());
+    
     res.status(200).send({success: true});
 
 }
