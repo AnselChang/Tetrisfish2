@@ -350,9 +350,12 @@ export class GameStateMachineService {
     }
 
     // export and send to server
-    this.exportService.export(this.game).then(() => {
+    this.exportService.export(this.game).then(([notifyType, notifyMessage]) => {
       const accuracy = Math.round(this.game!.analysisStats.getOverallAccuracy().getAverage() * 10000) / 100;
       this.notifier.notify("success", `Game successfully saved with ${this.game!.status.score} points at ${accuracy}% accuracy.`);
+      setTimeout(() => {
+        if (notifyType !== "none") this.notifier.notify(notifyType, notifyMessage);
+      }, 1000);
     });
 
     // if callback set, call it

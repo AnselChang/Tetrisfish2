@@ -39,9 +39,9 @@ export async function sendGameRoute(req: Request, res: Response) {
     console.log("Incremented global stats to ", await getCounts());
 
     // if eligible for leaderboard, check if leaderboard-worthy
-    addGameToLeaderboard(game, userID);
+    const [notifyType, notifyMessage] = await addGameToLeaderboard(game, userID);
 
-    res.status(200).send({success: true});
+    res.status(200).send({success: true, notifyType: notifyType, notifyMessage: notifyMessage});
 
 }
 

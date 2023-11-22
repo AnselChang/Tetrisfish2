@@ -92,12 +92,15 @@ export class GameExportService {
     }
   }
 
-  public async export(game: Game) {
+  public async export(game: Game): Promise<[string, string]> {
     
     const serializedGame = this.serialize(game);
     const {status, content} = await fetchServer(Method.POST, "/api/send-game", serializedGame);
 
     console.log("Response from /api/send-game:", status, content);
+
+    const {notifyType, notifyMessage} = content;
+    return [notifyType, notifyMessage];
 
   }
 

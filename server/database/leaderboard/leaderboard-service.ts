@@ -6,12 +6,12 @@ const MAX_LEADERBOARD_ENTRIES = 100;
 const MAX_LEADERBOARD_ENTRIES_WITH_BUFFER = 110; // 10 extra entries to reduce chance of  race conditions
 
 // if game is good enough for leaderboard, add it to the leaderboard and remove the worst game if full
-export async function addGameToLeaderboard(game: SerializedGame, userID: string) {
+// return success/error message
+export async function addGameToLeaderboard(game: SerializedGame, userID: string): Promise<[string, string]> {
 
     // check if game is eligible for leaderboard
     if (!game.eligibleForLeaderboard) {
-        console.log("Game is not eligible for leaderboard");
-        return;
+        return ["none", "Note: game was not submitted to leaderboard because it was ineligible."]
     }
 
     let leaderboardType: LeaderboardType;
@@ -20,18 +20,17 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
     } else if (game.startLevel === 29) {
         leaderboardType = LeaderboardType.START_29;
     } else {
-        console.log("Game is wrong level for leaderboard");
-        return; // not eligible for leaderboard
+        return ["none", "Note: game was not submitted to leaderboard because it was ineligible."]
     }
 
     if (leaderboardType === LeaderboardType.OVERALL && game.finalLines < 230) {
         console.log("18/29 start game did not reach 230 lines, not eligible for leaderboard");
-        return; // not eligible for leaderboard
+        return ["none", "Note: game was not submitted to leaderboard because game did not reach 230 lines."]
     }
 
     if (leaderboardType === LeaderboardType.START_29 && game.finalLines < 100) {
         console.log("29 start game did not reach 100 lines, not eligible for leaderboard");
-        return; // not eligible for leaderboard
+        return ["none", "Note: game was not submitted to leaderboard because game did not reach 100 lines."]
     }
 
     // get the corresponding leaderboard
@@ -50,9 +49,9 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
     const gameAccuracy = game.startLevel === 29 ? game.accuracy100LinesFor29! : game.overallAccuracy;
     
     // check if game is better than the worst game in the leaderboard using leaderboard's lowestAccuracy cache
-    if (leaderboard.entries.length >=  MAX_LEADERBOARD_ENTRIES_WITH_BUFFER && gameAccuracy < leaderboard.lowestAccuracy) {
-        console.log("Game is not better than the worst game in the leaderboard");
-        return;
+    if (leaderboard.entries.length >=  MAX_LEADERBOARD_ENTRIES && gameAccuracy < leaderboard.lowestAccuracy) {
+        return ["warning", "Note: although the game qualified for leaderboards, game accuracy was not high enough for the top 100."]
+
     }
 
     // get user info
@@ -60,7 +59,7 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
 
     if (!user) {
         console.error("User does not exist:", userID);
-        return;
+        return ["error", "Error adding game to leaderboard: you do not exist."]
     }
 
     console.log("Adding game to leaderboard:", game.gameID, user.username);
@@ -90,8 +89,13 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
     // update the lowest accuracy cache
     leaderboard.lowestAccuracy = leaderboard.entries[0].accuracy;
 
+     // get the ranking of the game
+    const gameRankIndex = leaderboard.entries.findIndex(entry => entry.gameID === game.gameID);
+
     // save the leaderboard
     await leaderboard.save();
+
+    return ["success", `Congratulations! Your game ranked #${gameRankIndex+1} on the leaderboard!`];
 
 }
 
