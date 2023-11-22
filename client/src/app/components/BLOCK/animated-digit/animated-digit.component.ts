@@ -53,6 +53,8 @@ export class AnimatedDigitComponent implements OnChanges {
 
   public getWidth(): string {
     if (this.nextDigit === '') return "0px";
+    else if (this.nextDigit === '.') return "15px";
+    else if (this.nextDigit ===  '1') return "20px";
     else return "auto";
     // else if (this.nextDigit === '.') return 15;
     // else if (this.nextDigit === 'K' || this.nextDigit === 'M') return 35;

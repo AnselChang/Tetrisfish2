@@ -13,7 +13,7 @@ export default class DiscordBot {
 
         this.client.once('ready', () => {
             console.log('Ready!');
-            this.sendMessage("Tetrisfish bot is now online!");
+            // this.sendMessage("Tetrisfish bot is now online!");
         });
 
         const token = process.env['DISCORD_BOT_TOKEN'];
