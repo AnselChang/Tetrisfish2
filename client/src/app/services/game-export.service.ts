@@ -67,6 +67,7 @@ export class GameExportService {
       accuraciesForAllPlacements: game.getAllPlacements().map(placement => placement.analysis.getRateMoveDeep()!.accuracy!),
       numMissedAdjustments: -1, // TODO
       overallAccuracy: game.analysisStats.getOverallAccuracy().getAverage(),
+      accuracy100LinesFor29: game.startLevel === 29 ? game.analysisStats.getAccuracy100LinesFor29() : undefined,
 
       accuracy18: average18?.getAverage() ?? -1,
       num18: average18?.getNumValues() ?? 0,

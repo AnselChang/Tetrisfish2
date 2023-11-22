@@ -8,6 +8,14 @@
         [style.color]="stats!.getAccuracyColor(overallAccuracy)"
         >{{stats?.getAccuracyString(overallAccuracy, 2)}}</h1>
         <p class="tiny" *ngIf="stats && stats.startLevel < 29">*Excludes 29 accuracy</p>
+
+        <div *ngIf="stats?.is29Start()">
+            <h3>At 100 lines: <span
+                [style.color]="stats!.getAccuracyColor(stats!.getAccuracy100LinesFor29())"
+                >{{stats!.getAccuracyString(stats!.getAccuracy100LinesFor29(), 2)}}</span></h3>
+            <p class="tiny">*For 29 leaderboard</p>
+        </div>
+
     </app-subsection>
 
     <app-subsection class="speed-subsection" *ngIf="stats && stats.startLevel < 29">

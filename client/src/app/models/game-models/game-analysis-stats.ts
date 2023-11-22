@@ -33,6 +33,9 @@ export class GameAnalysisStats {
     private speedAccuracy: [GameSpeed, Average][] = [];
     private pieceAccuracy: Partial<Record<TetrominoType, Average>> = {};
 
+    // track accuracy for when 100 lines is reached on 29 seperately for leaderboard
+    private accuracy100LinesFor29? : number;
+
     public speedAccuracyCache: [string, Average][] = [];
     public pieceAccuracyCache: [TetrominoType, Average][] = [];
 
@@ -80,6 +83,11 @@ export class GameAnalysisStats {
             // 29 accuracy does not count for games that start under 29
             this.overallAccuracy.push(accuracy);
         }
+
+        // if just crossed 100 line mark on 29, set accuracy100LinesFor29
+        if (this.startLevel === 29 && placement.statusAfterPlacement!.lines >= 100 && !this.accuracy100LinesFor29) {
+            this.accuracy100LinesFor29 = this.overallAccuracy.getAverage();
+        }
         
         // update accuracy for corresponding speed
         const speed = getSpeedFromLevel(placement.statusBeforePlacement.level);
@@ -93,8 +101,24 @@ export class GameAnalysisStats {
         this.calculatePieceAccuracies();
     }
 
+    public getAccuracy100LinesFor29(): number {
+        if (this.accuracy100LinesFor29 !== undefined) return this.accuracy100LinesFor29;
+        return this.overallAccuracy.getAverage();
+    }
+
+    public is29Start(): boolean {
+        return this.startLevel === 29;
+    }
+
     // return as a number like "44.35%" or - for no values
-    public getAccuracyString(accuracy: Average, round: number = 0): string {
+    public getAccuracyString(accuracy: Average | number | undefined, round: number = 0): string {
+
+
+        if (accuracy === undefined) return "-";
+
+        if (typeof accuracy === "number") {
+            return (accuracy * 100).toFixed(round) + "%";
+        }
 
         if (!accuracy.hasValues()) return "0%";
 
@@ -102,7 +126,15 @@ export class GameAnalysisStats {
         return (average * 100).toFixed(round) + "%";
     }
 
-    public getAccuracyColor(accuracy: Average): string {
+    public getAccuracyColor(accuracy: Average | number | undefined): string {
+
+        if (accuracy === undefined) return "white";
+
+        if (typeof accuracy === "number") {
+            const rating = getRatingFromAveragePercent(accuracy);
+            return RATING_TO_COLOR[rating];
+        }
+
         if (!accuracy.hasValues()) return "white";
         const rating = getRatingFromAveragePercent(accuracy.getAverage());
         return RATING_TO_COLOR[rating];

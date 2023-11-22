@@ -24,6 +24,16 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
         return; // not eligible for leaderboard
     }
 
+    if (leaderboardType === LeaderboardType.OVERALL && game.finalLines < 230) {
+        console.log("18/29 start game did not reach 230 lines, not eligible for leaderboard");
+        return; // not eligible for leaderboard
+    }
+
+    if (leaderboardType === LeaderboardType.START_29 && game.finalLines < 100) {
+        console.log("29 start game did not reach 100 lines, not eligible for leaderboard");
+        return; // not eligible for leaderboard
+    }
+
     // get the corresponding leaderboard
     let leaderboard = await DBLeaderboard.findOne({type: leaderboardType});
 
@@ -36,9 +46,11 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
         });
         console.log("Created new leaderboard:", leaderboardType);
     }
+
+    const gameAccuracy = game.startLevel === 29 ? game.accuracy100LinesFor29! : game.overallAccuracy;
     
     // check if game is better than the worst game in the leaderboard using leaderboard's lowestAccuracy cache
-    if (leaderboard.entries.length >=  MAX_LEADERBOARD_ENTRIES_WITH_BUFFER && game.overallAccuracy < leaderboard.lowestAccuracy) {
+    if (leaderboard.entries.length >=  MAX_LEADERBOARD_ENTRIES_WITH_BUFFER && gameAccuracy < leaderboard.lowestAccuracy) {
         console.log("Game is not better than the worst game in the leaderboard");
         return;
     }
@@ -65,7 +77,7 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
         playstyle: game.playstyle,
         tetrisReadiness: game.tetrisReadiness,
         score: game.finalScore,
-        accuracy: game.overallAccuracy,
+        accuracy: gameAccuracy,
     });
 
     // if leaderboard is full, remove the worst game
