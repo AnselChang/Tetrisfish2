@@ -42,6 +42,32 @@ export function getColorTypeForTetromino(tetrominoType: TetrominoType): Tetromin
     }
 }
 
+const COLOR_FIRST_COLORS: {[key: number]: string} = {
+0: "rgb(0,88,248)",
+1: "rgb(0,168,0)",
+2: "rgb(216,0,204)",
+3: "rgb(0,88,248)",
+4: "rgb(228,0,88",
+5: "rgb(88,248,152)",
+6: "rgb(248,56,0)",
+7: "rgb(104,68,252)",
+8: "rgb(0,88,248)",
+9: "rgb(248,56,0)",
+};
+
+const COLOR_SECOND_COLORS: {[key: number]: string} = {
+    0: "rgb(60,188,252)",
+    1: "rgb(148,248,24)",
+    2: "rgb(248,120,248)",
+    3: "rgb(88,216,84)",
+    4: "rgb(88,248,152)",
+    5: "rgb(104,136,252)",
+    6: "rgb(124,124,124)",
+    7: "rgb(168,0,32)",
+    8: "rgb(248,56,0)",
+    9: "rgb(252,160,68)",
+  };
+
 export function getColorForLevel(colorType: TetrominoColorType, level: number = 0): string {
     level = level % 10;
     
@@ -49,9 +75,9 @@ export function getColorForLevel(colorType: TetrominoColorType, level: number = 
     if (colorType === TetrominoColorType.COLOR_WHITE) {
         return 'rgb(255, 255, 255)';
     } else if (colorType === TetrominoColorType.COLOR_FIRST) {
-        return 'rgb(36, 87, 239)';
+        return COLOR_FIRST_COLORS[level];
     } else {
-        return 'rgb(228, 75, 37)';
+        return COLOR_SECOND_COLORS[level];
     }
 }
 
