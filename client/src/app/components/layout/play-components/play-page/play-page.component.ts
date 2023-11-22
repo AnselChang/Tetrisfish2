@@ -36,7 +36,7 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   // eligibility when not in game
-  private readonly defaultEligibility = new GameEligibility(-1, InputSpeed.HZ_30);
+  private defaultEligibility!: GameEligibility;
 
   constructor(
     public videoCaptureService: VideoCaptureService,
@@ -52,6 +52,9 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.defaultEligibility = new GameEligibility(-1, this.captureSettingsService.get().inputSpeed);
+
     this.userService.loginStatus$.pipe(
       filter(status => status !== LoginStatus.LIMBO), // ignore unknown login status events
       take(1) // Take only the first value that passes the filter

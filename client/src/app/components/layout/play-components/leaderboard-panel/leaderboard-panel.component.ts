@@ -32,16 +32,6 @@ export class LeaderboardPanelComponent {
     return "#" + this.leaderboardRank;
   }
 
-  getHzEligibilityText(): string {
-
-    const allowed = this.eligibility.getNumPiecesOverHzAllowed();
-    const count = this.eligibility.getNumPiecesOverHz();
-
-    let str = `Max ${allowed} pieces over `;
-    str += `${this.inputSpeed}Hz (${count}/${allowed})`;
-
-    return str;
-  }
 
   is30Hz() {
     return this.eligibility.inputSpeed === InputSpeed.HZ_30;

@@ -32,15 +32,18 @@
             <h3>Accuracy</h3>
         </div>
 
-        <div class="leaderboard-item" *ngFor="let entry of getOverallLeaderboard(); let i = index">
-            <p>#{{i+1}}</p>
-            <p>{{entry.playerName}}</p>
-            <p>{{entry.timeString}}</p>
-            <p>{{entry.startLevel}}</p>
-            <p>{{entry.playstyle}} ({{entry.inputSpeed}}hz)</p>
-            <p>{{formatAccuracy(entry.tetrisReadiness, 0)}}</p>
-            <p>{{entry.finalScore}}</p>
-            <p [style.color]="getAccuracyColor(entry.overallAccuracy)">{{formatAccuracy(entry.overallAccuracy, 2)}}</p>
+        <div class="row" *ngFor="let entry of getCurrentLeaderboard(); let i = index">
+            <hr class="divider" *ngIf="i !== 0">
+            <div class="leaderboard-item">
+                <p>#{{i+1}}</p>
+                <p>{{entry.playerName}}</p>
+                <p>{{entry.timeString}}</p>
+                <p>{{entry.startLevel}}</p>
+                <p>{{entry.playstyle}}</p>
+                <p>{{formatAccuracy(entry.tetrisReadiness, 0)}}</p>
+                <p>{{entry.score}}</p>
+                <p class="accuracy" [style.color]="getAccuracyColor(entry.accuracy)">{{formatAccuracy(entry.accuracy, 2)}}</p>
+            </div>
         </div>
 
     </div>

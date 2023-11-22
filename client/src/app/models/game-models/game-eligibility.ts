@@ -3,17 +3,10 @@ import { LeaderboardType } from "../leaderboard-models/leaderboards";
 
 export default class GameEligibility {
 
-    private readonly MAX_PIECES_OVER_HZ_ALLOWED: number = 3;
-
-    private numPiecesOverHz: number = 0;
     private hasPaused: boolean = false;
     private locked: boolean = false;
 
-    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed) {}
-
-    public onPieceOverHz(): void {
-        if (this.locked) return;
-        this.numPiecesOverHz++;
+    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed) {
     }
 
     public onPiecePause(): void {
@@ -21,18 +14,6 @@ export default class GameEligibility {
         this.hasPaused = true;
     }
 
-    public getNumPiecesOverHz(): number {
-        return this.numPiecesOverHz;
-    }
-
-    public getNumPiecesOverHzAllowed(): number {
-        return this.MAX_PIECES_OVER_HZ_ALLOWED;
-    }
-
-    public isNumPiecesOverHzAllowed(): boolean {
-        if (this.inputSpeed === InputSpeed.HZ_30) return true;
-        return this.numPiecesOverHz <= this.MAX_PIECES_OVER_HZ_ALLOWED;
-    }
 
     public getHasPaused(): boolean {
         return this.hasPaused;
@@ -46,10 +27,14 @@ export default class GameEligibility {
         return this.startLevel === 18 || this.startLevel === 19 || this.startLevel === 29;
     }
 
+    public getIs30Hz(): boolean {
+        return this.inputSpeed === InputSpeed.HZ_30;
+    }
+
     // return overall, 29, or undefined if not eligible
     public getEligibility(): LeaderboardType | undefined {
         if (this.hasPaused) return undefined;
-        if (this.numPiecesOverHz > this.MAX_PIECES_OVER_HZ_ALLOWED) return undefined;
+        if (!this.getIs30Hz()) return undefined;
         if (!this.isStartLevelAllowed()) return undefined;
 
         if (this.startLevel === 29) return LeaderboardType.TWENTY_NINE;

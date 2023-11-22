@@ -9,9 +9,9 @@
                 [isEligible]="eligibility.isStartLevelAllowed()"
                 [text]="'Level 18/19/29 Start'"
             />
-            <app-eligibility-item *ngIf="!is30Hz()"
-                [isEligible]="eligibility.isNumPiecesOverHzAllowed()"
-                [text]="getHzEligibilityText()"
+            <app-eligibility-item
+                [isEligible]="eligibility.getIs30Hz()"
+                [text]="'Analysis set to 30hz'"
             />
             <app-eligibility-item
                 [isEligible]="!eligibility.getHasPaused()"

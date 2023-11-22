@@ -34,7 +34,7 @@ export class LeaderboardPageComponent implements OnInit {
       // calculate time strings
       const now = new Date();
       for (const entry of this.leaderboards[LeaderboardType.OVERALL]) {
-        entry.timeString = formatDistanceStrict(entry.timestamp, now) + " ago";
+        entry.timeString = formatDistanceStrict(new Date(entry.timestamp), now) + " ago";
       }
 
       console.log("overall leaderboards", this.leaderboards);
@@ -51,7 +51,7 @@ export class LeaderboardPageComponent implements OnInit {
       // calculate time strings
       const now = new Date();
       for (const entry of this.leaderboards[LeaderboardType.START_29]) {
-        entry.timeString = formatDistanceStrict(entry.timestamp, now) + " ago";
+        entry.timeString = formatDistanceStrict(new Date(entry.timestamp), now) + " ago";
       }
       
       console.log("29 leaderboards", this.leaderboards);
@@ -65,6 +65,10 @@ export class LeaderboardPageComponent implements OnInit {
 
   public get29Leaderboard(): LeaderboardEntry[] {
     return this.leaderboards[LeaderboardType.START_29];
+  }
+
+  public getCurrentLeaderboard(): LeaderboardEntry[] {
+    return this.leaderboards[this.type];
   }
 
   public isTypeOverall(): boolean {
