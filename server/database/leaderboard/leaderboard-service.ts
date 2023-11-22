@@ -38,7 +38,7 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
     }
     
     // check if game is better than the worst game in the leaderboard using leaderboard's lowestAccuracy cache
-    if (game.overallAccuracy < leaderboard.lowestAccuracy) {
+    if (leaderboard.entries.length >=  MAX_LEADERBOARD_ENTRIES_WITH_BUFFER && game.overallAccuracy < leaderboard.lowestAccuracy) {
         console.log("Game is not better than the worst game in the leaderboard");
         return;
     }
@@ -56,6 +56,7 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
     // add the game to the leaderboard
     leaderboard.entries.push({
         gameID: game.gameID,
+        discordID: userID,
         playerName: user.username,
         isProUser: user.isProUser,
         timestamp: (new Date()).toISOString(),

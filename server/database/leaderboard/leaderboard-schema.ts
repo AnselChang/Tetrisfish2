@@ -1,10 +1,11 @@
 import mongoose, { Schema } from "mongoose";
 
 export interface LeaderboardEntry {
+    gameID: string,
     discordID: string,
     playerName: string,
     isProUser: boolean,
-    ts: Date,
+    timestamp: Date,
     startLevel: number,
     inputSpeed: number,
     playstyle: string,
@@ -14,6 +15,10 @@ export interface LeaderboardEntry {
 }
 
 const leaderboardEntrySchema = new Schema({
+    gameID: {
+        type: String,
+        required: true,
+    },
     discordID: {
         type: String,
         required: true,
@@ -26,7 +31,7 @@ const leaderboardEntrySchema = new Schema({
         type: Boolean,
         required: true,
     },
-    ts: {
+    timestamp: {
         type: Date,
         required: true,
     },
