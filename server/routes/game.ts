@@ -4,7 +4,7 @@ import { SerializedGame } from '../../shared/models/serialized-game';
 import { GameHistoryGame } from '../../shared/models/game-history-game';
 import { GlobalStats } from '../database/global-stats/global-stats-schema';
 import { getCounts, incrementCounts } from '../database/global-stats/global-stats-service';
-import { addGameToLeaderboard } from 'server/database/leaderboard/leaderboard-service';
+import { addGameToLeaderboard } from '../database/leaderboard/leaderboard-service';
 
 export async function sendGameRoute(req: Request, res: Response) {
 
@@ -39,13 +39,8 @@ export async function sendGameRoute(req: Request, res: Response) {
     console.log("Incremented global stats to ", await getCounts());
 
     // if eligible for leaderboard, check if leaderboard-worthy
-    if (game.eligibleForLeaderboard) {
-        console.log("Game is eligible for leaderboard");
-        addGameToLeaderboard(game, userID);
-    } else {
-        console.log("Game is not eligible for leaderboard");
-    }
-    
+    addGameToLeaderboard(game, userID);
+
     res.status(200).send({success: true});
 
 }

@@ -51,6 +51,8 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
         return;
     }
 
+    console.log("Adding game to leaderboard:", game.gameID, user.username);
+
     // add the game to the leaderboard
     leaderboard.entries.push({
         gameID: game.gameID,
@@ -69,6 +71,7 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
     if (leaderboard.entries.length > MAX_LEADERBOARD_ENTRIES_WITH_BUFFER) {
         leaderboard.entries.sort((a, b) => a.accuracy - b.accuracy);
         leaderboard.entries.shift(); // remove the worst game
+        console.log("Removed worst game from leaderboard:", leaderboardType);
     }
 
     // update the lowest accuracy cache

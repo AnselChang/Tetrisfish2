@@ -99,9 +99,9 @@ export default async function createApp(): Promise<Express> {
     app.get('/api/get-global-stats', async (req: Request, res: Response) => getGlobalStatsRoute(req, res));
 
     app.get('/api/get-leaderboard-overall', async (req: Request, res: Response) => getLeaderboardRoute(req, res, LeaderboardType.OVERALL));
-    app.get('/api/get-leaderboard-start-29', async (req: Request, res: Response) => getLeaderboardRoute(req, res, LeaderboardType.START_29));
+    app.get('/api/get-leaderboard-29', async (req: Request, res: Response) => getLeaderboardRoute(req, res, LeaderboardType.START_29));
     app.get('/api/get-leaderboard-accuracies-overall', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.OVERALL));
-    app.get('/api/get-leaderboard-accuracies-start-29', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.START_29));
+    app.get('/api/get-leaderboard-accuracies-29', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.START_29));
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {
