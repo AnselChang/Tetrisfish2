@@ -82,6 +82,7 @@ export class VideoCaptureService {
 
   public onEnterPlayPage(): void {
     this.onPlayPage = true;
+    this.gameStateMachineService.onEnterPlayPage();
   }
 
   public onLeavePlayPage(): void {

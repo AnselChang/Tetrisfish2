@@ -78,7 +78,6 @@ class GridStateMachine {
   private nextPieceType?: TetrominoType;
   private currentPieceType?: TetrominoType;
 
-
   constructor(private debug: GameDebugService) {}
 
   // return [result, linesCleared, numMinosSpawned]
@@ -147,7 +146,7 @@ class GridStateMachine {
       // find the spawned piece by running connected components algorithm
       // if first placement, we search entire grid for matching tetronimo
       // otherwise, we search first few rows for any connected component with matching mino count
-      const topRows = currentLevel >= 29 ? 8 : 4;
+      const topRows = currentLevel >= 29 ? 8 : (currentLevel >= 19 ? 6 : 4)
       let spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, isFirstPlacement ? undefined : topRows);
       let spawnedMinosGrid = this.getSpawnedMinosAsGrid(spawnedMinos);
       let spawnedPiece: MoveableTetromino | undefined = undefined;
@@ -263,6 +262,7 @@ class GridStateMachine {
 export class GameStateMachineService {
 
   private playStatus: PlayStatus = PlayStatus.NOT_PLAYING;
+  private isOnPlayPage: boolean = false;
 
   // handles mino changes / new piece detection
   private gridSM?: GridStateMachine = undefined;
@@ -383,7 +383,12 @@ export class GameStateMachineService {
   }
 
   public onLeavePlayPage(): void {
+    this.isOnPlayPage = false;
     if (this.playStatus === PlayStatus.PLAYING) this.endGame();
+  }
+
+  public onEnterPlayPage(): void {
+    this.isOnPlayPage = true;
   }
 
   // executes once per frame to update state machine. Main method for this class
@@ -394,7 +399,7 @@ export class GameStateMachineService {
     if (this.playStatus === PlayStatus.NOT_PLAYING) {
 
       // if game start detected, then start game
-      if (this.detectGameStart(state)) {
+      if (this.isOnPlayPage && this.detectGameStart(state)) {
         this.gameStartDetectionCount++;
         console.log(`Game Start Detection (${this.gameStartDetectionCount})`);
         if (this.gameStartDetectionCount >= this.MIN_GAME_START_DETECTION) {
