@@ -36,6 +36,13 @@ export async function sendGameRoute(req: Request, res: Response) {
     await incrementCounts(increment);
     console.log("Placements:", game.placements.length);
     console.log("Incremented global stats to ", await getCounts());
+
+    // if eligible for leaderboard, check if leaderboard-worthy
+    if (game.eligibleForLeaderboard) {
+        console.log("Game is eligible for leaderboard");
+    } else {
+        console.log("Game is not eligible for leaderboard");
+    }
     
     res.status(200).send({success: true});
 
