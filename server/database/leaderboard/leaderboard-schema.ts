@@ -11,7 +11,8 @@ export interface LeaderboardEntry {
     playstyle: string,
     tetrisReadiness: number,
     score: number,
-    accuracy: number
+    accuracy: number,
+    timeString?: string,
 }
 
 const leaderboardEntrySchema = new Schema({

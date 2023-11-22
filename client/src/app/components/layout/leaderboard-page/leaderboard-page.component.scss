@@ -129,6 +129,42 @@ section {
 .tab.selected > .tab-line {
     height: 2px;
     opacity: 0.8;
-    transform: translateY(-0.5px);
+    transform: translateY(-0.75px);
 }
 
+.leaderboard-container {
+    background-color: #28272A;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 15px;
+
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.leaderboard-item {
+    display: grid;
+    grid-template-columns: 1fr 4fr 3fr 1.5fr 3fr 3fr 2.5fr 2.5fr;
+}
+
+h3 {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+p {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+p:nth-child(2) {
+    text-align: left;
+}

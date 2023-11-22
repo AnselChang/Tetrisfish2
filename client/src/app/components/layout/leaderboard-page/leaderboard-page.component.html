@@ -20,4 +20,29 @@
         </div>
     </div>
 
+    <div class="leaderboard-container">
+        <div class="leaderboard-item">
+            <h3></h3>
+            <h3></h3>
+            <h3>Date</h3>
+            <h3>Level</h3>
+            <h3>Playstyle</h3>
+            <h3>Tetris Readiness</h3>
+            <h3>Score</h3>
+            <h3>Accuracy</h3>
+        </div>
+
+        <div class="leaderboard-item" *ngFor="let entry of getOverallLeaderboard(); let i = index">
+            <p>#{{i+1}}</p>
+            <p>{{entry.playerName}}</p>
+            <p>{{entry.timeString}}</p>
+            <p>{{entry.startLevel}}</p>
+            <p>{{entry.playstyle}} ({{entry.inputSpeed}}hz)</p>
+            <p>{{formatAccuracy(entry.tetrisReadiness, 0)}}</p>
+            <p>{{entry.finalScore}}</p>
+            <p [style.color]="getAccuracyColor(entry.overallAccuracy)">{{formatAccuracy(entry.overallAccuracy, 2)}}</p>
+        </div>
+
+    </div>
+
 </section>
