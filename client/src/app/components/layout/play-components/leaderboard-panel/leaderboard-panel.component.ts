@@ -11,7 +11,7 @@ import { InputSpeed } from 'client/src/app/scripts/evaluation/input-frame-timeli
 })
 export class LeaderboardPanelComponent {
   @Input() eligibility!: GameEligibility;
-  @Input() leaderboardRank?: number; // undefined if not on leaderboard
+  @Input() leaderboardRank?: number; // undefined if unknown, -1 if not on leaderboard
   @Input() maxLeaderboardRank: number = 100; // undefined if not on leaderboard
   @Input() inputSpeed!: InputSpeed;
 
@@ -28,7 +28,8 @@ export class LeaderboardPanelComponent {
 
   getRankString(): string {
     if (this.eligibility.getEligibility() === undefined) return "Ineligible";
-    if (this.leaderboardRank === undefined) return "Over #" + this.maxLeaderboardRank;
+    if (this.leaderboardRank === undefined) return "Unknown";
+    if (this.leaderboardRank === -1) return "Over #" + this.maxLeaderboardRank;
     return "#" + this.leaderboardRank;
   }
 

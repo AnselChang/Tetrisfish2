@@ -23,15 +23,15 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
         return ["none", "Note: game was not submitted to leaderboard because it was ineligible."]
     }
 
-    // if (leaderboardType === LeaderboardType.OVERALL && game.finalLines < 230) {
-    //     console.log("18/29 start game did not reach 230 lines, not eligible for leaderboard");
-    //     return ["none", "Note: game was not submitted to leaderboard because game did not reach 230 lines."]
-    // }
+    if (leaderboardType === LeaderboardType.OVERALL && game.finalLines < 230) {
+        console.log("18/29 start game did not reach 230 lines, not eligible for leaderboard");
+        return ["info", "Note: game was not submitted to leaderboard because game did not reach 230 lines."]
+    }
 
-    // if (leaderboardType === LeaderboardType.START_29 && game.finalLines < 100) {
-    //     console.log("29 start game did not reach 100 lines, not eligible for leaderboard");
-    //     return ["none", "Note: game was not submitted to leaderboard because game did not reach 100 lines."]
-    // }
+    if (leaderboardType === LeaderboardType.START_29 && game.finalLines < 100) {
+        console.log("29 start game did not reach 100 lines, not eligible for leaderboard");
+        return ["info", "Note: game was not submitted to leaderboard because game did not reach 100 lines."]
+    }
 
     // get the corresponding leaderboard
     let leaderboard = await DBLeaderboard.findOne({type: leaderboardType});
@@ -91,6 +91,7 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
 
      // get the ranking of the game
     const gameRankIndex = leaderboard.entries.findIndex(entry => entry.gameID === game.gameID);
+    console.log("GAME RANK", gameRankIndex+1);
 
     // save the leaderboard
     await leaderboard.save();

@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 import { filter, take } from 'rxjs';
 import { InputSpeed } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import { NotifierService } from 'angular-notifier';
+import { LeaderboardAccuracyCacheService } from 'client/src/app/services/leaderboard-accuracy-cache.service';
 
 
 @Component({
@@ -34,9 +35,10 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
   public showBoundingBoxes: boolean = true;
   public showMinoIndicators: boolean = true;
 
-
   // eligibility when not in game
   private defaultEligibility!: GameEligibility;
+
+  private currentLeaderboardRank? : number;
 
   constructor(
     public videoCaptureService: VideoCaptureService,
@@ -47,6 +49,7 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
     private userService: UserService,
     private router: Router,
     private notifier: NotifierService,
+    public leaderboardCache: LeaderboardAccuracyCacheService
     ) {
  
   }

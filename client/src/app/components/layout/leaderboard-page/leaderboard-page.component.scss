@@ -78,6 +78,14 @@ section {
     flex-direction: column;
 }
 
+.tab:hover {
+    cursor: pointer;
+}
+
+.tab:active {
+    cursor: pointer;
+}
+
 .tab.left {
     align-items: flex-end;
 }
@@ -149,7 +157,7 @@ section {
     grid-template-columns: 1.5fr 2fr 3fr 1.5fr 3fr 3fr 2.5fr 2.5fr;
 }
 
-.leaderboard-item:first-child {
+.leaderboard-item.header {
     margin-bottom: 13px;
 }
 
@@ -189,7 +197,7 @@ p.accuracy {
     background-color: #646464;
     opacity: 0.5;
     height: 0.5px;
-    margin-top: -7px;
-    margin-bottom: 6px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     width: 98%;
 }

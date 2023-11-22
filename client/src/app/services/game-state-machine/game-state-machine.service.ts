@@ -20,6 +20,8 @@ import { GameCacheService } from '../game-cache.service';
 import { GameHistoryCacheService } from '../game-history-cache.service';
 import { GameSpeed } from '../../models/evaluation-models/rating';
 import { UserService } from '../user.service';
+import { LeaderboardAccuracyCacheService } from '../leaderboard-accuracy-cache.service';
+import { LeaderboardType } from 'server/database/leaderboard/leaderboard-schema';
 
 /*
 Handles the game lifecycle, from starting the game, processing each piece placement,
@@ -291,6 +293,7 @@ export class GameStateMachineService {
     private gameCacheService: GameCacheService,
     private gameHistoryCacheService: GameHistoryCacheService,
     private user: UserService,
+    private leaderboardCache: LeaderboardAccuracyCacheService,
     ) { }
 
   public startGame(): void {
@@ -305,6 +308,11 @@ export class GameStateMachineService {
 
     this.debug.resetNewGame(this.game.gameID);
     this.notifier.notify("success", `Game started on level ${gameStartLevel}`);
+
+    // sync leaderboard accuracy
+    this.leaderboardCache.registerGame(this.game);
+    if (gameStartLevel === 29) this.leaderboardCache.syncAccuraciesWithServer(LeaderboardType.START_29);
+    else if (gameStartLevel === 18 || gameStartLevel === 19) this.leaderboardCache.syncAccuraciesWithServer(LeaderboardType.OVERALL);
   }
 
   // this function handles pushing to game history and sending game to server once complete

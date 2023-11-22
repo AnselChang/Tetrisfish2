@@ -27,6 +27,9 @@ export class Game {
 
     // the most recent placement that has a rating
     public lastRatingNB$ = new BehaviorSubject<GamePlacement | undefined>(undefined);
+
+    // event that fires when the overall accuracy changes
+    public onOverallAccuracyChange$ = new BehaviorSubject<number>(0);
     
     // the most recent placement that has been evaluated with engine-movelist
     public lastEngineMovelistNB$ = new BehaviorSubject<GamePlacement | undefined>(undefined);
@@ -172,6 +175,10 @@ export class Game {
 
             // update game analysis stats for placement
             this.analysisStats.onRateMoveDeep(placement);
+
+            // update live leaderboard rank
+            this.onOverallAccuracyChange$.next(this.analysisStats.getOverallAccuracy().getAverage());
+
         });
 
         //non-blocking fetch the engine rate-move shallow, set to placement analysis when it's done fetching

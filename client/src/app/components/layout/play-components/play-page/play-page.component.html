@@ -81,7 +81,7 @@
 
             <app-leaderboard-panel
                 [eligibility]="getEligibility()"
-                [leaderboardRank]="undefined"
+                [leaderboardRank]="leaderboardCache.getLeaderboardRank()"
                 [maxLeaderboardRank]="100"
                 [inputSpeed]="settings.inputSpeed"
             />
