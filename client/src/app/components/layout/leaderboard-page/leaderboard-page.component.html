@@ -1,1 +1,23 @@
-<p>leaderboard-page works!</p>
+<header>
+    <div class="brand">
+        <img src="./assets/img/tetrisfish_logo_shadow.svg">
+        <h1 class="brand-name">tetrisfish</h1>
+    </div>
+    <p class="brand-leaderboard">Leaderboard</p>
+    <h2 class="brand-subtitle">Stack like a champion.</h2>
+</header>
+
+<section>
+
+    <div class="tabs">
+        <div class="tab left" (click)="setTypeOverall()" [ngClass]="{selected : isTypeOverall()}">
+            <h1 class="tab-title left" >Overall</h1>
+            <hr class="tab-line">
+        </div>
+        <div class="tab right" (click)="setType29()" [ngClass]="{selected : isType29()}">
+            <h1 class="tab-title right" >29 Start</h1>
+            <hr class="tab-line">
+        </div>
+    </div>
+
+</section>
