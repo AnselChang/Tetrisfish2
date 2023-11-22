@@ -5,6 +5,7 @@ export interface LeaderboardEntry {
     playerName: string,
     isProUser: boolean,
     ts: Date,
+    startLevel: number,
     inputSpeed: number,
     playstyle: string,
     tetrisReadiness: number,
@@ -27,6 +28,10 @@ const leaderboardEntrySchema = new Schema({
     },
     ts: {
         type: Date,
+        required: true,
+    },
+    startLevel: {
+        type: Number,
         required: true,
     },
     inputSpeed: {
@@ -52,11 +57,16 @@ const leaderboardEntrySchema = new Schema({
     }
 });
 
+export enum LeaderboardType {
+    OVERALL = "Overall",
+    START_29 = "29 start"
+}
+
 // custom uuid-generated id, and json for the bug report
 const leaderboardSchema = new Schema({
     type: {
         type: String,
-        enum: ["Overall", "29 start"],
+        enum: LeaderboardType,
         required: true,
     },
     lowestAccuracy: { // worst accuracy in the leaderboard to determine if a new entry should be added
