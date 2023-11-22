@@ -309,7 +309,7 @@ export class GameStateMachineService {
 
   // this function handles pushing to game history and sending game to server once complete
   // precondition: game is fully analyzed
-  public onGameFinishedAndAnalyzed() {
+  public onGameFinishedAndAnalyzed(callbackAfter?: ()=>void) {
 
     if (!this.game) throw new Error("Game is undefined");
 
@@ -354,9 +354,13 @@ export class GameStateMachineService {
       const accuracy = Math.round(this.game!.analysisStats.getOverallAccuracy().getAverage() * 10000) / 100;
       this.notifier.notify("success", `Game successfully saved with ${this.game!.status.score} points at ${accuracy}% accuracy.`);
     });
+
+    // if callback set, call it
+    if (callbackAfter) callbackAfter();
+
   }
 
-  public endGame(): void {
+  public endGame(callbackAfter?: ()=>void): void {
     console.log("Ending game");
     this.gridSM = undefined;
     this.playStatus = PlayStatus.NOT_PLAYING;
@@ -374,7 +378,7 @@ export class GameStateMachineService {
       this.game.getLastPosition()!.analysis.onFinishAnalysis$.pipe(
         first(isAnalysisComplete => isAnalysisComplete)
       ).subscribe(() => {
-        this.onGameFinishedAndAnalyzed();
+        this.onGameFinishedAndAnalyzed(callbackAfter);
       });
     } else {
       this.notifier.notify("warning", "Game discarded. Games under 5 placements are not saved.")
@@ -534,6 +538,10 @@ export class GameStateMachineService {
 
   public getGameStatus(): PlayStatus {
     return this.playStatus;
+  }
+
+  public isInGame(): boolean {
+    return this.playStatus === PlayStatus.PLAYING;
   }
 
   public getGameStartLevel(): number {

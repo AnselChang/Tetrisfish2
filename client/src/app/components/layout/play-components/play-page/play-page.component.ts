@@ -17,6 +17,7 @@ import { LoginStatus, UserService } from 'client/src/app/services/user.service';
 import { Router } from '@angular/router';
 import { filter, take } from 'rxjs';
 import { InputSpeed } from 'client/src/app/scripts/evaluation/input-frame-timeline';
+import { NotifierService } from 'angular-notifier';
 
 
 @Component({
@@ -45,6 +46,7 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
     private captureFrameService: CaptureFrameService,
     private userService: UserService,
     private router: Router,
+    private notifier: NotifierService,
     ) {
  
   }
@@ -178,4 +180,30 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
   public getEligibility(): GameEligibility {
     return this.gameStateMachineService.getGame()?.eligibility ?? this.defaultEligibility;
   }
+
+  public onClickAnalyze() {
+    
+    // if in a game, exit and save the game first
+    if (this.gameStateMachineService.isInGame()) {
+      this.gameStateMachineService.endGame(this.goToAnalysisForCurrentGame.bind(this));
+    } else {
+      this.goToAnalysisForCurrentGame();
+    }
+  }
+
+  public goToAnalysisForCurrentGame() {
+
+    const game = this.gameStateMachineService.getGame();
+
+    // if no game, do nothing
+    if (!game) {
+      this.notifier.notify("warning", "Nothing to analyze. Play a game first!");
+      return;
+    }
+
+    this.router.navigate(['/analyze-game'], { queryParams: { id: game.gameID } });
+
+  }
+
 }
+
