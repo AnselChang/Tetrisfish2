@@ -35,6 +35,7 @@ export class GameAnalysisStats {
 
     // track accuracy for when 100 lines is reached on 29 seperately for leaderboard
     private accuracy100LinesFor29? : number;
+    private score100LinesFor29? : number;
 
     public speedAccuracyCache: [string, Average][] = [];
     public pieceAccuracyCache: [TetrominoType, Average][] = [];
@@ -87,6 +88,7 @@ export class GameAnalysisStats {
         // if just crossed 100 line mark on 29, set accuracy100LinesFor29
         if (this.startLevel === 29 && placement.statusAfterPlacement!.lines >= 100 && !this.accuracy100LinesFor29) {
             this.accuracy100LinesFor29 = this.overallAccuracy.getAverage();
+            this.score100LinesFor29 = placement.statusAfterPlacement!.score;
         }
         
         // update accuracy for corresponding speed
@@ -104,6 +106,11 @@ export class GameAnalysisStats {
     public getAccuracy100LinesFor29(): number {
         if (this.accuracy100LinesFor29 !== undefined) return this.accuracy100LinesFor29;
         return this.overallAccuracy.getAverage();
+    }
+
+    public getScore100LinesFor29(): number {
+        if (this.score100LinesFor29 !== undefined) return this.score100LinesFor29;
+        return 0;
     }
 
     public is29Start(): boolean {

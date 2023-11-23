@@ -64,6 +64,14 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
 
     console.log("Adding game to leaderboard:", game.gameID, user.username);
 
+    // we don't care about the final score, but the transition to 29/100L score
+    let leaderboardScore: number;
+    if (leaderboardType === LeaderboardType.OVERALL) {
+        leaderboardScore = game.scoreAtTransitionTo29 ?? 0;
+    } else {
+        leaderboardScore = game.score100LinesFor29 ?? 0;
+    }
+
     // add the game to the leaderboard
     leaderboard.entries.push({
         gameID: game.gameID,
@@ -75,7 +83,7 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
         inputSpeed: game.inputSpeed,
         playstyle: game.playstyle,
         tetrisReadiness: game.tetrisReadiness,
-        score: game.finalScore,
+        score: leaderboardScore,
         accuracy: gameAccuracy,
     });
 
