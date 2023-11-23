@@ -37,6 +37,7 @@
 
 .element:active {
     background-color: $layer-3-color;
+    cursor: pointer;
 }
 
 .element:hover:first-of-type {

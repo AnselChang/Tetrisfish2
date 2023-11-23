@@ -34,7 +34,7 @@
 
         <div class="row" *ngFor="let entry of getCurrentLeaderboard(); let i = index">
             <hr class="divider" *ngIf="i !== 0">
-            <div class="leaderboard-item">
+            <div class="leaderboard-item leaderboard-entry" (click)="onClickEntry(entry)">
                 <p>#{{i+1}}</p>
                 <p>{{entry.playerName}}</p>
                 <p>{{entry.timeString}}</p>

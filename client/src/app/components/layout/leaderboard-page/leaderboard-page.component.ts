@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { RATING_TO_COLOR, getRatingFromAveragePercent } from 'client/src/app/models/evaluation-models/rating';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import formatDistanceStrict from 'date-fns/formatDistanceStrict';
@@ -18,7 +19,7 @@ export class LeaderboardPageComponent implements OnInit {
     [LeaderboardType.START_29]: []
   };
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     
@@ -94,5 +95,11 @@ export class LeaderboardPageComponent implements OnInit {
   getAccuracyColor(accuracy: number): string {
     const rating = getRatingFromAveragePercent(accuracy);
     return RATING_TO_COLOR[rating];
+  }
+
+  // redirect to game analysis page for entry
+  onClickEntry(entry: LeaderboardEntry) {
+    console.log("Clicked entry:", entry);
+    this.router.navigate(['/analyze-game'], { queryParams: { id: entry.gameID } });
   }
 }
