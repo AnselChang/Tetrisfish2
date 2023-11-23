@@ -28,13 +28,13 @@
             <h3>Level</h3>
             <h3>Playstyle</h3>
             <h3>Tetris Readiness</h3>
-            <h3>Score</h3>
-            <h3>Accuracy</h3>
+            <h3>{{isTypeOverall() ? 'Score at 29' : 'Score at 100L'}}</h3>
+            <h3>{{isTypeOverall() ? 'Accuracy at 29' : 'Accuracy at 100L'}}</h3>
         </div>
 
         <div class="row" *ngFor="let entry of getCurrentLeaderboard(); let i = index">
             <hr class="divider" *ngIf="i !== 0">
-            <div class="leaderboard-item">
+            <div class="leaderboard-item leaderboard-entry" (click)="onClickEntry(entry)">
                 <p>#{{i+1}}</p>
                 <p>{{entry.playerName}}</p>
                 <p>{{entry.timeString}}</p>

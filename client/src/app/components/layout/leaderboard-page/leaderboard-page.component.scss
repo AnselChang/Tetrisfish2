@@ -157,6 +157,22 @@ section {
     grid-template-columns: 1.5fr 2fr 3fr 1.5fr 3fr 3fr 2.5fr 2.5fr;
 }
 
+.leaderboard-entry {
+    border-radius: 5px;
+    padding: 3px;
+    align-items: center;
+}
+
+.leaderboard-entry:hover {
+    background-color: $layer-2-color;
+    cursor: pointer;
+}
+
+.leaderboard-entry:active {
+    background-color: #343336;
+}
+
+
 .leaderboard-item.header {
     margin-bottom: 13px;
 }

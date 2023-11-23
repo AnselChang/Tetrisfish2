@@ -68,6 +68,7 @@ export class GameExportService {
       numMissedAdjustments: -1, // TODO
       overallAccuracy: game.analysisStats.getOverallAccuracy().getAverage(),
       accuracy100LinesFor29: game.startLevel === 29 ? game.analysisStats.getAccuracy100LinesFor29() : undefined,
+      score100LinesFor29: game.startLevel === 29 ? game.analysisStats.getScore100LinesFor29() : undefined,
 
       accuracy18: average18?.getAverage() ?? -1,
       num18: average18?.getNumValues() ?? 0,

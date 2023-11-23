@@ -38,6 +38,7 @@ export interface SerializedGame {
     readonly numMissedAdjustments: number, // number of times the player missed an adjustment
     readonly overallAccuracy: number, // overall accuracy as a percent 0-1
     readonly accuracy100LinesFor29?: number, // accuracy as a percent 0-1 at <=100 lines on 29 speed, or undefined if not level 29
+    readonly score100LinesFor29?: number, // score at 100 lines on 29 speed, or undefined if not level 29
 
     readonly accuracy18: number, // accuracy as a percent 0-1 for 18 speed
     readonly num18: number, // number of placements at 18 speed
