@@ -103,7 +103,16 @@ export async function authCallbackRoute(req: Request, res: Response) {
     // make API request to discord to get user info
     const discordUser = await getUserFromAuth(token['access_token']);
     const discordID = discordUser['id'] as string;
-    const username = discordUser['global_name'] as string;
+    let username = discordUser['global_name'] as string;
+    if (username === undefined || username === null) {
+        console.log("global_name is undefined or null, trying username");
+        username = discordUser['username'] as string;
+        console.log("Username:", username);
+        if (username === undefined || username === null) {
+            username = "Unknown";
+            console.log("Both username and global name is undefined or null, setting to Unknown");
+        }
+    }
 
     // store in session
     req.session.state = new SessionState(discordID, username);
