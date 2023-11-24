@@ -6,6 +6,7 @@ The top 5 SR moves with 0 reaction time and both current/next piece
 import { fetchMovelist } from "../../scripts/evaluation/evaluator";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { convertSRPlacement } from "../../scripts/evaluation/sr-placement-converter";
+import { RATING_TO_COLOR, getRatingFromRelativeEval } from "../evaluation-models/rating";
 import { GamePlacement } from "../game-models/game-placement";
 import MoveableTetromino from "../game-models/moveable-tetromino";
 
@@ -17,7 +18,8 @@ export class MoveRecommendation {
     ) {}
 
     public toString(): string {
-        return `(${this.evaluation}) ${this.thisPiece.toString()} ${this.nextPiece.toString()}`;
+        const evalStr = (this.evaluation > 0) ? `+${this.evaluation}` : `${this.evaluation}`;
+        return `(${evalStr}) ${this.thisPiece.toString()} ${this.nextPiece.toString()}`;
     }
 }
 
@@ -46,6 +48,12 @@ export abstract class EngineMovelist {
 
     public get best(): MoveRecommendation {
         return this.recommendations[0];
+    }
+
+    public getRecommendationColor(recommendation: MoveRecommendation): string {
+        const diff = recommendation.evaluation - this.best.evaluation;
+        const rating = getRatingFromRelativeEval(diff);
+        return RATING_TO_COLOR[rating];
     }
 
     public getRecommendations(): MoveRecommendation[] {

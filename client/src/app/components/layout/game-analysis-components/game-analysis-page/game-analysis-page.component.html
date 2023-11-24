@@ -52,6 +52,13 @@
         </app-tetris-panel>
     </app-section>
 
+    <app-section class="stackrabbit-moves-container">
+        <div class="stackrabbit-moves">
+            <h2 class="header">StackRabbit Engine ({{game.inputSpeed}}hz)</h2>
+        <app-stackrabbit-moves *ngIf="getPosition().analysis.getEngineMoveListNB() as movelist" [movelist]="movelist"></app-stackrabbit-moves>
+        </div>
+    </app-section>
+
 </div>
 <app-graph *ngIf="game" class="graph" [game]="game" [currentPlacement]="placementIndex"
 (isTemporaryPlacement)="setWhetherTemporaryPlacement($event)" (setHoveredPlacement)="setPlacement($event)">

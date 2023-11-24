@@ -1,0 +1,15 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.header {
+    margin-bottom: 5px;
+}
+
+.recommendation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

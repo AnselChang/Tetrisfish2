@@ -24,6 +24,16 @@
     max-height: 150px;
 }
 
+.stackrabbit-moves-container {
+    height: fit-content;
+}
+
+.stackrabbit-moves {
+    height: 400px;
+    overflow-y: scroll;
+}
+
+
 .level-lines {
     display: flex;
     flex-direction: row;

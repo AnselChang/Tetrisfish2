@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-subsection',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./subsection.component.scss']
 })
 export class SubsectionComponent {
-
+  @Input() shadow: boolean = false;
 }
