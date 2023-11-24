@@ -5,19 +5,37 @@
     preserveAspectRatio="none"
 >
 
+    <!-- draw background colors for each speed -->
     <g *ngFor="let pair of speedPlacementPairs">
         <rect [attr.x]="pair.placementIndex" [attr.width]="pair.numPlacements"
-            [attr.height]="0.87" [attr.y]="0" [attr.fill]="getColorForSpeed(pair.speed)" opacity="0.2">
+            [attr.height]="0.9" [attr.y]="0" [attr.fill]="getColorForSpeed(pair.speed)" opacity="0.2">
         </rect>
         <rect [attr.x]="pair.placementIndex" [attr.width]="pair.numPlacements"
-            [attr.height]="0.13" [attr.y]="0.8" [attr.fill]="getColorForSpeed(pair.speed)" opacity="1">
+            [attr.height]="0.1" [attr.y]="0.9" [attr.fill]="getColorForSpeed(pair.speed)" opacity="1">
         </rect>
     </g>
 
+    <!-- draw drought locations -->
+    <g *ngFor="let drought of droughts">
+        <rect [attr.x]="drought.startIndex" [attr.width]="drought.endIndex - drought.startIndex"
+        [attr.height]="0.9" [attr.y]="0" fill="rgb(255,0,0)" opacity="0.3">
+    </rect>
+    </g>
+
+    <!-- draw hovered placement -->
     <rect *ngIf="hoveredPlacement !== null"
         [attr.x]="hoveredPlacement"
         [attr.width]="getSVGDisplayPlacementWidth()" height="1"
         fill="white" opacity="0.1"
+        (click)="onClickPlacement()"
+        >
+    </rect>
+
+    <!-- draw current placement -->
+    <rect
+        [attr.x]="hoveredPlacement ? lastPermanentPlacement : currentPlacement"
+        [attr.width]="getSVGDisplayPlacementWidth()" height="1"
+        fill="black" opacity="0.4"
         (click)="onClickPlacement()"
         >
     </rect>
