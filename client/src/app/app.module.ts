@@ -53,6 +53,7 @@ import { AnimatedCounterComponent } from './components/BLOCK/animated-counter/an
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { GameAnalysisPageComponent } from './components/layout/game-analysis-components/game-analysis-page/game-analysis-page.component';
 import { SortableComponent } from './components/layout/analyze-page/sortable/sortable.component';
+import { GraphComponent } from './components/layout/game-analysis-components/graph/graph.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -144,6 +145,7 @@ const customNotifierOptions: NotifierOptions = {
     AnimatedCounterComponent,
     GameAnalysisPageComponent,
     SortableComponent,
+    GraphComponent,
   ],
   imports: [
     BrowserModule,

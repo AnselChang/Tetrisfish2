@@ -27,4 +27,6 @@
         [attr.width]="getPauseWidth()"
         [attr.height]="getPauseHeight()" />
 
+    <rect *ngIf="greyOut > 0" x="0" y="0" [attr.width]="boardWidth" [attr.height]="boardHeight" fill="white" [attr.opacity]="greyOut" />
+
 </svg>

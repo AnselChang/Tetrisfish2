@@ -1,0 +1,15 @@
+<!-- svg dims are set to # of placements for x and 0-1 for y -->
+<svg #svgElement
+    [attr.viewBox]="'0 0 ' + (numPlacements) + ' 1'"
+    (mouseenter)="onMouseEnter()" (mousemove)="onMouseMove($event)" (mouseleave)="onMouseLeave()"
+    preserveAspectRatio="none"
+>
+    <rect *ngIf="hoveredPlacement !== null"
+        [attr.x]="hoveredPlacement"
+        [attr.width]="getSVGDisplayPlacementWidth()" height="1"
+        fill="white" opacity="0.1"
+        (click)="onClickPlacement()"
+        >
+    </rect>    
+
+  </svg>

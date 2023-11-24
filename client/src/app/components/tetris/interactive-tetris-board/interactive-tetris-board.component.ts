@@ -55,6 +55,7 @@ export class InteractiveTetrisBoardComponent {
   @Input() level: number = 18;
   @Input() grid: BinaryGrid | undefined;
   @Input() paused: boolean = false;
+  @Input() greyOut: number = 0;
 
   // two-way binding for current piece
   // use syntax [(currentPiece)]="currentPiece" in parent template

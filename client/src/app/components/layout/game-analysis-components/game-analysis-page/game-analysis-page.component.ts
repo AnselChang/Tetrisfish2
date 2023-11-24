@@ -24,6 +24,7 @@ export class GameAnalysisPageComponent implements OnInit {
   public game?: Game;
 
   public placementIndex: number = 0;
+  public isTemporaryPlacement: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -143,17 +144,33 @@ export class GameAnalysisPageComponent implements OnInit {
     }
   }
 
-  private setPlacement(index: number) {
+  public analyzePlacementIfNotAnalyzed(index: number) {
+    console.log("Analyzing placement", index);
+    const placement = this.game!.getPlacementAt(index);
+    if (placement && !placement.analysis.isAnalysisStarted()) {
+      this.game!.runFullAnalysis(placement);
+    }
+  }
+
+  public setPlacement(index: number) {
     this.placementIndex = index;
 
-    // start analyzing next ten placements including this if not analyzed
-    for (let i = index; i < Math.min(index + 10, this.game!.numPlacements); i++) {
-      const placement = this.game!.getPlacementAt(i);
-      if (!placement.analysis.isAnalysisStarted()) {
-        this.game!.runFullAnalysis(placement);
+    // only analyze placement if not while scrubbing through placements with graph
+    if (!this.isTemporaryPlacement) {
+      // start analyzing next ten placements including this if not analyzed
+      for (let i = index; i < Math.min(index + 10, this.game!.numPlacements); i++) {
+        this.analyzePlacementIfNotAnalyzed(i);
       }
+    } else {
+      console.log("Not analyzing placement because it is temporary");
     }
+  }
 
+  // toggle whether the current placement is temporary (from graph). // make sure the newly selected placement is analyzed
+  public setWhetherTemporaryPlacement(isTemporary: boolean) {
+    console.log("Setting temporary placement to", isTemporary);
+    this.isTemporaryPlacement = isTemporary;
+    if (!isTemporary) this.analyzePlacementIfNotAnalyzed(this.placementIndex);
   }
 
 

@@ -1,10 +1,27 @@
 @import "../../../../../styles.scss";
 
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+}
+
 .main {
     display: grid;
-    grid-template-columns: 50px 5fr 2.3fr 5fr; // 1fr = 50px in figma
+    grid-template-columns: 50px 470px 2.3fr 5fr; // 1fr = 50px in figma
     column-gap: 10px;
     margin: 0 10px;
+}
+
+.graph {
+    margin: 0 10px;
+    margin-bottom: 10px;
+    flex-grow: 1;
+    background-color: $layer-1-color;
+    border-radius: 5px;
+    min-height: 75px;
+    max-height: 150px;
 }
 
 .level-lines {
