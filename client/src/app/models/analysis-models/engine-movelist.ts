@@ -27,8 +27,19 @@ export abstract class EngineMovelist {
 
     private recommendations: MoveRecommendation[] = [];
 
+    // given a list of MT and a MT, check if the MT is already in the list
+    private doesPlacementExist(placements: MoveableTetromino[], myPlacement: MoveableTetromino) {
+        for (const placement of placements) {
+            if (placement.equals(myPlacement)) return true;
+        }
+        return false;
+    }
+
     constructor(moves: any, placement: GamePlacement) {
         // console.log("engine movelist nb created", moves);
+
+        // filter out recs that have current piece already in that spot
+        const firstPiecePlacements: MoveableTetromino[] = [];
 
         let i = 0;
         for (const move of moves) {
@@ -38,6 +49,10 @@ export abstract class EngineMovelist {
             const evaluation = nextDict["totalValue"];
             const thisPiece = convertSRPlacement(thisDict["placement"], placement.currentPieceType);
             const nextPiece = convertSRPlacement(nextDict["placement"], placement.nextPieceType);
+
+            // check if the piece placement for the first piece is already in the list, if so skip
+            if (this.doesPlacementExist(firstPiecePlacements, thisPiece)) continue;
+            firstPiecePlacements.push(thisPiece);
 
             const recommendation = new MoveRecommendation(thisPiece, nextPiece, evaluation);
             this.recommendations.push(recommendation);
