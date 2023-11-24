@@ -38,6 +38,14 @@ export default class PlacementAnalysis {
     }
 
     public flagStartedAnalysis() { this.isStartedAnalysis = true; }
+    public flagFailedAnalysis() {
+        this.isFinishedAnalysis = false; 
+        this.isStartedAnalysis = false;
+        this.engineMovelistNB = undefined;
+        this.engineMovelistNNB = undefined;
+        this.rateMoveDeep = undefined;
+        this.rateMoveShallow = undefined;
+    }
     public isAnalysisStarted(): boolean { return this.isStartedAnalysis; }
     public isAnalyisFinished(): boolean { return this.isFinishedAnalysis; }
 

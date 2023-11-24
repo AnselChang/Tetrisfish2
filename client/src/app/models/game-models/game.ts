@@ -131,11 +131,17 @@ export class Game {
             if (!lastPlacementMovelistNB || lastPlacementMovelistNB.index < position.index) {
                 this.lastEngineMovelistNB$.next(position);
             }
+        }).catch(e => {
+            console.log("Error fetching engine-movelist NB for placement #", position.index + 1);
+            position.analysis.flagFailedAnalysis();
         });
 
         // // non-blocking fetch SR engine-movelist NNB, set to placement analysis when it's done fetching
         EngineMovelistNNB.fetch(position, this.inputSpeed).then(engineMovelistNNB => {
             position.analysis.setEngineMoveListNNB(engineMovelistNNB);
+        }).catch(e => {
+            console.log("Error fetching engine-movelist NNB for placement #", position.index + 1);
+            position.analysis.flagFailedAnalysis();
         });
     }
 
@@ -179,11 +185,17 @@ export class Game {
             // update live leaderboard rank
             this.onOverallAccuracyChange$.next(this.analysisStats.getOverallAccuracy().getAverage());
 
+        }).catch(e => {
+            console.log("Error fetching rate-move deep for placement #", placement.index + 1);
+            placement.analysis.flagFailedAnalysis();
         });
 
         //non-blocking fetch the engine rate-move shallow, set to placement analysis when it's done fetching
         RateMoveShallow.fetch(placement, this.inputSpeed).then(rateMoveShallow => {
             placement.analysis.setRateMoveShallow(rateMoveShallow);
+        }).catch(e => {
+            console.log("Error fetching rate-move shallow for placement #", placement.index + 1);
+            placement.analysis.flagFailedAnalysis();
         });
     }
 

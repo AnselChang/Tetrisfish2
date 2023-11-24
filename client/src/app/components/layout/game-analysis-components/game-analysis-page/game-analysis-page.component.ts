@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
@@ -19,12 +19,15 @@ import { GameFromDatabase } from 'shared/models/game-from-database';
   templateUrl: './game-analysis-page.component.html',
   styleUrls: ['./game-analysis-page.component.scss']
 })
-export class GameAnalysisPageComponent implements OnInit {
+export class GameAnalysisPageComponent implements OnInit, OnDestroy {
 
   public game?: Game;
 
   public placementIndex: number = 0;
   public isTemporaryPlacement: boolean = false;
+
+  private currentAnalysingIndex: number = 0;
+  private analyzingIntervalID?: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -75,8 +78,20 @@ export class GameAnalysisPageComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    // stop analyzing placements from previous game if any
+    if (this.analyzingIntervalID) {
+      clearInterval(this.analyzingIntervalID);
+    }
+  }
+
   // build a Game object from the database game data 
   loadGame(dbGame: GameFromDatabase) {
+
+    // stop analyzing placements from previous game if any
+    if (this.analyzingIntervalID) {
+      clearInterval(this.analyzingIntervalID);
+    }
 
     console.log("Loading game", dbGame);
 
@@ -98,14 +113,25 @@ export class GameAnalysisPageComponent implements OnInit {
     // cache game
     this.gameCacheService.cacheGame(game);
 
-    // start analyzing first placement
-    this.game!.runFullAnalysis(this.game.getPlacementAt(0));
-
-    // start analyzing first 10 placements after a second
+    // hide loading notification after 1 second
     setTimeout(() => {
       this.notifier.hide("game-loading");
       this.setPlacement(0);
     }, 1000);
+
+    // analyze one placement a second for rate-limiting. this is to prevent requests from piling up
+    this.analyzingIntervalID = setInterval(() => {
+      this.analyzePlacementIfNotAnalyzed(this.currentAnalysingIndex);
+      this.currentAnalysingIndex++;
+
+      if (this.currentAnalysingIndex >= this.game!.numPlacements) {
+        console.log("Finished analyzing placements");
+        clearInterval(this.analyzingIntervalID);
+      }
+
+    }, 750);
+
+
   }
 
   getPosition(): GamePlacement {
@@ -144,7 +170,7 @@ export class GameAnalysisPageComponent implements OnInit {
   }
 
   public analyzePlacementIfNotAnalyzed(index: number) {
-    console.log("Analyzing placement", index);
+    console.log("Analyzing placement", index+1);
     const placement = this.game!.getPlacementAt(index);
     if (placement && !placement.analysis.isAnalysisStarted()) {
       this.game!.runFullAnalysis(placement);
@@ -156,10 +182,7 @@ export class GameAnalysisPageComponent implements OnInit {
 
     // only analyze placement if not while scrubbing through placements with graph
     if (!this.isTemporaryPlacement) {
-      // start analyzing next ten placements including this if not analyzed
-      for (let i = index; i < Math.min(index + 10, this.game!.numPlacements); i++) {
-        this.analyzePlacementIfNotAnalyzed(i);
-      }
+      this.analyzePlacementIfNotAnalyzed(this.placementIndex);
     } else {
       console.log("Not analyzing placement because it is temporary");
     }
@@ -182,5 +205,7 @@ export class GameAnalysisPageComponent implements OnInit {
       this.next();
     }
   }
+
+  
 
 }
