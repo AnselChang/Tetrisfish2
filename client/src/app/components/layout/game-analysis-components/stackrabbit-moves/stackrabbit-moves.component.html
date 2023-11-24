@@ -1,5 +1,7 @@
-<div class="recommendation-container" *ngFor="let rec of movelist.getRecommendations()">
-    <app-subsection [shadow]="true">
+<div class="recommendation-container" *ngFor="let rec of movelist.getRecommendations()"
+    (mouseenter)="onMouseEnterRecommendation(rec)" (mouseleave)="onMouseLeaveRecommendation()"
+>
+    <app-subsection class="subsection" [shadow]="true">
         <div class="recommendation">
             <h2 class="header" [style.color]="movelist.getRecommendationColor(rec)">{{rec.toString()}}</h2>
             <p class="description">Qualitative explanation on why move is good here</p>

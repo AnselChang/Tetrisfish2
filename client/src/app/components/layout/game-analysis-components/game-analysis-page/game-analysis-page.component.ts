@@ -1,6 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
+import { MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist';
 import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
 import { GameSpeed, getSpeedFromLevel } from 'client/src/app/models/evaluation-models/rating';
 import { Game } from 'client/src/app/models/game-models/game';
@@ -28,6 +29,8 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
 
   private currentAnalysingIndex: number = 0;
   private analyzingIntervalID?: any;
+
+  public hoveredRecommendation?: MoveRecommendation;
 
   constructor(
     private route: ActivatedRoute,
@@ -195,6 +198,9 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
     if (!isTemporary) this.analyzePlacementIfNotAnalyzed(this.placementIndex);
   }
 
+  public setHoveredRecommendation(rec: MoveRecommendation | undefined) {
+    this.hoveredRecommendation = rec;
+  }
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {

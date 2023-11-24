@@ -1,7 +1,17 @@
+@import "../../../../../styles.scss";
+
 :host {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.recommendation-container:hover .subsection ::ng-deep .subsection {
+    background-color: $layer-3-color;
+}
+
+.subsection {
+    cursor: default;
 }
 
 .header {

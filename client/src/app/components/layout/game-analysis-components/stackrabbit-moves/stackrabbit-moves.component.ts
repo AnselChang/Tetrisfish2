@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { EngineMovelistNB } from 'client/src/app/models/analysis-models/engine-movelist';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { EngineMovelistNB, MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist';
 
 @Component({
   selector: 'app-stackrabbit-moves',
@@ -8,7 +8,14 @@ import { EngineMovelistNB } from 'client/src/app/models/analysis-models/engine-m
 })
 export class StackrabbitMovesComponent {
   @Input() movelist!: EngineMovelistNB;
+  @Output() hoveredMove = new EventEmitter<MoveRecommendation | undefined>();
 
-  
+  onMouseEnterRecommendation(recommendation: MoveRecommendation): void {
+    this.hoveredMove.emit(recommendation);
+  }
+
+  onMouseLeaveRecommendation(): void {
+    this.hoveredMove.emit(undefined);
+  }
 
 }

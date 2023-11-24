@@ -12,8 +12,9 @@
             <app-interactive-tetris-board
                     [grid]="getPosition().grid"
                     [level]="getPosition().statusBeforePlacement.level"
-                    [currentPiece]="getPosition().piecePlacement"
-                    [greyOut]="isTemporaryPlacement ? 0.3 : 0"
+                    [currentPiece]="hoveredRecommendation ? hoveredRecommendation.thisPiece : getPosition().piecePlacement"
+                    [nextPiece]="hoveredRecommendation ? hoveredRecommendation.nextPiece : undefined"
+                    [greyOut]="(isTemporaryPlacement || hoveredRecommendation) ? 0.3 : 0"
                 />
             <app-tetris-panel-item>
                 <h2>Score</h2>
@@ -53,9 +54,14 @@
     </app-section>
 
     <app-section class="stackrabbit-moves-container">
-        <div class="stackrabbit-moves">
-            <h2 class="header">StackRabbit Engine ({{game.inputSpeed}}hz)</h2>
-        <app-stackrabbit-moves *ngIf="getPosition().analysis.getEngineMoveListNB() as movelist" [movelist]="movelist"></app-stackrabbit-moves>
+        <h2 class="header">StackRabbit Engine ({{game.inputSpeed}}hz)</h2>
+        <div class="stackrabbit-moves">  
+            <app-stackrabbit-moves
+            *ngIf="getPosition().analysis.getEngineMoveListNB() as movelist"
+            [movelist]="movelist"
+            (hoveredMove)="setHoveredRecommendation($event)"
+            >
+        </app-stackrabbit-moves>
         </div>
     </app-section>
 
