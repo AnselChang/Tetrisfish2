@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { RateMoveDeep } from 'client/src/app/models/analysis-models/rate-move';
+import { GameSpeed, getSpeedFromLevel } from 'client/src/app/models/evaluation-models/rating';
 import { Game } from 'client/src/app/models/game-models/game';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
@@ -13,6 +14,10 @@ import { GameCacheService } from 'client/src/app/services/game-cache.service';
 import formatDistanceStrict from 'date-fns/formatDistanceStrict';
 import { GameFromDatabase } from 'shared/models/game-from-database';
 
+export class SpeedPlacementPair {
+  public numPlacements: number = 0;
+  constructor(public speed: GameSpeed, public placementIndex: number) {}
+}
 
 @Component({
   selector: 'app-game-analysis-page',
@@ -25,6 +30,8 @@ export class GameAnalysisPageComponent implements OnInit {
 
   public placementIndex: number = 0;
   public isTemporaryPlacement: boolean = false;
+
+  public speedPlacementPairs?: SpeedPlacementPair[] | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -93,19 +100,47 @@ export class GameAnalysisPageComponent implements OnInit {
     });
 
     // set game object
-    this.game = game;
+    this.initNewGame(game);
 
     // cache game
     this.gameCacheService.cacheGame(game);
 
     // start analyzing first placement
-    this.game!.runFullAnalysis(this.game.getPlacementAt(0));
+    this.game!.runFullAnalysis(this.game!.getPlacementAt(0));
 
     // start analyzing first 10 placements after a second
     setTimeout(() => {
       this.notifier.hide("game-loading");
       this.setPlacement(0);
     }, 1000);
+  }
+
+  // run when a new game is set. calculate things like intervals for speeds for graph, etc.
+  initNewGame(game: Game) {
+    this.game = game;
+
+    // create a list of [speed, placementIndex] pairs for graph
+    this.speedPlacementPairs = [];
+    let currentSpeed: GameSpeed | undefined = undefined;
+    this.game.getAllPlacements().forEach((placement, index) => {
+      const speed = getSpeedFromLevel(placement.statusBeforePlacement.level);
+
+      // new speed detected
+      if (speed !== currentSpeed) {
+        if (currentSpeed !== undefined) {
+          const prevPair = this.speedPlacementPairs![this.speedPlacementPairs!.length-1];
+          prevPair.numPlacements = index - prevPair.placementIndex;
+        }
+
+        this.speedPlacementPairs!.push(new SpeedPlacementPair(speed, index));
+        currentSpeed = speed;
+      }
+    });
+
+    // set last pair
+    const lastPair = this.speedPlacementPairs![this.speedPlacementPairs!.length-1];
+    lastPair.numPlacements = this.game.numPlacements - lastPair.placementIndex;
+
   }
 
 

@@ -13,7 +13,7 @@
                     [grid]="getPosition().grid"
                     [level]="getPosition().statusBeforePlacement.level"
                     [currentPiece]="getPosition().piecePlacement"
-                    [greyOut]="isTemporaryPlacement ? 0.35 : 0"
+                    [greyOut]="isTemporaryPlacement ? 0.3 : 0"
                 />
             <app-tetris-panel-item>
                 <h2>Score</h2>
@@ -54,6 +54,7 @@
 
 </div>
 <app-graph *ngIf="game" class="graph" [game]="game" [currentPlacement]="placementIndex"
+[speedPlacementPairs]="speedPlacementPairs!"
 (isTemporaryPlacement)="setWhetherTemporaryPlacement($event)" (setHoveredPlacement)="setPlacement($event)">
     
 </app-graph>

@@ -42,7 +42,7 @@ export function getColorTypeForTetromino(tetrominoType: TetrominoType): Tetromin
     }
 }
 
-const COLOR_FIRST_COLORS: {[key: number]: string} = {
+export const COLOR_FIRST_COLORS: {[key: number]: string} = {
 0: "rgb(0,88,248)",
 1: "rgb(0,168,0)",
 2: "rgb(216,0,204)",
@@ -55,7 +55,7 @@ const COLOR_FIRST_COLORS: {[key: number]: string} = {
 9: "rgb(248,56,0)",
 };
 
-const COLOR_SECOND_COLORS: {[key: number]: string} = {
+export const COLOR_SECOND_COLORS: {[key: number]: string} = {
     0: "rgb(60,188,252)",
     1: "rgb(148,248,24)",
     2: "rgb(248,120,248)",

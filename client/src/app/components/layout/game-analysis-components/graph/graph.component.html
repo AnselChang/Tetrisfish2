@@ -4,12 +4,22 @@
     (mouseenter)="onMouseEnter()" (mousemove)="onMouseMove($event)" (mouseleave)="onMouseLeave()"
     preserveAspectRatio="none"
 >
+
+    <g *ngFor="let pair of speedPlacementPairs">
+        <rect [attr.x]="pair.placementIndex" [attr.width]="pair.numPlacements"
+            [attr.height]="0.87" [attr.y]="0" [attr.fill]="getColorForSpeed(pair.speed)" opacity="0.2">
+        </rect>
+        <rect [attr.x]="pair.placementIndex" [attr.width]="pair.numPlacements"
+            [attr.height]="0.13" [attr.y]="0.8" [attr.fill]="getColorForSpeed(pair.speed)" opacity="1">
+        </rect>
+    </g>
+
     <rect *ngIf="hoveredPlacement !== null"
         [attr.x]="hoveredPlacement"
         [attr.width]="getSVGDisplayPlacementWidth()" height="1"
         fill="white" opacity="0.1"
         (click)="onClickPlacement()"
         >
-    </rect>    
+    </rect>
 
   </svg>
