@@ -55,6 +55,9 @@ import { GameAnalysisPageComponent } from './components/layout/game-analysis-com
 import { SortableComponent } from './components/layout/analyze-page/sortable/sortable.component';
 import { GraphComponent } from './components/layout/game-analysis-components/graph/graph.component';
 import { StackrabbitMovesComponent } from './components/layout/game-analysis-components/stackrabbit-moves/stackrabbit-moves.component';
+import { TooltipComponent } from './components/BLOCK/tooltip/tooltip.component';
+import { TooltipDirective } from './directives/tooltip.directive';
+import { TooltipIndicatorComponent } from './components/BLOCK/tooltip-indicator/tooltip-indicator.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -148,6 +151,9 @@ const customNotifierOptions: NotifierOptions = {
     SortableComponent,
     GraphComponent,
     StackrabbitMovesComponent,
+    TooltipComponent,
+    TooltipDirective,
+    TooltipIndicatorComponent,
   ],
   imports: [
     BrowserModule,

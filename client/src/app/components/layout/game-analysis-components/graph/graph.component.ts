@@ -4,7 +4,12 @@ import { GameSpeed, getSpeedFromLevel } from 'client/src/app/models/evaluation-m
 import { COLOR_FIRST_COLORS, COLOR_SECOND_COLORS, TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
 
 class DroughtLocation {
-  constructor(public startIndex: number, public endIndex: number) {}
+  public readonly length: number;
+  public readonly tooltip: string;
+  constructor(public startIndex: number, public endIndex: number, numBurns: number) {
+    this.length = endIndex - startIndex + 1;
+    this.tooltip = `Drought (${this.length} placements): ${numBurns} burns`;
+  }
 }
 
 class SpeedPlacementPair {
@@ -109,21 +114,26 @@ export class GraphComponent implements OnInit, OnChanges {
     let droughtLength = 0;
     const MIN_DROUGHT_LENGTH = 14;
 
+    let numBurns = 0;
+
     this.game.getAllPlacements().forEach((placement, index) => {
       const piece = placement.currentPieceType;
 
+
       if (piece === TetrominoType.I_TYPE) {
         if (droughtLength >= MIN_DROUGHT_LENGTH) {
-          this.droughts.push(new DroughtLocation(startIndex, index - 1));
+          this.droughts.push(new DroughtLocation(startIndex, index - 1, numBurns));
         }
         startIndex = index + 1;
         droughtLength = 0;
+        numBurns = 0;
       } else {
+        if (placement.placementLineClears) numBurns += placement.placementLineClears;
         droughtLength++;
       }
     });
     if (droughtLength >= MIN_DROUGHT_LENGTH) {
-      this.droughts.push(new DroughtLocation(startIndex, this.game.numPlacements - 1));
+      this.droughts.push(new DroughtLocation(startIndex, this.game.numPlacements - 1, numBurns));
     }
   }
 
