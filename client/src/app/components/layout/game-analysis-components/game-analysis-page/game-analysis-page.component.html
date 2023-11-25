@@ -53,18 +53,29 @@
         </app-tetris-panel>
     </app-section>
 
-    <app-section class="stackrabbit-moves-container">
-        <h2 class="header">StackRabbit Engine ({{game.inputSpeed}}hz)</h2>
-        <div class="stackrabbit-moves">  
-            <app-stackrabbit-moves
-            *ngIf="getPosition().analysis.getEngineMoveListNB() as movelist"
-            [movelist]="movelist"
-            (hoveredMove)="setHoveredRecommendation($event)"
-            >
-        </app-stackrabbit-moves>
-        </div>
-    </app-section>
-
+    <div class="analysis-col">
+        <app-section class="stackrabbit-moves-container">
+            <h2 class="header">StackRabbit Engine ({{game.inputSpeed}}hz)</h2>
+            <div class="stackrabbit-moves">  
+                <app-stackrabbit-moves
+                *ngIf="getPosition().analysis.getEngineMoveListNB() as movelist"
+                [movelist]="movelist"
+                (hoveredMove)="setHoveredRecommendation($event)"
+                >
+            </app-stackrabbit-moves>
+            </div>
+        </app-section>
+    
+        <app-section class="nnb-container">
+            <h2 class="header">Alternate next pieces</h2>
+            <div class="pieces-container">
+                <app-tag class="nnb-piece" (mosueover)="setHoverNNB('default')" (mouseleave)="setHoverNNB()" />
+                <app-tag class="nnb-piece" *ngFor="let type of getPieceTypes()" 
+                [piece]="type" (mouseover)="setHoverNNB(type)" (mouseleave)="setHoverNNB()" />
+            </div>
+        </app-section>
+    </div>
+    
 </div>
 <app-graph *ngIf="game" class="graph" [game]="game" [currentPlacement]="placementIndex"
 (isTemporaryPlacement)="setWhetherTemporaryPlacement($event)" (setHoveredPlacement)="setPlacement($event)">

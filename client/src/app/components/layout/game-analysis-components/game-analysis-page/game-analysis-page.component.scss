@@ -24,15 +24,38 @@
     max-height: 150px;
 }
 
+.analysis-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .stackrabbit-moves-container {
     height: fit-content;
 }
 
 .stackrabbit-moves {
-    height: 400px;
+    height: 380px;
     overflow-y: scroll;
 }
 
+.nnb-container {
+    flex-grow: 1;
+}
+
+.pieces-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0 10%;
+    gap: 10px;
+}
+
+.nnb-piece:hover {
+    filter: brightness(1.4);
+}
 
 .level-lines {
     display: flex;

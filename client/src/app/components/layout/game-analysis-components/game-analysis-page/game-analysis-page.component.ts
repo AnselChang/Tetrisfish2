@@ -8,7 +8,7 @@ import { Game } from 'client/src/app/models/game-models/game';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 import BinaryGrid from 'client/src/app/models/tetronimo-models/binary-grid';
-import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
+import { ALL_TETROMINO_TYPES, TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
 import { InputSpeed } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { GameCacheService } from 'client/src/app/services/game-cache.service';
@@ -31,6 +31,7 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
   private analyzingIntervalID?: any;
 
   public hoveredRecommendation?: MoveRecommendation;
+  public hoveredNNB?: TetrominoType | "default" = this.hoveredNNB;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,6 +39,11 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
     private notifier: NotifierService,
     private gameCacheService: GameCacheService,
   ) {}
+
+  // get all the piece types excluding the current next piece
+  getPieceTypes(): TetrominoType[] {
+    return ALL_TETROMINO_TYPES;
+  }
 
   // if there is a route parameters for a specific game, load it
   ngOnInit() {
@@ -201,6 +207,15 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
   public setHoveredRecommendation(rec: MoveRecommendation | undefined) {
     this.hoveredRecommendation = rec;
   }
+
+  // when NNB type is hovered, show the NNB recommendation.
+  // if "default", show default recommendation
+  // if undefined, disable
+  public setHoverNNB(type: TetrominoType | "default" | undefined = undefined) {
+    this.hoveredNNB = type;
+  }
+
+
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {

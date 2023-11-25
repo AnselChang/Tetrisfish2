@@ -1,10 +1,10 @@
-<div class="recommendation-container" *ngFor="let rec of movelist.getRecommendations()"
+<div class="recommendation-container" *ngFor="let rec of movelist.getRecommendations(); let i = index"
     (mouseenter)="onMouseEnterRecommendation(rec)" (mouseleave)="onMouseLeaveRecommendation()"
 >
     <app-subsection class="subsection" [shadow]="true">
-        <div class="recommendation">
-            <h2 class="header" [style.color]="movelist.getRecommendationColor(rec)">{{rec.toString()}}</h2>
-            <p class="description">Qualitative explanation on why move is good here</p>
+        <div class="recommendation" [ngClass]="(i === 0) ? 'first-recommendation' : ''">
+            <h2 [style.color]="movelist.getRecommendationColor(rec)">{{rec.toString()}}</h2>
+            <p class="description" *ngIf="i === 0">Qualitative explanation on why move is good here</p>
         </div>
     </app-subsection>
 </div>

@@ -24,8 +24,20 @@ export class MoveRecommendation {
 }
 
 export abstract class EngineMovelist {
+    protected recommendations: MoveRecommendation[] = [];
 
-    private recommendations: MoveRecommendation[] = [];
+    public getRecommendations(): MoveRecommendation[] {
+        return this.recommendations;
+    }
+}
+
+// generates a list of best current piece + next piece placements given a game placement with current and next piece
+export class EngineMovelistNB extends EngineMovelist {
+
+    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNB> {
+        const response = await fetchMovelist(placement, inputSpeed, true);
+        return new EngineMovelistNB(response, placement);
+    }
 
     // given a list of MT and a MT, check if the MT is already in the list
     private doesPlacementExist(placements: MoveableTetromino[], myPlacement: MoveableTetromino) {
@@ -36,6 +48,7 @@ export abstract class EngineMovelist {
     }
 
     constructor(moves: any, placement: GamePlacement) {
+        super();
         // console.log("engine movelist nb created", moves);
 
         // filter out recs that have current piece already in that spot
@@ -71,19 +84,9 @@ export abstract class EngineMovelist {
         return RATING_TO_COLOR[rating];
     }
 
-    public getRecommendations(): MoveRecommendation[] {
-        return this.recommendations;
-    }
 }
 
-export class EngineMovelistNB extends EngineMovelist {
-
-    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNB> {
-        const response = await fetchMovelist(placement, inputSpeed, true);
-        return new EngineMovelistNB(response, placement);
-    }
-}
-
+// Given only current piece, generate a list of best 
 export class EngineMovelistNNB {
 
     static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNNB> {

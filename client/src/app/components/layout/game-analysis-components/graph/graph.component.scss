@@ -5,3 +5,16 @@
 svg {
     cursor: pointer;
 }
+
+.drought-rect {
+    opacity: 0.4;
+    pointer-events: all;
+}
+
+.drought-rect:hover {
+    opacity: 0.7;
+}
+
+.no-pointer-events {
+    pointer-events: none;
+}
