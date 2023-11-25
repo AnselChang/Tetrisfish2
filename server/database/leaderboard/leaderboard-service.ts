@@ -98,6 +98,7 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
     leaderboard.lowestAccuracy = leaderboard.entries[0].accuracy;
 
      // get the ranking of the game
+    leaderboard.entries.sort((a, b) => b.accuracy - a.accuracy);
     const gameRankIndex = leaderboard.entries.findIndex(entry => entry.gameID === game.gameID);
     console.log("GAME RANK", gameRankIndex+1);
 

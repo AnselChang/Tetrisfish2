@@ -220,6 +220,8 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
 
+    if (this.isTemporaryPlacement) return;
+
     if (event.key === "ArrowLeft" || event.key === ",") {
       this.previous();
     } else if (event.key === "ArrowRight" || event.key === ".") {
