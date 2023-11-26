@@ -65,6 +65,8 @@ export class PuzzleComponent implements OnInit {
   private setHoveringPiece(type: TetrominoType, block: BlockData) {
     this.hoveringPiece = new MoveableTetromino(type, this.rotation, block.x - 1, block.y);
     this.hoveringPiece.moveToBounds();
+    const valid = this.hoveringPiece.kickToValidPosition(this.currentGrid);
+    if (!valid) this.hoveringPiece.kickToNonIntersectingPosition(this.currentGrid);
     this.isHoveringPieceValid = this.hoveringPiece.isValidPlacement(this.currentGrid);
   }
 
@@ -110,13 +112,17 @@ export class PuzzleComponent implements OnInit {
   // if r key placed, rotate the hovering piece
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'r') this.rotatePiece();
+    if (event.key === 'r') this.rotatePiece(1);
+    else if (event.key === 'e') this.rotatePiece(-1);
+    else if (event.key === 'Space') this.submitPuzzle();
+    else if (event.key === 'q') this.resetPuzzle();
   }
 
-  rotatePiece() {
+  rotatePiece(direction: number = 1) {
     if (this.hoveringPiece) {
-      this.rotation++;
+      this.rotation += direction;
       this.hoveringPiece.updatePose(this.rotation, undefined, undefined);
+      this.hoveringPiece.moveToBounds();
     }
   }
 

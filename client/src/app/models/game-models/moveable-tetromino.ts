@@ -135,6 +135,40 @@ export default class MoveableTetromino {
         this.updateCurrentBlockSet();
     }
 
+    // attempt to kick the tetromino to a valid position by moving it up, down, left, or right
+    // return true if resulting position is valid, false if not
+    public kickToValidPosition(grid: BinaryGrid): boolean {
+        if (this.isValidPlacement(grid)) return true;
+        
+        // try moving up, down, left, right
+        const directions = [[0, 1], [0, -1], [-1, 0], [1, 0], [0, 2], [0, -2], [-2, 0], [2, 0]];
+        for (let direction of directions) {
+            const movedMT = new MoveableTetromino(this.tetrominoType, this.rotation, this.translateX + direction[0], this.translateY + direction[1]);
+            if (movedMT.isInBounds() && movedMT.isValidPlacement(grid)) {
+                this.updatePose(undefined, this.translateX + direction[0], this.translateY + direction[1]);
+                return true;
+            }
+        };
+        return false;
+    }
+
+    // attempt to kick the tetromino to a non-intersecting position by moving it up, down, left, or right
+    // return true if resulting position is valid, false if not
+    public kickToNonIntersectingPosition(grid: BinaryGrid): boolean {
+        if (!this.intersectsGrid(grid)) return true;
+        
+        // try moving up, down, left, right
+        const directions = [[0, 1], [0, -1], [-1, 0], [1, 0], [0, 2], [0, -2], [-2, 0], [2, 0]];
+        for (let direction of directions) {
+            const movedMT = new MoveableTetromino(this.tetrominoType, this.rotation, this.translateX + direction[0], this.translateY + direction[1]);
+            if (movedMT.isInBounds() && !movedMT.intersectsGrid(grid)) {
+                this.updatePose(undefined, this.translateX + direction[0], this.translateY + direction[1]);
+                return true;
+            }
+        };
+        return false;
+    }
+
     public isInBounds(): boolean {
         return this.getCurrentBlockSet().blocks.every(block => block.x >= 0 && block.x <= 9 && block.y >= 0 && block.y <= 19);
     }
