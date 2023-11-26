@@ -3,7 +3,7 @@ import { Puzzle } from '../../models/puzzle';
 import MoveableTetromino from '../../models/game-models/moveable-tetromino';
 import { BlockData } from '../tetris/interactive-tetris-board/interactive-tetris-board.component';
 import BinaryGrid from '../../models/tetronimo-models/binary-grid';
-import { TetrominoType } from '../../models/tetronimo-models/tetromino';
+import { Tetromino, TetrominoType } from '../../models/tetronimo-models/tetromino';
 
 export enum Status {
   PLACING_FIRST_PIECE,
@@ -32,6 +32,9 @@ export class PuzzleComponent implements OnInit {
 
   public currentGrid!: BinaryGrid;
   private rotation: number = 0;
+
+  private lastX: number = 0;
+  private lastY: number = 0;
 
   constructor() {
   }
@@ -62,8 +65,40 @@ export class PuzzleComponent implements OnInit {
     return undefined;
   }
 
-  private setHoveringPiece(type: TetrominoType, block: BlockData) {
-    this.hoveringPiece = new MoveableTetromino(type, this.rotation, block.x - 1, block.y);
+  private getOffset(type: TetrominoType, rot: number): {x: number, y: number} {
+
+    rot %= Tetromino.getPieceByType(type).numPossibleRotations();
+
+    if (type === TetrominoType.I_TYPE && rot === 1) return {x: 1, y: -2};
+    else if (type === TetrominoType.J_TYPE || type === TetrominoType.L_TYPE) {
+      if (rot === 1 || rot == 2) return {x: 0, y: -1};
+      else if (rot === 3) return {x: 1, y: -1};
+    } else if (type === TetrominoType.T_TYPE) {
+      if (rot === 1) return {x: 0, y: -1};
+      else if (rot === 2) return {x: 0, y: -1};
+      else if (rot === 3) return {x: 1, y: -1};
+      else if (rot === 2) return {x: 0, y : -1};
+    } else if (type === TetrominoType.S_TYPE) {
+      
+    } else if (type === TetrominoType.Z_TYPE) {
+      
+    } else { // O_TYPE
+
+    }
+
+
+    return {x: 0, y: 0};
+  }
+
+  private setHoveringPiece(type: TetrominoType, block?: BlockData) {
+
+    if (block) {
+      this.lastX = block.x;
+      this.lastY = block.y;
+    }
+    
+    const {x, y} = this.getOffset(type, this.rotation);
+    this.hoveringPiece = new MoveableTetromino(type, this.rotation, this.lastX + x - 1, this.lastY + y);
     this.hoveringPiece.moveToBounds();
     const valid = this.hoveringPiece.kickToValidPosition(this.currentGrid);
     if (!valid) this.hoveringPiece.kickToNonIntersectingPosition(this.currentGrid);
@@ -121,8 +156,7 @@ export class PuzzleComponent implements OnInit {
   rotatePiece(direction: number = 1) {
     if (this.hoveringPiece) {
       this.rotation += direction;
-      this.hoveringPiece.updatePose(this.rotation, undefined, undefined);
-      this.hoveringPiece.moveToBounds();
+      this.setHoveringPiece(this.hoveringPiece.tetrominoType);
     }
   }
 

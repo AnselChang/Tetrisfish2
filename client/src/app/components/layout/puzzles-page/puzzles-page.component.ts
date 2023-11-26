@@ -21,8 +21,8 @@ export class PuzzlesPageComponent {
     
     this.puzzle = new Puzzle(
       new BinaryGrid(),
-      new MoveableTetromino(TetrominoType.I_TYPE, 0, 0, 0),
-      new MoveableTetromino(TetrominoType.J_TYPE, 0, 0, 0),
+      new MoveableTetromino(TetrominoType.S_TYPE, 0, 0, 0),
+      new MoveableTetromino(TetrominoType.Z_TYPE, 0, 0, 0),
       0
     );
 
