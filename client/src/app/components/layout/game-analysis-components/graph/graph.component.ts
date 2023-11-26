@@ -26,7 +26,7 @@ class NotTetrisReadyLocation {
   public readonly tooltip: string;
   constructor(public startIndex: number, public endIndex: number, numBars: number, numTetrises: number, numBurns: number) {
     this.length = endIndex - startIndex + 1;
-    this.tooltip = `Tetris ready (${this.length} placements): ${numBars} I-pieces, ${numTetrises} tetrises, ${numBurns} burns`;
+    this.tooltip = `Not tetris ready (${this.length} placements): ${numBars} I-pieces, ${numTetrises} tetrises, ${numBurns} burns`;
   }
 }
 
