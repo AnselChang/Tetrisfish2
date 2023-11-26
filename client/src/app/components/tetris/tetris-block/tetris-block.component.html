@@ -1,5 +1,5 @@
 
-<svg:g [attr.opacity] = "isNextPiece() ? 0.5 : ((isHovering || showHovering) ? 0.8 : 1)">
+<svg:g [attr.opacity] = "blockData.opacity ?? (isNextPiece() ? 0.5 : ((isHovering || showHovering) ? 0.8 : 1))">
 
     <!-- draw bounding box -->
     <svg:rect

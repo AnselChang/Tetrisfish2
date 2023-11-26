@@ -79,6 +79,23 @@
             </div>
         </app-section>
     </div>
+
+    <app-section class="test-container">
+        <h2>Rate Move Deep</h2>
+        <div *ngIf="getPosition().analysis.getRateMoveDeep() as rmd">
+            <p>Best NB: {{rmd.bestNB}}</p>
+            <p>Best NNB: {{rmd.bestNNB}}</p>
+            <p>Player NB: {{rmd.playerNB}}</p>
+            <p>Player NNB: {{rmd.playerNNB}}</p>
+        </div>
+        <h2>Rate Move Shallow</h2>
+        <div *ngIf="getPosition().analysis.getRateMoveShallow() as rms">
+            <p>Best NB: {{rms.bestNB}}</p>
+            <p>Best NNB: {{rms.bestNNB}}</p>
+            <p>Player NB: {{rms.playerNB}}</p>
+            <p>Player NNB: {{rms.playerNNB}}</p>
+        </div>
+    </app-section>
     
 </div>
 <app-graph *ngIf="game" class="graph" [game]="game" [currentPlacement]="placementIndex"

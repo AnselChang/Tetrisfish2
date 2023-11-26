@@ -58,6 +58,7 @@ import { StackrabbitMovesComponent } from './components/layout/game-analysis-com
 import { TooltipComponent } from './components/BLOCK/tooltip/tooltip.component';
 import { TooltipDirective } from './directives/tooltip.directive';
 import { TooltipIndicatorComponent } from './components/BLOCK/tooltip-indicator/tooltip-indicator.component';
+import { PuzzleComponent } from './components/puzzle/puzzle.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -154,6 +155,7 @@ const customNotifierOptions: NotifierOptions = {
     TooltipComponent,
     TooltipDirective,
     TooltipIndicatorComponent,
+    PuzzleComponent,
   ],
   imports: [
     BrowserModule,

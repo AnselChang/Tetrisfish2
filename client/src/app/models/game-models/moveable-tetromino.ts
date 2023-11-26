@@ -108,7 +108,8 @@ export default class MoveableTetromino {
 
     public updatePose(rotation: number | undefined, translateX: number | undefined, translateY: number | undefined): void {
         if (rotation !== undefined) {
-            this.rotation = rotation;
+            const numPossibleRotations = Tetromino.getPieceByType(this.tetrominoType).numPossibleRotations();
+            this.rotation = rotation % numPossibleRotations;
         }
         if (translateX !== undefined) {
             this.translateX = translateX;
@@ -119,12 +120,32 @@ export default class MoveableTetromino {
         this.updateCurrentBlockSet();
     }
 
+    // if the tetromino is out of bounds, move it back in bounds
+    public moveToBounds(): void {
+        let moveX = 0;
+        let moveY = 0;
+        this.currentBlockSet.blocks.forEach(block => {
+            if (block.x < 0) moveX = Math.max(moveX, -block.x);
+            if (block.x > 9) moveX = Math.min(moveX, 9 - block.x);
+            if (block.y < 0) moveY = Math.max(moveY, -block.y);
+            if (block.y > 19) moveY = Math.min(moveY, 19 - block.y);
+        });
+        this.translateX += moveX;
+        this.translateY += moveY;
+        this.updateCurrentBlockSet();
+    }
+
+    public isInBounds(): boolean {
+        return this.getCurrentBlockSet().blocks.every(block => block.x >= 0 && block.x <= 9 && block.y >= 0 && block.y <= 19);
+    }
+
 
     // Whether one of the minos of this tetromino is a the given position
     public isAtLocation(x: number, y: number): boolean {
         return this.getCurrentBlockSet().blocks.some(block => block.x === x && block.y === y);
     }
 
+    // modify the given grid to include the blocks of this tetromino
     public blitToGrid(grid: BinaryGrid): BinaryGrid {
 
         const blockSet = this.getCurrentBlockSet();
@@ -132,6 +153,19 @@ export default class MoveableTetromino {
             grid.setAt(block.x, block.y, BlockType.FILLED);
         });
         return grid;
+    }
+
+    public intersectsGrid(grid: BinaryGrid): boolean {
+        return this.getCurrentBlockSet().blocks.some(block => grid.at(block.x, block.y) === BlockType.FILLED);
+    }
+
+    // placement is valid if the piece is in bounds, and does not intersect with the grid, 
+    // but moving the piece down one row would intersect with the grid
+    public isValidPlacement(grid: BinaryGrid): boolean {
+        if (!this.isInBounds()) return false;
+        if (this.intersectsGrid(grid)) return false;
+        const movedMT = new MoveableTetromino(this.tetrominoType, this.rotation, this.translateX, this.translateY + 1);
+        return !movedMT.isInBounds() || movedMT.intersectsGrid(grid);
     }
 
     public equals(other: MoveableTetromino): boolean {

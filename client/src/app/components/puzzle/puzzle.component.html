@@ -1,0 +1,30 @@
+<app-section class="puzzle-section">
+    <h1 class="padded">Puzzle</h1>
+
+    <app-tetris-panel>
+        <app-interactive-tetris-board
+            [grid]="currentGrid"
+            [level]="18"
+            [currentPiece]="getDisplayPiece()"
+            [currentPieceOpacity]="isHoveringPieceValid ? 0.8 : 0.5"
+            (hoveredBlock)="setHoveredBlock($event)"
+            (onHoverOff)="setHoveredBlock(undefined)"
+            (onClick)="onBoardClick($event)"
+        />
+        <app-tetris-panel-item>
+            <app-next-box [showBackground]="false" [level]="18" [type]="puzzle.secondPieceSolution.tetrominoType"></app-next-box>
+        </app-tetris-panel-item>
+
+        <div class="rotate">
+            <app-button-big label="Rotate" color="#9162DF" (click)="rotatePiece()"></app-button-big>
+            <p class="tiny">Or, press 'R' to rotate the piece</p>
+        </div>
+        
+        <div class="buttons">
+            <app-button-big label="Reset" color="#D75858" (click)="resetPuzzle()"></app-button-big>
+            <app-button-big label="Submit" color="#58D774" (click)="submitPuzzle()"></app-button-big>
+        </div>
+        
+
+    </app-tetris-panel>
+</app-section>

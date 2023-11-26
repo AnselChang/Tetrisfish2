@@ -38,6 +38,7 @@ export class BlockData {
     public readonly level: number,
     public readonly color?: TetrominoColorType,
     public readonly mode: BlockMode = BlockMode.NORMAL, // if color is white and special, display the other border color
+    public readonly opacity?: number
   ) {
     this.svgSize = SVG_BLOCK_SIZE;
     this.svgX = (this.x) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
@@ -63,6 +64,7 @@ export class InteractiveTetrisBoardComponent {
   // will hover the piece at the mouse location
   @Input() currentPiece?: MoveableTetromino;
   @Output() currentPieceChange = new EventEmitter<MoveableTetromino | undefined>();
+  @Input() currentPieceOpacity?: number;
 
   @Input() nextPiece?: MoveableTetromino;
 
@@ -117,10 +119,12 @@ export class InteractiveTetrisBoardComponent {
     // type is "SOLID" for solid design if mostly mainColor, "BORDER" for mostly whiteColor with mainColor border 
 
     let colorType;
+    let opacity = undefined;
     let mode: BlockMode = BlockMode.NORMAL;
     if (this.currentPiece && this.currentPiece.isAtLocation(x,y)) {
       colorType = getColorTypeForTetromino(this.currentPiece.tetrominoType);
       mode = BlockMode.THIS_PIECE;
+      opacity = this.currentPieceOpacity;
     } else if (this.nextPiece && this.nextPiece.isAtLocation(x,y)) {
       colorType = getColorTypeForTetromino(this.nextPiece.tetrominoType);
       mode = BlockMode.NEXT_PIECE;
@@ -135,7 +139,8 @@ export class InteractiveTetrisBoardComponent {
       SVG_PADDING,
       this.level,
       colorType,
-      mode
+      mode,
+      opacity
     );
   }
 

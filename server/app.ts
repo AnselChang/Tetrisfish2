@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as path from 'path';
 import * as morgan from 'morgan'; // Import Morgan
+import Stripe from 'stripe';
 
 //import * as livereload from 'livereload';
 //import * as connectLivereload from 'connect-livereload';
@@ -19,11 +20,20 @@ import { getGameRoute, getGamesByPlayerRoute, sendGameRoute } from './routes/gam
 import { getGlobalStatsRoute } from './routes/global-stats';
 import { LeaderboardType } from './database/leaderboard/leaderboard-schema';
 import { getLeaderboardAccuraciesRoute, getLeaderboardRoute } from './routes/leaderboard';
+import { stripeWebhook } from './routes/stripe';
+import * as bodyParser from 'body-parser';
+
+
 declare module 'express-session' {
     export interface SessionData {
       state?: SessionState; // Add your custom session properties here
       redirect?: string;
     }
+  }
+
+// TypeScript interface for extended request
+interface ExtendedRequest extends Request {
+    rawBody: string;
   }
 
 require('dotenv').config();
@@ -50,6 +60,7 @@ export default async function createApp(): Promise<Express> {
 
     // connect to discord
     const discordBot = new DiscordBot();
+    const stripe = new Stripe(process.env['STRIPE_SECRET_KEY']!);
 
 
         // In development, refresh Angular on save just like ng serve does
@@ -102,6 +113,17 @@ export default async function createApp(): Promise<Express> {
     app.get('/api/get-leaderboard-29', async (req: Request, res: Response) => getLeaderboardRoute(req, res, LeaderboardType.START_29));
     app.get('/api/get-leaderboard-accuracy-overall', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.OVERALL));
     app.get('/api/get-leaderboard-accuracy-29', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.START_29));
+
+    app.use(
+        '/webhook',
+        bodyParser.json({
+          verify: (req: Request, res: Response, buf: Buffer, encoding: string) => {
+            (req as ExtendedRequest).rawBody = buf.toString();
+          },
+        })
+      );
+
+    app.post('/webhook', async (req: Request, res: Response) => stripeWebhook(req, res, stripe));
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {
