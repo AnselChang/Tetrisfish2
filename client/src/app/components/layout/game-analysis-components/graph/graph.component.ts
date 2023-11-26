@@ -12,6 +12,42 @@ class DroughtLocation {
   }
 }
 
+class TetrisReadyLocation {
+  public readonly length: number;
+  public readonly tooltip: string;
+  constructor(public startIndex: number, public endIndex: number, numTetrises: number, numBurns: number) {
+    this.length = endIndex - startIndex + 1;
+    this.tooltip = `Tetris ready (${this.length} placements): ${numTetrises} tetrises, ${numBurns} burns`;
+  }
+}
+
+class NotTetrisReadyLocation {
+  public readonly length: number;
+  public readonly tooltip: string;
+  constructor(public startIndex: number, public endIndex: number, numBars: number, numTetrises: number, numBurns: number) {
+    this.length = endIndex - startIndex + 1;
+    this.tooltip = `Tetris ready (${this.length} placements): ${numBars} I-pieces, ${numTetrises} tetrises, ${numBurns} burns`;
+  }
+}
+
+class RightWellLocation {
+  public readonly length: number;
+  public readonly tooltip: string;
+  constructor(public startIndex: number, public endIndex: number, numBars: number, numTetrises: number, numBurns: number) {
+    this.length = endIndex - startIndex + 1;
+    this.tooltip = `Right well open (${this.length} placements): ${numBars} I-pieces, ${numTetrises} tetrises, ${numBurns} burns`;
+  }
+}
+
+class NotRightWellLocation {
+  public readonly length: number;
+  public readonly tooltip: string;
+  constructor(public startIndex: number, public endIndex: number, numBars: number, numTetrises: number, numBurns: number) {
+    this.length = endIndex - startIndex + 1;
+    this.tooltip = `Right well closed (${this.length} placements): ${numBars} I-pieces, ${numTetrises} tetrises, ${numBurns} burns`;
+  }
+}
+
 class SpeedPlacementPair {
   public numPlacements: number = 0;
   constructor(public speed: GameSpeed, public placementIndex: number) {}
@@ -43,6 +79,10 @@ export class GraphComponent implements OnInit, OnChanges {
   speedPlacementPairs!: SpeedPlacementPair[];
   displayPlacementAccuracies: PlacementAccuracyIndex[] = [];
   droughts: DroughtLocation[] = [];
+  tetrisReady: TetrisReadyLocation[] = [];
+  notTetrisReady: NotTetrisReadyLocation[] = [];
+  rightWell: RightWellLocation[] = [];
+  notRightWell: NotRightWellLocation[] = [];
 
 
   private afterClickPlacement = false;
@@ -70,6 +110,10 @@ export class GraphComponent implements OnInit, OnChanges {
     this.updateSpeedPlacementPairs();
     this.updateDisplayPlacementAccuracies();
     this.updateDroughts();
+    this.updateTetrisReady();
+    this.updateNotTetrisReady();
+    this.updateRightWell();
+    this.updateNotRightWell();
   }
 
   private updateSpeedPlacementPairs() {
@@ -134,6 +178,149 @@ export class GraphComponent implements OnInit, OnChanges {
     });
     if (droughtLength >= MIN_DROUGHT_LENGTH) {
       this.droughts.push(new DroughtLocation(startIndex, this.game.numPlacements - 1, numBurns));
+    }
+  }
+
+  // Identify all intervals where board was tetris ready
+  private updateTetrisReady() {
+    this.tetrisReady = [];
+
+    let startIndex = 0;
+    let numTetrises = 0;
+    let numBurns = 0;
+
+    this.game.getAllPlacements().forEach((placement, index) => {
+
+      if (!placement.getGridWithPlacement().isTetrisReady()) {
+        if (startIndex !== index) {
+          this.tetrisReady.push(new TetrisReadyLocation(startIndex, index - 1, numTetrises, numBurns));
+          numTetrises = 0;
+          numBurns = 0;
+        }
+        startIndex = index + 1;
+      } else {
+        if (placement.placementLineClears) {
+          if (placement.placementLineClears === 4) {
+            numTetrises++;
+          } else {
+            numBurns += placement.placementLineClears;
+          }
+        }
+      }
+    });
+    if (startIndex !== this.game.numPlacements) {
+      this.tetrisReady.push(new TetrisReadyLocation(startIndex, this.game.numPlacements-1, numTetrises, numBurns));
+    }
+  }
+
+  // Identify all intervals where board was tetris ready
+  private updateNotTetrisReady() {
+    this.notTetrisReady = [];
+
+    let startIndex = 0;
+    let numTetrises = 0;
+    let numBurns = 0;
+    let numBars = 0;
+
+    this.game.getAllPlacements().forEach((placement, index) => {
+
+      if (placement.grid.isTetrisReady()) { // ends the interval
+        if (startIndex !== index) {
+          this.notTetrisReady.push(new NotTetrisReadyLocation(startIndex, index - 1, numBars, numTetrises, numBurns));
+          numTetrises = 0;
+          numBurns = 0;
+          numBars = 0;
+        }
+        startIndex = index + 1;
+      } else {
+        if (placement.placementLineClears) {
+          if (placement.placementLineClears === 4) {
+            numTetrises++;
+          } else {
+            numBurns += placement.placementLineClears;
+          }
+        }
+        if (placement.currentPieceType === TetrominoType.I_TYPE) {
+          numBars++;
+        }
+      }
+    });
+    if (startIndex !== this.game.numPlacements) {
+      this.notTetrisReady.push(new NotTetrisReadyLocation(startIndex, this.game.numPlacements-1, numBars, numTetrises, numBurns));
+    }
+  }
+
+  // Identify all intervals where board had open right well
+  private updateRightWell() {
+    this.rightWell = [];
+
+    let startIndex = 0;
+    let numTetrises = 0;
+    let numBurns = 0;
+    let numBars = 0;
+
+    this.game.getAllPlacements().forEach((placement, index) => {
+
+      if (!placement.grid.isRightWellOpen()) { // ends the interval
+        if (startIndex !== index) {
+          this.rightWell.push(new RightWellLocation(startIndex, index - 1, numBars, numTetrises, numBurns));
+          numTetrises = 0;
+          numBurns = 0;
+          numBars = 0;
+        }
+        startIndex = index + 1;
+      } else {
+        if (placement.placementLineClears) {
+          if (placement.placementLineClears === 4) {
+            numTetrises++;
+          } else {
+            numBurns += placement.placementLineClears;
+          }
+        }
+        if (placement.currentPieceType === TetrominoType.I_TYPE) {
+          numBars++;
+        }
+      }
+    });
+    if (startIndex !== this.game.numPlacements) {
+      this.rightWell.push(new RightWellLocation(startIndex, this.game.numPlacements-1, numBars, numTetrises, numBurns));
+    }
+  }
+
+  // Identify all intervals where board had closed right well
+  private updateNotRightWell() {
+    this.notRightWell = [];
+
+    let startIndex = 0;
+    let numTetrises = 0;
+    let numBurns = 0;
+    let numBars = 0;
+
+    this.game.getAllPlacements().forEach((placement, index) => {
+
+      if (placement.grid.isRightWellOpen()) { // ends the interval
+        if (startIndex !== index) {
+          this.notRightWell.push(new NotRightWellLocation(startIndex, index - 1, numBars, numTetrises, numBurns));
+          numTetrises = 0;
+          numBurns = 0;
+          numBars = 0;
+        }
+        startIndex = index + 1;
+      } else {
+        if (placement.placementLineClears) {
+          if (placement.placementLineClears === 4) {
+            numTetrises++;
+          } else {
+            numBurns += placement.placementLineClears;
+          }
+        }
+        if (placement.currentPieceType === TetrominoType.I_TYPE) {
+          numBars++;
+        }
+      }
+    });
+    if (startIndex !== this.game.numPlacements) {
+      this.notRightWell.push(new NotRightWellLocation(startIndex, this.game.numPlacements-1, numBars, numTetrises, numBurns));
     }
   }
 

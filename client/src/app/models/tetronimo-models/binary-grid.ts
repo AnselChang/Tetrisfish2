@@ -147,25 +147,84 @@ export default class BinaryGrid implements Grid {
     // returns a new BinaryGrid object, does not modify grid1 or grid2
     public static subtract(grid1: BinaryGrid, grid2: BinaryGrid): BinaryGrid | undefined {
 
-            if (grid1.numRows !== grid2.numRows || grid1.numCols !== grid2.numCols) {
-                return undefined;
-            }
+        if (grid1.numRows !== grid2.numRows || grid1.numCols !== grid2.numCols) {
+            return undefined;
+        }
 
-            const newGrid = grid1.copy();
-            for (let i = 0; i < grid1.numRows; i++) {
-                for (let j = 0; j < grid1.numCols; j++) {
-                    if (grid2.at(j, i) === BlockType.FILLED) {
-                        if (newGrid.at(j, i) === BlockType.EMPTY) {
-                            return undefined;
-                        } else {
-                            newGrid.setAt(j, i, BlockType.EMPTY);
-                        }
+        const newGrid = grid1.copy();
+        for (let i = 0; i < grid1.numRows; i++) {
+            for (let j = 0; j < grid1.numCols; j++) {
+                if (grid2.at(j, i) === BlockType.FILLED) {
+                    if (newGrid.at(j, i) === BlockType.EMPTY) {
+                        return undefined;
+                    } else {
+                        newGrid.setAt(j, i, BlockType.EMPTY);
                     }
                 }
             }
-
-            return newGrid;
         }
+
+        return newGrid;
+    }
+
+    // return the column number of the only hole in the row, or undefined if there are more than one hole
+    private getSingleHoleFromRow(y: number): number | undefined {
+        let holeColumn: number | undefined = undefined;
+        for (let x = 0; x < 10; x++) {
+            if (this.at(x, y) === BlockType.EMPTY) {
+                if (holeColumn !== undefined) return undefined;
+                holeColumn = x;
+            }
+        }
+        return holeColumn;
+    }
+
+    // return whether (x,y) and all the blocks above it are empty
+    private isBlockAndAboveEmpty(x: number, y: number): boolean {
+        for (let i = y; i >= 0; i--) {
+            if (this.at(x, i) === BlockType.FILLED) return false;
+        }
+        return true;
+    }
+
+    public isRightWellOpen(): boolean {
+        return this.isBlockAndAboveEmpty(9, this.numRows-1);
+    }
+
+    // calculate whether board is tetris ready
+    // current algorithm: check for four rows that share the same single hole, and check if the column above the hole is empty
+    public isTetrisReady(): boolean {
+        let y = this.numRows - 1;
+        let wellHeight = 0;
+        let wellColumn: number | undefined = undefined;
+        while (y >= 0) {
+            const holeColumn = this.getSingleHoleFromRow(y);
+            if (holeColumn !== undefined) {
+                if (holeColumn === wellColumn) { // extend well
+                    wellHeight++;
+
+                    if (wellHeight >= 4 && this.isBlockAndAboveEmpty(wellColumn, y)) {
+                        return true;
+                    }
+
+                } else { // new well
+                    if (y === this.numRows-1 || this.at(holeColumn, y+1) === BlockType.FILLED) { // well is on the bottom row or has a block below it
+                        wellHeight = 1;
+                        wellColumn = holeColumn;
+                    } else { // well is not on the bottom row and does not have a block below it
+                        wellColumn = undefined;
+                        wellHeight = 0;
+                    }
+                }
+            } else {
+                wellColumn = undefined;
+                wellHeight = 0;
+            }
+            y--;
+        }
+
+        return false;
+    }
 
 
     public print(): void {

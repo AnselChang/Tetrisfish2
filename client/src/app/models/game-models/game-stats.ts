@@ -15,7 +15,9 @@ class TetrisReadinessStats {
 
     // the grid without any placement. determine if tetris ready and increment numPositionsTetrisReady if so
     public updateTetrisReadiness(grid: BinaryGrid): void {
-
+        if (grid.isTetrisReady()) {
+            this.numPositionsTetrisReady++;
+        }
     }
 
     public getTetrisReadiness(totalPositions: number): number {

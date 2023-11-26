@@ -179,7 +179,7 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
   }
 
   public analyzePlacementIfNotAnalyzed(index: number) {
-    console.log("Analyzing placement", index+1);
+    //console.log("Analyzing placement", index+1);
     const placement = this.game!.getPlacementAt(index);
     if (placement && !placement.analysis.isAnalysisStarted()) {
       this.game!.runFullAnalysis(placement);
@@ -188,6 +188,8 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
 
   public setPlacement(index: number) {
     this.placementIndex = index;
+
+    console.log("isTetrisReady", this.getPosition().grid.isTetrisReady());
 
     // only analyze placement if not while scrubbing through placements with graph
     if (!this.isTemporaryPlacement) {

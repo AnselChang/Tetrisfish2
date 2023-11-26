@@ -6,12 +6,12 @@ svg {
     cursor: pointer;
 }
 
-.drought-rect {
+.drought-rect, .tetris-ready-rect {
     opacity: 0.4;
-    pointer-events: all;
+    pointer-events: visibleFill;
 }
 
-.drought-rect:hover {
+.drought-rect:hover, .tetris-ready-rect:hover {
     opacity: 0.7;
 }
 
