@@ -35,6 +35,7 @@ export class PuzzleComponent implements OnInit {
 
   private lastX: number = 0;
   private lastY: number = 0;
+  private lastBlock?: BlockData;
 
   constructor() {
   }
@@ -79,13 +80,13 @@ export class PuzzleComponent implements OnInit {
       else if (rot === 3) return {x: 1, y: -1};
       else if (rot === 2) return {x: 0, y : -1};
     } else if (type === TetrominoType.S_TYPE) {
-      
+      return {x: 0, y: -1};
     } else if (type === TetrominoType.Z_TYPE) {
-      
+      if (rot === 0) return {x: 0, y: -1};
+      else  return {x: 1, y: -1};
     } else { // O_TYPE
-
+      return {x: 1, y: -1};
     }
-
 
     return {x: 0, y: 0};
   }
@@ -106,6 +107,8 @@ export class PuzzleComponent implements OnInit {
   }
 
   setHoveredBlock(block?: BlockData) {
+
+    this.lastBlock = block;
 
     if (!block) {
       this.hoveringPiece = undefined;
@@ -147,15 +150,17 @@ export class PuzzleComponent implements OnInit {
   // if r key placed, rotate the hovering piece
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
+    console.log(event.key);
     if (event.key === 'r') this.rotatePiece(1);
-    else if (event.key === 'e') this.rotatePiece(-1);
-    else if (event.key === 'Space') this.submitPuzzle();
+    if (event.key === 'w') this.undoPuzzle();
+    else if (event.key === 'e') this.rotatePiece(3);
+    else if (event.key === ' ') this.submitPuzzle();
     else if (event.key === 'q') this.resetPuzzle();
   }
 
-  rotatePiece(direction: number = 1) {
+  rotatePiece(amount: number = 1) {
     if (this.hoveringPiece) {
-      this.rotation += direction;
+      this.rotation += amount;
       this.setHoveringPiece(this.hoveringPiece.tetrominoType);
     }
   }
@@ -163,15 +168,34 @@ export class PuzzleComponent implements OnInit {
   resetPuzzle() {
     this.currentGrid = this.puzzle.grid.copy();
     this.status = Status.PLACING_FIRST_PIECE;
-    this.hoveringPiece = undefined;
     this.placedCurrentPiece = undefined;
     this.placedNextPiece = undefined;
     this.rotation = 0;
+    this.hoveringPiece = undefined;
+  }
+
+  undoPuzzle() {
+    if (this.status === Status.PLACING_FIRST_PIECE) return;
+    if (this.status === Status.PLACING_SECOND_PIECE) this.resetPuzzle();
+    else { // undo to after placing first piece
+      this.status = Status.PLACING_SECOND_PIECE;
+      this.hoveringPiece = undefined;
+      this.placedNextPiece = undefined;
+      this.rotation = 0;
+
+      // reset to after placing first piece
+      this.currentGrid = this.puzzle.grid.copy();
+      this.placedCurrentPiece!.blitToGrid(this.currentGrid);
+      this.currentGrid.processLineClears();
+    }
   }
 
   submitPuzzle() {
 
-    if (this.status !== Status.FINISHED_PLACING_PIECES) return;
+    if (this.status !== Status.FINISHED_PLACING_PIECES) {
+      this.onBoardClick(this.lastBlock);
+      return;
+    }
 
     if (
       this.puzzle.firstPieceSolution.equals(this.placedCurrentPiece!) &&
