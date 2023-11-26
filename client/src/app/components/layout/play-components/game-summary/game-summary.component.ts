@@ -22,8 +22,6 @@ export class GameSummaryComponent {
 
   tetrisReadinessString(): string {
 
-    if (true) return '?'; // TODO
-
     if (!this.stats) return "-";
     const readiness = this.stats!.getTetrisReadiness();
     return Math.round(readiness * 100) + "%";
