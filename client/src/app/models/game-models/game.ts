@@ -15,6 +15,8 @@ import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-movelist";
 import GameEligibility from "./game-eligibility";
 import { v4 as uuidv4 } from 'uuid';
+import { TagID } from "../tag-models/tag-types";
+import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
 
 export class Game {
 

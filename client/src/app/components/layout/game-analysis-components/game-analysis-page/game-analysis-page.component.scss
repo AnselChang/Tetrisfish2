@@ -102,3 +102,9 @@ h2.header {
 .arrow-button.disabled {
     opacity: 0.2;
 }
+
+.url {
+    text-wrap: wrap;
+    overflow-wrap: break-word;
+    width: 400px;
+}

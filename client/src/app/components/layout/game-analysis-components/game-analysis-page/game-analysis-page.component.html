@@ -81,8 +81,16 @@
     </div>
 
     <app-section class="test-container">
+        <h2>Move list NB</h2>
+        <div *ngIf="getPosition().analysis.getEngineMoveListNB() as mlnb">
+            <p class="url">URL: {{mlnb.apiURL}}</p>
+            <p *ngFor="let rec of mlnb.getRecommendations()" [style.color]="mlnb.getRecommendationColor(rec)">
+                {{rec.toString()}}
+            </p>
+        </div>
         <h2>Rate Move Deep</h2>
         <div *ngIf="getPosition().analysis.getRateMoveDeep() as rmd">
+            <p class="url">URL: {{rmd.apiURL}}</p>
             <p>Best NB: {{rmd.bestNB}}</p>
             <p>Best NNB: {{rmd.bestNNB}}</p>
             <p>Player NB: {{rmd.playerNB}}</p>

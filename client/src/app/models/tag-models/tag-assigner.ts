@@ -10,9 +10,9 @@ import { ALL_TAGS, TagID } from "./tag-types";
 // a struct for a placement that has enough info for tags to determine if they apply
 export class SimplePlacement {
     constructor(
-        board: BinaryGrid,
-        current: MoveableTetromino,
-        next: MoveableTetromino
+        public readonly board: BinaryGrid,
+        public readonly current: MoveableTetromino,
+        public readonly next: MoveableTetromino
     ) {}
 }
 

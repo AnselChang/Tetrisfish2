@@ -15,26 +15,34 @@ async function fetchStackRabbitURL(url: string): Promise<any> {
     return result.content;
 }
 
-// returns the raw dictionary from the StackRabbit engine-movelist request
-export async function fetchMovelist(placement: GamePlacement, inputSpeed: InputSpeed, useNextBox: boolean): Promise<any> {
-
+export function generateMoveListURL(placement: GamePlacement, inputSpeed: InputSpeed, useNextBox: boolean, lookaheadDepth: LookaheadDepth): string {
     // Generate the common portion of the URL
     const params = generateStandardParams(placement.grid, placement.currentPieceType, placement.statusBeforePlacement!, inputSpeed);
 
-    // Make engine-movelist request
-    const movelistURL = new EngineMovelistURL(params, useNextBox ? placement.nextPieceType : undefined).getURL();
+    return new EngineMovelistURL(params, useNextBox ? placement.nextPieceType : undefined, lookaheadDepth).getURL();
+}
+
+// returns the raw dictionary from the StackRabbit engine-movelist request
+export async function fetchMovelist(placement: GamePlacement, inputSpeed: InputSpeed, useNextBox: boolean, lookaheadDepth: LookaheadDepth): Promise<any> {
+
+    const movelistURL = generateMoveListURL(placement, inputSpeed, useNextBox, lookaheadDepth);
     return fetchStackRabbitURL(movelistURL);
 }
 
-// returns the raw dictionary from the StackRabbit rate-move request
-export async function fetchRateMove(placement: GamePlacement, inputSpeed: InputSpeed, lookaheadDepth: LookaheadDepth) {
 
+export function generateRateMoveURL(placement: GamePlacement, inputSpeed: InputSpeed, lookaheadDepth: LookaheadDepth) {
     // Generate the common portion of the URL
     const params = generateStandardParams(placement.grid, placement.currentPieceType, placement.statusBeforePlacement!, inputSpeed);
 
     // Make rate-move request
     const boardWithPlacement = placement.getGridWithPlacement();
     boardWithPlacement.processLineClears();
-    const rateMoveURL = new RateMoveURL(params, boardToString(boardWithPlacement), placement.nextPieceType, lookaheadDepth).getURL();
+    return new RateMoveURL(params, boardToString(boardWithPlacement), placement.nextPieceType, lookaheadDepth).getURL();
+}
+
+// returns the raw dictionary from the StackRabbit rate-move request
+export async function fetchRateMove(placement: GamePlacement, inputSpeed: InputSpeed, lookaheadDepth: LookaheadDepth) {
+
+    const rateMoveURL = generateRateMoveURL(placement, inputSpeed, lookaheadDepth);
     return fetchStackRabbitURL(rateMoveURL);
 }

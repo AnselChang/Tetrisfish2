@@ -3,9 +3,10 @@ Deserializes SR engine-movelist NB request and stores as a model
 The top 5 SR moves with 0 reaction time and both current/next piece
 */
 
-import { fetchMovelist } from "../../scripts/evaluation/evaluator";
+import { fetchMovelist, generateMoveListURL } from "../../scripts/evaluation/evaluator";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { convertSRPlacement } from "../../scripts/evaluation/sr-placement-converter";
+import { LookaheadDepth } from "../../scripts/evaluation/stack-rabbit-api";
 import { RATING_TO_COLOR, getRatingFromRelativeEval } from "../evaluation-models/rating";
 import { GamePlacement } from "../game-models/game-placement";
 import MoveableTetromino from "../game-models/moveable-tetromino";
@@ -35,8 +36,9 @@ export abstract class EngineMovelist {
 export class EngineMovelistNB extends EngineMovelist {
 
     static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNB> {
-        const response = await fetchMovelist(placement, inputSpeed, true);
-        return new EngineMovelistNB(response, placement);
+        const response = await fetchMovelist(placement, inputSpeed, true, LookaheadDepth.DEEP);
+        const apiURL = generateMoveListURL(placement, inputSpeed, true, LookaheadDepth.DEEP);
+        return new EngineMovelistNB(response, placement, apiURL);
     }
 
     // given a list of MT and a MT, check if the MT is already in the list
@@ -47,13 +49,11 @@ export class EngineMovelistNB extends EngineMovelist {
         return false;
     }
 
-    constructor(moves: any, placement: GamePlacement) {
+    constructor(moves: any, placement: GamePlacement, public readonly apiURL: string) {
         super();
         // console.log("engine movelist nb created", moves);
 
-        // filter out recs that have current piece already in that spot
-        const firstPiecePlacements: MoveableTetromino[] = [];
-
+        // map the moves to a list of MoveRecommendations
         let i = 0;
         for (const move of moves) {
             const thisDict = move[0];
@@ -63,15 +63,32 @@ export class EngineMovelistNB extends EngineMovelist {
             const thisPiece = convertSRPlacement(thisDict["placement"], placement.currentPieceType);
             const nextPiece = convertSRPlacement(nextDict["placement"], placement.nextPieceType);
 
-            // check if the piece placement for the first piece is already in the list, if so skip
-            if (this.doesPlacementExist(firstPiecePlacements, thisPiece)) continue;
-            firstPiecePlacements.push(thisPiece);
-
             const recommendation = new MoveRecommendation(thisPiece, nextPiece, evaluation);
             this.recommendations.push(recommendation);
 
             i++;
         }
+
+        // sort by evaluation, descending
+        this.recommendations.sort((a, b) => b.evaluation - a.evaluation);
+
+        // find all duplicate first piece placements
+        const firstPiecePlacements: MoveableTetromino[] = [];
+        const duplicatePlacements: MoveRecommendation[] = [];
+        this.recommendations.forEach(recommendation => {
+            if (this.doesPlacementExist(firstPiecePlacements, recommendation.thisPiece)) {
+                duplicatePlacements.push(recommendation);
+            } else {
+                firstPiecePlacements.push(recommendation.thisPiece);
+            }
+        });
+
+        // delete all duplicate first piece placements
+        this.recommendations = this.recommendations.filter(recommendation => {
+            return duplicatePlacements.indexOf(recommendation) === -1;
+        });
+
+        // for the best move, assign tags
     }
 
     public get best(): MoveRecommendation {

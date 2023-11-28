@@ -4,11 +4,19 @@ import MoveableTetromino from '../../models/game-models/moveable-tetromino';
 import { BlockData } from '../tetris/interactive-tetris-board/interactive-tetris-board.component';
 import BinaryGrid from '../../models/tetronimo-models/binary-grid';
 import { Tetromino, TetrominoType } from '../../models/tetronimo-models/tetromino';
+import TagAssigner, { SimplePlacement } from '../../models/tag-models/tag-assigner';
 
 export enum Status {
   PLACING_FIRST_PIECE,
   PLACING_SECOND_PIECE,
   FINISHED_PLACING_PIECES,
+}
+
+export enum Outcome {
+  CORRECT,
+  INCORRECT,
+  INCOMPLETE,
+
 }
 
 @Component({
@@ -36,6 +44,8 @@ export class PuzzleComponent implements OnInit {
   private lastX: number = 0;
   private lastY: number = 0;
   private lastBlock?: BlockData;
+
+  private outcome = Outcome.INCOMPLETE;
 
   constructor() {
   }
@@ -159,13 +169,12 @@ export class PuzzleComponent implements OnInit {
   }
 
   rotatePiece(amount: number = 1) {
-    if (this.hoveringPiece) {
-      this.rotation += amount;
-      this.setHoveringPiece(this.hoveringPiece.tetrominoType);
-    }
+    this.rotation += amount;
+    if (this.hoveringPiece) this.setHoveringPiece(this.hoveringPiece.tetrominoType);
   }
 
   resetPuzzle() {
+    this.outcome = Outcome.INCOMPLETE;
     this.currentGrid = this.puzzle.grid.copy();
     this.status = Status.PLACING_FIRST_PIECE;
     this.placedCurrentPiece = undefined;
@@ -178,6 +187,7 @@ export class PuzzleComponent implements OnInit {
     if (this.status === Status.PLACING_FIRST_PIECE) return;
     if (this.status === Status.PLACING_SECOND_PIECE) this.resetPuzzle();
     else { // undo to after placing first piece
+      this.outcome = Outcome.INCOMPLETE;
       this.status = Status.PLACING_SECOND_PIECE;
       this.hoveringPiece = undefined;
       this.placedNextPiece = undefined;
@@ -201,11 +211,30 @@ export class PuzzleComponent implements OnInit {
       this.puzzle.firstPieceSolution.equals(this.placedCurrentPiece!) &&
       this.puzzle.secondPieceSolution.equals(this.placedNextPiece!)
     ) {
-      alert("Correct!");
+      this.outcome = Outcome.CORRECT;
     } else {
-      alert("Incorrect");
+      this.outcome = Outcome.INCORRECT;
     }
 
+    console.log(`Current piece: r=${this.placedCurrentPiece!.getRotation()}, x=${this.placedCurrentPiece!.getTranslateX()}, y=${this.placedCurrentPiece!.getTranslateY()}`);
+    console.log(`Next piece: r=${this.placedNextPiece!.getRotation()}, x=${this.placedNextPiece!.getTranslateX()}, y=${this.placedNextPiece!.getTranslateY()}`);
+
+    const tags = TagAssigner.assignTagsFor(new SimplePlacement(this.puzzle.grid, this.placedCurrentPiece!, this.placedNextPiece!));
+    console.log(tags);
+
+  }
+
+  getOutcomeColor(): string | undefined {
+    if (this.outcome === Outcome.CORRECT) return "#58D774";
+    if (this.outcome === Outcome.INCORRECT) return "#D75858";
+    return undefined;
+  }
+
+  getPuzzleTitle(): string {
+    let title = this.puzzle.getTitleString();
+    if (this.outcome === Outcome.CORRECT) title += ": Correct";
+    else if (this.outcome === Outcome.INCORRECT) title += ": Incorrect";
+    return title;
   }
 
 }

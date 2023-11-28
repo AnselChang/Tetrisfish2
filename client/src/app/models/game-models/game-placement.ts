@@ -4,12 +4,11 @@ the board, the placement, and the current/next pieces
 Useful for analysis, puzzle generation, etc.
 */
 
-import GameStatus from "../tetronimo-models/game-status";
 import { TetrominoType } from "../tetronimo-models/tetromino";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import MoveableTetromino from "./moveable-tetromino";
 import PlacementAnalysis from "./placement-analysis";
-import { SmartGameStatus } from "../tetronimo-models/smart-game-status";
+import { SmartGameStatus } from "../tetronimo-models/smart-game-status"
 
 export class GamePlacement {
 
@@ -41,6 +40,7 @@ export class GamePlacement {
         // calculate what score/level/lines would be after the plcaement
         this.statusAfterPlacement = this.statusBeforePlacement.copy();
         if (lineClears > 0) this.statusAfterPlacement.onLineClear(lineClears);
+
     }
 
     // create a grid that includes the current piece

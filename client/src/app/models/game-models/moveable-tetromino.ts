@@ -18,6 +18,45 @@ export default class MoveableTetromino {
         this.updateCurrentBlockSet()
     }
 
+    // TRXXYY
+    public encodeAsNumber(): number {
+
+        let typeAsNumber;
+        switch (this.tetrominoType) {
+            case TetrominoType.I_TYPE: typeAsNumber = 0; break;
+            case TetrominoType.J_TYPE: typeAsNumber = 1; break;
+            case TetrominoType.L_TYPE: typeAsNumber = 2; break;
+            case TetrominoType.O_TYPE: typeAsNumber = 3; break;
+            case TetrominoType.S_TYPE: typeAsNumber = 4; break;
+            case TetrominoType.T_TYPE: typeAsNumber = 5; break;
+            case TetrominoType.Z_TYPE: typeAsNumber = 6; break;
+        }
+
+        return typeAsNumber * 100000 + this.rotation * 10000 + this.translateX * 100 + this.translateY;
+    }
+
+    static decodeFromNumber(number: number): MoveableTetromino {
+
+        const typeAsNumber = Math.floor(number / 100000);
+        let type: TetrominoType;
+        switch (typeAsNumber) {
+            case 0: type = TetrominoType.I_TYPE; break;
+            case 1: type = TetrominoType.J_TYPE; break;
+            case 2: type = TetrominoType.L_TYPE; break;
+            case 3: type = TetrominoType.O_TYPE; break;
+            case 4: type = TetrominoType.S_TYPE; break;
+            case 5: type = TetrominoType.T_TYPE; break;
+            case 6: type = TetrominoType.Z_TYPE; break;
+            default: throw new Error("invalid typeAsNumber");
+        }
+
+        const rotation = Math.floor((number % 100000) / 10000);
+        const translateX = Math.floor((number % 10000) / 100);
+        const translateY = Math.floor(number % 100);
+
+        return new MoveableTetromino(type, rotation, translateX, translateY);
+    }
+
     static doesBlocksetMatchMask(pieceMask: BinaryGrid, maskStartX: number, maskStartY: number, blockSet: BlockSet): boolean {
         let exists = true;
         blockSet.blocks.forEach(block => {

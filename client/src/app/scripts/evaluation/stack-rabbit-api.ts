@@ -71,6 +71,7 @@ export class EngineMovelistURL extends StackRabbitURL {
     constructor(
         public override params: StandardParams,
         public nextPiece: string | undefined,
+        public lookaheadDepth: LookaheadDepth,
     ) {
         super(params, 'engine-movelist');
     }
@@ -79,6 +80,7 @@ export class EngineMovelistURL extends StackRabbitURL {
         if (this.nextPiece !== undefined) {
             paramsObject.append('nextPiece', this.nextPiece);
         }
+        paramsObject.append('lookaheadDepth', this.lookaheadDepth.toString());
     }
 }
 

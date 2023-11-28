@@ -19,7 +19,23 @@ export default class OJTag extends Tag {
     }
 
     public override identify(placement: SimplePlacement): boolean {
-        return true;
+
+        /* example:
+        J r=3, x=4, y=17
+        O r=3, x=5, y=18
+        */
+
+        if (placement.current.tetrominoType !== TetrominoType.J_TYPE) return false;
+        if (placement.next.tetrominoType !== TetrominoType.O_TYPE) return false;
+
+        if (placement.current.getRotation() !== 3) return false;
+        if (placement.next.getRotation() !== 3) return false;
+
+        const dx = placement.next.getTranslateX() - placement.current.getTranslateX();
+        const dy = placement.next.getTranslateY() - placement.current.getTranslateY();
+
+        return dx === 1 && dy === 1;
+
     }
 
 }

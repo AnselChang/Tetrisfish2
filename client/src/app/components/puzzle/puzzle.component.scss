@@ -1,7 +1,27 @@
+@import '../../../styles.scss';
+
 :host {
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+.puzzle-section {
+    width: fit-content;
+    background-color: $layer-1-color;
+    border-radius: 5px;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    padding: 10px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.body {
+    padding: 10px;
 }
 
 .puzzle-section ::ng-deep section {

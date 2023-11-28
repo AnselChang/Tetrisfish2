@@ -1,7 +1,9 @@
-<app-section class="puzzle-section">
-    <h1 class="padded">Puzzle</h1>
-
-    <app-tetris-panel>
+<section class="puzzle-section">
+    <div class="header" [style.backgroundColor]="getOutcomeColor()">
+        <h1>{{getPuzzleTitle()}}</h1>
+    </div>
+    
+    <app-tetris-panel class="body">
         <app-interactive-tetris-board
             [grid]="currentGrid"
             [level]="18"
@@ -16,7 +18,7 @@
         </app-tetris-panel-item>
 
         <div class="Reset">
-            <app-button-big label="Reset" color="#D75858" (click)="resetPuzzle()"></app-button-big>
+            <app-button-big label="Reset" (click)="resetPuzzle()"></app-button-big>
             <p class="tiny">Or, press 'Q' to restart and 'W' to undo</p>
         </div>
 
@@ -32,4 +34,4 @@
         
 
     </app-tetris-panel>
-</app-section>
+</section>

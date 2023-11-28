@@ -171,7 +171,7 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
             playerMoveAfterAdjustment: recommendation.evaluation,
             bestMoveNoAdjustment: -1,
             bestMoveAfterAdjustment: engineMovelistNB!.best.evaluation,
-          });
+          }, "Generated from move-list instead of a rate-move API call");
         }
       }
     }

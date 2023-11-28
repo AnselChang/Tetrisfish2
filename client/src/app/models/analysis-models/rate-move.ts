@@ -10,7 +10,7 @@ rate-move returns a dictionary of the form:
 }
 */
 
-import { fetchRateMove } from "../../scripts/evaluation/evaluator";
+import { fetchRateMove, generateRateMoveURL } from "../../scripts/evaluation/evaluator";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { LookaheadDepth } from "../../scripts/evaluation/stack-rabbit-api";
 import { Rating, getRatingFromRelativeEval, relativeEvaluationToPercent } from "../evaluation-models/rating";
@@ -47,10 +47,11 @@ export class RateMoveDeep extends RateMove {
 
     static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<RateMoveDeep> {
         const response = await fetchRateMove(placement, inputSpeed, LookaheadDepth.DEEP);
-        return new RateMoveDeep(response);
+        const apiURL = generateRateMoveURL(placement, inputSpeed, LookaheadDepth.DEEP);
+        return new RateMoveDeep(response, apiURL);
     }
 
-    constructor(dict: any) {
+    constructor(dict: any, public readonly apiURL: string) {
         super(dict);
         this.diff = this.playerNB ? (this.playerNB - this.bestNB) : undefined;
         this.rating = getRatingFromRelativeEval(this.diff);
