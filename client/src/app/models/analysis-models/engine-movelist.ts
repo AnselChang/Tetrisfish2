@@ -35,9 +35,9 @@ export abstract class EngineMovelist {
 // generates a list of best current piece + next piece placements given a game placement with current and next piece
 export class EngineMovelistNB extends EngineMovelist {
 
-    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNB> {
-        const response = await fetchMovelist(placement, inputSpeed, true, LookaheadDepth.DEEP);
-        const apiURL = generateMoveListURL(placement, inputSpeed, true, LookaheadDepth.DEEP);
+    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed, depth: LookaheadDepth): Promise<EngineMovelistNB> {
+        const response = await fetchMovelist(placement, inputSpeed, true, depth);
+        const apiURL = generateMoveListURL(placement, inputSpeed, true, depth);
         return new EngineMovelistNB(response, placement, apiURL);
     }
 

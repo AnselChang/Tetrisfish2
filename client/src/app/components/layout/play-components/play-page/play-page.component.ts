@@ -147,7 +147,7 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public getBestMove(): MoveRecommendation | undefined {
-    return this.getLastPlacement()?.analysis.getEngineMoveListNB()?.best;
+    return this.getLastPlacement()?.analysis.getEngineMoveListDeep()?.best;
   }
 
   public getMoveRating(): RateMoveDeep | undefined {
@@ -161,7 +161,7 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // otherwise, check if player move is in SR move recommendations
     // If so, we can derive rating from that
-    const engineMovelistNB = lastPlacement?.analysis.getEngineMoveListNB();
+    const engineMovelistNB = lastPlacement?.analysis.getEngineMoveListDeep();
     const recommendations = engineMovelistNB?.getRecommendations();
     if (recommendations) {
       for (const recommendation of recommendations) {

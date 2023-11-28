@@ -13,10 +13,9 @@ import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-m
 import { RateMoveDeep, RateMoveShallow } from "../analysis-models/rate-move";
 
 export default class PlacementAnalysis {
-    private engineMovelistNB?: EngineMovelistNB;
-    private engineMovelistNNB?: EngineMovelistNNB;
+    private engineMovelistDeep?: EngineMovelistNB;
+    private engineMovelistShallow?: EngineMovelistNB;
     private rateMoveDeep?: RateMoveDeep;
-    private rateMoveShallow?: RateMoveShallow;
 
     // subscribe to this to know when all four analysis requests are done
     public onFinishAnalysis$ = new BehaviorSubject<boolean>(false);
@@ -29,7 +28,7 @@ export default class PlacementAnalysis {
     private updateAnalysisObservable() {
         if (this.isFinishedAnalysis) return;
 
-        const finished = this.hasEngineMovelistNB() && this.hasEngineMovelistNNB() && this.hasRateMoveDeep() && this.hasRateMoveShallow();
+        const finished = this.hasEngineMovelistDeep() && this.hasEngineMovelistShallow() && this.hasRateMoveDeep();
         if (finished) {
             this.isFinishedAnalysis = true;
             //console.log("Finished analysis for placement", this.index+1);
@@ -41,28 +40,24 @@ export default class PlacementAnalysis {
     public flagFailedAnalysis() {
         this.isFinishedAnalysis = false; 
         this.isStartedAnalysis = false;
-        this.engineMovelistNB = undefined;
-        this.engineMovelistNNB = undefined;
+        this.engineMovelistDeep = undefined;
+        this.engineMovelistShallow = undefined;
         this.rateMoveDeep = undefined;
-        this.rateMoveShallow = undefined;
     }
     public isAnalysisStarted(): boolean { return this.isStartedAnalysis; }
     public isAnalyisFinished(): boolean { return this.isFinishedAnalysis; }
 
-    hasEngineMovelistNB(): boolean { return this.engineMovelistNB !== undefined; }
-    hasEngineMovelistNNB(): boolean { return this.engineMovelistNNB !== undefined; }
+    hasEngineMovelistDeep(): boolean { return this.engineMovelistDeep !== undefined; }
+    hasEngineMovelistShallow(): boolean { return this.engineMovelistShallow !== undefined; }
     hasRateMoveDeep(): boolean { return this.rateMoveDeep !== undefined; }
-    hasRateMoveShallow(): boolean { return this.rateMoveShallow !== undefined; }
 
-    setEngineMoveListNB(engineMovelistNB: EngineMovelistNB) { this.engineMovelistNB = engineMovelistNB; this.updateAnalysisObservable(); }
-    setEngineMoveListNNB(engineMovelistNNB: EngineMovelistNNB) { this.engineMovelistNNB = engineMovelistNNB; this.updateAnalysisObservable(); }
+    setEngineMoveListDeep(engineMovelistNB: EngineMovelistNB) { this.engineMovelistDeep = engineMovelistNB; this.updateAnalysisObservable(); }
+    setEngineMoveListShallow(engineMovelistNB: EngineMovelistNB) { this.engineMovelistShallow = engineMovelistNB; this.updateAnalysisObservable(); }
     setRateMoveDeep(rateMoveDeep: RateMoveDeep) { this.rateMoveDeep = rateMoveDeep; this.updateAnalysisObservable(); }
-    setRateMoveShallow(rateMoveShallow: RateMoveShallow) { this.rateMoveShallow = rateMoveShallow; this.updateAnalysisObservable(); }
 
 
-    getEngineMoveListNB(): EngineMovelistNB | undefined { return this.engineMovelistNB; }
-    getEngineMoveListNNB(): EngineMovelistNNB | undefined { return this.engineMovelistNNB; }
+    getEngineMoveListDeep(): EngineMovelistNB | undefined { return this.engineMovelistDeep; }
+    getEngineMoveListShallow(): EngineMovelistNB | undefined { return this.engineMovelistShallow; }
     getRateMoveDeep(): RateMoveDeep | undefined { return this.rateMoveDeep; }
-    getRateMoveShallow(): RateMoveShallow | undefined { return this.rateMoveShallow; }
 
 }

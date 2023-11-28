@@ -60,7 +60,7 @@
             </h2>
             <div class="stackrabbit-moves">  
                 <app-stackrabbit-moves
-                *ngIf="getPosition().analysis.getEngineMoveListNB() as movelist"
+                *ngIf="getPosition().analysis.getEngineMoveListDeep() as movelist"
                 [movelist]="movelist"
                 (hoveredMove)="setHoveredRecommendation($event)"
                 >
@@ -81,27 +81,24 @@
     </div>
 
     <app-section class="test-container">
-        <h2>Move list NB</h2>
-        <div *ngIf="getPosition().analysis.getEngineMoveListNB() as mlnb">
-            <p class="url">URL: {{mlnb.apiURL}}</p>
-            <p *ngFor="let rec of mlnb.getRecommendations()" [style.color]="mlnb.getRecommendationColor(rec)">
+        <h2>Move list Deep</h2>
+        <div *ngIf="getPosition().analysis.getEngineMoveListDeep() as mld">
+            <p *ngFor="let rec of mld.getRecommendations()" [style.color]="mld.getRecommendationColor(rec)">
+                {{rec.toString()}}
+            </p>
+        </div>
+        <h2>Move list Shallow</h2>
+        <div *ngIf="getPosition().analysis.getEngineMoveListShallow() as mls">
+            <p *ngFor="let rec of mls.getRecommendations()" [style.color]="mls.getRecommendationColor(rec)">
                 {{rec.toString()}}
             </p>
         </div>
         <h2>Rate Move Deep</h2>
         <div *ngIf="getPosition().analysis.getRateMoveDeep() as rmd">
-            <p class="url">URL: {{rmd.apiURL}}</p>
             <p>Best NB: {{rmd.bestNB}}</p>
             <p>Best NNB: {{rmd.bestNNB}}</p>
             <p>Player NB: {{rmd.playerNB}}</p>
             <p>Player NNB: {{rmd.playerNNB}}</p>
-        </div>
-        <h2>Rate Move Shallow</h2>
-        <div *ngIf="getPosition().analysis.getRateMoveShallow() as rms">
-            <p>Best NB: {{rms.bestNB}}</p>
-            <p>Best NNB: {{rms.bestNNB}}</p>
-            <p>Player NB: {{rms.playerNB}}</p>
-            <p>Player NNB: {{rms.playerNNB}}</p>
         </div>
     </app-section>
     

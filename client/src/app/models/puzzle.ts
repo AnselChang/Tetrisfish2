@@ -20,7 +20,7 @@ export class Puzzle {
     // C-tier puzzles have diff of 10 to < 15    
     static generateFromPlacement(placement: GamePlacement): Puzzle | undefined {
 
-        const topMoves = placement.analysis.getEngineMoveListNB()?.getRecommendations();
+        const topMoves = placement.analysis.getEngineMoveListDeep()?.getRecommendations();
         if (!topMoves || topMoves.length < 2) return undefined;
 
         const diff = topMoves[0].evaluation - topMoves[1].evaluation;

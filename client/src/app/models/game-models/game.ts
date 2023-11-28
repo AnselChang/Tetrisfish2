@@ -17,6 +17,7 @@ import GameEligibility from "./game-eligibility";
 import { v4 as uuidv4 } from 'uuid';
 import { TagID } from "../tag-models/tag-types";
 import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
+import { LookaheadDepth } from "../../scripts/evaluation/stack-rabbit-api";
 
 export class Game {
 
@@ -124,9 +125,9 @@ export class Game {
         // mark position as started analysis
         position.analysis.flagStartedAnalysis();
 
-        // non-blocking fetch SR engine-movelist NB, set to placement analysis when it's done fetching 
-        EngineMovelistNB.fetch(position, this.inputSpeed).then(engineMovelistNB => {
-            position.analysis.setEngineMoveListNB(engineMovelistNB);
+        // non-blocking fetch SR engine-movelist deep, set to placement analysis when it's done fetching 
+        EngineMovelistNB.fetch(position, this.inputSpeed, LookaheadDepth.DEEP).then(engineMovelistDeep => {
+            position.analysis.setEngineMoveListDeep(engineMovelistDeep);
 
             // update most recent placement with engine-movelist NB if it's higher than the current one
             const lastPlacementMovelistNB = this.lastEngineMovelistNB$.getValue();
@@ -134,15 +135,15 @@ export class Game {
                 this.lastEngineMovelistNB$.next(position);
             }
         }).catch(e => {
-            console.log("Error fetching engine-movelist NB for placement #", position.index + 1);
+            console.log("Error fetching engine-movelist DEEP for placement #", position.index + 1);
             position.analysis.flagFailedAnalysis();
         });
 
-        // // non-blocking fetch SR engine-movelist NNB, set to placement analysis when it's done fetching
-        EngineMovelistNNB.fetch(position, this.inputSpeed).then(engineMovelistNNB => {
-            position.analysis.setEngineMoveListNNB(engineMovelistNNB);
+        // non-blocking fetch SR engine-movelist shallow, set to placement analysis when it's done fetching 
+        EngineMovelistNB.fetch(position, this.inputSpeed, LookaheadDepth.SHALLOW).then(engineMovelistShallow => {
+            position.analysis.setEngineMoveListShallow(engineMovelistShallow);
         }).catch(e => {
-            console.log("Error fetching engine-movelist NNB for placement #", position.index + 1);
+            console.log("Error fetching engine-movelist SHALLOW for placement #", position.index + 1);
             position.analysis.flagFailedAnalysis();
         });
     }
@@ -189,14 +190,6 @@ export class Game {
 
         }).catch(e => {
             console.log("Error fetching rate-move deep for placement #", placement.index + 1);
-            placement.analysis.flagFailedAnalysis();
-        });
-
-        //non-blocking fetch the engine rate-move shallow, set to placement analysis when it's done fetching
-        RateMoveShallow.fetch(placement, this.inputSpeed).then(rateMoveShallow => {
-            placement.analysis.setRateMoveShallow(rateMoveShallow);
-        }).catch(e => {
-            console.log("Error fetching rate-move shallow for placement #", placement.index + 1);
             placement.analysis.flagFailedAnalysis();
         });
     }
