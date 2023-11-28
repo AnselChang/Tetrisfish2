@@ -25,14 +25,21 @@ export default class KoryanLJTag extends Tag {
         J r=3, x=6, y=17
         */
 
-        if (placement.current.tetrominoType !== TetrominoType.L_TYPE) return false;
-        if (placement.next.tetrominoType !== TetrominoType.J_TYPE) return false;
+        if (!(
+            (placement.current.tetrominoType === TetrominoType.L_TYPE && placement.next.tetrominoType === TetrominoType.J_TYPE)
+            ||
+            (placement.current.tetrominoType === TetrominoType.J_TYPE && placement.next.tetrominoType === TetrominoType.L_TYPE)
+            )
+        ) return false;
 
-        if (placement.current.getRotation() !== 1) return false;
-        if (placement.next.getRotation() !== 3) return false;
+        const lPiece = placement.current.tetrominoType === TetrominoType.L_TYPE ? placement.current : placement.next;
+        const jPiece = placement.current.tetrominoType === TetrominoType.J_TYPE ? placement.current : placement.next;
 
-        if (placement.current.getTranslateY() !== placement.next.getTranslateY()) return false;
-        return placement.next.getTranslateX() - placement.current.getTranslateX() === 2;
+        if (lPiece.getRotation() !== 1) return false;
+        if (jPiece.getRotation() !== 3) return false;
+
+        if (lPiece.getTranslateY() !== jPiece.getTranslateY()) return false;
+        return jPiece.getTranslateX() - lPiece.getTranslateX() === 2;
 
     }
 
