@@ -6,10 +6,12 @@ import { get } from "mongoose";
 import Tag from "./abstract-tag";
 import OJTag from "./all-tags/oj-tag";
 import SFlatTag from "./all-tags/s-flat-tag";
+import KoryanLJTag from "./all-tags/koryan-lj-tag";
 
 export const enum TagID {
     S_FLAT = "S_FLAT",
     OJ = "OJ",
+    KORYAN_LJ = "KORYAN_LJ",
 }
 
 
@@ -17,6 +19,8 @@ export const enum TagID {
 export const ALL_TAGS: {[key: string]: Tag} = {
     [TagID.S_FLAT]: new SFlatTag(),
     [TagID.OJ]: new OJTag(),
+    [TagID.KORYAN_LJ]: new KoryanLJTag(),
+    
 };
 
 export const getTagByID = (id: TagID): Tag | undefined => {
