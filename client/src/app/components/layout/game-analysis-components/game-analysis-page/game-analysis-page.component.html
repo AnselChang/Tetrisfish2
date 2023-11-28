@@ -45,6 +45,7 @@
             <app-tetris-panel-item>
                 <app-rating-subsection
                     [moveNotation]="getPosition().piecePlacement!.toString()"
+                    [tags]="getPosition().getPlayerPlacementTags()"
                     [rating]="getPlayerRating()"
                     >
                 </app-rating-subsection>

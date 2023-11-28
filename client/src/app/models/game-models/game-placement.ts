@@ -9,6 +9,8 @@ import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
 import MoveableTetromino from "./moveable-tetromino";
 import PlacementAnalysis from "./placement-analysis";
 import { SmartGameStatus } from "../tetronimo-models/smart-game-status"
+import { TagID } from "../tag-models/tag-types";
+import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
 
 export class GamePlacement {
 
@@ -18,6 +20,8 @@ export class GamePlacement {
     public statusAfterPlacement?: SmartGameStatus;
     public piecePlacement?: MoveableTetromino; // compact way to store the pose of the current piece
     public placementLineClears?: number;
+
+    private playerPlacementTags?: TagID[];
 
     constructor(
         public readonly index: number,
@@ -41,6 +45,19 @@ export class GamePlacement {
         this.statusAfterPlacement = this.statusBeforePlacement.copy();
         if (lineClears > 0) this.statusAfterPlacement.onLineClear(lineClears);
 
+    }
+
+    assignTags(placementAfterThis: MoveableTetromino) {
+        this.playerPlacementTags = TagAssigner.assignTagsFor(new SimplePlacement(
+            this.grid,
+            this.piecePlacement!,
+            placementAfterThis
+        ));
+    }
+
+    getPlayerPlacementTags(): TagID[] {
+        if (!this.playerPlacementTags) return [];
+        return this.playerPlacementTags;
     }
 
     // create a grid that includes the current piece

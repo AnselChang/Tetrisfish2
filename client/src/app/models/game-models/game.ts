@@ -161,6 +161,12 @@ export class Game {
         this.status.onLineClear(numLineClears);
         this.calculateTransitionScores();
 
+        // assign tags for previous placement based on this placement
+        if (placement.index > 0) {
+            const previousPlacement = this.getPlacementAt(placement.index - 1);
+            previousPlacement.assignTags(moveableTetronimo);
+        }
+
         if (this.startLevel < 29 && this.status.level >= 29) {
             this.eligibility.lockEligibility();
         }

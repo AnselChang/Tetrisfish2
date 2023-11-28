@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RateMoveDeep, RateMoveShallow } from 'client/src/app/models/analysis-models/rate-move';
 import { RATING_TO_COLOR, RATING_TO_STRING, Rating } from 'client/src/app/models/evaluation-models/rating';
+import { TagID, getTagByID } from 'client/src/app/models/tag-models/tag-types';
 
 // Should always be inside a <subsection> for correct formatting
 
@@ -12,6 +13,7 @@ import { RATING_TO_COLOR, RATING_TO_STRING, Rating } from 'client/src/app/models
 export class RatingSubsectionComponent {
   @Input() moveNotation: string | undefined = "K-391";
   @Input() rating?: RateMoveDeep;
+  @Input() tags: TagID[] = [];
   @Input() feedback: string = "Feedback goes here";
 
   getColor(): string {
@@ -28,6 +30,10 @@ export class RatingSubsectionComponent {
     if (!this.rating) return "-";
     if (!this.rating.playerNB) return "-";
     return this.rating.playerNB.toString();
+  }
+
+  getTagName(tagID: TagID) {
+    return getTagByID(tagID)?.tagName ?? ("Unknown " + tagID);
   }
 
 }

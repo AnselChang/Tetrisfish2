@@ -1,5 +1,8 @@
 <div class="root">
     <h2 [ngStyle]="{'color': getColor()}">({{getPlayerEval()}}) {{moveNotation}}</h2>
     <h1 [ngStyle]="{'color': getColor()}">{{getRatingString()}}</h1>
+    <div class="tags">
+        <app-tag *ngFor="let tag of tags" [name]="getTagName(tag)"></app-tag>
+    </div>
     <p [ngStyle]="{'color': getColor()}">{{feedback}}</p>
 </div>
