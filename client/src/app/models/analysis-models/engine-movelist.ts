@@ -7,16 +7,33 @@ import { fetchMovelist, generateMoveListURL } from "../../scripts/evaluation/eva
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { convertSRPlacement } from "../../scripts/evaluation/sr-placement-converter";
 import { LookaheadDepth } from "../../scripts/evaluation/stack-rabbit-api";
-import { RATING_TO_COLOR, getRatingFromRelativeEval } from "../evaluation-models/rating";
+import { RATING_TO_COLOR, Rating, getRatingFromRelativeEval } from "../evaluation-models/rating";
 import { GamePlacement } from "../game-models/game-placement";
 import MoveableTetromino from "../game-models/moveable-tetromino";
+import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
+import { TagID } from "../tag-models/tag-types";
 
 export class MoveRecommendation {
+
+    private tags?: TagID[] = undefined;
+
     constructor(
         public thisPiece: MoveableTetromino,
         public nextPiece: MoveableTetromino,
         public evaluation: number,
     ) {}
+
+    public assignTags(tags: TagID[]) {
+        this.tags = tags;
+    }
+
+    public getTags(): TagID[] {
+        if (!this.tags) {
+            console.error("tags not assigned for this move recommendation");
+            return [];
+        }
+        return this.tags;
+    }
 
     public toString(): string {
         const evalStr = (this.evaluation > 0) ? `+${this.evaluation}` : `${this.evaluation}`;
@@ -38,7 +55,7 @@ export class EngineMovelistNB extends EngineMovelist {
     static async fetch(placement: GamePlacement, inputSpeed: InputSpeed, depth: LookaheadDepth): Promise<EngineMovelistNB> {
         const response = await fetchMovelist(placement, inputSpeed, true, depth);
         const apiURL = generateMoveListURL(placement, inputSpeed, true, depth);
-        return new EngineMovelistNB(response, placement, apiURL);
+        return new EngineMovelistNB(response, placement, apiURL, depth);
     }
 
     // given a list of MT and a MT, check if the MT is already in the list
@@ -49,7 +66,7 @@ export class EngineMovelistNB extends EngineMovelist {
         return false;
     }
 
-    constructor(moves: any, placement: GamePlacement, public readonly apiURL: string) {
+    constructor(moves: any, private readonly placement: GamePlacement, public readonly apiURL: string, public readonly depth: LookaheadDepth) {
         super();
         // console.log("engine movelist nb created", moves);
 
@@ -88,16 +105,31 @@ export class EngineMovelistNB extends EngineMovelist {
             return duplicatePlacements.indexOf(recommendation) === -1;
         });
 
-        // for the best move, assign tags
+        // If lookahead is deep, assign tags for all best moves
+        if (this.depth === LookaheadDepth.DEEP) {
+            this.recommendations.forEach(recommendation => {
+                if (this.getRecommendationRating(recommendation) === Rating.BEST || this.getRecommendationRating(recommendation) === Rating.BRILLIANT) {
+                    recommendation.assignTags(TagAssigner.assignTagsFor(new SimplePlacement(
+                        this.placement.grid,
+                        recommendation.thisPiece,
+                        recommendation.nextPiece,
+                    )));
+                }
+            });
+        }
     }
 
     public get best(): MoveRecommendation {
         return this.recommendations[0];
     }
 
-    public getRecommendationColor(recommendation: MoveRecommendation): string {
+    public getRecommendationRating(recommendation: MoveRecommendation): Rating {
         const diff = recommendation.evaluation - this.best.evaluation;
-        const rating = getRatingFromRelativeEval(diff);
+        return getRatingFromRelativeEval(diff);
+    }
+
+    public getRecommendationColor(recommendation: MoveRecommendation): string {
+        const rating = this.getRecommendationRating(recommendation);
         return RATING_TO_COLOR[rating];
     }
 

@@ -1,1 +1,4 @@
-<img [src]="'./assets/img/svg-pieces/' + (piece ?? 'default') + '.svg'" width="30">
+<img *ngIf="!name" [src]="'./assets/img/svg-pieces/' + (piece ?? 'default') + '.svg'" width="30">
+<div *ngIf="name" class="text-container">
+    <p class="tag-text" [style.color]="nameColor">{{name}}</p>
+</div>

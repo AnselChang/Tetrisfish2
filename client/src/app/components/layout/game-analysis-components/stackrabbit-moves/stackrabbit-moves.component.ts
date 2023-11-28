@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EngineMovelistNB, MoveRecommendation } from 'client/src/app/models/analysis-models/engine-movelist';
+import { TagID, getTagByID } from 'client/src/app/models/tag-models/tag-types';
 
 @Component({
   selector: 'app-stackrabbit-moves',
@@ -16,6 +17,10 @@ export class StackrabbitMovesComponent {
 
   onMouseLeaveRecommendation(): void {
     this.hoveredMove.emit(undefined);
+  }
+
+  getTagName(tagID: TagID) {
+    return getTagByID(tagID)?.tagName ?? ("Unknown " + tagID);
   }
 
 }

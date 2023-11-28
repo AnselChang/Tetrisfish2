@@ -19,7 +19,12 @@ export default class SFlatTag extends Tag {
     }
 
     public override identify(placement: SimplePlacement): boolean {
-        return false;
+        
+        if (placement.current.tetrominoType !== TetrominoType.S_TYPE) return false;
+        if (placement.current.getRotation() !== 0) return false;
+
+        return placement.current.getTranslateX() === 7;
+        
     }
 
 }

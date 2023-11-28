@@ -11,4 +11,5 @@ import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino'
 export class TagComponent {
   @Input() piece?: TetrominoType;
   @Input() name?: string;
+  @Input() nameColor: string = "white";
 }
