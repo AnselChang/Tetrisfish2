@@ -107,7 +107,7 @@ export class EngineMovelistNB extends EngineMovelist {
 export class EngineMovelistNNB {
 
     static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNNB> {
-        const response = await fetchMovelist(placement, inputSpeed, false);
+        const response = await fetchMovelist(placement, inputSpeed, false, LookaheadDepth.DEEP);
         return new EngineMovelistNNB();
     }
 }
