@@ -53,6 +53,9 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       // Get a specific parameter by name
       const gameID = params['id'];
+      let positionStr = params['position'];
+      this.placementIndex = isNaN(+positionStr) ? 0 : +positionStr - 1;
+
       console.log("GameID:", gameID);
 
       // if game ID is not defined, redirect to analysis page
@@ -65,7 +68,9 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
         // if game is cached, load it
         this.game = this.gameCacheService.getGame(gameID);
         console.log("Loaded cached game", gameID);
-        
+
+        // bound placementIndex to [0, number of placements)
+        this.setPlacement(Math.min(Math.max(0, this.placementIndex), this.game!.numPlacements - 1));
       
       } else {
 
@@ -122,10 +127,12 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
     // cache game
     this.gameCacheService.cacheGame(game);
 
+    // bound placementIndex to [0, number of placements)
+    this.setPlacement(Math.min(Math.max(0, this.placementIndex), this.game!.numPlacements - 1));
+
     // hide loading notification after 1 second
     setTimeout(() => {
       this.notifier.hide("game-loading");
-      this.setPlacement(0);
     }, 1000);
 
     // analyze one placement a second for rate-limiting. this is to prevent requests from piling up
@@ -188,6 +195,9 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
 
   public setPlacement(index: number) {
     this.placementIndex = index;
+
+    // update URL to go to placement location without reloading page
+    window.history.replaceState({}, "", `/analyze-game?id=${this.game!.gameID}&position=${this.placementIndex+1}`);
 
     console.log("isTetrisReady", this.getPosition().grid.isTetrisReady());
 
