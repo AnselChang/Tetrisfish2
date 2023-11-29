@@ -38,8 +38,10 @@ export class AnalyzePageComponent implements OnInit {
 
       const loggedIn = status === LoginStatus.LOGGED_IN;
       if (loggedIn) {
+
+        const userID = this.userService.getUserID()!;
         
-        fetchServer(Method.GET, "/api/get-games-by-player").then(({status, content}) => {
+        fetchServer(Method.GET, "/api/get-games-by-player", {userID: userID}).then(({status, content}) => {
           if (status === 200) {
             this.gameHistoryCache.set(content);
             console.log("Recieved game history from server");

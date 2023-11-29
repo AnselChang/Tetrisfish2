@@ -29,7 +29,6 @@ export class MoveRecommendation {
 
     public getTags(): TagID[] {
         if (!this.tags) {
-            console.error("tags not assigned for this move recommendation");
             return [];
         }
         return this.tags;

@@ -5,7 +5,7 @@ import { GameHistoryGame } from '../../shared/models/game-history-game';
 import { GlobalStats } from '../database/global-stats/global-stats-schema';
 import { getCounts, incrementCounts } from '../database/global-stats/global-stats-service';
 import { addGameToLeaderboard } from '../database/leaderboard/leaderboard-service';
-import { doesUserExist } from 'server/database/user/user-service';
+import { doesUserExist } from '../database/user/user-service';
 
 export async function sendGameRoute(req: Request, res: Response) {
 
@@ -64,13 +64,7 @@ export async function getGameRoute(req: Request, res: Response) {
 
 export async function getGamesByPlayerRoute(req: Request, res: Response) {
 
-    console.log("Session state:", req.session?.state);
-    const userID = req.session?.state?.discordID;
-
-    if (!userID) {
-        res.status(401).send({"error": "Not logged in"});
-        return;
-    }
+    const userID = req.query['userID'] as string;
 
     // TODO: poll leaderboards for rank
 
