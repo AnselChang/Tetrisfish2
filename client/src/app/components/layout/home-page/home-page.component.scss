@@ -137,3 +137,13 @@ header {
     line-height: normal;
     transform: translateX(70%);
 }
+
+@media (max-width: 800px) {
+    .global-game-stats {
+        flex-direction: column;
+    }
+
+    .author {
+        transform: translateX(0%);
+    }
+}
