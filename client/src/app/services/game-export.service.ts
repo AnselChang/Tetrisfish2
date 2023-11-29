@@ -6,6 +6,7 @@ import { TetrominoType } from '../models/tetronimo-models/tetromino';
 import { SerializedGame, SerializedPlacement } from 'shared/models/serialized-game';
 import { GamePlacement } from '../models/game-models/game-placement';
 import { UserService } from './user.service';
+import { CaptureSettingsService } from './capture/capture-settings.service';
 
 /*
 Handles exporting a game object to the server
@@ -56,7 +57,7 @@ export class GameExportService {
       gameID: game.gameID,
       startLevel: game.startLevel,
       inputSpeed: game.inputSpeed,
-      playstyle: "unknown",
+      playstyle: game.playstyle,
       eligibleForLeaderboard: game.eligibility.getEligibility() !== undefined,
 
       placements: placements.map(placement => this.serializePlacement(placement)),

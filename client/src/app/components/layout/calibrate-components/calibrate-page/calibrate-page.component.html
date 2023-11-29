@@ -10,9 +10,18 @@
         </div>
         
         <app-section class="calibrate-panel">
+            <h3 class="padded">Set playstyle</h3>
+            <select class="dropdown" [(ngModel)]="settings.playstyle">
+                <option *ngFor="let playstyle of ALL_PLAYSTYLES" [ngValue]="playstyle">
+                    {{playstyle}}
+                </option>
+            </select>
+
+            <hr>
+
             <h3 class="padded">Set analysis input speed</h3>
-            <p class="tiny">Note: Going over input speed risks leaderboard ineligibility.</p>
-            <select class="hz-dropdown" [(ngModel)]="settings.inputSpeed">
+            <p class="tiny">Note: Only 30hz is eligible for leaderboard.</p>
+            <select class="dropdown" [(ngModel)]="settings.inputSpeed">
                 <option *ngFor="let speed of ALL_INPUT_SPEEDS" [ngValue]="speed">
                     {{speed}}hz
                 </option>

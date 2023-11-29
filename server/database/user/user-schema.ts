@@ -24,7 +24,17 @@ const userSchema = new Schema({
     },
     playstyle: {
         type: String,
-        required: true,
+        required: false,
+    },
+    inputSpeed: {
+        type: Number,
+        reuqired: false,
+    }, minoThreshold: {
+        type: Number,
+        required: false,
+    }, textThreshold: {
+        type: Number,
+        required: false,
     }
 });
 

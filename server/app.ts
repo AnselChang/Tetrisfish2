@@ -12,7 +12,7 @@ import { authRoute, authCallbackRoute } from './routes/auth';
 
 import * as session from 'express-session';
 import { SessionState } from './database/session-state';
-import { usernameRoute } from './routes/user-info';
+import { getUserSettingsRoute, setUserSettingsRoute, usernameRoute } from './routes/user-info';
 import { getBugReportRoute, sendBugReportRoute } from './routes/bug-report';
 import { Database } from './singletons/database';
 import DiscordBot from './singletons/discord-bot';
@@ -99,6 +99,9 @@ export default async function createApp(): Promise<Express> {
     app.get('/api/auth', authRoute);
     app.get('/api/auth/callback', authCallbackRoute);
     app.get('/api/username', usernameRoute) // FAST, does not require database lookup
+    
+    app.post('/api/set-user-settings', setUserSettingsRoute);
+    app.get('/api/get-user-settings', getUserSettingsRoute);
 
     app.post('/api/send-bug-report', (req: Request, res: Response) => sendBugReportRoute(discordBot, req, res));
     app.get('/api/get-bug-report', (req: Request, res: Response) => getBugReportRoute(req, res));

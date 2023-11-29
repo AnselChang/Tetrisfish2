@@ -43,7 +43,7 @@ export class Game {
 
     public eligibility: GameEligibility;
 
-    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed, public readonly playerName: string, existingGameID?: string) {
+    constructor(public readonly startLevel: number, public readonly inputSpeed: InputSpeed, public readonly playerName: string, public readonly playstyle: string, existingGameID?: string) {
 
         // if not recreating an existing game, generate a new uuid
         this.gameID = existingGameID ?? uuidv4();

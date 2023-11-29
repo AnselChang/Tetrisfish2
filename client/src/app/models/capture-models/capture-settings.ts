@@ -2,6 +2,7 @@
 Represents all the state for a frame after OCR
 */
 
+import { Playstyle } from "../../misc/playstyle";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import BinaryGrid from "../tetronimo-models/binary-grid";
 import { Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
@@ -27,6 +28,7 @@ export class Threshold {
 export class CaptureSettings {
 
     public inputSpeed: InputSpeed = InputSpeed.HZ_30;
+    public playstyle: Playstyle = Playstyle.UNKNOWN;
 
     public threshold: number = 5; 
 

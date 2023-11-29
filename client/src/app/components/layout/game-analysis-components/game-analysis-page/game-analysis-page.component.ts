@@ -110,7 +110,7 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
     console.log("Loading game", dbGame);
 
     // create game object to store placements. will be assigned to this.game after all placements are loaded
-    const game = new Game(dbGame.startLevel, dbGame.inputSpeed as InputSpeed, dbGame.playerName, dbGame.gameID);
+    const game = new Game(dbGame.startLevel, dbGame.inputSpeed as InputSpeed, dbGame.playerName, dbGame.playstyle, dbGame.gameID);
     game.setTimestamp(new Date(dbGame.timestamp));
 
     // add placements

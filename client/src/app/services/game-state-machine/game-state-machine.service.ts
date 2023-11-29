@@ -322,7 +322,7 @@ export class GameStateMachineService {
 
     const gameStartLevel = this.extractedStateService.get().getStatus().level;
     const inputSpeed = this.captureSettingsService.get().inputSpeed;
-    this.game = new Game(gameStartLevel, inputSpeed, this.user.getUsername()!); // create a new game that will store all the placements
+    this.game = new Game(gameStartLevel, inputSpeed, this.user.getUsername()!, this.captureSettingsService.get().playstyle); // create a new game that will store all the placements
 
     this.debug.resetNewGame(this.game.gameID);
     this.notifier.notify("success", `Game started on level ${gameStartLevel}`);

@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { ALL_PLAYSTYLES } from 'client/src/app/misc/playstyle';
 import { ThresholdType } from 'client/src/app/models/capture-models/capture-settings';
 import { ALL_INPUT_SPEEDS } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
@@ -21,6 +22,7 @@ export class CalibratePageComponent implements OnInit, AfterViewInit, OnDestroy 
 
   readonly ThresholdType = ThresholdType;
   readonly ALL_INPUT_SPEEDS = ALL_INPUT_SPEEDS;
+  readonly ALL_PLAYSTYLES = ALL_PLAYSTYLES;
 
   constructor(
     public videoCaptureService: VideoCaptureService,
@@ -50,6 +52,7 @@ export class CalibratePageComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
+    this.userService.postUserSettings();
     this.videoCaptureService.onLeaveCalibratePage();
   }
 
