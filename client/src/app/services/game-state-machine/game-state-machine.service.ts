@@ -283,7 +283,7 @@ export class GameStateMachineService {
   private pauseCountInGame = 0;
   private readonly MAX_PAUSE_COUNT_IN_GAME = 10; // if this many pauses in a row, send onPause() event
 
-  private lastGameSentToServer: boolean = true;
+  private lastGameSentToServerOrDiscarded: boolean = true;
   private sentGameCancelledMessage = false;
 
   constructor(
@@ -301,7 +301,7 @@ export class GameStateMachineService {
 
   public startGame(): void {
 
-    if (!this.lastGameSentToServer) {
+    if (!this.lastGameSentToServerOrDiscarded) {
 
       if (!this.sentGameCancelledMessage) {
         console.log("ABORTING START GAME, PREVIOUS NOT SENT");
@@ -314,7 +314,7 @@ export class GameStateMachineService {
 
     console.log("Starting game");
 
-    this.lastGameSentToServer = false;
+    this.lastGameSentToServerOrDiscarded = false;
     this.sentGameCancelledMessage = false;
 
     this.gridSM = new GridStateMachine(this.debug);
@@ -437,7 +437,7 @@ export class GameStateMachineService {
       }, 1000);
     });
 
-    this.lastGameSentToServer = true;
+    this.lastGameSentToServerOrDiscarded = true;
 
     // if callback set, call it
     if (callbackAfter) callbackAfter();
@@ -484,6 +484,8 @@ export class GameStateMachineService {
       }, 2000);
 
     } else {
+      this.lastGameSentToServerOrDiscarded = true;
+      this.sentGameCancelledMessage = false;
       this.notifier.notify("warning", "Game discarded. Games under 5 placements are not saved.")
     }
 
