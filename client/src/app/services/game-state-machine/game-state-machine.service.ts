@@ -283,6 +283,9 @@ export class GameStateMachineService {
   private pauseCountInGame = 0;
   private readonly MAX_PAUSE_COUNT_IN_GAME = 10; // if this many pauses in a row, send onPause() event
 
+  private lastGameSentToServer: boolean = true;
+  private sentGameCancelledMessage = false;
+
   constructor(
     private extractedStateService: ExtractedStateService,
     private captureSettingsService: CaptureSettingsService,
@@ -297,7 +300,22 @@ export class GameStateMachineService {
     ) { }
 
   public startGame(): void {
+
+    if (!this.lastGameSentToServer) {
+
+      if (!this.sentGameCancelledMessage) {
+        console.log("ABORTING START GAME, PREVIOUS NOT SENT");
+        this.notifier.notify("error", "Game cancelled. Still trying to save the previous game to server. Check your internet! Please wait...", "ABORT_START_GAME");
+        this.sentGameCancelledMessage = true;
+      }
+
+      return;
+    }
+
     console.log("Starting game");
+
+    this.lastGameSentToServer = false;
+    this.sentGameCancelledMessage = false;
 
     this.gridSM = new GridStateMachine(this.debug);
     this.playStatus = PlayStatus.PLAYING;
@@ -419,6 +437,8 @@ export class GameStateMachineService {
       }, 1000);
     });
 
+    this.lastGameSentToServer = true;
+
     // if callback set, call it
     if (callbackAfter) callbackAfter();
 
@@ -434,6 +454,8 @@ export class GameStateMachineService {
     // if game has at least five placements, add to game history
     if (this.game && this.game.numPlacements >= 5) {
 
+      let gameSent = false;
+
       // delete last placement if placement is undefined
       this.game.popLastPositionIfUndefined();
       if (!this.game.getLastPosition()!.hasPlacement()) throw new Error("Last position has no placement");
@@ -442,10 +464,25 @@ export class GameStateMachineService {
       this.game.getLastPosition()!.analysis.onFinishAnalysis$.pipe(
         first(isAnalysisComplete => isAnalysisComplete)
       ).subscribe(() => {
+        gameSent = true;
         this.analyzeMissedPlacements(this.game!, () => {
           this.onGameFinishedAndAnalyzed(callbackAfter);
         })
       });
+
+      // after 3 seconds, check if analysis has started. if not, wifi failed. keep trying to send game
+      let numRetries = 0;
+      const retrySendGame = setInterval(() => {
+        if (!gameSent && !this.game!.getLastPosition()!.analysis.isAnalysisStarted()) {
+          if (numRetries % 3 === 0) this.notifier.notify("error", "Connection failed. Retrying...");
+          this.game!.runFullAnalysis(this.game!.getLastPosition()!);
+        } else {
+          console.log("Break out of retry loop because sent");
+          clearInterval(retrySendGame);
+        }
+        numRetries++;
+      }, 2000);
+
     } else {
       this.notifier.notify("warning", "Game discarded. Games under 5 placements are not saved.")
     }
@@ -480,6 +517,7 @@ export class GameStateMachineService {
       } else {
         if (this.gameStartDetectionCount > 0) console.log("Game Start Detection failed. Resetting");
         this.gameStartDetectionCount = 0;
+        this.sentGameCancelledMessage = false;
       }
 
     } else if (this.playStatus === PlayStatus.PLAYING) {
