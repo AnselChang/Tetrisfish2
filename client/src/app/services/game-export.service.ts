@@ -5,6 +5,7 @@ import { GameSpeed } from '../models/evaluation-models/rating';
 import { TetrominoType } from '../models/tetronimo-models/tetromino';
 import { SerializedGame, SerializedPlacement } from 'shared/models/serialized-game';
 import { GamePlacement } from '../models/game-models/game-placement';
+import { UserService } from './user.service';
 
 /*
 Handles exporting a game object to the server
@@ -15,7 +16,7 @@ Handles exporting a game object to the server
 })
 export class GameExportService {
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   private serializePlacement(placement: GamePlacement): SerializedPlacement {
 
@@ -45,6 +46,7 @@ export class GameExportService {
     const averageZ = game.analysisStats.getAccuracyForPiece(TetrominoType.Z_TYPE);
     
     return {
+      userID: this.userService.getUserID() ?? "logged out",
       gameID: game.gameID,
       startLevel: game.startLevel,
       inputSpeed: game.inputSpeed,

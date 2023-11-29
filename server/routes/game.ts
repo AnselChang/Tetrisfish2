@@ -5,19 +5,19 @@ import { GameHistoryGame } from '../../shared/models/game-history-game';
 import { GlobalStats } from '../database/global-stats/global-stats-schema';
 import { getCounts, incrementCounts } from '../database/global-stats/global-stats-service';
 import { addGameToLeaderboard } from '../database/leaderboard/leaderboard-service';
+import { doesUserExist } from 'server/database/user/user-service';
 
 export async function sendGameRoute(req: Request, res: Response) {
 
-    console.log("Session state:", req.session?.state);
-    const userID = req.session?.state?.discordID;
+    const game = req.body as SerializedGame;
 
-    if (!userID) {
-        res.status(401).send({"error": "Not logged in"});
+    if (!(await doesUserExist(game.userID))) {
+        console.error("User does not exist:", game.userID);
+        res.status(404).send({error : "User does not exist"});
         return;
     }
 
-    const game = req.body as SerializedGame;
-    console.log("Recieved game from user:", userID, game.gameID, game.finalScore);
+    console.log("Recieved game from user:", game.userID, game.gameID, game.finalScore);
 
     if (await doesGameExist(game.gameID)) {
         console.error("Game already exists:", game.gameID);
@@ -26,7 +26,7 @@ export async function sendGameRoute(req: Request, res: Response) {
     }
 
     // add the game to the database
-    await addGameToDatabase(userID, game);
+    await addGameToDatabase(game.userID, game);
 
     // increment global state counts
     const increment: GlobalStats = {
@@ -39,7 +39,7 @@ export async function sendGameRoute(req: Request, res: Response) {
     console.log("Incremented global stats to ", await getCounts());
 
     // if eligible for leaderboard, check if leaderboard-worthy
-    const [notifyType, notifyMessage] = await addGameToLeaderboard(game, userID);
+    const [notifyType, notifyMessage] = await addGameToLeaderboard(game, game.userID);
 
     res.status(200).send({success: true, notifyType: notifyType, notifyMessage: notifyMessage});
 

@@ -6,5 +6,6 @@ export class SessionState {
     constructor(
         public discordID: string,
         public username: string,
+        public isProUser: boolean,
     ) {}
 }

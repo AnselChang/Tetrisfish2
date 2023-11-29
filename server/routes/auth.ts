@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import { SessionState } from '../database/session-state';
-import { createNewUser, doesUserExist } from '../database/user/user-service';
+import { createNewUser, doesUserExist, getUserByID } from '../database/user/user-service';
 
 const DISCORD_API_ENDPOINT = 'https://discord.com/api/v10';
 
@@ -114,9 +114,6 @@ export async function authCallbackRoute(req: Request, res: Response) {
         }
     }
 
-    // store in session
-    req.session.state = new SessionState(discordID, username);
-
     // check if user exists in database
     const userExists = await doesUserExist(discordID);
 
@@ -124,6 +121,11 @@ export async function authCallbackRoute(req: Request, res: Response) {
     if (!userExists) {
         await createNewUser(discordID, username);
     }
+
+    const user = await getUserByID(discordID);
+    
+    // store in session
+    req.session.state = new SessionState(discordID, username, user!.isProUser);
     
     // redirect to home page, specifying if user is new
     const userRedirect = req.session.redirect;

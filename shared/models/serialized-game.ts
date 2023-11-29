@@ -10,6 +10,7 @@ export interface SerializedGame {
 
     // the game's unique id
     readonly gameID: string,
+    readonly userID: string,
 
     // all the placements in the game, as compressed as possible
     readonly placements: SerializedPlacement[];
