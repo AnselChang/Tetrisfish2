@@ -4,10 +4,9 @@
 
 .button-big {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 17px;
 
     padding: 8px;
     margin: 5px 0; // left-right padding must be 0 so that 100% width won't cause weird overflow issues
@@ -29,16 +28,21 @@
     box-shadow: 0 0 4.5px 0.15px rgb(0,0,0,0.75);
 }
 
-.text {
+.title {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 10px;
     align-items: center;
-    gap: 2px;
     text-wrap: nowrap;
 }
 
+.description {
+    text-wrap: wrap;
+    font-size: .65rem;
+}
+
 h1 {
-    line-height: 1.4;
+    line-height: 1.3;
     font-size: 1.3rem;
     font-weight: 600;
 }

@@ -1,6 +1,10 @@
 <div class="root">
     <div class="col-analysis">
 
+        <a routerLink="/calibrate" routerLinkActive="active">
+            <app-button-big color="#626EDF" label="Edit Calibration"/>
+        </a>
+
         <app-section class="game-summary">
             <app-game-summary [stats]="this.game?.stats" />
         </app-section>
@@ -87,13 +91,11 @@
             />
 
             <div class="buttons">
-                <a routerLink="/calibrate" routerLinkActive="active">
-                    <app-button-big color="#626EDF" label="Edit Calibration" icon="calibrate_button.svg"/>
-                </a>
-                <app-button-big color="#9162DF" label="Analyze" icon="analysis_button.svg" (click)="onClickAnalyze()" />
+                <app-button-big color="#9162DF" label="Analyze" description="Review your stacking placement by placement" icon="analysis_button.svg" (click)="onClickAnalyze()" />
                 <a routerLink="/debug" routerLinkActive="active">
-                    <app-button-big color="#DF6262" label="Debug" icon="debug_button.svg" />
+                    <app-button-big color="#DF6262" label="Debug" description="Diagnose OCR fails or submit a bug report" icon="debug_button.svg" />
                 </a>
+                <app-button-big color="#DF7962" (click)="export()" label="Export" description="Save a local copy to your computer" icon="calibrate_button.svg"/>
             </div>
         </div>
         

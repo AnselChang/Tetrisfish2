@@ -1,8 +1,8 @@
 <button class="generic-button button-big" [disabled]="buttonDisabled ? true : null">
-    <app-fixed-size-image *ngIf="icon" [src]="icon" [width]="24"></app-fixed-size-image>
-    <div class="text">
+    <div class="title">
+        <app-fixed-size-image *ngIf="icon" [src]="icon" [width]="24"></app-fixed-size-image>
         <h1>{{label}}</h1>
-        <p>{{description}}</p>
     </div>
+     <p class="description">{{description}}</p>
     
 </button>

@@ -44,16 +44,22 @@ export class GameExportService {
     const averageS = game.analysisStats.getAccuracyForPiece(TetrominoType.S_TYPE);
     const averageT = game.analysisStats.getAccuracyForPiece(TetrominoType.T_TYPE);
     const averageZ = game.analysisStats.getAccuracyForPiece(TetrominoType.Z_TYPE);
-    
+
+    let placements = game.getAllPlacements();
+    if (placements.length > 0 && !placements[placements.length-1].hasPlacement()) {
+      //remove last placement
+      placements = placements.slice(0, placements.length-1);
+    }
+        
     return {
-      userID: this.userService.getUserID() ?? "logged out",
+      userID: this.userService.getUserID() ?? "unknown user",
       gameID: game.gameID,
       startLevel: game.startLevel,
       inputSpeed: game.inputSpeed,
       playstyle: "unknown",
       eligibleForLeaderboard: game.eligibility.getEligibility() !== undefined,
 
-      placements: game.getAllPlacements().map(placement => this.serializePlacement(placement)),
+      placements: placements.map(placement => this.serializePlacement(placement)),
 
       scoreAtTransitionTo19: game.stats.getScoreAtTransitionTo19(),
       scoreAtTransitionTo29: game.stats.getScoreAtTransitionTo29(),
@@ -103,6 +109,24 @@ export class GameExportService {
 
     const {notifyType, notifyMessage} = content;
     return [notifyType, notifyMessage];
+
+  }
+
+  public downloadAsFile(game: Game): string {
+
+    const filename = `tetrisfish_save_${game.status.score}.json`;
+
+    const serializedGame = this.serialize(game);
+    const blob = new Blob([JSON.stringify(serializedGame)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+
+    return filename;
 
   }
 

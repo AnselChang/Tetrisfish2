@@ -19,6 +19,7 @@ import { filter, take } from 'rxjs';
 import { InputSpeed } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 import { NotifierService } from 'angular-notifier';
 import { LeaderboardAccuracyCacheService } from 'client/src/app/services/leaderboard-accuracy-cache.service';
+import { GameExportService } from 'client/src/app/services/game-export.service';
 
 
 @Component({
@@ -49,7 +50,8 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
     private userService: UserService,
     private router: Router,
     private notifier: NotifierService,
-    public leaderboardCache: LeaderboardAccuracyCacheService
+    public leaderboardCache: LeaderboardAccuracyCacheService,
+    private gameExportService: GameExportService,
     ) {
  
   }
@@ -209,6 +211,20 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.router.navigate(['/analyze-game'], { queryParams: { id: game.gameID } });
 
+  }
+
+  public export() {
+    const game = this.gameStateMachineService.getGame();
+
+    // if no game, do nothing
+    if (!game) {
+      this.notifier.notify("warning", "Nothing to export. Play a game first!");
+      return;
+    }
+
+    // download game as JSON
+    const filename = this.gameExportService.downloadAsFile(game);
+    this.notifier.notify("success", `Game exported as ${filename}!`);
   }
 
 }
