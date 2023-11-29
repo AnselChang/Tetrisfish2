@@ -35,7 +35,6 @@ export interface SerializedGame {
     readonly iPieceEfficiency: number, // as percent 0-1
 
     // accuracy-related game statistics
-    readonly accuraciesForAllPlacements: number[], // accuracy as a percent 0-1 for every placement in the game used for 10,000 placement calculations
     readonly numMissedAdjustments: number, // number of times the player missed an adjustment
     readonly overallAccuracy: number, // overall accuracy as a percent 0-1
     readonly accuracy100LinesFor29?: number, // accuracy as a percent 0-1 at <=100 lines on 29 speed, or undefined if not level 29

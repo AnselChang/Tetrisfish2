@@ -315,6 +315,59 @@ export class GameStateMachineService {
     else if (gameStartLevel === 18 || gameStartLevel === 19) this.leaderboardCache.syncAccuraciesWithServer(LeaderboardType.OVERALL);
   }
 
+
+  // go through the game and see if any placements were missed
+  public analyzeMissedPlacements(game: Game, callbackAfter?: ()=>void): void {
+
+
+    let gameSent: boolean = false;
+
+    let missedPlacementsWarningID = "MISSED_PLACEMENT_ID"
+
+    let numMissedPlacements = 0;
+    let numMissedPlacementsAnalyzed = 0;
+    game.getAllPlacements().forEach((placement, index) => {
+      if (!placement.analysis.isAnalysisStarted()) {
+        
+        numMissedPlacements++;
+        game.runFullAnalysis(placement);
+
+        placement.analysis.onFinishAnalysis$.pipe(
+          first(isAnalysisComplete => isAnalysisComplete)
+        ).subscribe(() => {
+          numMissedPlacementsAnalyzed++;
+          if (numMissedPlacementsAnalyzed === numMissedPlacements) {
+            this.notifier.hide(missedPlacementsWarningID);
+            console.log("Finished analyzing missed placements");
+            if (callbackAfter && !gameSent) {
+              console.log("Sending game after analyzing missed placements")
+              gameSent = true;
+              callbackAfter();
+            }
+          }
+        })
+      }
+    });
+
+    if (numMissedPlacements > 0) {
+      this.notifier.notify("warning", `Analysis for ${numMissedPlacements} placements were incomplete. Please wait...`, missedPlacementsWarningID);
+    } else {
+      console.log("No missed placements to analyze")
+      gameSent = true;
+      if (callbackAfter) callbackAfter();
+    }
+
+    setTimeout(() => {
+      if (!gameSent) {
+        this.notifier.notify("error", "Analysis for missed placements timed out. Will send game to server anyways, but be aware of incomplete analysis.");
+        console.log("Sending game after analyzing missed placements timeout")
+        gameSent = true;
+        if (callbackAfter) callbackAfter();
+      }
+    }, 60000); // one minute
+
+  }
+
   // this function handles pushing to game history and sending game to server once complete
   // precondition: game is fully analyzed
   public onGameFinishedAndAnalyzed(callbackAfter?: ()=>void) {
@@ -389,7 +442,9 @@ export class GameStateMachineService {
       this.game.getLastPosition()!.analysis.onFinishAnalysis$.pipe(
         first(isAnalysisComplete => isAnalysisComplete)
       ).subscribe(() => {
-        this.onGameFinishedAndAnalyzed(callbackAfter);
+        this.analyzeMissedPlacements(this.game!, () => {
+          this.onGameFinishedAndAnalyzed(callbackAfter);
+        })
       });
     } else {
       this.notifier.notify("warning", "Game discarded. Games under 5 placements are not saved.")

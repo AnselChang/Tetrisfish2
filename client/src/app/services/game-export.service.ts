@@ -66,7 +66,6 @@ export class GameExportService {
       tetrisReadiness: game.stats.getTetrisReadiness(),
       iPieceEfficiency: game.stats.getIPieceEfficiency(),
 
-      accuraciesForAllPlacements: game.getAllPlacements().map(placement => placement.analysis.getRateMoveDeep()!.accuracy!),
       numMissedAdjustments: -1, // TODO
       overallAccuracy: game.analysisStats.getOverallAccuracy().getAverage(),
       accuracy100LinesFor29: game.startLevel === 29 ? game.analysisStats.getAccuracy100LinesFor29() : undefined,
