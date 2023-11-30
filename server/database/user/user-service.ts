@@ -72,6 +72,7 @@ export async function getUserSettings(discordID: string): Promise<UserSettings |
     };
 }
 
+// set a user's pro status. also update the leaderboard cache to reflect this change
 export async function setProUserStatus(discordID: string, isProUser: boolean) {
     const user = await DBUser.findOne({discordID: discordID});
     if (!user) {

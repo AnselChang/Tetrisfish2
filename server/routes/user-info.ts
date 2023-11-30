@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getUserSettings, setUserSettings } from '../database/user/user-service';
+import { getUserByID, getUserSettings, setUserSettings } from '../database/user/user-service';
 import { UserInfo } from 'shared/models/user-info';
 import { UserSettings } from 'shared/models/user-settings';
 
@@ -14,10 +14,17 @@ export async function usernameRoute(req: Request, res: Response) {
         return;
     }
 
+    const user = await getUserByID(state.discordID);
+
+    if (!user) {
+        res.status(401).send({"error": "User not found in database"});
+        return;
+    }
+
     const userInfo: UserInfo = {
         userID: state.discordID,
-        username: state.username,
-        isProUser: state.isProUser
+        username: user.username,
+        isProUser: user.isProUser,
     };
 
     res.send(userInfo);

@@ -10,9 +10,10 @@
 
     <!-- If logged in, display profile name and picture -->
     <div *ngIf="this.userService.isLoggedIn()" class="right-nav">
-        <h3>{{this.userService.getUsername()}}</h3>
+        <h3 class="username" [style.color]="this.userService.getProUser() ? '#FFB938' : 'white'">{{this.userService.getUsername()}}</h3>
+        <app-fixed-size-image *ngIf="this.userService.getProUser()" [src]="'pro_user.svg'" [width]="27" [tooltip]="'Patreon Supporter'" />
         <a routerLink="/profile" routerLinkActive="active">
-            <app-image class="profile-pic" [src]="'profile.svg'" [widthPx]="27" />
+            <app-fixed-size-image class="profile-pic" [src]="'profile.svg'" [width]="27" />
         </a> 
     </div>
 

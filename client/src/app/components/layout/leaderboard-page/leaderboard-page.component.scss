@@ -217,3 +217,15 @@ p.accuracy {
     margin-bottom: 5px;
     width: 98%;
 }
+
+.username {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+}
+
+.patreon-icon {
+    margin-top: -5px;
+    margin-bottom: -5px;
+}

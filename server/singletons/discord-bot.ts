@@ -31,7 +31,10 @@ export default class DiscordBot {
 
     }
 
+    // external Patreon bot handles adding/removing Patreon role
+    // this method is called whenever discord user properties change
     // check if user has changed whether user in tetrisfish server has Patreon role
+    // if there's a change, update the database
     async handleUserUpdate(oldMember: GuildMember | PartialGuildMember, newMember: GuildMember) {
 
         // Check and fetch complete member if partial

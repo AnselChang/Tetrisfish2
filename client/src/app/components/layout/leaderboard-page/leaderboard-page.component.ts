@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RATING_TO_COLOR, getRatingFromAveragePercent } from 'client/src/app/models/evaluation-models/rating';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
+import { UserService } from 'client/src/app/services/user.service';
 import formatDistanceStrict from 'date-fns/formatDistanceStrict';
 import { LeaderboardEntry, LeaderboardType } from 'server/database/leaderboard/leaderboard-schema';
 
@@ -19,7 +20,7 @@ export class LeaderboardPageComponent implements OnInit {
     [LeaderboardType.START_29]: []
   };
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, public userService: UserService) {}
 
   ngOnInit(): void {
     
