@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import DBUser, { User } from "./user-schema";
 import { UserSettings } from "shared/models/user-settings";
+import { updateIsProForUserInLeaderboards } from "../leaderboard/leaderboard-service";
 
 export async function createNewUser(discordID: string, username: string): Promise<mongoose.Types.ObjectId> {
 
@@ -69,4 +70,28 @@ export async function getUserSettings(discordID: string): Promise<UserSettings |
         minoThreshold: user.minoThreshold ?? undefined,
         textThreshold: user.textThreshold ?? undefined,
     };
+}
+
+export async function setProUserStatus(discordID: string, isProUser: boolean) {
+    const user = await DBUser.findOne({discordID: discordID});
+    if (!user) {
+        console.log("setProUserStatus: User not found")
+        return;
+    }
+
+    // check if user pro status is already set to the desired value. if so, do nothing
+    if (user.isProUser === isProUser) {
+        console.log("setProUserStatus: User already has desired pro status");
+        return;
+    }
+
+    // Okay. there is a change in pro status. Update the database
+    user.isProUser = isProUser;
+    await user.save();
+
+    // also update leaderboard cache to reflect this change
+    await updateIsProForUserInLeaderboards(discordID, isProUser);
+
+    console.log(`setProUserStatus: Set user ${discordID} pro status to ${isProUser} and updated leaderboards`);
+
 }

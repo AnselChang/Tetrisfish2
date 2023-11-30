@@ -158,3 +158,18 @@ export async function getLeaderboardAccuracies(leaderboardType: LeaderboardType)
 
     return accuracies;
 }
+
+// update leaderboards cached isPro value to reflect a user's pro status change
+export async function updateIsProForUserInLeaderboards(userID: string, isPro: boolean): Promise<void> {
+
+    const leaderboards = await DBLeaderboard.find({});
+
+    for (const leaderboard of leaderboards) {
+        for (const entry of leaderboard.entries) {
+            if (entry.discordID === userID) {
+                entry.isProUser = isPro;
+            }
+        }
+        await leaderboard.save();
+    }
+}
