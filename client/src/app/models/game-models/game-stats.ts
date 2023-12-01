@@ -10,6 +10,22 @@ export class TransitionScore {
     ) {}
 }
 
+class RightWellOpenStats {
+    private numPositionsRightWellOpen: number = 0;
+
+    // the grid without any placement. determine if tetris ready and increment numPositionsTetrisReady if so
+    public updateRightWellOpen(grid: BinaryGrid): void {
+        if (grid.isRightWellOpen()) {
+            this.numPositionsRightWellOpen++;
+        }
+    }
+
+    public getRightWellOpen(totalPositions: number): number {
+        if (totalPositions === 0) return 0;
+        return this.numPositionsRightWellOpen / totalPositions;
+    }
+}
+
 class TetrisReadinessStats {
     private numPositionsTetrisReady: number = 0;
 
@@ -107,6 +123,7 @@ export class GameStats {
     private readonly lineClearStats: LineClearStats = new LineClearStats();
     private readonly efficiencyStats: EfficiencyStats = new EfficiencyStats();
     private readonly tetrisReadinessStats: TetrisReadinessStats = new TetrisReadinessStats();
+    private readonly rightWellOpenStats: RightWellOpenStats = new RightWellOpenStats();
 
     private numPlacements: number = 0;
 
@@ -121,6 +138,7 @@ export class GameStats {
         this.lineClearStats.updateBurnedLinesAndTetrises(linesBurned);
         this.efficiencyStats.updateIPieceEfficiency(placement.currentPieceType, linesBurned);
         this.tetrisReadinessStats.updateTetrisReadiness(placement.grid);
+        this.rightWellOpenStats.updateRightWellOpen(placement.grid);
 
         this.numPlacements++;
     }
@@ -151,6 +169,10 @@ export class GameStats {
 
     public getTetrisReadiness(): number {
         return this.tetrisReadinessStats.getTetrisReadiness(this.numPlacements);
+    }
+
+    public getRightWellOpen(): number {
+        return this.rightWellOpenStats.getRightWellOpen(this.numPlacements);
     }
 
     public getScoreAtTransitionTo19(): number | undefined {

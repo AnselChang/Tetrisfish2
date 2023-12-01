@@ -20,6 +20,12 @@ export class GameSummaryComponent {
     return Math.round(percent * 100) + "%";
   }
 
+  rightWellOpenString(): string {
+    if (!this.stats) return "-";
+    const open = this.stats.getRightWellOpen();
+    return Math.round(open * 100) + "%";
+  }
+
   tetrisReadinessString(): string {
 
     if (!this.stats) return "-";
