@@ -11,7 +11,8 @@ import { getNegativeEvalFactorPhrase, getNegativeNounEvalFactorPhrase, getPositi
 export function findOutliers(thirdPieceEvals: { [key in TetrominoType]: number }): {good: TetrominoType | undefined, bad: TetrominoType | undefined} {
 
     // the number of standard deviations away from the mean that a value must be to be considered an outlier
-    const STANDARD_DEVIATION_THRESHOLD = 2.2;
+    const BAD_STANDARD_DEVIATION_THRESHOLD = 2.2;
+    const GOOD_STANDARD_DEVIATION_THRESHOLD = 2.2;
         
     // Calculate the mean
     let total = 0;
@@ -31,7 +32,7 @@ export function findOutliers(thirdPieceEvals: { [key in TetrominoType]: number }
     let goodOutlier: TetrominoType | undefined = undefined;
 
     // Find bad outlier
-    const badThreshold = mean - STANDARD_DEVIATION_THRESHOLD * standardDeviation;
+    const badThreshold = mean - BAD_STANDARD_DEVIATION_THRESHOLD * standardDeviation;
     for (const key of ALL_TETROMINO_TYPES) {
         if (thirdPieceEvals[key] < badThreshold) {
             if (badOutlier === undefined) {
@@ -44,7 +45,7 @@ export function findOutliers(thirdPieceEvals: { [key in TetrominoType]: number }
     }
 
     // Find good outlier
-    const goodThreshold = mean + STANDARD_DEVIATION_THRESHOLD * standardDeviation;
+    const goodThreshold = mean + GOOD_STANDARD_DEVIATION_THRESHOLD * standardDeviation;
     for (const key of ALL_TETROMINO_TYPES) {
         if (thirdPieceEvals[key] > goodThreshold) {
             if (goodOutlier === undefined) {
@@ -74,9 +75,11 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
     let worstEvalFactor = rec.evalFactors!.getWorstEvalFactor();
 
     if (bestEvalFactor === EvalFactor.INPUT_COST) bestEvalFactor = undefined;
-    if (worstEvalFactor === EvalFactor.INPUT_COST) worstEvalFactor = undefined;
+    if (worstEvalFactor === EvalFactor.INPUT_COST || worstEvalFactor === EvalFactor.LINE_CLEAR) worstEvalFactor = undefined;
     
-    const bestThirdPiece = rec.goodAccomPiece;
+    // when I is best piece, not necessarily dependency but just waiting for tetris
+    let bestThirdPiece = rec.goodAccomPiece;
+    if (bestThirdPiece === TetrominoType.I_TYPE) bestThirdPiece = undefined;
 
     // use worst third piece only if it's not an I piece, because how SR evaluates I pieces is weird sometimes
     let worstThirdPiece: TetrominoType | undefined = undefined;
@@ -129,7 +132,7 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
         if (sentiment) {
             return `Although this placement ${getNegativeEvalFactorPhrase(worstEvalFactor)}, it more importantly ${getPositiveEvalFactorPhrase(bestEvalFactor)}.`;
         } else {
-            return `Although this placement ${getPositiveEvalFactorPhrase(bestEvalFactor)}, it doesn't accomodate ${worstThirdPiece} pieces.`;
+            return `Although this placement ${getPositiveEvalFactorPhrase(bestEvalFactor)}, it ${getNegativeEvalFactorPhrase(worstEvalFactor)}.`;
         }
 
     } else if (bestEvalFactor && worstThirdPiece) { // ignore tag, too many things to say
@@ -140,24 +143,20 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
             return `Although this placement ${getPositiveEvalFactorPhrase(bestEvalFactor)}, it doesn't accomodate ${worstThirdPiece} pieces.`;
         }
 
-    } else if (worstEvalFactor && worstThirdPiece) {
-        if (sentiment) return; // do not only say bad things about good moves
-
+    } else if (worstEvalFactor && worstThirdPiece && !sentiment) {
         return `This placement not only ${getNegativeEvalFactorPhrase(worstEvalFactor)}, but also doesn't leave a good spot for ${worstThirdPiece} pieces.`
 
-    } else if (bestEvalFactor) { // since only one thing to say, can mention tag if it exists
-        if (!sentiment) return; // do not only say good things about bad moves
+    } else if (bestEvalFactor && sentiment) { // since only one thing to say, can mention tag if it exists
+        if (bestThirdPiece) return `Although this placement creates a ${bestThirdPiece} dependency, it more importantly ${getPositiveEvalFactorPhrase(bestEvalFactor)}.`;
         return `This placement ${getPositiveEvalFactorPhrase(bestEvalFactor)}.`
 
-    } else if (worstEvalFactor) { // since only one thing to say, can mention tag if it exists
-        if (sentiment) return; // do not only say bad things about good moves
-
+    } else if (worstEvalFactor && !sentiment) { // since only one thing to say, can mention tag if it exists
         if (tag) return `Doing ${tagString} here ${getNegativeEvalFactorPhrase(worstEvalFactor)}.`;
-        return `This placement ${getNegativeEvalFactorPhrase(worstEvalFactor)}.`;
+        else if (bestThirdPiece) return `This placement ${getNegativeEvalFactorPhrase(worstEvalFactor)} and creates a ${bestThirdPiece} dependency.`;
+        else return `This placement ${getNegativeEvalFactorPhrase(worstEvalFactor)}.`;
 
-    } else if (worstThirdPiece) {
-        if (sentiment) return; // do not only say bad things about good moves
-
+    } else if (worstThirdPiece && !sentiment) {
+        if (bestThirdPiece) return `This placement doesn't leave a good spot for a future ${worstThirdPiece}, and the resulting board is ${bestThirdPiece} dependent.`
         return `This placement doesn't leave a good spot for a future ${worstThirdPiece}.`
 
     } else { // no bestEvalFactor/worstEvalFactor/worstThirdPiece
@@ -167,6 +166,8 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
             } else {
                 return `${tagString} doesn't work well here.`;
             }
+        } else if (bestThirdPiece) {
+            if (!sentiment) return `This placement creates a ${bestThirdPiece} dependency.`;
         }
     }
 

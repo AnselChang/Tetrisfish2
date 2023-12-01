@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
 import { TetrominoColorType, getColorTypeForTetromino } from 'client/src/app/models/tetronimo-models/tetromino';
@@ -51,7 +51,7 @@ export class BlockData {
   templateUrl: './interactive-tetris-board.component.html',
   styleUrls: ['./interactive-tetris-board.component.scss']
 })
-export class InteractiveTetrisBoardComponent {
+export class InteractiveTetrisBoardComponent implements OnInit, OnChanges {
   @Input() mode = TetrisBoardMode.READONLY;
   @Input() level: number = 18;
   @Input() grid: BinaryGrid | undefined;
@@ -84,6 +84,31 @@ export class InteractiveTetrisBoardComponent {
   public readonly PAUSE_Y = SVG_BOARD_HEIGHT / 3;
   public readonly PAUSE_SIZE = SVG_BOARD_WIDTH / 3;
   public readonly PAUSE_HEIGHT_OVER_WIDTH = 60/270;
+
+  private linesClearedByFirstPiece: number = 0;
+
+  // after Input() currentPiece or grid changes, calculate the number of lines cleared by the first piece
+  // this is so that the next piece can be displayed in the correct location by offsetting by the number of lines cleared
+  private calculateLinesClearedByFirstPiece() {
+    if (!this.grid || !this.currentPiece) {
+      this.linesClearedByFirstPiece = 0;
+      return;
+    }
+
+    const tempGrid = this.grid.copy();
+    this.currentPiece.blitToGrid(tempGrid);
+    this.linesClearedByFirstPiece = tempGrid.processLineClears();
+  }
+
+  ngOnInit(): void {
+    this.calculateLinesClearedByFirstPiece();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['grid'] || changes['currentPiece']) {
+      this.calculateLinesClearedByFirstPiece();
+    }
+  }
   
   public get boardWidth(): number {
     return SVG_BOARD_WIDTH;
@@ -125,7 +150,8 @@ export class InteractiveTetrisBoardComponent {
       colorType = getColorTypeForTetromino(this.currentPiece.tetrominoType);
       mode = BlockMode.THIS_PIECE;
       opacity = this.currentPieceOpacity;
-    } else if (this.nextPiece && this.nextPiece.isAtLocation(x,y)) {
+    } else if (this.nextPiece && this.nextPiece.isAtLocation(x,y + this.linesClearedByFirstPiece)) {
+      // offset by the number of lines cleared by the first piece so that the next piece is displayed in the correct location
       colorType = getColorTypeForTetromino(this.nextPiece.tetrominoType);
       mode = BlockMode.NEXT_PIECE;
     } else if (this.grid && this.grid.at(x, y) === BlockType.FILLED) {

@@ -48,7 +48,7 @@ export function getNegativeEvalFactorPhrase(evalFactor: EvalFactor): string {
         case EvalFactor.SURFACE:
             return "creates a bumpier surface";
         case EvalFactor.TETRIS_READY: // a special eval factor that should be handled separately
-            return "";
+            return "doesn't get tetris ready";
         case EvalFactor.LINE_CLEAR: // a special eval factor that should be handled separately
             return "";
         case EvalFactor.BUILT_OUT_LEFT:
@@ -85,7 +85,7 @@ export function getNegativeNounEvalFactorPhrase(evalFactor: EvalFactor): string 
         case EvalFactor.SURFACE:
             return "creating a worse bumpier surface";
         case EvalFactor.TETRIS_READY: // a special eval factor that should be handled separately
-            return "";
+            return "not being ready for a tetris";
         case EvalFactor.LINE_CLEAR: // a special eval factor that should be handled separately
             return "";
         case EvalFactor.BUILT_OUT_LEFT:

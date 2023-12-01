@@ -148,9 +148,9 @@ export class EngineMovelistNB {
         });
 
         // delete all duplicate first piece placements
-        this.recommendations = this.recommendations.filter(recommendation => {
-            return duplicatePlacements.indexOf(recommendation) === -1;
-        });
+        // this.recommendations = this.recommendations.filter(recommendation => {
+        //     return duplicatePlacements.indexOf(recommendation) === -1;
+        // });
 
         // assign ratings to each recommendation relative to the best recommendation
         this.recommendations.forEach(recommendation => {
