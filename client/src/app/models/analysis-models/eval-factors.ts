@@ -130,6 +130,35 @@ export class EvalFactors {
         return this.badEvalFactors;
     }
 
+    // from the good eval factors, return the one that has the highest value
+    getBestEvalFactor(): EvalFactor | undefined {
+        let bestFactor: EvalFactor | undefined = undefined;
+        let bestValue = -Infinity;
+
+        for (let factor of this.goodEvalFactors) {
+            if (this.evalFactors[factor] > bestValue) {
+                bestFactor = factor;
+                bestValue = this.evalFactors[factor];
+            }
+        }
+
+        return bestFactor;
+    }
+
+    // from the bad eval factors, return the one that has the lowest value
+    getWorstEvalFactor(): EvalFactor | undefined {
+        let worstFactor: EvalFactor | undefined = undefined;
+        let worstValue = Infinity;
+
+        for (let factor of this.badEvalFactors) {
+            if (this.evalFactors[factor] < worstValue) {
+                worstFactor = factor;
+                worstValue = this.evalFactors[factor];
+            }
+        }
+
+        return worstFactor;
+    }
 
 }
 

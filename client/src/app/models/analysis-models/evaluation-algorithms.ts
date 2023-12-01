@@ -1,6 +1,9 @@
 import { Rating } from "../evaluation-models/rating";
+import { getTagByID } from "../tag-models/tag-types";
 import { ALL_TETROMINO_TYPES, TetrominoType } from "../tetronimo-models/tetromino";
 import { MoveRecommendation } from "./engine-movelist";
+import { EvalFactor } from "./eval-factors";
+import { getNegativeEvalFactorPhrase, getNegativeNounEvalFactorPhrase } from "./qualitative-analysis-generation";
 
 
 // Find whether one piece is particularly good/bad in evaluation
@@ -67,9 +70,12 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
     // 4. relevant tags
 
     const rating = rec.rating;
-    const badEvalFactors = rec.evalFactors!.getBadEvalFactors();
-    const goodEvalFactors = rec.evalFactors!.getGoodEvalFactors();
+    let bestEvalFactor = rec.evalFactors!.getBestEvalFactor();
+    let worstEvalFactor = rec.evalFactors!.getWorstEvalFactor();
 
+    if (bestEvalFactor === EvalFactor.INPUT_COST) bestEvalFactor = undefined;
+    if (worstEvalFactor === EvalFactor.INPUT_COST) worstEvalFactor = undefined;
+    
     const bestThirdPiece = rec.goodAccomPiece;
 
     // use worst third piece only if it's not an I piece, because how SR evaluates I pieces is weird sometimes
@@ -78,7 +84,64 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
         // return `This placement doesn't leave a good spot for a future ${rec.badAccomPiece}.`;
         worstThirdPiece = rec.badAccomPiece;
     }
-    
+
+    const tag = rec.getTags().length > 0 ? rec.getTags()[0] : undefined;
+    const tagString = tag ? getTagByID(tag)?.titleName : undefined;
+    const tagIsVowel = tagString ? ['a', 'e', 'i', 'o', 'u'].includes(tagString[0].toLowerCase()) : false;
+
+    const sentiment = rating >= Rating.GOOD;
+
+    if (bestEvalFactor === EvalFactor.TETRIS_READY) {
+        if (sentiment) {
+            if (tag) return `${tagString} is a nice find to get tetris ready.`;
+            else return "Tetris readiness ensures the next bar isn't wasted.";
+        } else {
+            if (worstThirdPiece) return `Although this placement gets tetris ready, it doesn't leave a good spot for a future ${worstThirdPiece}.`;
+            else if (worstEvalFactor) return `Tetris readiness isn't worth ${getNegativeNounEvalFactorPhrase(worstEvalFactor)}.`;
+            else return "Tetris readiness is usually good, but not here.";
+        }
+    } else if (bestEvalFactor === EvalFactor.LINE_CLEAR) {
+        if (sentiment) {
+            if (worstThirdPiece) return `Although the board isn't very accomodating for a ${worstThirdPiece}, scoring a tetris buys more time to resolve it later.`;
+            else if (worstEvalFactor) return `Although ${getNegativeNounEvalFactorPhrase(worstEvalFactor)} isn't great, scoring a tetris buys more time to resolve it later.`;
+            else return "Scoring a tetris is the most efficent way to score at the game.";
+        } else {
+            if (worstThirdPiece) return `Although a tetris is possible, it's more urgent to accomodate a possible future ${worstThirdPiece} piece.`;
+            else if (worstEvalFactor) return `Although a tetris is possible, it ${getNegativeEvalFactorPhrase(worstEvalFactor)}.`;
+            else return "Scoring a tetris is usually good, but not here.";
+        }
+    }
+
+    // All possible permutations of bestEvalFactor/worstEvalFactor/worstThirdPiece
+    if (bestEvalFactor && worstEvalFactor && worstThirdPiece) { // ignore tag, too many things to say
+
+    } else if (bestEvalFactor && worstEvalFactor) { // ignore tag, too many things to say
+
+    } else if (bestEvalFactor && worstThirdPiece) { // ignore tag, too many things to say
+
+    } else if (worstEvalFactor && worstThirdPiece) {
+        if (sentiment) return; // do not only say bad things about good moves
+
+    } else if (bestEvalFactor) { // since only one thing to say, can mention tag if it exists
+        if (!sentiment) return; // do not only say good things about bad moves
+
+    } else if (worstEvalFactor) { // since only one thing to say, can mention tag if it exists
+        if (sentiment) return; // do not only say bad things about good moves
+
+    } else if (worstThirdPiece) {
+        if (sentiment) return; // do not only say bad things about good moves
+
+        return `This placement doesn't leave a good spot for a future ${worstThirdPiece}.`
+
+    } else { // no bestEvalFactor/worstEvalFactor/worstThirdPiece
+        if (tag) {
+            if (sentiment) {
+                return `${tagString} is a nice find here.`;
+            } else {
+                return `${tagString} doesn't work well here.`;
+            }
+        }
+    }
 
     return undefined;
 }
