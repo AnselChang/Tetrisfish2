@@ -37,6 +37,7 @@
 .stackrabbit-moves {
     height: 380px;
     overflow-y: scroll;
+    width: 100%;
 }
 
 .nnb-container {
@@ -107,4 +108,9 @@ h2.header {
     text-wrap: wrap;
     overflow-wrap: break-word;
     width: 400px;
+}
+
+.test-container ::ng-deep section {
+    max-height: 600px;
+    overflow-y: scroll;
 }

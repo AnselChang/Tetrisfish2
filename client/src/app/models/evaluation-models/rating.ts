@@ -1,12 +1,12 @@
 export enum Rating {
     ERROR = -1,
-    BRILLIANT = 0,
-    BEST = 1,
-    GOOD = 2,
+    BRILLIANT = 6,
+    BEST = 5,
+    GOOD = 4,
     MEDIOCRE = 3,
-    INACCURACY = 4,
-    MISTAKE = 5,
-    BLUNDER = 6,
+    INACCURACY = 2,
+    MISTAKE = 1,
+    BLUNDER = 0,
 }
 
 export const ALL_VALID_RATINGS = [
