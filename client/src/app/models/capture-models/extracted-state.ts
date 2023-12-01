@@ -5,6 +5,7 @@ Represents all the state for a frame after OCR
 import GameStatus from "../tetronimo-models/game-status";
 import { TetrominoType, TetronimoOCR } from "../tetronimo-models/tetromino";
 import BinaryGrid from "../tetronimo-models/binary-grid";
+import ColorGrid from "../tetronimo-models/color-grid";
 
 
 export class ExtractedState {
@@ -12,6 +13,7 @@ export class ExtractedState {
     // if no capture, then all fields are set to default values
     private status: GameStatus = new GameStatus(0, 0, 0);
     private grid: BinaryGrid = new BinaryGrid();
+    private colorGrid: ColorGrid = new ColorGrid();
     private nextPieceType?: TetrominoType = undefined;
 
     private levelConfidence: string = "";
@@ -43,6 +45,10 @@ export class ExtractedState {
         return this.grid;
     }
 
+    public getColorGrid(): ColorGrid {
+        return this.colorGrid;
+    }
+
     public getNextPieceType(): TetrominoType | undefined {
         return this.nextPieceType;
     }
@@ -53,6 +59,10 @@ export class ExtractedState {
 
     public setGrid(grid: BinaryGrid): void {
         this.grid = grid;
+    }
+
+    public setColorGrid(colorGrid: ColorGrid): void {
+        this.colorGrid = colorGrid;
     }
 
     public setNext(nextGrid: BinaryGrid): void {

@@ -48,6 +48,7 @@
         <app-tetris-panel>
             <app-interactive-tetris-board
                     [grid]="extractedState.getGrid()"
+                    [colorGrid]="extractedState.getColorGrid()"
                     [level]="extractedState.getStatus().level"
                     [paused]="extractedState.getPaused()"
                 />

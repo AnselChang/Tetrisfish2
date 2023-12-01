@@ -8,7 +8,10 @@ minos
 
 import { Bitboard } from "../../scripts/bitboard";
 import { HSVColor, rgbToHsv } from "../../scripts/color";
+import { ExtractedStateService } from "../../services/capture/extracted-state.service";
 import BinaryGrid, { BlockType } from "../tetronimo-models/binary-grid";
+import ColorGrid from "../tetronimo-models/color-grid";
+import { RGBColor, classifyColor, getColorTypeForTetromino } from "../tetronimo-models/tetromino";
 import { CaptureSettings, Rectangle, ThresholdType } from "./capture-settings";
 import { PixelReader } from "./pixel-reader";
 import { Point } from "./point";
@@ -32,6 +35,15 @@ class OCRPosition {
     ) {}
 }
 
+// the result of calling evaluate()
+// returns a BinaryGrid and a ColorGrid
+export class OCRResult {
+    constructor(
+        public binaryGrid: BinaryGrid,
+        public colorGrid: ColorGrid,
+    ) {}
+}
+
 export class OCRBox {
 
     // all the canvas positions of the OCR matrixs
@@ -48,6 +60,7 @@ export class OCRBox {
     public readonly START_X: number;
 
     constructor(
+        private extractedState: ExtractedStateService,
         private settings: CaptureSettings,
         public boundingRect: Rectangle,
         protected thresholdType: ThresholdType,
@@ -92,10 +105,14 @@ export class OCRBox {
         return {x, y};
     }
 
-    // given an image, return [numRows x numCols] array of RGB values
-    public evaluate(image: PixelReader): BinaryGrid {
+    // given an image, return [numRows x numCols] BinaryGrid, as well as ColorGrid that stores rgb color info at each of those points
+    public evaluate(image: PixelReader, level?: number): OCRResult {
+
+        if (!level) level = this.extractedState.get().getStatus().level;
+
         
         let blocks: BlockType[][] = [];
+        let colorGrid = new ColorGrid(undefined, this.p.numRows, this.p.numCols);
 
         for (let yIndex = 0; yIndex < this.p.numRows; yIndex++) {
             let row: BlockType[] = [];
@@ -103,10 +120,16 @@ export class OCRBox {
             for (let xIndex = 0; xIndex < this.p.numCols; xIndex++) {
                 const {x, y} = this.positions[yIndex][xIndex];
                 const [r, g, b] = image.getPixelAt(x, y)!;
+                
                 const hsv = rgbToHsv(r,g,b);
                 const thresholdValue = this.settings.thresholds[this.thresholdType].value;
                 const isMino = hsv.v >= thresholdValue;
                 row.push(isMino ? BlockType.FILLED : BlockType.EMPTY);
+
+                if (isMino) {
+                    colorGrid.setAt(xIndex, yIndex, classifyColor(level, new RGBColor(r, g, b)));
+                }
+
             }
             blocks.push(row);
         }
@@ -118,7 +141,7 @@ export class OCRBox {
         }
 
         this.grid = new BinaryGrid(blocks);
-        return this.grid;
+        return new OCRResult(this.grid, colorGrid);
     }
 
     // returns the canvas positions of all the OCR points
@@ -169,11 +192,11 @@ export class BoardOCRBox extends OCRBox {
     private static readonly LEVEL_LOCATION = {x: 1.35, y: 0.8};
     private static readonly LINES_LOCATION = {x: 0.01, y: -0.15};
 
-    constructor(settings: CaptureSettings, boundingRect: Rectangle) {
+    constructor(extractedState: ExtractedStateService, settings: CaptureSettings, boundingRect: Rectangle) {
 
         // main board is 20 rows, 10 columns
         // TUNE THESE VALUES
-        super(settings, boundingRect, ThresholdType.MINO,
+        super(extractedState, settings, boundingRect, ThresholdType.MINO,
             new OCRPosition(
                 20, 0.03, 0.032, // numRows, paddingTop, paddingBottom
                 10, 0.05, 0.038, // numCols, paddingLeft, paddingRight
@@ -218,11 +241,11 @@ export class BoardOCRBox extends OCRBox {
 
 export class NextOCRBox extends OCRBox {
     
-        constructor(settings: CaptureSettings, boundingRect: Rectangle) {
+        constructor(extractedState: ExtractedStateService, settings: CaptureSettings, boundingRect: Rectangle) {
     
             // next box is 6 rows, 8 columns
             // TUNE THESE VALUES
-            super(settings, boundingRect, ThresholdType.MINO,
+            super(extractedState, settings, boundingRect, ThresholdType.MINO,
                 new OCRPosition(
                     6, 0.37, 0.18, // numRows, paddingTop, paddingBottom
                     8, 0.08, 0.06, // numCols, paddingLeft, paddingRight
@@ -235,7 +258,7 @@ export class NumberOCRBox extends OCRBox {
 
     private static readonly RESOLUTION = 16;
     
-    constructor(settings: CaptureSettings, boundingRect: Rectangle, private numDigits: number,
+    constructor(extractedState: ExtractedStateService, settings: CaptureSettings, boundingRect: Rectangle, private numDigits: number,
         public paddingTop: number, // distance (in percent of height) before first OCR dot row
         public paddingBottom: number, // distance (in percent of height) after last OCR dot row
         public paddingLeft: number, // distance (in percent of width) before first OCR dot column
@@ -247,7 +270,7 @@ export class NumberOCRBox extends OCRBox {
 
         // level box is 1 row, 2 columns
         // TUNE THESE VALUES
-        super(settings, boundingRect, ThresholdType.TEXT,
+        super(extractedState, settings, boundingRect, ThresholdType.TEXT,
             new OCRPosition(
                 NUM_ROWS, paddingTop, paddingBottom,
                 NUM_COLS, paddingLeft, paddingRight
@@ -319,9 +342,9 @@ export class NumberOCRBox extends OCRBox {
 
 export class LevelOCRBox extends NumberOCRBox {
     
-    constructor(settings: CaptureSettings, boundingRect: Rectangle) {
+    constructor(extractedState: ExtractedStateService, settings: CaptureSettings, boundingRect: Rectangle) {
 
-        super(settings, boundingRect, 2,
+        super(extractedState, settings, boundingRect, 2,
             0.5, 0.18, // paddingTop, paddingBottom
             0.42, 0.25, // paddingLeft, paddingRight
         );
@@ -330,9 +353,9 @@ export class LevelOCRBox extends NumberOCRBox {
 
 export class LinesOCRBox extends NumberOCRBox {
 
-    constructor(settings: CaptureSettings, boundingRect: Rectangle) {
+    constructor(extractedState: ExtractedStateService, settings: CaptureSettings, boundingRect: Rectangle) {
 
-        super(settings, boundingRect, 3,
+        super(extractedState, settings, boundingRect, 3,
             0.23, 0.3, // paddingTop, paddingBottom
             0.69, 0.04, // paddingLeft, paddingRight
         );

@@ -38,6 +38,7 @@
         <app-tetris-panel *ngIf="isInGame()">
             <app-interactive-tetris-board
                     [grid]="extractedState.getGrid()"
+                    [colorGrid]="extractedState.getColorGrid()"
                     [level]="extractedState.getStatus().level"
                     [paused]="extractedState.getPaused()"
                 />

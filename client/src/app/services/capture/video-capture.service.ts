@@ -225,11 +225,15 @@ export class VideoCaptureService {
   }
 
   updateBoardOCR(): void {
-    // Extract colors for each OCR position for this frame
-    const grid = this.captureSettingsService.get().getBoard()?.evaluate(this.captureFrameService);
 
+    const level = this.gameStateMachineService.isInGame() ? this.gameStateMachineService.getCurrentGameStatus()?.level : undefined;
+
+    // Extract colors for each OCR position for this frame
+    const ocrResult = this.captureSettingsService.get().getBoard()?.evaluate(this.captureFrameService, level);
+    
     // set extracted board to the computed OCR grid
-    this.extractedStateService.get().setGrid(grid!);
+    this.extractedStateService.get().setGrid(ocrResult!.binaryGrid!);
+    this.extractedStateService.get().setColorGrid(ocrResult!.colorGrid!);
 
     // determine if game is paused
     this.extractedStateService.get().setPaused(this.captureSettingsService.get().getBoard()?.isPaused()!);
@@ -237,7 +241,7 @@ export class VideoCaptureService {
 
   updateNextBoxOCR(): void {
     // Extract colors for each OCR position for this frame
-    const nextGrid = this.captureSettingsService.get().getNext()?.evaluate(this.captureFrameService);
+    const nextGrid = this.captureSettingsService.get().getNext()?.evaluate(this.captureFrameService).binaryGrid;
     // set extracted next box to the computed OCR grid
     this.extractedStateService.get().setNext(nextGrid!);
   }

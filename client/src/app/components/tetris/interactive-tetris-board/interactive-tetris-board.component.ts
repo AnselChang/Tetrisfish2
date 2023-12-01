@@ -1,6 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 import BinaryGrid, { BlockType } from 'client/src/app/models/tetronimo-models/binary-grid';
+import ColorGrid from 'client/src/app/models/tetronimo-models/color-grid';
 import { TetrominoColorType, getColorTypeForTetromino } from 'client/src/app/models/tetronimo-models/tetromino';
 
 /*
@@ -38,7 +39,7 @@ export class BlockData {
     public readonly level: number,
     public readonly color?: TetrominoColorType,
     public readonly mode: BlockMode = BlockMode.NORMAL, // if color is white and special, display the other border color
-    public readonly opacity?: number
+    public readonly opacity?: number,
   ) {
     this.svgSize = SVG_BLOCK_SIZE;
     this.svgX = (this.x) * (SVG_BLOCK_SIZE + SVG_BLOCK_GAP) + padding;
@@ -55,6 +56,7 @@ export class InteractiveTetrisBoardComponent implements OnInit, OnChanges {
   @Input() mode = TetrisBoardMode.READONLY;
   @Input() level: number = 18;
   @Input() grid: BinaryGrid | undefined;
+  @Input() colorGrid: ColorGrid | undefined; // pass in parameter if you want to manually specify the color of the blocks. default color is white
   @Input() paused: boolean = false;
   @Input() greyOut: number = 0;
 
@@ -155,7 +157,7 @@ export class InteractiveTetrisBoardComponent implements OnInit, OnChanges {
       colorType = getColorTypeForTetromino(this.nextPiece.tetrominoType);
       mode = BlockMode.NEXT_PIECE;
     } else if (this.grid && this.grid.at(x, y) === BlockType.FILLED) {
-      colorType = TetrominoColorType.COLOR_WHITE;
+      colorType = this.colorGrid ? this.colorGrid.at(x,y) : TetrominoColorType.COLOR_WHITE;
     } else {
       return new BlockData(x, y, SVG_PADDING, this.level, undefined); // no block to display
     }
@@ -166,7 +168,7 @@ export class InteractiveTetrisBoardComponent implements OnInit, OnChanges {
       this.level,
       colorType,
       mode,
-      opacity
+      opacity,
     );
   }
 

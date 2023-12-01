@@ -4,6 +4,7 @@ Represents all the state for a frame after OCR
 
 import { Playstyle } from "../../misc/playstyle";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
+import { ExtractedStateService } from "../../services/capture/extracted-state.service";
 import BinaryGrid from "../tetronimo-models/binary-grid";
 import { Tetromino, TetrominoType } from "../tetronimo-models/tetromino";
 import { BoardOCRBox, LevelOCRBox, LinesOCRBox, NextOCRBox } from "./ocr-box";
@@ -42,24 +43,26 @@ export class CaptureSettings {
     private levelOCRBox?: LevelOCRBox;
     private linesOCRBox?: LevelOCRBox;
 
+    constructor(private extractedState: ExtractedStateService) {}
+
     public isCalibrated(): boolean {
         return this.boardOCRBox !== undefined && this.nextOCRBox !== undefined && this.levelOCRBox !== undefined && this.linesOCRBox !== undefined;
     }
 
     public setBoardBoundingRect(boundingRect: Rectangle) {
-        this.boardOCRBox = new BoardOCRBox(this, boundingRect);
+        this.boardOCRBox = new BoardOCRBox(this.extractedState, this, boundingRect);
     }
 
     public setNextBoundingRect(boundingRect: Rectangle) {
-        this.nextOCRBox = new NextOCRBox(this, boundingRect);
+        this.nextOCRBox = new NextOCRBox(this.extractedState, this, boundingRect);
     }
 
     public setLevelBoundingRect(boundingRect: Rectangle) {
-        this.levelOCRBox = new LevelOCRBox(this, boundingRect);
+        this.levelOCRBox = new LevelOCRBox(this.extractedState, this, boundingRect);
     }
 
     public setLinesBoundingRect(boundingRect: Rectangle) {
-        this.linesOCRBox = new LinesOCRBox(this, boundingRect);
+        this.linesOCRBox = new LinesOCRBox(this.extractedState, this, boundingRect);
     }
 
     public getNext(): NextOCRBox | undefined {
