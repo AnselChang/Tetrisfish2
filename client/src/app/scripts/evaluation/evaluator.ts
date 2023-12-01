@@ -8,11 +8,19 @@ import { EngineMovelistURL, LookaheadDepth, RateMoveURL, boardToString, generate
 
 async function fetchStackRabbitURL(url: string): Promise<any> {
 
-    const result = await fetchServer(Method.GET, "/api/stackrabbit", {"url" : url});
-    if (result.status !== 200) {
-        throw new Error("Could not evaluate position");
-    }
-    return result.content;
+    // const result = await fetchServer(Method.GET, "/api/stackrabbit", {"url" : url});
+    // if (result.status !== 200) {
+    //     throw new Error("Could not evaluate position");
+    // }
+
+    // fetch the URL directly from StackRabbit API without server, hopefully avoiding CORS issues
+    const result = (await fetch(url, {
+        mode: "cors"
+    })).json();
+
+    return result;
+
+    // return result.content;
 }
 
 export function generateMoveListURL(placement: GamePlacement, inputSpeed: InputSpeed, useNextBox: boolean, lookaheadDepth: LookaheadDepth): string {
