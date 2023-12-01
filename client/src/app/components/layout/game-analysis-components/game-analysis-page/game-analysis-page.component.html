@@ -91,6 +91,9 @@
                 <p class="tiny" *ngFor="let kv of rec.evalFactors?.getAllEvalFactors() | keyvalue">
                     {{kv.key}}: {{kv.value}}
                 </p>
+                <p class="tiny" *ngFor="let string of rec.evalFactors?.getImpactfulEvalsString()">
+                    {{string}}
+                </p>
             </div>
         </div>
         <h2>Move list Shallow</h2>

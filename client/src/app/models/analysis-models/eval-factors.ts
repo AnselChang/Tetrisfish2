@@ -45,6 +45,14 @@ export class EvalFactors {
         [EvalFactor.INPUT_COST]: 0,
     };
 
+    private goodEvalFactors: EvalFactor[] = [];
+    private badEvalFactors: EvalFactor[] = [];
+
+    public assignImpactfulEvalFactors(goodFactors: EvalFactor[], badFactors: EvalFactor[]): void {
+        this.goodEvalFactors = goodFactors;
+        this.badEvalFactors = badFactors;
+    }
+
     constructor(rawEvalFactorsString: string) {
         const evalFactorsDict = this.parseEvalFactors(rawEvalFactorsString);
 
@@ -94,6 +102,34 @@ export class EvalFactors {
     getEvalFactorValue(factor: EvalFactor): number {
         return this.evalFactors[factor];
     }
+
+    /* Return output is:
+    Good: Surface (30.78), Line Clear (30.00),
+    Bad: Hole (0.00), Hole Weight (0.00),
+    */
+    getImpactfulEvalsString(): string[] {
+        let goodStr = 'Good: ';
+        let badStr = 'Bad: ';
+
+        for (let factor of this.goodEvalFactors) {
+            goodStr += `${factor} (${this.evalFactors[factor].toFixed(2)}), `;
+        }
+
+        for (let factor of this.badEvalFactors) {
+            badStr += `${factor} (${this.evalFactors[factor].toFixed(2)}), `;
+        }
+
+        return [goodStr, badStr];
+    }
+
+    getGoodEvalFactors(): EvalFactor[] {
+        return this.goodEvalFactors;
+    }
+
+    getBadEvalFactors(): EvalFactor[] {
+        return this.badEvalFactors;
+    }
+
 
 }
 

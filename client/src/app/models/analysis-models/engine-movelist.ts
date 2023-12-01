@@ -13,8 +13,9 @@ import MoveableTetromino from "../game-models/moveable-tetromino";
 import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
 import { TagID } from "../tag-models/tag-types";
 import { TetrominoType } from "../tetronimo-models/tetromino";
+import { findImpactfulEvalFactors } from "./eval-factor-algorithms";
 import { EvalFactors } from "./eval-factors";
-import { findOutlier, generateQualitativeAnalysis } from "./evaluation-algorithms";
+import { findOutliers, generateQualitativeAnalysis } from "./evaluation-algorithms";
 
 function charToTetrominoType(char: string): TetrominoType {
     switch (char) {
@@ -34,6 +35,7 @@ export class MoveRecommendation {
 
     private tags?: TagID[] = undefined;
     public readonly badAccomPiece: TetrominoType | undefined;
+    public readonly goodAccomPiece: TetrominoType | undefined;
 
     public rating!: Rating;
     public ratingColor!: string;
@@ -46,7 +48,13 @@ export class MoveRecommendation {
         public thirdPieceEvals: { [key in TetrominoType]: number } | undefined,
         public evalFactors: EvalFactors | undefined,
     ) {
-        this.badAccomPiece = thirdPieceEvals ? findOutlier(thirdPieceEvals) : undefined;
+
+        // find best and worst third pieces, if they are outliers
+        if (thirdPieceEvals) {
+            const outliers = findOutliers(thirdPieceEvals);
+            this.badAccomPiece = outliers.bad;
+            this.goodAccomPiece = outliers.good;
+        }   
     }
 
     public assignTags(tags: TagID[]) {
@@ -156,6 +164,14 @@ export class EngineMovelistNB {
                         recommendation.nextPiece,
                     )));
                 }
+            });
+        }
+
+        // find impactful eval factors
+        if (this.depth === LookaheadDepth.DEEP) {
+            this.recommendations.forEach(recommendation => {
+                const {higher, lower} = findImpactfulEvalFactors(recommendation, this.recommendations);
+                recommendation.evalFactors!.assignImpactfulEvalFactors(higher, lower);
             });
         }
 
