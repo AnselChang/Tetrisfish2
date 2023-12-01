@@ -199,13 +199,13 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
     // update URL to go to placement location without reloading page
     window.history.replaceState({}, "", `/analyze-game?id=${this.game!.gameID}&position=${this.placementIndex+1}`);
 
-    console.log("isTetrisReady", this.getPosition().grid.isTetrisReady());
+    // console.log("isTetrisReady", this.getPosition().grid.isTetrisReady());
 
     // only analyze placement if not while scrubbing through placements with graph
     if (!this.isTemporaryPlacement) {
       this.analyzePlacementIfNotAnalyzed(this.placementIndex);
     } else {
-      console.log("Not analyzing placement because it is temporary");
+      // console.log("Not analyzing placement because it is temporary");
     }
   }
 

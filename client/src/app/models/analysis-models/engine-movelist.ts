@@ -13,6 +13,7 @@ import MoveableTetromino from "../game-models/moveable-tetromino";
 import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
 import { TagID } from "../tag-models/tag-types";
 import { TetrominoType } from "../tetronimo-models/tetromino";
+import { EvalFactors } from "./eval-factors";
 import { findOutlier, generateQualitativeAnalysis } from "./evaluation-algorithms";
 
 function charToTetrominoType(char: string): TetrominoType {
@@ -43,6 +44,7 @@ export class MoveRecommendation {
         public nextPiece: MoveableTetromino,
         public evaluation: number,
         public thirdPieceEvals: { [key in TetrominoType]: number } | undefined,
+        public evalFactors: EvalFactors | undefined,
     ) {
         this.badAccomPiece = thirdPieceEvals ? findOutlier(thirdPieceEvals) : undefined;
     }
@@ -99,6 +101,7 @@ export class EngineMovelistNB {
             const nextPiece = convertSRPlacement(nextDict["placement"], placement.nextPieceType);
 
             let thirdPieceEvals: any = undefined;
+            let evalFactors: EvalFactors | undefined = undefined;
             if (depth === LookaheadDepth.DEEP) {
                 
                 thirdPieceEvals = {};
@@ -106,10 +109,12 @@ export class EngineMovelistNB {
                 hypotheticalLines.forEach((piece: any) => {
                     thirdPieceEvals[charToTetrominoType(piece["pieceSequence"])] = piece["resultingValue"];
                 });
-                console.log("third piece evals", thirdPieceEvals);
+
+                evalFactors = new EvalFactors(nextDict["evalExplanation"]);
+
             }
 
-            const recommendation = new MoveRecommendation(thisPiece, nextPiece, evaluation, thirdPieceEvals);
+            const recommendation = new MoveRecommendation(thisPiece, nextPiece, evaluation, thirdPieceEvals, evalFactors);
             this.recommendations.push(recommendation);
 
             i++;

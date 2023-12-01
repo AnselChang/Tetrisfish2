@@ -88,10 +88,9 @@
                 <p [style.color]="rec.ratingColor">
                     {{rec.toString()}}
                 </p>
-                <p class="tiny" *ngFor="let kv of rec.thirdPieceEvals | keyvalue">
+                <p class="tiny" *ngFor="let kv of rec.evalFactors?.getAllEvalFactors() | keyvalue">
                     {{kv.key}}: {{kv.value}}
                 </p>
-                <p class="tiny">bad accom: {{rec.badAccomPiece}}</p>
             </div>
         </div>
         <h2>Move list Shallow</h2>
