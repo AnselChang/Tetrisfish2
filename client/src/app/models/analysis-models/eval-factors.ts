@@ -11,6 +11,9 @@ export enum EvalFactor {
     COVERED_WELL = 'coveredWell',
     SPIRE_HEIGHT = 'spireHeight',
     INPUT_COST = 'inputCost',
+    AVG_HEIGHT = 'avgHeight',
+    COL9 = 'col9',
+    INACCESSIBLE_LEFT = 'inaccessibleLeft',
 }
 
 export const ALL_EVAL_FACTORS = [
@@ -26,6 +29,9 @@ export const ALL_EVAL_FACTORS = [
     EvalFactor.COVERED_WELL,
     EvalFactor.SPIRE_HEIGHT,
     EvalFactor.INPUT_COST,
+    EvalFactor.AVG_HEIGHT,
+    EvalFactor.COL9,
+    EvalFactor.INACCESSIBLE_LEFT,
 ];
 
 export class EvalFactors {
@@ -43,6 +49,9 @@ export class EvalFactors {
         [EvalFactor.COVERED_WELL]: 0,
         [EvalFactor.SPIRE_HEIGHT]: 0,
         [EvalFactor.INPUT_COST]: 0,
+        [EvalFactor.AVG_HEIGHT]: 0,
+        [EvalFactor.COL9]: 0,
+        [EvalFactor.INACCESSIBLE_LEFT]: 0,
     };
 
     private goodEvalFactors: EvalFactor[] = [];

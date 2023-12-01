@@ -3,7 +3,7 @@ import { getTagByID } from "../tag-models/tag-types";
 import { ALL_TETROMINO_TYPES, TetrominoType } from "../tetronimo-models/tetromino";
 import { MoveRecommendation } from "./engine-movelist";
 import { EvalFactor } from "./eval-factors";
-import { getNegativeEvalFactorPhrase, getNegativeNounEvalFactorPhrase } from "./qualitative-analysis-generation";
+import { getNegativeEvalFactorPhrase, getNegativeNounEvalFactorPhrase, getPositiveEvalFactorPhrase } from "./qualitative-analysis-generation";
 
 
 // Find whether one piece is particularly good/bad in evaluation
@@ -91,7 +91,7 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
 
     const sentiment = rating >= Rating.GOOD;
 
-    if (bestEvalFactor === EvalFactor.TETRIS_READY) {
+    if (bestEvalFactor === EvalFactor.TETRIS_READY) { // special case for tetris readiness
         if (sentiment) {
             if (tag) return `${tagString} is a nice find to get tetris ready.`;
             else return "Tetris readiness ensures the next bar isn't wasted.";
@@ -100,8 +100,11 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
             else if (worstEvalFactor) return `Tetris readiness isn't worth ${getNegativeNounEvalFactorPhrase(worstEvalFactor)}.`;
             else return "Tetris readiness is usually good, but not here.";
         }
-    } else if (bestEvalFactor === EvalFactor.LINE_CLEAR) {
-        if (sentiment) {
+    } else if (bestEvalFactor === EvalFactor.LINE_CLEAR) { // special case for tetrises
+
+        if (rec.numLineClears !== 4) { // false positive, not a tetris actually
+            bestEvalFactor = undefined;
+        } else if (sentiment) {
             if (worstThirdPiece) return `Although the board isn't very accomodating for a ${worstThirdPiece}, scoring a tetris buys more time to resolve it later.`;
             else if (worstEvalFactor) return `Although ${getNegativeNounEvalFactorPhrase(worstEvalFactor)} isn't great, scoring a tetris buys more time to resolve it later.`;
             else return "Scoring a tetris is the most efficent way to score at the game.";
@@ -124,9 +127,13 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
 
     } else if (bestEvalFactor) { // since only one thing to say, can mention tag if it exists
         if (!sentiment) return; // do not only say good things about bad moves
+        return `This placement ${getPositiveEvalFactorPhrase(bestEvalFactor)}.`
 
     } else if (worstEvalFactor) { // since only one thing to say, can mention tag if it exists
         if (sentiment) return; // do not only say bad things about good moves
+
+        if (tag) return `Doing ${tagString} here ${getNegativeEvalFactorPhrase(worstEvalFactor)}.`;
+        return `This placement ${getNegativeEvalFactorPhrase(worstEvalFactor)}.`;
 
     } else if (worstThirdPiece) {
         if (sentiment) return; // do not only say bad things about good moves

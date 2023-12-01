@@ -32,6 +32,12 @@ export function getPositiveEvalFactorPhrase(evalFactor: EvalFactor): string {
             return "prevents spires from getting out of control";
         case EvalFactor.INPUT_COST:
             return ""; // ignored
+        case EvalFactor.AVG_HEIGHT:
+            return "keeps the stack at a safe height";
+        case EvalFactor.COL9:
+            return "avoids building too high in column 9";
+        case EvalFactor.INACCESSIBLE_LEFT:
+            return "keeps the left side accessible"
     }
 }
 
@@ -63,6 +69,12 @@ export function getNegativeEvalFactorPhrase(evalFactor: EvalFactor): string {
             return "creates a dangerous spire that divides the stack";
         case EvalFactor.INPUT_COST:
             return "" // ignored
+        case EvalFactor.AVG_HEIGHT:
+            return "builds the stack dangerously high";
+        case EvalFactor.COL9:
+            return "builds too high in column 9";
+        case EvalFactor.INACCESSIBLE_LEFT:
+            return "dangerously cuts off the left side"
     }
 }
 
@@ -85,7 +97,7 @@ export function getNegativeNounEvalFactorPhrase(evalFactor: EvalFactor): string 
         case EvalFactor.HOLE:
             return "creating a hole in the stack";
         case EvalFactor.HOLE_WEIGHT:
-            return "adding weight to a hole and prolongs the dig";
+            return "adding weight to a hole and prolonging the dig";
         case EvalFactor.EARLY_DOUBLE_WELL:
             return "an early double well";
         case EvalFactor.COVERED_WELL:
@@ -94,5 +106,11 @@ export function getNegativeNounEvalFactorPhrase(evalFactor: EvalFactor): string 
             return "a dangerous spire that divides the stack";
         case EvalFactor.INPUT_COST:
             return "" // ignored
+        case EvalFactor.AVG_HEIGHT:
+            return "building the stack dangerously high";
+        case EvalFactor.COL9:
+            return "building too high in column 9";
+        case EvalFactor.INACCESSIBLE_LEFT:
+            return "having an inaccessible left side"
     }
 }

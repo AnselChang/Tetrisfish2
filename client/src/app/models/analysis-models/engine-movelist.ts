@@ -45,6 +45,7 @@ export class MoveRecommendation {
         public thisPiece: MoveableTetromino,
         public nextPiece: MoveableTetromino,
         public evaluation: number,
+        public readonly numLineClears: number,
         public thirdPieceEvals: { [key in TetrominoType]: number } | undefined,
         public evalFactors: EvalFactors | undefined,
     ) {
@@ -122,7 +123,11 @@ export class EngineMovelistNB {
 
             }
 
-            const recommendation = new MoveRecommendation(thisPiece, nextPiece, evaluation, thirdPieceEvals, evalFactors);
+            const tempGrid = placement.grid.copy();
+            thisPiece.blitToGrid(tempGrid);
+            const numLinesCleared = tempGrid.processLineClears();
+
+            const recommendation = new MoveRecommendation(thisPiece, nextPiece, evaluation, numLinesCleared, thirdPieceEvals, evalFactors);
             this.recommendations.push(recommendation);
 
             i++;
@@ -177,9 +182,11 @@ export class EngineMovelistNB {
 
         // get qualitative analysis for each recommendation.
         // because analysis may be relative to other recommendations, we do this only after all recommendations have been generated
-        this.recommendations.forEach(recommendation => {
-            recommendation.qualitativeAnalysis = generateQualitativeAnalysis(this.recommendations, recommendation);
-        });
+        if (this.depth === LookaheadDepth.DEEP) {
+            this.recommendations.forEach(recommendation => {
+                recommendation.qualitativeAnalysis = generateQualitativeAnalysis(this.recommendations, recommendation);
+            });
+        }
     }
 
     public getRecommendations(): MoveRecommendation[] {

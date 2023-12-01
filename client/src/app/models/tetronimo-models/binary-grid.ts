@@ -79,8 +79,8 @@ export default class BinaryGrid implements Grid {
         return this.blocks[y].every(block => block === BlockType.FILLED);
     }
 
-    // modifies grid in place to delete line clears
-    public processLineClears() {
+    // modifies grid in place to delete line clears, and returns the number of lines cleared
+    public processLineClears(): number {
         // remove all full rows
         let y = this.numRows - 1;
         let numLinesCleared = 0;
@@ -96,6 +96,8 @@ export default class BinaryGrid implements Grid {
         for (let i = 0; i < numLinesCleared; i++) {
             this.blocks.unshift(new Array(this.numCols).fill(BlockType.EMPTY));
         }
+
+        return numLinesCleared;
     }
 
     // given a string consisting of 200 0s and 1s, make the grid
