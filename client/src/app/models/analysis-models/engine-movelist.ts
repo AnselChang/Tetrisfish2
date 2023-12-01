@@ -13,7 +13,7 @@ import MoveableTetromino from "../game-models/moveable-tetromino";
 import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
 import { TagID } from "../tag-models/tag-types";
 import { TetrominoType } from "../tetronimo-models/tetromino";
-import { findOutlier } from "./evaluation-algorithms";
+import { findOutlier, generateQualitativeAnalysis } from "./evaluation-algorithms";
 
 function charToTetrominoType(char: string): TetrominoType {
     switch (char) {
@@ -33,6 +33,10 @@ export class MoveRecommendation {
 
     private tags?: TagID[] = undefined;
     public readonly badAccomPiece: TetrominoType | undefined;
+
+    public rating!: Rating;
+    public ratingColor!: string;
+    public qualitativeAnalysis: string | undefined = undefined;
 
     constructor(
         public thisPiece: MoveableTetromino,
@@ -130,10 +134,17 @@ export class EngineMovelistNB {
             return duplicatePlacements.indexOf(recommendation) === -1;
         });
 
+        // assign ratings to each recommendation relative to the best recommendation
+        this.recommendations.forEach(recommendation => {
+            const diff = recommendation.evaluation - this.best.evaluation;
+            recommendation.rating = getRatingFromRelativeEval(diff);
+            recommendation.ratingColor = RATING_TO_COLOR[recommendation.rating];
+        });
+
         // If lookahead is deep, assign tags for all best moves
         if (this.depth === LookaheadDepth.DEEP) {
             this.recommendations.forEach(recommendation => {
-                if (this.getRecommendationRating(recommendation) === Rating.BEST || this.getRecommendationRating(recommendation) === Rating.BRILLIANT) {
+                if (recommendation.rating === Rating.BEST || recommendation.rating === Rating.BRILLIANT) {
                     recommendation.assignTags(TagAssigner.assignTagsFor(new SimplePlacement(
                         this.placement.grid,
                         recommendation.thisPiece,
@@ -142,6 +153,12 @@ export class EngineMovelistNB {
                 }
             });
         }
+
+        // get qualitative analysis for each recommendation.
+        // because analysis may be relative to other recommendations, we do this only after all recommendations have been generated
+        this.recommendations.forEach(recommendation => {
+            recommendation.qualitativeAnalysis = generateQualitativeAnalysis(this.recommendations, recommendation);
+        });
     }
 
     public getRecommendations(): MoveRecommendation[] {
@@ -150,16 +167,6 @@ export class EngineMovelistNB {
 
     public get best(): MoveRecommendation {
         return this.recommendations[0];
-    }
-
-    public getRecommendationRating(recommendation: MoveRecommendation): Rating {
-        const diff = recommendation.evaluation - this.best.evaluation;
-        return getRatingFromRelativeEval(diff);
-    }
-
-    public getRecommendationColor(recommendation: MoveRecommendation): string {
-        const rating = this.getRecommendationRating(recommendation);
-        return RATING_TO_COLOR[rating];
     }
 
 }

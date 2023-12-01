@@ -3,11 +3,11 @@
 >
     <app-subsection class="subsection" [shadow]="true">
         <div class="recommendation" [ngClass]="(i === 0) ? 'first-recommendation' : ''">
-            <h2 [style.color]="movelist.getRecommendationColor(rec)">{{rec.toString()}}</h2>
+            <h2 [style.color]="rec.ratingColor">{{rec.toString()}}</h2>
             <div class="tags">
                 <app-tag *ngFor="let tag of rec.getTags()" [name]="getTagName(tag)"></app-tag>
             </div>
-            <p class="description" *ngIf="i === 0">Qualitative explanation on why move is good here</p>
+            <p class="description" *ngIf="rec.qualitativeAnalysis as analyis">{{analyis}}</p>
         </div>
     </app-subsection>
 </div>

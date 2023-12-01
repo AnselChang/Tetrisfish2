@@ -1,4 +1,5 @@
 import { ALL_TETROMINO_TYPES, TetrominoType } from "../tetronimo-models/tetromino";
+import { MoveRecommendation } from "./engine-movelist";
 
 // Find whether one piece is particularly bad in evaluation
 // if no outlier is found, return undefined
@@ -35,4 +36,15 @@ export function findOutlier(thirdPieceEvals: { [key in TetrominoType]: number })
     }
 
     return outlier;
+}
+
+
+// generate qualitative analysis for a rec, given all the other recs as well to be able to do comparisons
+export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: MoveRecommendation): string | undefined {
+
+    if (rec.badAccomPiece !== undefined) {
+        return `This placement doesn't leave a good spot for a future ${rec.badAccomPiece}.`;
+    }
+
+    return undefined;
 }
