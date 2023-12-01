@@ -14,7 +14,7 @@ export class RatingSubsectionComponent {
   @Input() moveNotation: string | undefined = "K-391";
   @Input() rating?: RateMoveDeep;
   @Input() tags: TagID[] = [];
-  @Input() feedback: string = "Feedback goes here";
+  @Input() feedback?: string;
 
   getColor(): string {
     if (!this.rating) return "grey";

@@ -181,6 +181,19 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
     return undefined;
   }
 
+  // check whether the current placement is in move recommendations. if so, return that feedback.
+  // otherwise, return nothing
+  getFeedbackForPlayerMove(): string | undefined {
+
+    const placement = this.getLastPlacement();
+    if (!placement) return undefined;
+
+    if (!placement.piecePlacement) return undefined;
+
+    const rec = placement.analysis.getEngineMoveListDeep()?.getRecommendationForMove(placement.piecePlacement!);
+    return rec?.qualitativeAnalysis;
+  }
+
   public getAccuracyColor(accuracy: number): string {
     return "white";
   }

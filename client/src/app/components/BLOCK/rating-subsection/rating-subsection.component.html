@@ -4,5 +4,5 @@
     <div class="tags">
         <app-tag *ngFor="let tag of tags" [name]="getTagName(tag)" [nameColor]="getColor()"></app-tag>
     </div>
-    <p [ngStyle]="{'color': getColor()}">{{feedback}}</p>
+    <p *ngIf="feedback" [ngStyle]="{'color': getColor()}">{{feedback}}</p>
 </div>

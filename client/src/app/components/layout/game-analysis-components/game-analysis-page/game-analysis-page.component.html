@@ -47,6 +47,7 @@
                     [moveNotation]="getPosition().piecePlacement!.toString()"
                     [tags]="getPosition().getPlayerPlacementTags()"
                     [rating]="getPlayerRating()"
+                    [feedback]="getFeedbackForPlayerMove()"
                     >
                 </app-rating-subsection>
             </app-tetris-panel-item>
@@ -81,7 +82,7 @@
         </app-section>
     </div>
 
-    <app-section class="test-container">
+    <!-- <app-section class="test-container">
         <h2>Move list Deep</h2>
         <div *ngIf="getPosition().analysis.getEngineMoveListDeep() as mld">
             <div *ngFor="let rec of mld.getRecommendations()">
@@ -107,7 +108,7 @@
             <p>Player NNB: {{rmd.playerNNB}}</p>
         </div>
     </app-section>
-    
+     -->
 </div>
 <app-graph *ngIf="game" class="graph" [game]="game" [currentPlacement]="placementIndex"
 (isTemporaryPlacement)="setWhetherTemporaryPlacement($event)" (setHoveredPlacement)="setPlacement($event)">

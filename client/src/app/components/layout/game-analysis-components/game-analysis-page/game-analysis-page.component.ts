@@ -241,6 +241,14 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  // check whether the current placement is in move recommendations. if so, return that feedback.
+  // otherwise, return nothing
+  getFeedbackForPlayerMove(): string | undefined {
+    const placement = this.getPosition();
+    const rec = placement.analysis.getEngineMoveListDeep()?.getRecommendationForMove(placement.piecePlacement!);
+    return rec?.qualitativeAnalysis;
+  }
+
   
 
 }

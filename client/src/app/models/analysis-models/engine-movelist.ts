@@ -197,4 +197,11 @@ export class EngineMovelistNB {
         return this.recommendations[0];
     }
 
+    public getRecommendationForMove(move: MoveableTetromino): MoveRecommendation | undefined {
+        for (const recommendation of this.recommendations) {
+            if (recommendation.thisPiece.equals(move)) return recommendation;
+        }
+        return undefined;
+    }
+
 }
