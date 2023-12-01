@@ -9,7 +9,7 @@ export function getPositiveEvalFactorPhrase(evalFactor: EvalFactor): string {
 
     switch (evalFactor) {
         case EvalFactor.SURFACE:
-            return "creates a good flatter surface";
+            return "creates a flatter surface";
         case EvalFactor.TETRIS_READY: // a special eval factor that should be handled separately
             return "";
         case EvalFactor.LINE_CLEAR: // a special eval factor that should be handled separately
@@ -46,7 +46,7 @@ export function getNegativeEvalFactorPhrase(evalFactor: EvalFactor): string {
 
     switch (evalFactor) {
         case EvalFactor.SURFACE:
-            return "creates a worse bumpier surface";
+            return "creates a bumpier surface";
         case EvalFactor.TETRIS_READY: // a special eval factor that should be handled separately
             return "";
         case EvalFactor.LINE_CLEAR: // a special eval factor that should be handled separately

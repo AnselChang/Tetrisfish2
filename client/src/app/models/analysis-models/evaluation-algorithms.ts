@@ -118,12 +118,32 @@ export function generateQualitativeAnalysis(allRecs: MoveRecommendation[], rec: 
     // All possible permutations of bestEvalFactor/worstEvalFactor/worstThirdPiece
     if (bestEvalFactor && worstEvalFactor && worstThirdPiece) { // ignore tag, too many things to say
 
+        if (sentiment) {
+            return `Although this placement ${getNegativeEvalFactorPhrase(worstEvalFactor)}, it more importantly ${getPositiveEvalFactorPhrase(bestEvalFactor)}.`;
+        } else {
+            return `Although this placement ${getPositiveEvalFactorPhrase(bestEvalFactor)}, neither ${getPositiveEvalFactorPhrase(worstEvalFactor)} nor accomodates ${worstThirdPiece} pieces.`;
+        }
+
     } else if (bestEvalFactor && worstEvalFactor) { // ignore tag, too many things to say
+
+        if (sentiment) {
+            return `Although this placement ${getNegativeEvalFactorPhrase(worstEvalFactor)}, it more importantly ${getPositiveEvalFactorPhrase(bestEvalFactor)}.`;
+        } else {
+            return `Although this placement ${getPositiveEvalFactorPhrase(bestEvalFactor)}, it doesn't accomodate ${worstThirdPiece} pieces.`;
+        }
 
     } else if (bestEvalFactor && worstThirdPiece) { // ignore tag, too many things to say
 
+        if (sentiment) {
+            return `Although the resulting board isn't very accomodating for ${worstThirdPiece} pieces, it more importantly ${getPositiveEvalFactorPhrase(bestEvalFactor)}.`;
+        } else {
+            return `Although this placement ${getPositiveEvalFactorPhrase(bestEvalFactor)}, it doesn't accomodate ${worstThirdPiece} pieces.`;
+        }
+
     } else if (worstEvalFactor && worstThirdPiece) {
         if (sentiment) return; // do not only say bad things about good moves
+
+        return `This placement not only ${getNegativeEvalFactorPhrase(worstEvalFactor)}, but also doesn't leave a good spot for ${worstThirdPiece} pieces.`
 
     } else if (bestEvalFactor) { // since only one thing to say, can mention tag if it exists
         if (!sentiment) return; // do not only say good things about bad moves
