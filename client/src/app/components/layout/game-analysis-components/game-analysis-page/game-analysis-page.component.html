@@ -84,9 +84,15 @@
     <app-section class="test-container">
         <h2>Move list Deep</h2>
         <div *ngIf="getPosition().analysis.getEngineMoveListDeep() as mld">
-            <p *ngFor="let rec of mld.getRecommendations()" [style.color]="mld.getRecommendationColor(rec)">
-                {{rec.toString()}}
-            </p>
+            <div *ngFor="let rec of mld.getRecommendations()">
+                <p [style.color]="mld.getRecommendationColor(rec)">
+                    {{rec.toString()}}
+                </p>
+                <p class="tiny" *ngFor="let kv of rec.thirdPieceEvals | keyvalue">
+                    {{kv.key}}: {{kv.value}}
+                </p>
+                <p class="tiny">bad accom: {{rec.badAccomPiece}}</p>
+            </div>
         </div>
         <h2>Move list Shallow</h2>
         <div *ngIf="getPosition().analysis.getEngineMoveListShallow() as mls">

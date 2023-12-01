@@ -12,16 +12,36 @@ import { GamePlacement } from "../game-models/game-placement";
 import MoveableTetromino from "../game-models/moveable-tetromino";
 import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
 import { TagID } from "../tag-models/tag-types";
+import { TetrominoType } from "../tetronimo-models/tetromino";
+import { findOutlier } from "./evaluation-algorithms";
+
+function charToTetrominoType(char: string): TetrominoType {
+    switch (char) {
+        case 'I': return TetrominoType.I_TYPE;
+        case 'J': return TetrominoType.J_TYPE;
+        case 'L': return TetrominoType.L_TYPE;
+        case 'O': return TetrominoType.O_TYPE;
+        case 'S': return TetrominoType.S_TYPE;
+        case 'T': return TetrominoType.T_TYPE;
+        case 'Z': return TetrominoType.Z_TYPE;
+        default: throw new Error(`Invalid char ${char}`);
+    }
+
+}
 
 export class MoveRecommendation {
 
     private tags?: TagID[] = undefined;
+    public readonly badAccomPiece: TetrominoType | undefined;
 
     constructor(
         public thisPiece: MoveableTetromino,
         public nextPiece: MoveableTetromino,
         public evaluation: number,
-    ) {}
+        public thirdPieceEvals: { [key in TetrominoType]: number } | undefined,
+    ) {
+        this.badAccomPiece = thirdPieceEvals ? findOutlier(thirdPieceEvals) : undefined;
+    }
 
     public assignTags(tags: TagID[]) {
         this.tags = tags;
@@ -38,18 +58,14 @@ export class MoveRecommendation {
         const evalStr = (this.evaluation > 0) ? `+${this.evaluation}` : `${this.evaluation}`;
         return `(${evalStr}) ${this.thisPiece.toString()} ${this.nextPiece.toString()}`;
     }
+
 }
 
-export abstract class EngineMovelist {
-    protected recommendations: MoveRecommendation[] = [];
-
-    public getRecommendations(): MoveRecommendation[] {
-        return this.recommendations;
-    }
-}
 
 // generates a list of best current piece + next piece placements given a game placement with current and next piece
-export class EngineMovelistNB extends EngineMovelist {
+export class EngineMovelistNB {
+
+    private recommendations: MoveRecommendation[] = [];
 
     static async fetch(placement: GamePlacement, inputSpeed: InputSpeed, depth: LookaheadDepth): Promise<EngineMovelistNB> {
         const response = await fetchMovelist(placement, inputSpeed, true, depth);
@@ -66,7 +82,6 @@ export class EngineMovelistNB extends EngineMovelist {
     }
 
     constructor(moves: any, private readonly placement: GamePlacement, public readonly apiURL: string, public readonly depth: LookaheadDepth) {
-        super();
         // console.log("engine movelist nb created", moves);
 
         // map the moves to a list of MoveRecommendations
@@ -79,7 +94,18 @@ export class EngineMovelistNB extends EngineMovelist {
             const thisPiece = convertSRPlacement(thisDict["placement"], placement.currentPieceType);
             const nextPiece = convertSRPlacement(nextDict["placement"], placement.nextPieceType);
 
-            const recommendation = new MoveRecommendation(thisPiece, nextPiece, evaluation);
+            let thirdPieceEvals: any = undefined;
+            if (depth === LookaheadDepth.DEEP) {
+                
+                thirdPieceEvals = {};
+                const hypotheticalLines = nextDict["hypotheticalLines"];
+                hypotheticalLines.forEach((piece: any) => {
+                    thirdPieceEvals[charToTetrominoType(piece["pieceSequence"])] = piece["resultingValue"];
+                });
+                console.log("third piece evals", thirdPieceEvals);
+            }
+
+            const recommendation = new MoveRecommendation(thisPiece, nextPiece, evaluation, thirdPieceEvals);
             this.recommendations.push(recommendation);
 
             i++;
@@ -118,6 +144,10 @@ export class EngineMovelistNB extends EngineMovelist {
         }
     }
 
+    public getRecommendations(): MoveRecommendation[] {
+        return this.recommendations;
+    }
+
     public get best(): MoveRecommendation {
         return this.recommendations[0];
     }
@@ -132,13 +162,4 @@ export class EngineMovelistNB extends EngineMovelist {
         return RATING_TO_COLOR[rating];
     }
 
-}
-
-// Given only current piece, generate a list of best 
-export class EngineMovelistNNB {
-
-    static async fetch(placement: GamePlacement, inputSpeed: InputSpeed): Promise<EngineMovelistNNB> {
-        const response = await fetchMovelist(placement, inputSpeed, false, LookaheadDepth.DEEP);
-        return new EngineMovelistNNB();
-    }
 }

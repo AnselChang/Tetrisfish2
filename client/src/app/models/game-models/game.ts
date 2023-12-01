@@ -12,7 +12,7 @@ import MoveableTetromino from "./moveable-tetromino";
 import { GameStats } from "./game-stats";
 import { GameAnalysisStats } from "./game-analysis-stats";
 import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
-import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-movelist";
+import { EngineMovelistNB } from "../analysis-models/engine-movelist";
 import GameEligibility from "./game-eligibility";
 import { v4 as uuidv4 } from 'uuid';
 import { TagID } from "../tag-models/tag-types";
@@ -135,7 +135,7 @@ export class Game {
                 this.lastEngineMovelistNB$.next(position);
             }
         }).catch(e => {
-            console.log("Error fetching engine-movelist DEEP for placement #", position.index + 1);
+            console.log("Error fetching engine-movelist DEEP for placement #", position.index + 1, e);
             position.analysis.flagFailedAnalysis();
         });
 
@@ -143,7 +143,7 @@ export class Game {
         EngineMovelistNB.fetch(position, this.inputSpeed, LookaheadDepth.SHALLOW).then(engineMovelistShallow => {
             position.analysis.setEngineMoveListShallow(engineMovelistShallow);
         }).catch(e => {
-            console.log("Error fetching engine-movelist SHALLOW for placement #", position.index + 1);
+            console.log("Error fetching engine-movelist SHALLOW for placement #", position.index + 1, e);
             position.analysis.flagFailedAnalysis();
         });
     }

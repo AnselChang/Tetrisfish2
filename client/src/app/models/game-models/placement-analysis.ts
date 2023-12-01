@@ -9,7 +9,7 @@ be shown.
 */
 
 import { BehaviorSubject, Subject } from "rxjs";
-import { EngineMovelistNB, EngineMovelistNNB } from "../analysis-models/engine-movelist";
+import { EngineMovelistNB } from "../analysis-models/engine-movelist";
 import { RateMoveDeep, RateMoveShallow } from "../analysis-models/rate-move";
 
 export default class PlacementAnalysis {
