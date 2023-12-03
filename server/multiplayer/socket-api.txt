@@ -1,0 +1,20 @@
+(client-to-server)
+create-room {
+    userID: string
+}
+    creates a room where user is admin
+
+(client to server)
+join-room {
+    roomID: string
+    userID?: string // undefined if not logged in. but must be logged in to join slot
+    slotID?: string // if defined, it is an invitation for player to play in that slot
+}
+
+(server to client)
+on-join-room {
+    success: boolean // whether creating/joining room was successful
+    error?: string // if not successful, the reason why
+    room-data?: SerializedRoom // serialized room data if successful
+}
+
