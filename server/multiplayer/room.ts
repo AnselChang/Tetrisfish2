@@ -8,6 +8,7 @@ import { Socket } from "socket.io";
 import { Slot } from "./slot";
 import { SerializedRoom } from "./serialized-room";
 import { Chat } from "./chat";
+import { MultiplayerManager } from './multiplayer-manager';
 
 export class SocketUser {
     constructor(
@@ -24,11 +25,22 @@ export class Room {
 
     private chat: Chat = new Chat();
 
-    constructor(public readonly roomID: string, public readonly adminUserID: string) {
+    constructor(
+        private readonly multiplayerManager: MultiplayerManager,
+        public readonly roomID: string,
+        public readonly adminUserID: string
+    ) {
 
         // start with 2 slots
-        this.slots.push(new Slot(uuidv4(), this, 0));
-        this.slots.push(new Slot(uuidv4(), this, 1));
+        this.addSlot();
+        this.addSlot();
+    }
+
+    public addSlot(): Slot {
+        const slot = new Slot(uuidv4(), this, this.slots.length);
+        this.slots.push(slot);
+        this.multiplayerManager.accessCodes.onSlotCreated(slot.slotID);
+        return slot;
     }
 
     public isUserInRoom(userID: string): boolean {
@@ -68,5 +80,27 @@ export class Room {
             numUsersConnected: this.getNumConnectedSockets(),
             messages: this.chat.getMessages()
         }
+    }
+
+    public getSlots(): Slot[] {
+        return this.slots;
+    }
+
+    public getSlotByID(slotID: string): Slot | undefined {
+        return this.slots.find(slot => slot.slotID === slotID);
+    }
+
+    // broadcast socket.io event to all sockets in the room
+    public broadcastAll(event: string, data: any): void {
+        this.sockets.forEach(socketUser => socketUser.socket.emit(event, data));
+    }
+
+    // broadcast socket.io event to all sockets in the room except the given socket
+    public broadcastExcept(exceptSocket: Socket, event: string, data: any): void {
+        this.sockets.forEach(socketUser => {
+            if (socketUser.socket !== exceptSocket) {
+                socketUser.socket.emit(event, data);
+            }
+        });
     }
 }

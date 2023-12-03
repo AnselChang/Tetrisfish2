@@ -5,10 +5,15 @@ create-room {
     creates a room where user is admin
 
 (client to server)
-join-room {
+join-room-spectate {
     roomID: string
     userID?: string // undefined if not logged in. but must be logged in to join slot
-    slotID?: string // if defined, it is an invitation for player to play in that slot
+}
+
+(client to server)
+join-room-play {
+    accessCode: number // 6 digit access code for some slot in some room
+    userID: string // HAS to be a user
 }
 
 (server to client)
@@ -18,3 +23,11 @@ on-join-room {
     room-data?: SerializedRoom // serialized room data if successful
 }
 
+--------------------------------
+EVENT UPDATE MESSAGES (SERVER TO CLIENT)
+
+on-slot-filled {
+    type: SlotType
+    index: number
+    data: SerializedSlot
+}

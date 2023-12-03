@@ -1,8 +1,9 @@
 import { ChatMessage } from "./chat";
-import { SlotType } from "./slot";
+import { SlotType } from "./slot-state/slot-state";
 
 export interface SerializedSlot {
     type: SlotType;
+    index: number;
     playerName?: string;
     numHearts: number;
 }
