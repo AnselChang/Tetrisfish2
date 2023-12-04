@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MultiplayerService } from 'client/src/app/services/multiplayer.service';
 
 @Component({
@@ -6,8 +6,16 @@ import { MultiplayerService } from 'client/src/app/services/multiplayer.service'
   templateUrl: './multiplayer.component.html',
   styleUrls: ['./multiplayer.component.scss']
 })
-export class MultiplayerComponent {
+export class MultiplayerComponent implements OnInit, OnDestroy {
 
   constructor(public multiplayer: MultiplayerService) {}
+
+  ngOnInit(): void {
+    this.multiplayer.onEnterPage();
+  }
+
+  ngOnDestroy(): void {
+    this.multiplayer.onLeavePage();
+  }
 
 }

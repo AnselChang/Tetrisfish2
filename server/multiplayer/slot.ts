@@ -35,4 +35,15 @@ export class Slot {
             numHearts: this.numHearts
         }
     }
+
+    getState(): SlotState | undefined {
+        return this.state;
+    }
+
+    // removes the person/AI from the slot
+    vacate() {
+        this.state = undefined;
+        this.playerName = undefined;
+        this.numHearts = 0;
+    }
 }

@@ -10,14 +10,14 @@
 </header>
 <section class="play-options">
 
-    <div class="option-container hoverable">
+    <div class="option-container hoverable" (click)="singleplayer()">
         <h1>Play Solo</h1>
         <app-fixed-size-image [src]="'play_1p.svg'" [width]="248"></app-fixed-size-image>
         <p>
             Get detailed real-time feedback and statistics as you play through live capture or our emulator!
         </p>
     </div>
-    <div class="option-container hoverable">
+    <div class="option-container hoverable" (click)="createRoom()">
         <h1>Multiplayer</h1>
         <app-fixed-size-image [src]="'play_2p.svg'" [width]="248"></app-fixed-size-image>
         <p>

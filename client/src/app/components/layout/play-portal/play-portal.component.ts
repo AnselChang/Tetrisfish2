@@ -20,14 +20,54 @@ export class PlayPortalComponent {
     private multiplayerService: MultiplayerService
   ) {}
 
+  // redirect to singleplayer page
+  singleplayer() {
+
+    // redirect if not logged in
+    if (!this.userService.isLoggedIn()) {
+      this.login();
+      return
+    }
+    
+    this.router.navigate(['/play-calibrate']);
+  }
+
   onJoinRoomContainerClick() {
     console.log('onJoinRoomContainerClick');
     console.log(this.accessCodeInput);
     this.accessCodeInput.setSelectedDigitIndex(0);
   }
 
+  // called when "Multiplayer" button is clicked
+  async createRoom() {
+
+    // redirect if not logged in
+    if (!this.userService.isLoggedIn()) {
+      this.login();
+      return
+    }
+
+    const {status, content} = await fetchServer(Method.POST, '/api/multiplayer/create-room', {
+      userID: this.userService.getUserID()
+    });
+
+    // failed to create room
+    if (status !== 200 || !content['success']) {
+      console.log('failed to create room', content);
+      return
+    }
+
+    // succeeded in creating room. go to multiplayer page
+    const roomID = content['roomID'] as string;
+    console.log('success creating room', roomID);
+    this.multiplayerService.onJoinRoom(roomID);
+    this.router.navigate(['/multiplayer']);
+
+  }
+
   async submitCode(code: number) {
 
+    // redirect if not logged in
     if (!this.userService.isLoggedIn()) {
       this.login();
       return
@@ -40,14 +80,8 @@ export class PlayPortalComponent {
       userID: this.userService.getUserID()
     });
 
-    if (status !== 200) {
-      console.log('server error', content);
-      this.accessCodeInput.onInvalidCode();
-      return
-    }
-
-    // invalid access code
-    if (!content['success']) {
+    // access code is invalid
+    if (status !== 200 || !content['success']) {
       console.log('invalid access code', content);
       this.accessCodeInput.onInvalidCode();
       return

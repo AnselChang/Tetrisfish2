@@ -34,6 +34,13 @@ POST join-room-play {
     slotID: string
 }
 
+POST leave-room {
+    userID: string
+    roomID: string
+} response {
+    success: boolean
+}
+
 --------------------------------
 EVENT UPDATE MESSAGES (SERVER TO CLIENT)
 

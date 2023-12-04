@@ -48,10 +48,15 @@ export class MultiplayerManager {
 
         // delete all empty rooms
         emptyRooms.forEach(room => {
-            this.rooms = this.rooms.filter(r => r !== room);
-            this.accessCodes.onRoomDestroyed(room);
+            this.deleteRoom(room);
         });
 
+    }
+
+    deleteRoom(room: Room) {
+        this.rooms = this.rooms.filter(r => r !== room);
+        this.accessCodes.onRoomDestroyed(room);
+        console.log(`Deleted room ${room.roomID}`);
     }
 
     // called when a socket joins through room link. Attempt to join the room.

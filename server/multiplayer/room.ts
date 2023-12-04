@@ -9,6 +9,8 @@ import { Slot } from "./slot";
 import { SerializedRoom } from "./serialized-room";
 import { Chat } from "./chat";
 import { MultiplayerManager } from './multiplayer-manager';
+import { SlotType } from './slot-state/slot-state';
+import { HumanSlotState } from './slot-state/human-slot-state';
 
 export class SocketUser {
     constructor(
@@ -22,14 +24,15 @@ export class Room {
 
     private slots: Slot[] = [];
     private sockets: SocketUser[] = [];
-
     private chat: Chat = new Chat();
 
     constructor(
         private readonly multiplayerManager: MultiplayerManager,
         public readonly roomID: string,
-        public readonly adminUserID: string
+        public adminUserID: string
     ) {
+
+        console.log('created room', roomID, 'with admin', adminUserID);
 
         // start with 2 slots
         this.addSlot();
@@ -43,7 +46,7 @@ export class Room {
         return slot;
     }
 
-    public isUserInRoom(userID: string): boolean {
+    public isThereSocketWithUserID(userID: string): boolean {
         for (const socketUser of this.sockets) {
             if (socketUser.userID === userID) {
                 return true;
@@ -55,7 +58,7 @@ export class Room {
     // tries to add a socket user to the room. Returns true if successful, false otherwise.
     // fails if the socketUser has userID and the userID is already in the room
     public addSocketUser(socketUser: SocketUser): boolean {
-        if (socketUser.userID !== undefined && this.isUserInRoom(socketUser.userID)) {
+        if (socketUser.userID !== undefined && this.isThereSocketWithUserID(socketUser.userID)) {
             return false
         }
         this.sockets.push(socketUser);
@@ -72,6 +75,29 @@ export class Room {
         slot.assignHuman(userID);
         this.multiplayerManager.accessCodes.onSlotRemoved(slot.slotID);
         return true;
+    }
+
+    // remove a human with userID from room. if in slot, remove from slot.
+    // if admin, promote someone else. if no human player, delete room
+    removeHumanFromRoom(userID: string) {
+
+        this.getSlots().forEach(slot => {
+            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).userID === userID) {
+                slot.vacate();
+            }
+        });
+
+        if (userID === this.adminUserID) {
+            // if user is admin, promote someone else or delete room
+            const newAdminSlotState = (this.slots.find(slot => slot.getType() === SlotType.HUMAN))?.getState() as (HumanSlotState | undefined);
+
+            if (newAdminSlotState) { // there's a human player in the room to promote
+                console.log('promoting', newAdminSlotState.userID, 'to admin');
+                this.adminUserID = newAdminSlotState.userID;
+            } else { // no human players left in the room, delete room
+                this.multiplayerManager.deleteRoom(this);
+            }            
+        }
     }
 
     // remove a socket from the room. happens on disconnect

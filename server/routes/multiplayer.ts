@@ -45,3 +45,24 @@ export async function joinRoomPlayRoute(multiplayer: MultiplayerManager, req: Re
         });
     }
 }
+
+export async function leaveRoomRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
+
+    const userID = req.body['userID'] as string;
+    const roomID = req.body['roomID'] as string;
+
+    const room = multiplayer.getRoomByID(roomID);
+
+    if (!room) {
+        res.status(200).send({
+            success: false,
+            error: "Room not found"
+        });
+        return;
+    }
+
+    room.removeHumanFromRoom(userID);
+    res.status(200).send({
+        success: true
+    });
+}
