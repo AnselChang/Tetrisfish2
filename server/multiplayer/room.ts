@@ -39,7 +39,7 @@ export class Room {
     public addSlot(): Slot {
         const slot = new Slot(uuidv4(), this, this.slots.length);
         this.slots.push(slot);
-        this.multiplayerManager.accessCodes.onSlotCreated(slot.slotID);
+        // this.multiplayerManager.accessCodes.onSlotCreated(slot.slotID);
         return slot;
     }
 

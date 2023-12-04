@@ -1,0 +1,52 @@
+client-to-server HTTP REQUESTS
+
+POST create-room {
+    userID: string
+} response {
+    success: boolean
+    roomID?: string
+}
+    creates a room where user is admin
+
+POST generate-slot-access-code {
+    slotID: string
+} response {
+    success: boolean // whether slot exists and is vacant
+    accessCode?: number 4-digit access code
+}
+
+POST join-room-spectate {
+    roomID: string
+    userID?: string // undefined if not logged in. but must be logged in to join slot
+} response {
+    success: boolean // whether creating/joining room was successful
+    error?: string // if not successful, the reason why
+    room-data?: SerializedRoom // serialized room data if successful
+}
+
+POST join-room-play {
+    accessCode: number // 6 digit access code for some slot in some room
+    userID: string // HAS to be a user
+} response {
+    success: boolean // whether creating/joining room was successful
+    error?: string // if not successful, the reason why
+    room-data?: SerializedRoom // serialized room data if successful
+}
+
+--------------------------------
+EVENT UPDATE MESSAGES (SERVER TO CLIENT)
+
+SOCKET on-slot-filled {
+    type: SlotType
+    index: number
+    data: SerializedSlot
+}
+
+SOCKET on-comment {
+    message: ChatMessage
+}
+
+WEBRTC update {
+    // frame of board state / camera
+    // game state if it changed
+}

@@ -1,9 +1,11 @@
 /*
-Handles creation and conversion of six-digit access codes to slot IDs
+Handles creation and conversion of four-digit access codes to slot IDs
 Ensure that access codes are unique
 */
 
 import { Room } from "./room";
+
+const NUM_DIGITS = 4;
 
 export class AccessCodeManager {
     
@@ -23,7 +25,7 @@ export class AccessCodeManager {
     private generateAccessCode(): number {
         let accessCode: number;
         do {
-            accessCode = Math.floor(Math.random() * 1000000);
+            accessCode = Math.floor(Math.random() * Math.pow(10, NUM_DIGITS));
         } while (this.accessCodes.has(accessCode));
         return accessCode;
     }
