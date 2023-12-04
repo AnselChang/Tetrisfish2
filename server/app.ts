@@ -1,7 +1,6 @@
 import * as express from 'express';
 import * as path from 'path';
 import * as morgan from 'morgan'; // Import Morgan
-import Stripe from 'stripe';
 
 //import * as livereload from 'livereload';
 //import * as connectLivereload from 'connect-livereload';
@@ -20,8 +19,8 @@ import { getGameRoute, getGamesByPlayerRoute, sendGameRoute } from './routes/gam
 import { getGlobalStatsRoute } from './routes/global-stats';
 import { LeaderboardType } from './database/leaderboard/leaderboard-schema';
 import { getLeaderboardAccuraciesRoute, getLeaderboardRoute } from './routes/leaderboard';
-import { stripeWebhook } from './routes/stripe';
-import * as bodyParser from 'body-parser';
+import { MultiplayerManager } from './multiplayer/multiplayer-manager';
+import { createRoomRoute } from './routes/multiplayer';
 
 
 declare module 'express-session' {
@@ -60,10 +59,11 @@ export default async function createApp(): Promise<Express> {
 
     // connect to discord
     const discordBot = new DiscordBot();
-    const stripe = new Stripe(process.env['STRIPE_SECRET_KEY']!);
 
+    // multiplayer manager
+    const multiplayer = new MultiplayerManager();
 
-        // In development, refresh Angular on save just like ng serve does
+    // In development, refresh Angular on save just like ng serve does
     let livereloadServer: any;
     if (process.env['NODE_ENV'] !== 'production') {
 
@@ -117,16 +117,7 @@ export default async function createApp(): Promise<Express> {
     app.get('/api/get-leaderboard-accuracy-overall', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.OVERALL));
     app.get('/api/get-leaderboard-accuracy-29', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.START_29));
 
-    app.use(
-        '/webhook',
-        bodyParser.json({
-          verify: (req: Request, res: Response, buf: Buffer, encoding: string) => {
-            (req as ExtendedRequest).rawBody = buf.toString();
-          },
-        })
-      );
-
-    app.post('/webhook', async (req: Request, res: Response) => stripeWebhook(req, res, stripe));
+    app.get('api/multiplayer/create-room', async (req: Request, res: Response) => createRoomRoute(multiplayer, req, res));
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {

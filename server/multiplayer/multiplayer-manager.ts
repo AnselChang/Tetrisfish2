@@ -31,6 +31,7 @@ export class MultiplayerManager {
     }
 
     createNewRoom(adminUserID: string): Room {
+
         const room = new Room(this, uuidv4(), adminUserID);
         this.rooms.push(room);
         return room;
