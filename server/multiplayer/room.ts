@@ -59,6 +59,18 @@ export class Room {
             return false
         }
         this.sockets.push(socketUser);
+
+        return true;
+    }
+
+    // add a human to a slot in the room. This happens after the HTTP request POST join-room-play
+    // this does not necesarily mean the socket connection has been established yet. that will happen right after
+    public addHumanToRoomWithSlot(userID: string, slot: Slot): boolean {
+
+        if (!this.isSlotInRoom(slot)) return false;
+
+        slot.assignHuman(userID);
+        this.multiplayerManager.accessCodes.onSlotRemoved(slot.slotID);
         return true;
     }
 
@@ -88,6 +100,10 @@ export class Room {
 
     public getSlotByID(slotID: string): Slot | undefined {
         return this.slots.find(slot => slot.slotID === slotID);
+    }
+
+    public isSlotInRoom(slot: Slot): boolean {
+        return this.slots.includes(slot);
     }
 
     // broadcast socket.io event to all sockets in the room

@@ -1,5 +1,12 @@
-<header>
+<header *ngIf="userService.isLoggedIn()">
     <h1>Ansel, let’s play a game.</h1>
+</header>
+<header *ngIf="!userService.isLoggedIn()">
+    <h2>To get started, log in!</h2>
+    <div class="discord">
+        <app-discord-button (click)="login()"></app-discord-button>
+    </div>
+    
 </header>
 <section class="play-options">
 
@@ -18,10 +25,14 @@
         </p>
     </div>
     <div class="option-container" (click)="onJoinRoomContainerClick()">
-        <h1>Multiplayer</h1>
-        <app-four-digit-code #fourDigitCode [(code)]="accessCode"></app-four-digit-code>
+        <h1>Join Room</h1>
+        <div class="code-and-description">
+            <app-four-digit-code #fourDigitCode (onSubmit)="submitCode($event)"></app-four-digit-code>
+            <p class="join-room-description">Enter 4-digit Code</p>
+        </div>
+        
         <p>
-            Invite others to play in your multiplayer room, or train against an AI!
+            Ask the owner of an existing multiplayer room for a 4-digit code!
         </p>
     </div>
 

@@ -1,6 +1,7 @@
 <div class="digits" appClickOutside (clickOutside)="onClickedOutside($event)">
     <div class="digit" *ngFor="let index of ZERO_TO_THREE"
     [ngClass]="index === selectedDigitIndex ? 'selected' : ''"
+    [ngClass]="isCodeValid ? '' : 'shake-animation'"
     (click)="onClickDigit(index)">
     <p class="digit-character">{{code.getDigit(index)}}</p>
     </div>

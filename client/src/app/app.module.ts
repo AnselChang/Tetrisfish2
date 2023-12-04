@@ -62,6 +62,7 @@ import { PuzzleComponent } from './components/puzzle/puzzle.component';
 import { PlayPortalComponent } from './components/layout/play-portal/play-portal.component';
 import { FourDigitCodeComponent } from './components/BLOCK/four-digit-code/four-digit-code.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { MultiplayerComponent } from './components/layout/multiplayer-components/multiplayer/multiplayer.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -162,6 +163,7 @@ const customNotifierOptions: NotifierOptions = {
     PlayPortalComponent,
     FourDigitCodeComponent,
     ClickOutsideDirective,
+    MultiplayerComponent,
   ],
   imports: [
     BrowserModule,

@@ -16,6 +16,7 @@ import { HowToPlayComponent } from './components/layout/play-components/how-to-p
 import { OnLoginComponent } from './components/layout/on-login/on-login.component';
 import { GameAnalysisPageComponent } from './components/layout/game-analysis-components/game-analysis-page/game-analysis-page.component';
 import { PlayPortalComponent } from './components/layout/play-portal/play-portal.component';
+import { MultiplayerComponent } from './components/layout/multiplayer-components/multiplayer/multiplayer.component';
 
 const routes: Routes = [
   // { path: 'login', component: LoginPageComponent},
@@ -29,6 +30,7 @@ const routes: Routes = [
       { path: 'calibrate', component: CalibratePageComponent },
       { path: 'how-to-play', component: HowToPlayComponent },
       { path: 'play-calibrate', component: PlayCalibrateComponent },
+      { path: 'multiplayer', component: MultiplayerComponent },
       { path: 'analysis', component: AnalyzePageComponent },
       { path: 'analyze-game', component: GameAnalysisPageComponent },
       { path: 'puzzles', component: PuzzlesPageComponent },

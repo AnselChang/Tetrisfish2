@@ -20,7 +20,7 @@ import { getGlobalStatsRoute } from './routes/global-stats';
 import { LeaderboardType } from './database/leaderboard/leaderboard-schema';
 import { getLeaderboardAccuraciesRoute, getLeaderboardRoute } from './routes/leaderboard';
 import { MultiplayerManager } from './multiplayer/multiplayer-manager';
-import { createRoomRoute } from './routes/multiplayer';
+import { createRoomRoute, joinRoomPlayRoute } from './routes/multiplayer';
 
 
 declare module 'express-session' {
@@ -117,7 +117,8 @@ export default async function createApp(): Promise<Express> {
     app.get('/api/get-leaderboard-accuracy-overall', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.OVERALL));
     app.get('/api/get-leaderboard-accuracy-29', async (req: Request, res: Response) => getLeaderboardAccuraciesRoute(req, res, LeaderboardType.START_29));
 
-    app.get('api/multiplayer/create-room', async (req: Request, res: Response) => createRoomRoute(multiplayer, req, res));
+    app.post('/api/multiplayer/create-room', async (req: Request, res: Response) => createRoomRoute(multiplayer, req, res));
+    app.post('/api/multiplayer/join-room-play', async (req: Request, res: Response) => joinRoomPlayRoute(multiplayer, req, res));
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {

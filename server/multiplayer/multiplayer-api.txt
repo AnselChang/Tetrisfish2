@@ -19,18 +19,19 @@ POST join-room-spectate {
     roomID: string
     userID?: string // undefined if not logged in. but must be logged in to join slot
 } response {
-    success: boolean // whether creating/joining room was successful
+    success: boolean // whether user is allowed to join room to spectate
     error?: string // if not successful, the reason why
-    room-data?: SerializedRoom // serialized room data if successful
+    // IF SUCCESS, USER NEEDS TO ESTABLISH SOCKET.IO CONNECTION
 }
 
 POST join-room-play {
-    accessCode: number // 6 digit access code for some slot in some room
+    accessCode: number // 4 digit access code for some slot in some room
     userID: string // HAS to be a user
 } response {
-    success: boolean // whether creating/joining room was successful
+    success: boolean // whether user is allowed to join room at slot
     error?: string // if not successful, the reason why
-    room-data?: SerializedRoom // serialized room data if successful
+    roomID: string
+    slotID: string
 }
 
 --------------------------------

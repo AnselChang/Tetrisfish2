@@ -19,6 +19,13 @@ export class FourDigitCode {
       && this.fourthDigit === undefined;
   }
 
+  public isFilled(): boolean {
+    return this.firstDigit !== undefined
+      && this.secondDigit !== undefined
+      && this.thirdDigit !== undefined
+      && this.fourthDigit !== undefined;
+  }
+
   public getDigit(index: number): number | string {
     if (index === 0) return this.firstDigit ?? '';
     if (index === 1) return this.secondDigit ?? '';
@@ -35,10 +42,11 @@ export class FourDigitCode {
   styleUrls: ['./four-digit-code.component.scss']
 })
 export class FourDigitCodeComponent {
-  @Input() code!: FourDigitCode;
-  @Output() codeChange = new EventEmitter<FourDigitCode>();
+  @Output() onSubmit = new EventEmitter<number>();
 
+  public code = new FourDigitCode();
   public selectedDigitIndex?: number;
+  public isCodeValid: boolean = true;
 
   readonly ZERO_TO_THREE = [0, 1, 2, 3];
 
@@ -47,17 +55,17 @@ export class FourDigitCodeComponent {
   onClickDigit(index: number): void {
     if (this.code.isBlank()) this.selectedDigitIndex = 0;
     else this.selectedDigitIndex = index;
-    this.changeDetectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges(); // Manually triggering change detection
   }
 
   onClickedOutside(event: Event): void {
     this.selectedDigitIndex = undefined;
-    this.changeDetectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges(); // Manually triggering change detection
   }
 
   setSelectedDigitIndex(index: number): void {
     this.selectedDigitIndex = index;
-    this.changeDetectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges(); // Manually triggering change detection
   }
 
   // listen for digit key presses
@@ -68,14 +76,29 @@ export class FourDigitCodeComponent {
     const digit = parseInt(event.key);
     if (isNaN(digit)) return;
 
-    if (this.selectedDigitIndex === 0) this.code.firstDigit = digit;
-    if (this.selectedDigitIndex === 1) this.code.secondDigit = digit;
-    if (this.selectedDigitIndex === 2) this.code.thirdDigit = digit;
-    if (this.selectedDigitIndex === 3) this.code.fourthDigit = digit;
-    this.codeChange.emit(this.code);
+    this.isCodeValid = true;
 
+    if (this.selectedDigitIndex === 0) { // reset
+      this.code.firstDigit = digit;
+      this.code.secondDigit = undefined;
+      this.code.thirdDigit = undefined;
+      this.code.fourthDigit = undefined;
+    }
+    else if (this.selectedDigitIndex === 1) this.code.secondDigit = digit;
+    else if (this.selectedDigitIndex === 2) this.code.thirdDigit = digit;
+    else if (this.selectedDigitIndex === 3) this.code.fourthDigit = digit;
+    
+    
     if (this.selectedDigitIndex < 3) this.selectedDigitIndex++;
     else this.selectedDigitIndex = undefined;
+
+    if (this.code.isFilled()) this.onSubmit.emit(parseInt(this.code.getCode()));
+    this.changeDetectorRef.detectChanges(); // Manually triggering change detection
+  }
+
+  onInvalidCode(): void {
+    this.isCodeValid = false;
+    this.changeDetectorRef.detectChanges(); // Manually triggering change detection
   }
 
 }
