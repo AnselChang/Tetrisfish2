@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 export class FourDigitCode {
   constructor(
@@ -42,17 +42,22 @@ export class FourDigitCodeComponent {
 
   readonly ZERO_TO_THREE = [0, 1, 2, 3];
 
+  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+
   onClickDigit(index: number): void {
-    if (this.code.isBlank()) index = 0;
+    if (this.code.isBlank()) this.selectedDigitIndex = 0;
     else this.selectedDigitIndex = index;
+    this.changeDetectorRef.detectChanges();
   }
 
   onClickedOutside(event: Event): void {
     this.selectedDigitIndex = undefined;
+    this.changeDetectorRef.detectChanges();
   }
 
   setSelectedDigitIndex(index: number): void {
     this.selectedDigitIndex = index;
+    this.changeDetectorRef.detectChanges();
   }
 
   // listen for digit key presses

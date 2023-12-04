@@ -17,7 +17,7 @@
             Invite others to play in your multiplayer room, or train against an AI!
         </p>
     </div>
-    <div class="option-container" (click)="">
+    <div class="option-container" (click)="onJoinRoomContainerClick()">
         <h1>Multiplayer</h1>
         <app-four-digit-code #fourDigitCode [(code)]="accessCode"></app-four-digit-code>
         <p>

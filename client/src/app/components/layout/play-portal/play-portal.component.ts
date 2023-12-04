@@ -12,6 +12,8 @@ export class PlayPortalComponent {
   public accessCode: FourDigitCode = new FourDigitCode();
 
   onJoinRoomContainerClick() {
+    console.log('onJoinRoomContainerClick');
+    console.log(this.accessCodeInput);
     this.accessCodeInput.setSelectedDigitIndex(0);
   }
 
