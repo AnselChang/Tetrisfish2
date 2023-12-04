@@ -24,10 +24,20 @@ export class UserService {
   private userID: string | null = null;
   private isProUser: boolean | null = null;
 
+  private readonly randomTemporaryUsername = this.generateRandomUsername();
+
   public loginStatus$ = new BehaviorSubject<LoginStatus>(LoginStatus.LIMBO);
 
   constructor(private captureSettings: CaptureSettingsService) { 
 
+  }
+
+  // generate random tepmporary username of format user132445 with 6 numbers
+  // no less than 6 numbers
+  private generateRandomUsername() {
+    const randomNum = Math.floor(Math.random() * 1000000);
+    const randomNumStr = randomNum.toString().padStart(6, '0');
+    return 'user' + randomNumStr;
   }
 
   private async updateCaptureSettings() {
@@ -95,8 +105,8 @@ export class UserService {
     this.loginStatus$.next(LoginStatus.LOGGED_IN);
   }
 
-  public getUsername(): string | null {
-    return this.username;
+  public getUsername(): string {
+    return this.username ?? this.randomTemporaryUsername;
   }
 
   public getUserID(): string | null {

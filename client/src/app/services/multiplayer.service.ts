@@ -4,6 +4,17 @@ import { Method, fetchServer } from '../scripts/fetch-server';
 import { Socket, io } from 'socket.io-client';
 import { SerializedRoom } from 'server/multiplayer/serialized-room';
 import { ChatMessage } from 'server/multiplayer/chat';
+import { SlotType } from 'server/multiplayer/slot-state/slot-state';
+
+export class SlotData {
+  constructor(
+    public readonly slotID: string,
+    public readonly type: SlotType,
+    public readonly playerID?: string,
+    public readonly playerName?: string,
+    public readonly numHearts: number = 0,
+  ) {}
+}
 
 
 @Injectable({
@@ -15,21 +26,24 @@ export class MultiplayerService {
 
   private roomID?: string
   private slotID?: string;
-  private isPlaying: boolean = false;
 
   private adminUserID?: string;
   private isAdmin: boolean = false;
   private numUsersConnected: number = 0;
   private messages: ChatMessage[] = [];
 
+  private mySlot?: SlotData;
+
+  private slots: SlotData[] = [];
+
 
   constructor(private user: UserService) { }
 
   // join a room given id. if slotID, then join as a player
   onJoinRoom(roomID: string, slotID?: string) {
+    console.log('onJoinRoom', roomID, slotID);
     this.roomID = roomID;
     this.slotID = slotID;
-    this.isPlaying = slotID !== undefined;
   }
 
   getRoomID(): string | undefined {
@@ -56,8 +70,12 @@ export class MultiplayerService {
     return this.messages;
   }
 
+  getSlots(): SlotData[] {
+    return this.slots;
+  }
+
   isPlayingGame(): boolean {
-    return this.isPlaying;
+    return this.mySlot !== undefined;
   }
 
   /* SOCKET send-message {
@@ -78,7 +96,7 @@ export class MultiplayerService {
       roomID: this.roomID,
       name: this.user.getUsername(),
       userIsPro: this.user.getProUser(),
-      userIsPlayer: this.isPlaying,
+      userIsPlayer: this.isPlayingGame(),
       message: message
     });
   }
@@ -97,6 +115,7 @@ export class MultiplayerService {
       this.socket!.emit('register-socket', {
         userID: this.user.getUserID(),
         roomID: this.roomID,
+        slotID: this.slotID
       })
     });
 
@@ -159,6 +178,16 @@ export class MultiplayerService {
     this.isAdmin = this.adminUserID === this.user.getUserID();
     this.numUsersConnected = data.numUsersConnected;
     this.messages = data.messages;
+
+    // initialize slots
+    this.slots = [];
+    data.slots.forEach(slot => {
+      this.slots.push(new SlotData(slot.slotID, slot.type, slot.playerUserID, slot.playerName, slot.numHearts));
+    });
+
+    // find my slot, if it exists
+    this.mySlot = this.slots.find(slot => slot.playerID === this.user.getUserID());
+
   }
 
   // on leave page, disconnect socket and send closing HTTP request

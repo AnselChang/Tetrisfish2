@@ -46,7 +46,8 @@ export class Room {
         return slot;
     }
 
-    public isThereSocketWithUserID(userID: string): boolean {
+    public isThereSocketWithUserID(userID: string | undefined): boolean {
+        
         for (const socketUser of this.sockets) {
             if (socketUser.userID === userID) {
                 return true;
@@ -124,7 +125,8 @@ export class Room {
             roomID: this.roomID,
             adminUserID: this.adminUserID,
             numUsersConnected: this.getNumConnectedSockets(),
-            messages: this.chat.getMessages()
+            messages: this.chat.getMessages(),
+            slots: this.slots.map(slot => slot.serialize())
         }
     }
 

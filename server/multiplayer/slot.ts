@@ -29,9 +29,10 @@ export class Slot {
 
     serialize(): SerializedSlot {
         return {
+            slotID: this.slotID,
             type: this.getType(),
-            index: this.index,
             playerName: this.playerName,
+            playerUserID: this.state?.type === SlotType.HUMAN ? (this.state as HumanSlotState).userID : undefined,
             numHearts: this.numHearts
         }
     }

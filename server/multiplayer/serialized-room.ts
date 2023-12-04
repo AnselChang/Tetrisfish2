@@ -2,8 +2,9 @@ import { ChatMessage } from "./chat";
 import { SlotType } from "./slot-state/slot-state";
 
 export interface SerializedSlot {
+    slotID: string;
     type: SlotType;
-    index: number;
+    playerUserID?: string;
     playerName?: string;
     numHearts: number;
 }
@@ -15,5 +16,6 @@ export interface SerializedRoom {
     adminUserID: string;
     numUsersConnected: number;
     messages: ChatMessage[];
+    slots: SerializedSlot[];
 
 }

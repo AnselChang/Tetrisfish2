@@ -3,9 +3,15 @@
         <p>Room ID: {{multiplayer.getRoomID()}}</p>
         <p>Slot ID: {{multiplayer.getSlotID()}}</p>
         <p>isPlaying: {{multiplayer.isPlayingGame()}}</p>
-        <p>numUsersConnected: {{multiplayer.getNumUsersConnected()}}</p>
-        <p>Messages:</p>
-        <p class="tiny" *ngFor="let msg of multiplayer.getMessages()">{{msg}}</p>
+
+        <div *ngFor="let slot of multiplayer.getSlots()">
+            <p>Slot id: {{slot.slotID}}</p>
+            <p>Player ID: {{slot.playerID}}</p>
+            <p>Player name: {{slot.playerName}}</p>
+            <p>Type: {{slot.type}}</p>
+            <p>NumHearts: {{slot.numHearts}}</p>
+        </div>
+        
     </div>
     <div class="panels">
         <app-section class="admin-panel">
@@ -22,10 +28,10 @@
             <div class="chat-messages-container">
                 <p class="message" *ngFor="let msg of multiplayer.getMessages()">
                     <span class="username"
-                    [style.color]="msg.userIsPro ? '#FFB938' : (msg.userIsPlayer ? '#387CFF' : 'white')"
+                    [style.color]="msg.userIsPlayer ? '#387CFF' : (msg.userIsPro ? '#FFB938' : 'white')"
                     >{{msg.name}}</span>
                     <app-fixed-size-image class="patreon-icon" *ngIf="msg.userIsPro" [src]="'pro_user.svg'" [width]="13" [tooltip]="'Patreon Supporter'" />
-                    <span class="content">{{msg.message}}</span>
+                    <span class="content" [ngClass]="(msg.userIsPro || msg.userIsPlayer) ? 'white' : ''">{{msg.message}}</span>
                 </p>
             </div>
 

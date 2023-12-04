@@ -67,13 +67,12 @@ p.message {
     font-family: Bai Jamjuree;
     font-size: 13px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 900;
     line-height: normal;
 }
 
 .patreon-icon {
     margin-left: 5px;
-    margin-right: 8px;
 }
 
 .patreon-icon ::ng-deep img {
@@ -86,6 +85,11 @@ p.message {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    color: #dcdcdc;
+    margin-left: 8px;
+}
+
+.message .content.white {
     color: white;
 }
 

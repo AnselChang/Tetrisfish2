@@ -20,6 +20,14 @@ export async function joinRoomPlayRoute(multiplayer: MultiplayerManager, req: Re
 
     const result = multiplayer.getRoomAndSlotByAccessCode(accessCode);
 
+    if (!userID) {
+        res.status(200).send({
+            success: false,
+            error: "User not logged in"
+        });
+        return;
+    }
+
     if (!result) {
         res.status(200).send({
             success: false,
@@ -29,21 +37,32 @@ export async function joinRoomPlayRoute(multiplayer: MultiplayerManager, req: Re
     }
 
     const {room, slot} = result;
-    const success = room.addHumanToRoomWithSlot(userID, slot);
+    
+    res.status(200).send({
+        success: true,
+        roomID: room.roomID,
+        slotID: slot.slotID
+    });
+}
 
-    if (!success) {
+export async function doesRoomExistRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
+
+    const roomID = req.query['roomID'] as string;
+    const room = multiplayer.getRoomByID(roomID);
+
+    console.log(`doesRoomExistRoute ${roomID} ${room}`);
+
+    if (!room) {
         res.status(200).send({
             success: false,
-            error: "Slot is not in room"
         });
         return;
     } else {
         res.status(200).send({
             success: true,
-            roomID: room.roomID,
-            slotID: slot.slotID
         });
     }
+
 }
 
 export async function leaveRoomRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {

@@ -126,8 +126,11 @@ export class MultiplayerManager {
                 
             const userID = data['userID'] as (string | undefined);
             const roomID = data['roomID'] as (string | undefined);
+            const slotID = data['slotID'] as (string | undefined);
 
-            const response = this.onRegisterSocket(socket, userID, roomID);
+            console.log(`Socket ${socket.id} registering with userID ${userID} and roomID ${roomID} and slotID ${slotID}`)
+
+            const response = this.onRegisterSocket(socket, userID, roomID, slotID);
             socket.emit("initialize-client", response);
         });
 
@@ -171,7 +174,7 @@ export class MultiplayerManager {
     }
 
     // called when a socket registers itself with the server. update corresponding room with socket
-    onRegisterSocket(socket: Socket, userID?: string, roomID?: string): any {
+    onRegisterSocket(socket: Socket, userID?: string, roomID?: string, slotID?: string): any {
 
         if (!roomID || !this.doesRoomExist(roomID)) {
             return {
@@ -184,6 +187,11 @@ export class MultiplayerManager {
 
         // register socket with room
         room.addSocketUser(new SocketUser(socket, userID));
+
+        // if slotID is not none and is in the room, assign the slot to the socket
+        if (userID && slotID) {
+            room.addHumanToRoomWithSlot(userID!, room.getSlotByID(slotID)!);
+        }
 
         return {
             success: true,
