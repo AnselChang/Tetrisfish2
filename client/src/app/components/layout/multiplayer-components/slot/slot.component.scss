@@ -1,0 +1,69 @@
+@import "../../../../../styles.scss";
+
+.slot {
+    width: fit-content;
+    height: fit-content;
+    background-color: $layer-1-color;
+    padding: 4px;
+    border-radius: 5px;
+}
+
+.slot.occupied {
+    display: grid;
+    grid-template-columns: 34px 217px 76px 87px;
+    column-gap: 3px;
+    grid-template-rows: 53px 83px 58px 123px 46px 142px;
+}
+
+.slot.vacant {
+    width: 422.969px;
+    height: 504.974px;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.open-slot {
+    color: #FFF;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.open-slot-text {
+    margin-bottom: 15px;
+}
+
+.open-slot-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+// ocupies the entire first row
+.name-panel {
+    grid-column: 1 / -1;
+    grid-row: 1 / 1;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-name {
+    color: #FFF;
+    text-align: center;
+    font-family: NES;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.open-slot-button ::ng-deep .description {
+    font-size: 13px;
+}

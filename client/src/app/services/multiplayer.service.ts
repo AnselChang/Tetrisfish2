@@ -9,6 +9,7 @@ import { SlotType } from 'server/multiplayer/slot-state/slot-state';
 export class SlotData {
   constructor(
     public readonly slotID: string,
+    public readonly index: number,
     public readonly type: SlotType,
     public readonly playerID?: string,
     public readonly playerName?: string,
@@ -181,8 +182,8 @@ export class MultiplayerService {
 
     // initialize slots
     this.slots = [];
-    data.slots.forEach(slot => {
-      this.slots.push(new SlotData(slot.slotID, slot.type, slot.playerUserID, slot.playerName, slot.numHearts));
+    data.slots.forEach((slot, index) => {
+      this.slots.push(new SlotData(slot.slotID, index, slot.type, slot.playerUserID, slot.playerName, slot.numHearts));
     });
 
     // find my slot, if it exists

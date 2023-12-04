@@ -63,6 +63,8 @@ import { PlayPortalComponent } from './components/layout/play-portal/play-portal
 import { FourDigitCodeComponent } from './components/BLOCK/four-digit-code/four-digit-code.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { MultiplayerComponent } from './components/layout/multiplayer-components/multiplayer/multiplayer.component';
+import { SlotComponent } from './components/layout/multiplayer-components/slot/slot.component';
+import { NesPanelComponent } from './components/layout/multiplayer-components/nes-panel/nes-panel.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -164,6 +166,8 @@ const customNotifierOptions: NotifierOptions = {
     FourDigitCodeComponent,
     ClickOutsideDirective,
     MultiplayerComponent,
+    SlotComponent,
+    NesPanelComponent,
   ],
   imports: [
     BrowserModule,

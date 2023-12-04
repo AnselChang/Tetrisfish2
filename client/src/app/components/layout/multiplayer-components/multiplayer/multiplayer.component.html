@@ -1,6 +1,6 @@
 <div class="main">
     <div class="player-boards">
-        <p>Room ID: {{multiplayer.getRoomID()}}</p>
+        <!-- <p>Room ID: {{multiplayer.getRoomID()}}</p>
         <p>Slot ID: {{multiplayer.getSlotID()}}</p>
         <p>isPlaying: {{multiplayer.isPlayingGame()}}</p>
 
@@ -10,7 +10,10 @@
             <p>Player name: {{slot.playerName}}</p>
             <p>Type: {{slot.type}}</p>
             <p>NumHearts: {{slot.numHearts}}</p>
-        </div>
+        </div> -->
+
+        <app-slot *ngFor="let slot of multiplayer.getSlots()" [slot]="slot" />
+
         
     </div>
     <div class="panels">

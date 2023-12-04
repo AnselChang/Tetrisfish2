@@ -1,0 +1,22 @@
+<div *ngIf="!isVacant()" class="slot occupied">
+    <app-nes-panel class="name-panel">
+        <h1 class="player-name">{{slot.playerName}}</h1>
+    </app-nes-panel>
+</div>
+
+<div *ngIf="isVacant()" class="slot vacant">
+    <h1 class="open-slot-text">Open Slot {{slot.index+1}}</h1>
+    <div class="open-slot-buttons">
+        <app-button-big class="open-slot-button" label="Invite Player" icon="puzzle.png" color="#3DAD55"
+            description="Generates a four-digit access code to invite a player to join this slot"
+            (click)="onInvitePlayer.emit()" />
+        <app-button-big class="open-slot-button" label="Register AI" icon="puzzle.png" color="#A54ECE"
+            description="Play against configurable AI opponents like StackRabbit and TripleMachine"
+            (click)="onRegisterAI.emit()" />
+        <app-button-big class="open-slot-button" label="Register myself" icon="puzzle.png" color="#4351CE"
+            description="Register yourself to play through live capture or an integrated emulator"
+            (click)="onRegisterMyself.emit()" />
+        <app-button-big class="open-slot-button" label="Delete Slot" icon="puzzle.png" color="#CB4C4C"
+            (click)="onDeleteSlot.emit()" />
+    </div>
+</div>
