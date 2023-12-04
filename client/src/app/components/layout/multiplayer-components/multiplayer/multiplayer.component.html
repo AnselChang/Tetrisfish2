@@ -21,11 +21,11 @@
 
             <div class="chat-messages-container">
                 <div class="message" *ngFor="let msg of multiplayer.getMessages()">
-                    <p class="username"
+                    <span class="username"
                     [style.color]="msg.userIsPro ? '#FFB938' : (msg.userIsPlayer ? '#387CFF' : 'white')"
-                    >{{msg.name}}</p>
+                    >{{msg.name}}</span>
                     <app-fixed-size-image class="patreon-icon" *ngIf="msg.userIsPro" [src]="'pro_user.svg'" [width]="15" [tooltip]="'Patreon Supporter'" />
-                    <p class="content">{{msg.message}}</p>
+                    <span class="content">{{msg.message}}</span>
                 </div>
             </div>
 

@@ -59,14 +59,11 @@
     gap: 5px;
 }
 
-div.message {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    align-items: center;
+p.message {
+    text-align: left;
 }
 
-div.message p.username {
+.message .username {
     font-family: Bai Jamjuree;
     font-size: 15px;
     font-style: normal;
@@ -75,10 +72,15 @@ div.message p.username {
 }
 
 .patreon-icon {
-    transform: translateY(2px);
+    margin-left: 5px;
+    margin-right: 8px;
 }
 
-div.message p.content {
+.patreon-icon ::ng-deep img {
+    transform: translateY(1.5px);
+}
+
+.message .content {
     font-family: Bai Jamjuree;
     font-size: 15px;
     font-style: normal;
