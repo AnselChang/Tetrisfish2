@@ -27,6 +27,13 @@ export class MultiplayerManager {
         return this.getRoomByID(roomID) !== undefined;
     }
 
+    doesSlotExist(slotID: string): boolean {
+        for (const room of this.rooms) {
+            if (room.getSlotByID(slotID)) return true;
+        }
+        return false;
+    }
+
     getRoomAndSlotByAccessCode(accessCode: number): {room: Room, slot: Slot} | undefined {
         const slotID = this.accessCodes.getSlotID(accessCode);
         if (!slotID) return undefined;

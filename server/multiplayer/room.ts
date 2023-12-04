@@ -27,7 +27,7 @@ export class Room {
     public readonly chat: Chat = new Chat();
 
     constructor(
-        private readonly multiplayerManager: MultiplayerManager,
+        public readonly multiplayerManager: MultiplayerManager,
         public readonly roomID: string,
         public adminUserID: string
     ) {
@@ -42,7 +42,6 @@ export class Room {
     public addSlot(): Slot {
         const slot = new Slot(uuidv4(), this, this.slots.length);
         this.slots.push(slot);
-        // this.multiplayerManager.accessCodes.onSlotCreated(slot.slotID);
         return slot;
     }
 
@@ -76,7 +75,7 @@ export class Room {
         if (!this.isSlotInRoom(slot)) return false;
 
         slot.assignHuman(userID);
-        this.multiplayerManager.accessCodes.onSlotRemoved(slot.slotID);
+        this.multiplayerManager.accessCodes.revokeAccessCodeForSlot(slot.slotID);
         return true;
     }
 

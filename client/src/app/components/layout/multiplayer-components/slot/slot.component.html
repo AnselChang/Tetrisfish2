@@ -9,7 +9,7 @@
     <div class="open-slot-buttons">
         <app-button-big class="open-slot-button" label="Invite Player" icon="puzzle.png" color="#3DAD55"
             description="Generates a four-digit access code to invite a player to join this slot"
-            (click)="onInvitePlayer.emit()" />
+            (click)="onClickInvitePlayer()" />
         <app-button-big class="open-slot-button" label="Register AI" icon="puzzle.png" color="#A54ECE"
             description="Play against configurable AI opponents like StackRabbit and TripleMachine"
             (click)="onRegisterAI.emit()" />

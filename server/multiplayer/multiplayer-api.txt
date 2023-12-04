@@ -15,6 +15,12 @@ POST generate-slot-access-code {
     accessCode?: number 4-digit access code
 }
 
+POST revoke-slot-access-code {
+    slotID: string
+} response {
+    success: boolean
+}
+
 GET does-room-exist {
     roomID: string
 } response {

@@ -22,7 +22,7 @@ export class AccessCodeManager {
     }
 
     // generate a new 6-digit access code that is not already in use
-    private generateAccessCode(): number {
+    private getUniqueAccessCode(): number {
         let accessCode: number;
         do {
             accessCode = Math.floor(Math.random() * Math.pow(10, NUM_DIGITS));
@@ -31,23 +31,25 @@ export class AccessCodeManager {
     }
 
     // generate a new access code for a slot
-    onSlotCreated(slotID: string): number {
-        const accessCode = this.generateAccessCode();
+    generateAccessCode(slotID: string): number {
+        const accessCode = this.getUniqueAccessCode();
         this.accessCodes.set(accessCode, slotID);
+        console.log(`Generated access code ${accessCode} for slot ${slotID}`);
         return accessCode;
     }
 
     // remove an access code from the map
-    onSlotRemoved(slotID: string): void {
+    revokeAccessCodeForSlot(slotID: string): void {
         this.accessCodes.forEach((value, key) => {
             if (value === slotID) {
+                console.log(`Revoked access code ${key} for slot ${slotID}`);
                 this.accessCodes.delete(key);
             }
         });
     }
 
     onRoomDestroyed(room: Room): void {
-        room.getSlots().forEach(slot => this.onSlotRemoved(slot.slotID));
+        room.getSlots().forEach(slot => this.revokeAccessCodeForSlot(slot.slotID));
     }
 
 }

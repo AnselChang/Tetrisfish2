@@ -20,7 +20,7 @@ import { getGlobalStatsRoute } from './routes/global-stats';
 import { LeaderboardType } from './database/leaderboard/leaderboard-schema';
 import { getLeaderboardAccuraciesRoute, getLeaderboardRoute } from './routes/leaderboard';
 import { MultiplayerManager } from './multiplayer/multiplayer-manager';
-import { createRoomRoute, doesRoomExistRoute, joinRoomPlayRoute, leaveRoomRoute } from './routes/multiplayer';
+import { createRoomRoute, doesRoomExistRoute, generateSlotAccessCodeRoute, joinRoomPlayRoute, leaveRoomRoute, revokeSlotAccessCodeRoute } from './routes/multiplayer';
 
 
 declare module 'express-session' {
@@ -126,6 +126,9 @@ export default async function createApp(): Promise<{
     app.post('/api/multiplayer/join-room-play', async (req: Request, res: Response) => joinRoomPlayRoute(multiplayer, req, res));
     app.get('/api/multiplayer/does-room-exist', async (req: Request, res: Response) => doesRoomExistRoute(multiplayer, req, res));
     app.post('/api/multiplayer/leave-room', async (req: Request, res: Response) => { leaveRoomRoute(multiplayer, req, res) });
+
+    app.post('/api/multiplayer/generate-slot-access-code', async (req: Request, res: Response) => { generateSlotAccessCodeRoute(multiplayer, req, res) });
+    app.post('/api/multiplayer/revoke-slot-access-code', async (req: Request, res: Response) => { revokeSlotAccessCodeRoute(multiplayer, req, res) });
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {

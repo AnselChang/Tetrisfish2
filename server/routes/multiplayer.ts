@@ -65,6 +65,55 @@ export async function doesRoomExistRoute(multiplayer: MultiplayerManager, req: R
 
 }
 
+export async function generateSlotAccessCodeRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
+    const slotID = req.body['slotID'] as string;
+    if (!slotID) {
+        res.status(200).send({
+            success: false,
+            error: "Invalid slotID"
+        });
+        return;
+    }
+
+    if (!multiplayer.doesSlotExist(slotID)) {
+        res.status(200).send({
+            success: false,
+            error: "Slot does not exist"
+        });
+        return;
+    }
+
+    const result = multiplayer.accessCodes.generateAccessCode(slotID);
+    res.status(200).send({
+        success: true,
+        accessCode: result
+    });
+}
+
+export async function revokeSlotAccessCodeRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
+    const slotID = req.body['slotID'] as string;
+    if (!slotID) {
+        res.status(200).send({
+            success: false,
+            error: "Invalid slotID"
+        });
+        return;
+    }
+
+    if (!multiplayer.doesSlotExist(slotID)) {
+        res.status(200).send({
+            success: false,
+            error: "Slot does not exist"
+        });
+        return;
+    }
+
+    multiplayer.accessCodes.revokeAccessCodeForSlot(slotID);
+    res.status(200).send({
+        success: true,
+    });
+}
+
 export async function leaveRoomRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
 
     const userID = req.body['userID'] as string;
