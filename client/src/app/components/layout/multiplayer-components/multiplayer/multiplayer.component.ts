@@ -9,6 +9,8 @@ import { MultiplayerService } from 'client/src/app/services/multiplayer.service'
 })
 export class MultiplayerComponent implements OnInit, OnDestroy {
 
+  public messageBeingTyped: string = '';
+
   constructor(public multiplayer: MultiplayerService, private router: Router) {}
 
   ngOnInit(): void {
@@ -25,6 +27,14 @@ export class MultiplayerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.multiplayer.onLeavePage();
+  }
+
+  sendMessage() {
+
+    this.multiplayer.sendMessage(this.messageBeingTyped);
+
+    // clear message
+    this.messageBeingTyped = '';
   }
 
 }

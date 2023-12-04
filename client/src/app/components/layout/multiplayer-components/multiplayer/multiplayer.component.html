@@ -1,7 +1,47 @@
-<p>Room ID: {{multiplayer.getRoomID()}}</p>
-<p>Slot ID: {{multiplayer.getSlotID()}}</p>
-<p>isPlaying: {{multiplayer.isPlayingGame()}}</p>
-<p>numUsersConnected: {{multiplayer.getNumUsersConnected()}}</p>
+<div class="main">
+    <div class="player-boards">
+        <p>Room ID: {{multiplayer.getRoomID()}}</p>
+        <p>Slot ID: {{multiplayer.getSlotID()}}</p>
+        <p>isPlaying: {{multiplayer.isPlayingGame()}}</p>
+        <p>numUsersConnected: {{multiplayer.getNumUsersConnected()}}</p>
+        <p>Messages:</p>
+        <p class="tiny" *ngFor="let msg of multiplayer.getMessages()">{{msg}}</p>
+    </div>
+    <div class="panels">
+        <app-section class="admin-panel">
+            <h1>Admin Panel</h1>
+        </app-section>
 
-<p>Messages:</p>
-<p class="tiny" *ngFor="let msg of multiplayer.getMessages()">{{msg}}</p>
+        <app-section class="chat-panel">
+            <h1>Live Chat</h1>
+            <p class="num-users-connected"
+                *ngIf="multiplayer.getNumUsersConnected() as i">
+                {{i}} {{i===1?'user':'users'}} connected
+            </p>
+
+            <div class="chat-messages-container">
+                <div class="message" *ngFor="let msg of multiplayer.getMessages()">
+                    <p class="username"
+                    [style.color]="msg.userIsPro ? '#FFB938' : (msg.userIsPlayer ? '#387CFF' : 'white')"
+                    >{{msg.name}}</p>
+                    <app-fixed-size-image class="patreon-icon" *ngIf="msg.userIsPro" [src]="'pro_user.svg'" [width]="15" [tooltip]="'Patreon Supporter'" />
+                    <p class="content">{{msg.message}}</p>
+                </div>
+            </div>
+
+            <div class="send-message">
+                <input class="send-message-input" type="text"
+                placeholder="Type a message..." [(ngModel)]="messageBeingTyped"
+                (keydown.enter)="sendMessage()"/>
+                <img class="send-message-button" (click)="sendMessage()" [src]="'./assets/img/send_message.svg'" height="27px">
+            </div>
+
+        </app-section>
+
+    </div>
+</div>
+
+<app-section class="match-info">
+<h1 class="title">March 2023 Computer Championship</h1>
+<h2 class="subtitle">Semifinals 1</h2>
+</app-section>

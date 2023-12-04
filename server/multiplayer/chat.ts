@@ -6,11 +6,10 @@ const MAX_MESSAGES_STORED = 200;
 
 export class ChatMessage {
     constructor(
-        userID: string | undefined,
-        name: string,
-        userIsPro: boolean,
-        userIsPlayer: boolean,
-        message: string,
+        public readonly name: string,
+        public readonly userIsPro: boolean,
+        public readonly userIsPlayer: boolean,
+        public readonly message: string,
     ) {}
 }
 

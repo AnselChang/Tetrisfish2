@@ -112,3 +112,8 @@ hr {
   }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@font-face {
+    font-family: 'NES';
+    src: url('../../client/src/assets/fonts/Pixel_NES.otf') format('opentype');
+}

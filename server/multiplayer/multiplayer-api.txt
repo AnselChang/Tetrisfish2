@@ -66,11 +66,25 @@ SOCKET on-slot-filled {
     data: SerializedSlot
 }
 
-SOCKET on-comment {
-    message: ChatMessage
+// broadcasted to all sockets in room
+SOCKET on-message {
+    name: string,
+    userIsPro: boolean,
+    userIsPlayer: boolean,
+    message: string
 }
 
 WEBRTC update {
     // frame of board state / camera
     // game state if it changed
+}
+
+--------------------------------
+CLIENT PUSH UPDATES (CLIENT TO SERVER)
+SOCKET send-message {
+    roomID: string
+    name: string,
+    userIsPro: boolean,
+    userIsPlayer: boolean,
+    message: string
 }

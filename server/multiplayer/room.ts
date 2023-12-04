@@ -24,7 +24,7 @@ export class Room {
 
     private slots: Slot[] = [];
     private sockets: SocketUser[] = [];
-    private chat: Chat = new Chat();
+    public readonly chat: Chat = new Chat();
 
     constructor(
         private readonly multiplayerManager: MultiplayerManager,

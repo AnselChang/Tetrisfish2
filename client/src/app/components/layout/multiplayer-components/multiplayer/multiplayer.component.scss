@@ -1,0 +1,142 @@
+@import "../../../../../styles.scss";
+
+:host {
+    flex-grow: 1;
+    margin-bottom: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.player-boards {
+    flex-grow: 1;
+}
+
+.panels {
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-panel {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.num-users-connected {
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.chat-messages-container {
+    margin-top: 5px;
+    flex-grow: 1;
+    border-radius: 5px;
+    background-color: $layer-2-color;
+
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+div.message {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+div.message p.username {
+    font-family: Bai Jamjuree;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.patreon-icon {
+    transform: translateY(2px);
+}
+
+div.message p.content {
+    font-family: Bai Jamjuree;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.send-message {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.send-message-input {
+    flex-grow: 1;
+    border: 0;
+    background-color: $layer-2-color;
+    border-radius: 5px;
+    padding: 5px;
+    color: white;
+}
+
+.send-message-input:active {
+    border: 0;
+    background-color: $layer-3-color;
+}
+
+.send-message-button:hover {
+    filter: brightness(0.8);
+}
+
+.send-message-button:active {
+    filter: brightness(0.7);
+}
+
+.match-info ::ng-deep section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.title {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.subtitle {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

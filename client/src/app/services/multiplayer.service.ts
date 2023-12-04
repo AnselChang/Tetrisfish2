@@ -60,6 +60,29 @@ export class MultiplayerService {
     return this.isPlaying;
   }
 
+  /* SOCKET send-message {
+    roomID: string
+    name: string,
+    userIsPro: boolean,
+    userIsPlayer: boolean,
+    message: string
+  } */
+  sendMessage(message: string) {
+
+    if (!this.socket) {
+      console.error('socket not initialized');
+      return
+    }
+
+    this.socket.emit('send-message', {
+      roomID: this.roomID,
+      name: this.user.getUsername(),
+      userIsPro: this.user.getProUser(),
+      userIsPlayer: this.isPlaying,
+      message: message
+    });
+  }
+
   // on enter page, establish socket connection
   onEnterPage() {
     this.socket = io();
@@ -77,7 +100,7 @@ export class MultiplayerService {
       })
     });
 
-    // sync server data with client
+    // listen for event to sync server data with client
     this.socket.on('initialize-client', (data: any) => {
 
       if (!data['success']) {
@@ -88,7 +111,7 @@ export class MultiplayerService {
         return
       }
 
-      const roomData = data['room'] as (SerializedRoom | undefined);
+      const roomData = data['data'] as (SerializedRoom | undefined);
       if (!roomData) {
         console.error('room data from server not found');
         return
@@ -99,11 +122,28 @@ export class MultiplayerService {
 
     });
 
+    // listen for chat message event
+    this.socket.on('on-message', (data: any) => {
+
+      const name = data['name'] as string;
+      const userIsPro = data['userIsPro'] as boolean;
+      const userIsPlayer = data['userIsPlayer'] as boolean;
+      const message = data['message'] as string;
+
+      if (name === undefined || userIsPro === undefined || userIsPlayer === undefined || message === undefined) {
+        console.error('invalid on-message data', data);
+        return
+      }
+
+      // add message to chat history
+      this.messages.push(new ChatMessage(name, userIsPro, userIsPlayer, message));
+
+    });
+
     // listen for socket disconnection event
     this.socket.on('disconnect', () => {
       console.log('disconnected from socket');
     });
-
   }
 
   // when the initial server data dump is recived at the start of the socket connection

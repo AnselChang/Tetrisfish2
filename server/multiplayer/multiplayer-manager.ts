@@ -3,6 +3,7 @@ import { Room, SocketUser } from './room';
 import { Socket } from 'socket.io';
 import { AccessCodeManager } from './access-code-manager';
 import { Slot } from './slot';
+import { ChatMessage } from './chat';
 
 
 /*
@@ -128,7 +129,38 @@ export class MultiplayerManager {
 
             const response = this.onRegisterSocket(socket, userID, roomID);
             socket.emit("initialize-client", response);
+        });
 
+        // chat message sent by someone in room
+        socket.on("send-message", (data: any) => {
+
+            const roomID = data['roomID'] as string;
+            const name = data['name'] as string;
+            const userIsPro = data['userIsPro'] as boolean;
+            const userIsPlayer = data['userIsPlayer'] as boolean;
+            const message = data['message'] as string;
+
+            if (roomID === undefined || name === undefined || userIsPro === undefined || userIsPlayer === undefined || message === undefined) {
+                console.error("Invalid send-message data", data);
+                return;
+            }
+
+            const room = this.getRoomByID(roomID);
+            if (!room) {
+                console.error(`Room ${roomID} not found`);
+                return;
+            }
+
+            // add message to chat history
+            room.chat.addMessage(new ChatMessage(name, userIsPro, userIsPlayer, message));
+
+            // broadcast event to all sockets in room
+            room.broadcastAll("on-message", {
+                name: name,
+                userIsPro: userIsPro,
+                userIsPlayer: userIsPlayer,
+                message: message
+            });
         });
 
         socket.on("disconnect", () => {
