@@ -23,7 +23,7 @@
 }
 
 .panels {
-    width: 240px;
+    width: 330px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -65,7 +65,7 @@ p.message {
 
 .message .username {
     font-family: Bai Jamjuree;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -77,15 +77,16 @@ p.message {
 }
 
 .patreon-icon ::ng-deep img {
-    transform: translateY(1.5px);
+    transform: translateY(1.3px);
 }
 
 .message .content {
     font-family: Bai Jamjuree;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    color: white;
 }
 
 .send-message {

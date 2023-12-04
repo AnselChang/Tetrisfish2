@@ -20,13 +20,13 @@
             </p>
 
             <div class="chat-messages-container">
-                <div class="message" *ngFor="let msg of multiplayer.getMessages()">
+                <p class="message" *ngFor="let msg of multiplayer.getMessages()">
                     <span class="username"
                     [style.color]="msg.userIsPro ? '#FFB938' : (msg.userIsPlayer ? '#387CFF' : 'white')"
                     >{{msg.name}}</span>
-                    <app-fixed-size-image class="patreon-icon" *ngIf="msg.userIsPro" [src]="'pro_user.svg'" [width]="15" [tooltip]="'Patreon Supporter'" />
+                    <app-fixed-size-image class="patreon-icon" *ngIf="msg.userIsPro" [src]="'pro_user.svg'" [width]="13" [tooltip]="'Patreon Supporter'" />
                     <span class="content">{{msg.message}}</span>
-                </div>
+                </p>
             </div>
 
             <div class="send-message">
