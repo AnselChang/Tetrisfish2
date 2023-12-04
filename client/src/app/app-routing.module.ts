@@ -15,6 +15,7 @@ import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-
 import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
 import { OnLoginComponent } from './components/layout/on-login/on-login.component';
 import { GameAnalysisPageComponent } from './components/layout/game-analysis-components/game-analysis-page/game-analysis-page.component';
+import { PlayPortalComponent } from './components/layout/play-portal/play-portal.component';
 
 const routes: Routes = [
   // { path: 'login', component: LoginPageComponent},
@@ -23,6 +24,7 @@ const routes: Routes = [
     component: RootComponent,
     children: [
       { path: 'home', component: HomePageComponent },
+      { path: 'play-portal', component: PlayPortalComponent },
       { path: 'play', component: PlayPageComponent } ,
       { path: 'calibrate', component: CalibratePageComponent },
       { path: 'how-to-play', component: HowToPlayComponent },

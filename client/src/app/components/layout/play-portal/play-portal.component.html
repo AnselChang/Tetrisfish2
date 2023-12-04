@@ -1,0 +1,28 @@
+<header>
+    <h1>Ansel, let’s play a game.</h1>
+</header>
+<section class="play-options">
+
+    <div class="option-container hoverable">
+        <h1>Play Solo</h1>
+        <app-fixed-size-image [src]="'play_1p.svg'" [width]="248"></app-fixed-size-image>
+        <p>
+            Get detailed real-time feedback and statistics as you play through live capture or our emulator!
+        </p>
+    </div>
+    <div class="option-container hoverable">
+        <h1>Multiplayer</h1>
+        <app-fixed-size-image [src]="'play_2p.svg'" [width]="248"></app-fixed-size-image>
+        <p>
+            Invite others to play in your multiplayer room, or train against an AI!
+        </p>
+    </div>
+    <div class="option-container" (click)="">
+        <h1>Multiplayer</h1>
+        <app-four-digit-code #fourDigitCode [(code)]="accessCode"></app-four-digit-code>
+        <p>
+            Invite others to play in your multiplayer room, or train against an AI!
+        </p>
+    </div>
+
+</section>

@@ -40,7 +40,7 @@ export class CalibratePageComponent implements OnInit, AfterViewInit, OnDestroy 
   
         const loggedIn = status === LoginStatus.LOGGED_IN;
         if (!loggedIn) {
-          this.router.navigate(['/how-to-play']);
+          this.router.navigate(['/play-portal']);
         }
       });
     }

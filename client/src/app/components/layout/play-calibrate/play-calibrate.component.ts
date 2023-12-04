@@ -36,7 +36,7 @@ export class PlayCalibrateComponent implements OnInit {
       console.log("Logged in?", loggedIn);
 
       let route;
-      if (!loggedIn) route = '/how-to-play';
+      if (!loggedIn) route = '/play-portal';
       else if (this.shouldLoadCalibrationFirst()) route = '/calibrate'
       else route = '/play';
 

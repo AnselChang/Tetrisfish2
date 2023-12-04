@@ -59,6 +59,9 @@ import { TooltipComponent } from './components/BLOCK/tooltip/tooltip.component';
 import { TooltipDirective } from './directives/tooltip.directive';
 import { TooltipIndicatorComponent } from './components/BLOCK/tooltip-indicator/tooltip-indicator.component';
 import { PuzzleComponent } from './components/puzzle/puzzle.component';
+import { PlayPortalComponent } from './components/layout/play-portal/play-portal.component';
+import { FourDigitCodeComponent } from './components/BLOCK/four-digit-code/four-digit-code.component';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -156,6 +159,9 @@ const customNotifierOptions: NotifierOptions = {
     TooltipDirective,
     TooltipIndicatorComponent,
     PuzzleComponent,
+    PlayPortalComponent,
+    FourDigitCodeComponent,
+    ClickOutsideDirective,
   ],
   imports: [
     BrowserModule,

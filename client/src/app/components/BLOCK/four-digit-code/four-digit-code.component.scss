@@ -1,0 +1,37 @@
+.digits {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-self: center;
+}
+
+.digit {
+    width: 62px;
+    height: 84px;
+    border-radius: 5px;
+    background-color: #202020;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 3px solid rgba(0,0,0,0);
+}
+
+.digit.selected {
+    border: 3px solid #FFF;
+}
+
+.digit:hover {
+    background-color: #191919;
+}
+
+.digit-character {
+    text-align: center;
+    font-family: Londrina Solid;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+}
