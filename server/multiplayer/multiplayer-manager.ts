@@ -22,6 +22,10 @@ export class MultiplayerManager {
         return this.rooms.find(room => room.roomID === roomID);
     }
 
+    doesRoomExist(roomID: string): boolean {
+        return this.getRoomByID(roomID) !== undefined;
+    }
+
     getRoomAndSlotByAccessCode(accessCode: number): {room: Room, slot: Slot} | undefined {
         const slotID = this.accessCodes.getSlotID(accessCode);
         if (!slotID) return undefined;
@@ -111,4 +115,57 @@ export class MultiplayerManager {
             data: slot.serialize()
         });
     }
+
+    // called when a socket connects to the server
+    onSocketConnectToServer(socket: Socket): void {
+        console.log(`Socket ${socket.id} connected to server`);
+
+        // when client connects, it immediately sends register-socket event to bind userID to socket
+        socket.on("register-socket", (data: any) => {
+                
+            const userID = data['userID'] as (string | undefined);
+            const roomID = data['roomID'] as (string | undefined);
+
+            const response = this.onRegisterSocket(socket, userID, roomID);
+            socket.emit("initialize-client", response);
+
+        });
+
+        socket.on("disconnect", () => {
+            console.log(`Socket ${socket.id} disconnected from server`);
+            this.onUnregisterSocket(socket);
+        });
+
+    }
+
+    // called when a socket registers itself with the server. update corresponding room with socket
+    onRegisterSocket(socket: Socket, userID?: string, roomID?: string): any {
+
+        if (!roomID || !this.doesRoomExist(roomID)) {
+            return {
+                success: false,
+                error: "Room not found"
+            };
+        }
+
+        const room = this.getRoomByID(roomID)!;
+
+        // register socket with room
+        room.addSocketUser(new SocketUser(socket, userID));
+
+        return {
+            success: true,
+            data: room.serialize()
+        };
+    }
+
+    // called when a socket disconnects from the server. remove socket from all rooms
+    onUnregisterSocket(socket: Socket): void {
+        this.rooms.forEach(room => {
+            if (room.isSocketConnected(socket)) {
+                room.removeSocket(socket);
+            }
+        });
+    }
+
 }

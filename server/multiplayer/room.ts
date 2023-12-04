@@ -55,6 +55,7 @@ export class Room {
         return false;
     }
 
+    // CALLED BY SOCKET
     // tries to add a socket user to the room. Returns true if successful, false otherwise.
     // fails if the socketUser has userID and the userID is already in the room
     public addSocketUser(socketUser: SocketUser): boolean {
@@ -66,6 +67,7 @@ export class Room {
         return true;
     }
 
+    // CALLED BY HTTP
     // add a human to a slot in the room. This happens after the HTTP request POST join-room-play
     // this does not necesarily mean the socket connection has been established yet. that will happen right after
     public addHumanToRoomWithSlot(userID: string, slot: Slot): boolean {
@@ -77,6 +79,7 @@ export class Room {
         return true;
     }
 
+    // CALLED BY HTTP
     // remove a human with userID from room. if in slot, remove from slot.
     // if admin, promote someone else. if no human player, delete room
     removeHumanFromRoom(userID: string) {
@@ -100,6 +103,11 @@ export class Room {
         }
     }
 
+    public isSocketConnected(socket: Socket): boolean {
+        return this.sockets.find(socketUser => socketUser.socket === socket) !== undefined;
+    }
+
+    // CALLED BY SOCKET
     // remove a socket from the room. happens on disconnect
     public removeSocket(socket: Socket): void {
         this.sockets = this.sockets.filter(socketUser => socketUser.socket !== socket);

@@ -42,6 +42,22 @@ POST leave-room {
 }
 
 --------------------------------
+INITIAL SOCKET HANDSHAKE
+
+(client to server)
+SOCKET register-socket {
+    roomID: string
+    userID?: string // if undefined, is spectator
+}
+
+(server to client, in response)
+SOCKET initialize-client {
+    success: boolean
+    error?: string
+    data: SerializedRoom
+}
+
+--------------------------------
 EVENT UPDATE MESSAGES (SERVER TO CLIENT)
 
 SOCKET on-slot-filled {

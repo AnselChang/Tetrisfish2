@@ -2,10 +2,11 @@
 /**
  * Module dependencies.
  */
-require('../server/app').default().then(app => {
+require('../server/app').default().then(({app, database, discordBot, multiplayer}) => {
 
   const debug = require('debug')('NameApp:server');
   const http = require('http');
+  const { Server } = require('socket.io');
   /**
    * Get port from environment and store in Express.
    */
@@ -17,6 +18,12 @@ require('../server/app').default().then(app => {
 
 
   const server = http.createServer(app);
+  const io = new Server(server);
+
+  io.on('connection', (socket) => {
+    multiplayer.onSocketConnectToServer(socket);
+  });
+
   /**
    * Listen on provided port, on all network interfaces.
    */

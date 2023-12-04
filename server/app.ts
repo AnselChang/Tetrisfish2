@@ -37,7 +37,12 @@ interface ExtendedRequest extends Request {
 
 require('dotenv').config();
 
-export default async function createApp(): Promise<Express> {
+export default async function createApp(): Promise<{
+    app : Express,
+    database: Database,
+    discordBot: DiscordBot,
+    multiplayer: MultiplayerManager
+}> {
     const app = express();
     const clientDir = path.join(__dirname, '../../public');
 
@@ -131,5 +136,10 @@ export default async function createApp(): Promise<Express> {
       res.sendFile(path.join(clientDir, 'index.html'));
     });
 
-    return app;
+    return {
+        app,
+        database,
+        discordBot,
+        multiplayer
+    }
 }

@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MultiplayerService } from 'client/src/app/services/multiplayer.service';
 
 @Component({
@@ -8,9 +9,17 @@ import { MultiplayerService } from 'client/src/app/services/multiplayer.service'
 })
 export class MultiplayerComponent implements OnInit, OnDestroy {
 
-  constructor(public multiplayer: MultiplayerService) {}
+  constructor(public multiplayer: MultiplayerService, private router: Router) {}
 
   ngOnInit(): void {
+
+    // redirect if multiplayer service isn't in a room
+    if (!this.multiplayer.isInRoom()) {
+      console.log('not in room. redirecting to play-portal');
+      this.router.navigate(['/play-portal']);
+      return
+    }
+
     this.multiplayer.onEnterPage();
   }
 

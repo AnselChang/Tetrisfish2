@@ -1,3 +1,7 @@
 <p>Room ID: {{multiplayer.getRoomID()}}</p>
 <p>Slot ID: {{multiplayer.getSlotID()}}</p>
 <p>isPlaying: {{multiplayer.isPlayingGame()}}</p>
+<p>numUsersConnected: {{multiplayer.getNumUsersConnected()}}</p>
+
+<p>Messages:</p>
+<p class="tiny" *ngFor="let msg of multiplayer.getMessages()">{{msg}}</p>
