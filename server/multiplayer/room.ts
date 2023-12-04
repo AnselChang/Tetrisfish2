@@ -114,7 +114,15 @@ export class Room {
     // CALLED BY SOCKET
     // remove a socket from the room. happens on disconnect
     public removeSocket(socket: Socket): void {
-        this.sockets = this.sockets.filter(socketUser => socketUser.socket !== socket);
+
+        if (this.isSocketConnected(socket)) { // if socket is in room
+
+            // remove socket from room
+            this.sockets = this.sockets.filter(socketUser => socketUser.socket !== socket);
+
+            // broadcast change
+            this.onChange();
+        }
     }
 
     public getNumConnectedSockets(): number {

@@ -49,28 +49,6 @@ export class MultiplayerManager {
         return room;
     }
 
-    onSocketDisconnect(socket: Socket): void {
-
-        const emptyRooms: Room[] = [];
-
-        this.rooms.forEach(room => {
-            room.removeSocket(socket);
-            if (room.getNumConnectedSockets() === 0) emptyRooms.push(room);
-        });
-
-        // delete all empty rooms
-        emptyRooms.forEach(room => {
-            this.deleteRoom(room);
-        });
-
-    }
-
-    deleteRoom(room: Room) {
-        this.rooms = this.rooms.filter(r => r !== room);
-        this.accessCodes.onRoomDestroyed(room);
-        console.log(`Deleted room ${room.roomID}`);
-    }
-
     // called when a socket joins through room link. Attempt to join the room.
     onSocketJoinRoom(roomID: string, socket: Socket, userID?: string): void {
 
@@ -181,11 +159,25 @@ export class MultiplayerManager {
 
     // called when a socket disconnects from the server. remove socket from all rooms
     onUnregisterSocket(socket: Socket): void {
+
+        const emptyRooms: Room[] = [];
+
         this.rooms.forEach(room => {
-            if (room.isSocketConnected(socket)) {
-                room.removeSocket(socket);
-            }
+            room.removeSocket(socket);
+            if (room.getNumConnectedSockets() === 0) emptyRooms.push(room);
         });
+
+        // delete all empty rooms
+        emptyRooms.forEach(room => {
+            this.deleteRoom(room);
+        });
+
+    }
+
+    deleteRoom(room: Room) {
+        this.rooms = this.rooms.filter(r => r !== room);
+        this.accessCodes.onRoomDestroyed(room);
+        console.log(`Deleted room ${room.roomID}`);
     }
 
 }
