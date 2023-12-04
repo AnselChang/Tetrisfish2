@@ -9,14 +9,32 @@
     <div class="open-slot-buttons">
         <app-button-big class="open-slot-button" label="Invite Player" icon="puzzle.png" color="#3DAD55"
             description="Generates a four-digit access code to invite a player to join this slot"
+            [@buttonOpacity]="buttonState" [ngStyle]="buttonStyle"
             (click)="onClickInvitePlayer()" />
         <app-button-big class="open-slot-button" label="Register AI" icon="puzzle.png" color="#A54ECE"
             description="Play against configurable AI opponents like StackRabbit and TripleMachine"
+            [@buttonOpacity]="buttonState" [ngStyle]="buttonStyle"
             (click)="onRegisterAI.emit()" />
         <app-button-big class="open-slot-button" label="Register myself" icon="puzzle.png" color="#4351CE"
             description="Register yourself to play through live capture or an integrated emulator"
+            [@buttonOpacity]="buttonState" [ngStyle]="buttonStyle"
             (click)="onRegisterMyself.emit()" />
         <app-button-big class="open-slot-button" label="Delete Slot" icon="puzzle.png" color="#CB4C4C"
-            (click)="onDeleteSlot.emit()" />
+        [@buttonOpacity]="buttonState" [ngStyle]="buttonStyle"
+        (click)="onDeleteSlot.emit()" />
     </div>
+
+    <div class="digits">
+        <div class="digit" *ngFor="let index of [0,1,2,3]"
+        [@codeAnimation]="codeAnimationState">
+            <p class="digit-character">{{getAccessCodeDigit(index)}}</p>
+        </div>
+    </div>
+
+    <div class="access-code-other">
+        <p class="instructions" [@otherOpacity]="instructionsState" [ngStyle]="instructionsStyle">Invite a player to join this room using the access code!</p>
+        <app-button-small class="back-button" label="Back" (click)="exitAccessCode()" [@otherOpacity]="backState" [ngStyle]="backStyle" />
+    </div>
+    
+
 </div>

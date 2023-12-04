@@ -20,6 +20,9 @@
     height: 504.974px;
     box-sizing: border-box;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .open-slot {
@@ -66,4 +69,59 @@
 
 .open-slot-button ::ng-deep .description {
     font-size: 13px;
+}
+
+.digits {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.digit {
+    width: 62px;
+    height: 84px;
+    border-radius: 5px;
+    background-color: #202020;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 3px solid rgba(0,0,0,0);
+}
+
+.digit-character {
+    text-align: center;
+    font-family: Londrina Solid;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+}
+
+.instructions {
+    font-size: 13px;
+    text-wrap: pretty;
+    margin-top: 10px;
+}
+
+.access-code-other {
+    width: 250px;
+    box-sizing: border-box;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+}
+
+.instructions {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.back-button {
+    display: block;
+    width: 60px;
 }
