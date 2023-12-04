@@ -70,11 +70,15 @@ export class Room {
     // CALLED BY HTTP
     // add a human to a slot in the room. This happens after the HTTP request POST join-room-play
     // this does not necesarily mean the socket connection has been established yet. that will happen right after
-    public addHumanToRoomWithSlot(userID: string, slot: Slot): boolean {
+    public async addHumanToRoomWithSlot(userID: string, slot: Slot): Promise<boolean> {
 
-        if (!this.isSlotInRoom(slot)) return false;
+        if (!this.isSlotInRoom(slot)) {
+            console.log('addHumanToRoomWithSlot: slot not in room');
+            return false;
+        }
 
-        slot.assignHuman(userID);
+        console.log('addHumanToRoomWithSlot', userID, slot.slotID);
+        await slot.assignHuman(userID);
         this.multiplayerManager.accessCodes.revokeAccessCodeForSlot(slot.slotID);
         return true;
     }
@@ -124,7 +128,6 @@ export class Room {
             roomID: this.roomID,
             adminUserID: this.adminUserID,
             numUsersConnected: this.getNumConnectedSockets(),
-            messages: this.chat.getMessages(),
             slots: this.slots.map(slot => slot.serialize())
         }
     }
@@ -139,6 +142,13 @@ export class Room {
 
     public isSlotInRoom(slot: Slot): boolean {
         return this.slots.includes(slot);
+    }
+
+    // anytime the room state changes, call this to broadcast the new state to all sockets in the room
+    public onChange() {
+        const data = this.serialize();
+        console.log('broadcasting on-change', data);
+        this.broadcastAll('on-change', { data: data });
     }
 
     // broadcast socket.io event to all sockets in the room

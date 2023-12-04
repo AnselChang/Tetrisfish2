@@ -93,37 +93,6 @@ export class MultiplayerManager {
         
     }
 
-    // called when a socket joins through access code to a specific slot. Attempt to join the room.
-    onSocketJoinRoomWithAccessCode(accessCode: number, socket: Socket, userID: string): void {
-        const slotID = this.accessCodes.getSlotID(accessCode);
-        if (!slotID) {
-            console.error(`Access code ${accessCode} not found`);
-            socket.emit("on-join-room", {success: false, reason: "Access code not found"});
-            return;
-        }
-
-        const result = this.getRoomAndSlotByAccessCode(accessCode);
-        if (!result) {
-            console.error(`Room or slot for access code ${accessCode} not found`);
-            socket.emit("on-join-room", {success: false, reason: "Room or slot not found"});
-            return;
-        }
-
-        // join the room
-        const {room, slot} = result;
-        this.onSocketJoinRoom(room.roomID, socket, userID);
-
-        // join the slot
-        slot.assignHuman(userID);
-
-        // broadcast the new slot state to all sockets in the room
-        room.broadcastAll("on-slot-filled", {
-            type: slot.getType(),
-            index: slot.slotID,
-            data: slot.serialize()
-        });
-    }
-
     // called when a socket connects to the server
     onSocketConnectToServer(socket: Socket): void {
         console.log(`Socket ${socket.id} connected to server`);
@@ -137,8 +106,9 @@ export class MultiplayerManager {
 
             console.log(`Socket ${socket.id} registering with userID ${userID} and roomID ${roomID} and slotID ${slotID}`)
 
-            const response = this.onRegisterSocket(socket, userID, roomID, slotID);
-            socket.emit("initialize-client", response);
+            this.onRegisterSocket(socket, userID, roomID, slotID).then(response => {
+                socket.emit("initialize-client", response);
+            });
         });
 
         // chat message sent by someone in room
@@ -181,7 +151,7 @@ export class MultiplayerManager {
     }
 
     // called when a socket registers itself with the server. update corresponding room with socket
-    onRegisterSocket(socket: Socket, userID?: string, roomID?: string, slotID?: string): any {
+    async onRegisterSocket(socket: Socket, userID?: string, roomID?: string, slotID?: string): Promise<any> {
 
         if (!roomID || !this.doesRoomExist(roomID)) {
             return {
@@ -197,12 +167,15 @@ export class MultiplayerManager {
 
         // if slotID is not none and is in the room, assign the slot to the socket
         if (userID && slotID) {
-            room.addHumanToRoomWithSlot(userID!, room.getSlotByID(slotID)!);
+            await room.addHumanToRoomWithSlot(userID!, room.getSlotByID(slotID)!);
         }
+
+        room.onChange();
 
         return {
             success: true,
-            data: room.serialize()
+            data: room.serialize(),
+            messages: room.chat.getMessages()
         };
     }
 

@@ -59,15 +59,15 @@ SOCKET initialize-client {
     success: boolean
     error?: string
     data: SerializedRoom
+    messages: ChatMessage[]
 }
 
 --------------------------------
 EVENT UPDATE MESSAGES (SERVER TO CLIENT)
 
-SOCKET on-slot-filled {
-    type: SlotType
-    index: number
-    data: SerializedSlot
+// anytime something besides chat changes
+SOCKET on-change {
+    data: SerializedRoom
 }
 
 // broadcasted to all sockets in room

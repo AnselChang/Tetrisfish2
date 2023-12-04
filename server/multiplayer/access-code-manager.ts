@@ -26,12 +26,16 @@ export class AccessCodeManager {
         let accessCode: number;
         do {
             accessCode = Math.floor(Math.random() * Math.pow(10, NUM_DIGITS));
-        } while (this.accessCodes.has(accessCode));
+        } while (accessCode < 1000 || this.accessCodes.has(accessCode));
         return accessCode;
     }
 
     // generate a new access code for a slot
     generateAccessCode(slotID: string): number {
+
+        // remote any existing access codes for this slot
+        this.revokeAccessCodeForSlot(slotID);
+
         const accessCode = this.getUniqueAccessCode();
         this.accessCodes.set(accessCode, slotID);
         console.log(`Generated access code ${accessCode} for slot ${slotID}`);

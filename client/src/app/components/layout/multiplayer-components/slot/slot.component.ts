@@ -159,9 +159,8 @@ export class SlotComponent {
   getAccessCodeDigit(digit: number) {
     if (!this.accessCode) return 0;
     const str = this.accessCode.toString();
-    const index = str.length - digit - 1;
-    if (index < 0) return 0;
-    return parseInt(str[index]);
+    if (digit < 0) return 0;
+    return parseInt(str[digit]);
   }
 
 }

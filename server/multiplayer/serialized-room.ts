@@ -15,7 +15,6 @@ export interface SerializedRoom {
     roomID: string;
     adminUserID: string;
     numUsersConnected: number;
-    messages: ChatMessage[];
     slots: SerializedSlot[];
 
 }

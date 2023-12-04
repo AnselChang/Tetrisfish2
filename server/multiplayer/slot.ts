@@ -2,6 +2,7 @@ import { HumanSlotState } from "./slot-state/human-slot-state";
 import { Room } from "./room";
 import { SerializedSlot } from "./serialized-room";
 import { SlotState, SlotType } from "./slot-state/slot-state";
+import { getUserByID } from "../database/user/user-service";
 
 /*
 A slot is a player that can be a real player or AI. A room consists of two or more slots
@@ -23,8 +24,9 @@ export class Slot {
         return this.state.type;
     }
 
-    assignHuman(userID: string) {
+    async assignHuman(userID: string) {
         this.state = new HumanSlotState(userID);
+        this.playerName = (await getUserByID(userID))?.username ?? 'unknown';
     }
 
     serialize(): SerializedSlot {

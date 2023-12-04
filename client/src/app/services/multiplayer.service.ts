@@ -137,8 +137,30 @@ export class MultiplayerService {
         return
       }
 
+      const messages = data['messages'] as (ChatMessage[] | undefined);
+      if (!messages) {
+        console.error('messages from server not found');
+        return
+      }
+
       // initialize this service with the room data
-      this.onRecieveInitialServerData(roomData);
+      this.onSyncServerData(roomData);
+      this.messages = messages;
+
+    });
+
+    // listen for event to sync server data with client. called when server data changes, excluding chat
+    this.socket.on('on-change', (data: any) => {
+      
+      const roomData = data['data'] as (SerializedRoom | undefined);
+      if (!roomData) {
+        console.error('invalid on-change data', roomData);
+        return
+      }
+
+      console.log('on-change', roomData);
+
+      this.onSyncServerData(roomData);
 
     });
 
@@ -168,17 +190,16 @@ export class MultiplayerService {
 
   // when the initial server data dump is recived at the start of the socket connection
   // initialize this service with that data
-  onRecieveInitialServerData(data: SerializedRoom) {
-
+  onSyncServerData(data: SerializedRoom) {
+    
     if (this.roomID !== data.roomID) {
-      console.error('roomID mismatch');
+      console.error('roomID mismatch', this.roomID, data.roomID);
       return
     }
 
     this.adminUserID = data.adminUserID;
     this.isAdmin = this.adminUserID === this.user.getUserID();
     this.numUsersConnected = data.numUsersConnected;
-    this.messages = data.messages;
 
     // initialize slots
     this.slots = [];

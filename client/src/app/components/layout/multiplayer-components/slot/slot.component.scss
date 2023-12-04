@@ -12,7 +12,7 @@
     display: grid;
     grid-template-columns: 34px 217px 76px 87px;
     column-gap: 3px;
-    grid-template-rows: 53px 83px 58px 123px 46px 142px;
+    grid-template-rows: 48px 83px 58px 123px 46px 142px;
 }
 
 .slot.vacant {
@@ -61,10 +61,12 @@
     color: #FFF;
     text-align: center;
     font-family: NES;
-    font-size: 35px;
+    font-size: 25px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .open-slot-button ::ng-deep .description {
