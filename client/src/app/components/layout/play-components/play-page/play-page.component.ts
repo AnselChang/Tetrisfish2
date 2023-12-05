@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CaptureSettingsService } from 'client/src/app/services/capture/capture-settings.service';
 import { CaptureFrameService, CaptureMode } from 'client/src/app/services/capture/capture-frame.service';
 import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
@@ -30,6 +30,8 @@ import { GameExportService } from 'client/src/app/services/game-export.service';
 export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
 
+  public onCalibrationPage: boolean = true;
+
   public videoElement!: ElementRef<HTMLVideoElement>;
 
   
@@ -52,6 +54,7 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
     private notifier: NotifierService,
     public leaderboardCache: LeaderboardAccuracyCacheService,
     private gameExportService: GameExportService,
+    private cdr: ChangeDetectorRef
     ) {
  
   }
@@ -74,12 +77,22 @@ export class PlayPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.videoElement = this.videoCaptureService.getVideoElement();
-    this.videoCaptureService.registerCanvas(this.canvasElement, true);
-    this.videoCaptureService.onEnterPlayPage();
+    this.videoCaptureService.enablePlaying();
   }
 
   ngOnDestroy(): void {
-      this.videoCaptureService.onLeavePlayPage();
+      this.videoCaptureService.disablePlaying();
+  }
+
+  showCalibrationPage() {
+    this.onCalibrationPage = true;
+  }
+
+  hideCalibrationPage() {
+    this.onCalibrationPage = false;
+    
+    this.cdr.detectChanges(); // force change detection so that this.canvasElement is defined
+    this.videoCaptureService.registerCanvas(this.canvasElement, true);
   }
 
 

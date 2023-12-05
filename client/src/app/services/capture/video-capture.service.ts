@@ -32,7 +32,7 @@ export class VideoCaptureService {
   private isCaptureRunning: boolean = false;
 
   private onPlayPage: boolean = false;
-  private onCalibratePage: boolean = false;
+  private isCalibrating: boolean = false;
 
   // how many times larger the canvas stored resolution is compared to display resolution
   // the higher the is, the more expensive OCR calculations are, but the more accurate they are
@@ -64,6 +64,7 @@ export class VideoCaptureService {
   }
 
   public registerCanvas(canvasElement: ElementRef<HTMLCanvasElement>, isCanvasHidden: boolean): void {
+    console.log("registering canvas", canvasElement, isCanvasHidden);
     this.canvasElement = canvasElement;
     this.isCanvasHidden = isCanvasHidden;
   }
@@ -80,26 +81,28 @@ export class VideoCaptureService {
     return this.onPlayPage;
   }
 
-  public onEnterPlayPage(): void {
+  public enablePlaying(): void {
     this.onPlayPage = true;
-    this.gameStateMachineService.onEnterPlayPage();
   }
 
-  public onLeavePlayPage(): void {
+  public disablePlaying(): void {
     this.onPlayPage = false;
-    this.gameStateMachineService.onLeavePlayPage();
   }
 
   public onEnterCalibratePage(): void {
-    this.onCalibratePage = true;
+    this.isCalibrating = true;
+    this.gameStateMachineService.onEnterCalibrationPage();
+
   }
 
   public onLeaveCalibratePage(): void {
-    this.onCalibratePage = false;
+    this.isCalibrating = false;
+    this.gameStateMachineService.onLeaveCalibrationPage();
+
   }
 
   public isOnCalibratePage(): boolean {
-    return this.onCalibratePage;
+    return this.isCalibrating;
   }
 
   public togglePause(): void {

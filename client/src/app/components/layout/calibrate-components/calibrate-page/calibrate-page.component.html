@@ -1,12 +1,10 @@
-<div class="root">
+<app-how-to-play *ngIf="displayingInstructions" (onExit)="hideInstructions()" />
+
+<div class="root" *ngIf="!displayingInstructions">
     <div class="calibrate">
         <div class="nav">
-            <a routerLink="/how-to-play" routerLinkActive="active">
-                <app-button-small label="Read Instructions" color="#F27458" />
-            </a>
-            <a routerLink="/play" routerLinkActive="active">
-                <app-button-small label="Back to recording" />
-            </a>
+            <app-button-small label="Read Instructions" color="#F27458" (click)="showInstructions()"/>
+            <app-button-small [label]="exitButtonText" (click)="onExit.emit()" />
         </div>
         
         <app-section class="calibrate-panel">

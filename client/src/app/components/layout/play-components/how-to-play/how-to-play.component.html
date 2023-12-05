@@ -45,15 +45,9 @@
         <img src="assets/img/how-to-play/step-3.png" alt="Step 3" />
     </div>
 
-    <footer *ngIf="!userService.isLoggedIn()">
-        <h2>To get started, log in!</h2>
-        <app-discord-button (click)="login()"></app-discord-button>
-    </footer>
-    <footer *ngIf="userService.isLoggedIn()">
+    <footer>
         <h2>Let's dive right in!</h2>
-        <a routerLink="/calibrate" routerLinkActive="active">
-            <app-discord-button color="#49B25A" label="Calibrate Game" icon="calibrate_button.svg"></app-discord-button>
-        </a>
+        <app-discord-button (click)="onExit.emit()" color="#49B25A" label="Calibrate Game" icon="calibrate_button.svg"></app-discord-button>
     </footer>
 
 </section>

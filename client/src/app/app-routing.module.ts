@@ -9,10 +9,7 @@ import { LeaderboardPageComponent } from './components/layout/leaderboard-page/l
 import { ProfilePageComponent } from './components/layout/profile-page/profile-page.component';
 import { MorePageComponent } from './components/layout/more-components/more-page/more-page.component';
 import { BoardCreationPageComponent } from './components/layout/board-creation-components/board-creation-page/board-creation-page.component';
-import { CalibratePageComponent } from './components/layout/calibrate-components/calibrate-page/calibrate-page.component';
 import { DebugGameComponent } from './components/layout/debug-game/debug-game.component';
-import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
-import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
 import { OnLoginComponent } from './components/layout/on-login/on-login.component';
 import { GameAnalysisPageComponent } from './components/layout/game-analysis-components/game-analysis-page/game-analysis-page.component';
 import { PlayPortalComponent } from './components/layout/play-portal/play-portal.component';
@@ -27,9 +24,6 @@ const routes: Routes = [
       { path: 'home', component: HomePageComponent },
       { path: 'play-portal', component: PlayPortalComponent },
       { path: 'play', component: PlayPageComponent } ,
-      { path: 'calibrate', component: CalibratePageComponent },
-      { path: 'how-to-play', component: HowToPlayComponent },
-      { path: 'play-calibrate', component: PlayCalibrateComponent },
       { path: 'multiplayer', component: MultiplayerComponent },
       { path: 'analysis', component: AnalyzePageComponent },
       { path: 'analyze-game', component: GameAnalysisPageComponent },

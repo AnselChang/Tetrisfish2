@@ -29,7 +29,7 @@ export class PlayPortalComponent {
       return
     }
     
-    this.router.navigate(['/play-calibrate']);
+    this.router.navigate(['/play']);
   }
 
   onJoinRoomContainerClick() {

@@ -43,7 +43,6 @@ import { GameHistoryPanelComponent } from './components/layout/play-components/g
 import { TagComponent } from './components/BLOCK/tag/tag.component';
 import { LeaderboardPanelComponent } from './components/layout/play-components/leaderboard-panel/leaderboard-panel.component';
 import { EligibilityItemComponent } from './components/layout/play-components/eligibility-item/eligibility-item.component';
-import { PlayCalibrateComponent } from './components/layout/play-calibrate/play-calibrate.component';
 import { RatingTotalsComponent } from './components/layout/play-components/rating-totals/rating-totals.component';
 import { HowToPlayComponent } from './components/layout/play-components/how-to-play/how-to-play.component';
 import { DiscordButtonComponent } from './components/BLOCK/discord-button/discord-button.component';
@@ -147,7 +146,6 @@ const customNotifierOptions: NotifierOptions = {
     TagComponent,
     LeaderboardPanelComponent,
     EligibilityItemComponent,
-    PlayCalibrateComponent,
     RatingTotalsComponent,
     HowToPlayComponent,
     DiscordButtonComponent,

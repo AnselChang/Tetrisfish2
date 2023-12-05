@@ -16,13 +16,17 @@ import { filter, take } from 'rxjs';
   styleUrls: ['./calibrate-page.component.scss']
 })
 export class CalibratePageComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() exitButtonText: string = "Back to Recording";
   @Output() onSwitchMode = new EventEmitter<void>();
+  @Output() onExit = new EventEmitter<void>();
   
   public captureVideoElement!: ElementRef<HTMLVideoElement>;
 
   readonly ThresholdType = ThresholdType;
   readonly ALL_INPUT_SPEEDS = ALL_INPUT_SPEEDS;
   readonly ALL_PLAYSTYLES = ALL_PLAYSTYLES;
+
+  public displayingInstructions: boolean = false;
 
   constructor(
     public videoCaptureService: VideoCaptureService,
@@ -54,6 +58,14 @@ export class CalibratePageComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {
     this.userService.postUserSettings();
     this.videoCaptureService.onLeaveCalibratePage();
+  }
+
+  showInstructions() {
+    this.displayingInstructions = true;
+  }
+
+  hideInstructions() {
+    this.displayingInstructions = false;
   }
 
   public get settings() {

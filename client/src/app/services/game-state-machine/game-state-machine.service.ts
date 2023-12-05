@@ -264,7 +264,7 @@ class GridStateMachine {
 export class GameStateMachineService {
 
   private playStatus: PlayStatus = PlayStatus.NOT_PLAYING;
-  private isOnPlayPage: boolean = false;
+  private canPlayGame: boolean = false;
 
   // handles mino changes / new piece detection
   private gridSM?: GridStateMachine = undefined;
@@ -491,13 +491,13 @@ export class GameStateMachineService {
 
   }
 
-  public onLeavePlayPage(): void {
-    this.isOnPlayPage = false;
+  public onEnterCalibrationPage(): void {
+    this.canPlayGame = false;
     if (this.playStatus === PlayStatus.PLAYING) this.endGame();
   }
 
-  public onEnterPlayPage(): void {
-    this.isOnPlayPage = true;
+  public onLeaveCalibrationPage(): void {
+    this.canPlayGame = true;
   }
 
   // executes once per frame to update state machine. Main method for this class
@@ -508,7 +508,7 @@ export class GameStateMachineService {
     if (this.playStatus === PlayStatus.NOT_PLAYING) {
 
       // if game start detected, then start game
-      if (this.isOnPlayPage && this.detectGameStart(state)) {
+      if (this.canPlayGame && this.detectGameStart(state)) {
         this.gameStartDetectionCount++;
         console.log(`Game Start Detection (${this.gameStartDetectionCount})`);
         if (this.gameStartDetectionCount >= this.MIN_GAME_START_DETECTION) {
