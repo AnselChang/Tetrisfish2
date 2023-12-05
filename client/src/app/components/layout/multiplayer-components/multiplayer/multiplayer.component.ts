@@ -28,6 +28,13 @@ export class MultiplayerComponent implements OnInit, OnDestroy {
     this.isCalibrating = true;
   }
 
+  // prompt user to confirm exiting the match
+  public exitMatchPrompt() {
+    if (confirm("Are you sure you want to exit the match? You won't be able to rejoin unless the host sends you a new access code.")) {
+      this.multiplayer.exitMatch();
+    }
+  }
+
   ngOnInit(): void {
 
     // Subscribe to paramMap to get the route parameters
