@@ -8,7 +8,13 @@
     </app-nes-panel>
 
     <app-nes-panel class="tetris-board-panel">
-        <app-interactive-tetris-board />
+        <app-interactive-tetris-board
+            [grid]="extractedState.getGrid()"
+            [colorGrid]="extractedState.getColorGrid()"
+            [level]="extractedState.getStatus().level"
+            [paused]="extractedState.getPaused()"
+            [verticalAlign]="VerticalAlign.CENTER"
+        />
     </app-nes-panel>
 
     <app-nes-panel class="score-panel">

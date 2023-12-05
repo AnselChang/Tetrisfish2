@@ -27,6 +27,11 @@ export enum BlockMode {
   NEXT_PIECE = "NEXT_PIECE",
 }
 
+export enum VerticalAlign {
+  TOP = "TOP",
+  CENTER = "CENTER",
+}
+
 export class BlockData {
   public readonly svgX: number;
   public readonly svgY: number;
@@ -69,6 +74,8 @@ export class InteractiveTetrisBoardComponent implements OnInit, OnChanges {
   @Input() currentPieceOpacity?: number;
 
   @Input() nextPiece?: MoveableTetromino;
+
+  @Input() verticalAlign: VerticalAlign = VerticalAlign.TOP;
 
 
   @Output() hoveredBlock = new EventEmitter<BlockData>();
@@ -118,6 +125,11 @@ export class InteractiveTetrisBoardComponent implements OnInit, OnChanges {
 
   public get boardHeight(): number {
     return SVG_BOARD_HEIGHT;
+  }
+
+  public get preserveAspectRatio(): string {
+    if (this.verticalAlign === VerticalAlign.TOP) return "xMidYMin meet";
+    else return "xMidYMid meet"; // center
   }
 
   @HostListener('mouseleave') onMouseLeave() {

@@ -1,9 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
+import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
 import { SlotData } from 'client/src/app/services/multiplayer.service';
 import { UserService } from 'client/src/app/services/user.service';
 import { SlotType } from 'server/multiplayer/slot-state/slot-state';
+import { VerticalAlign } from '../../../tetris/interactive-tetris-board/interactive-tetris-board.component';
 
 @Component({
   selector: 'app-slot',
@@ -62,8 +65,13 @@ export class SlotComponent {
   backState = 'invisible';
   backStyle = { display: 'none' };
 
-  constructor(private user: UserService) {}
+  constructor(private user: UserService, public extractedStateService: ExtractedStateService) {}
+
+  readonly VerticalAlign = VerticalAlign;
   
+  get extractedState(): ExtractedState {
+    return this.extractedStateService.get();
+  }
 
   isVacant() {
     return this.slot.type === SlotType.VACANT;
