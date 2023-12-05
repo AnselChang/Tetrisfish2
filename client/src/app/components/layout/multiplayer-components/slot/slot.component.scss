@@ -4,15 +4,16 @@
     width: fit-content;
     height: fit-content;
     background-color: $layer-1-color;
-    padding: 4px;
+    padding: 3px;
     border-radius: 5px;
 }
 
 .slot.occupied {
     display: grid;
     grid-template-columns: 34px 217px 76px 87px;
-    column-gap: 3px;
+    column-gap: 2px;
     grid-template-rows: 48px 83px 58px 123px 46px 142px;
+    row-gap: 2px;
 }
 
 .slot.vacant {
@@ -46,6 +47,8 @@
     gap: 10px;
 }
 
+// OCCUPIED SLOT CSS
+
 // ocupies the entire first row
 .name-panel {
     grid-column: 1 / -1;
@@ -68,6 +71,114 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+// occupies all the first column except the first row
+.eval-bar-panel {
+    grid-column: 1 / 1;
+    grid-row: 2 / -1;
+}
+
+.eval-bar {
+    border-radius: 0px;
+}
+
+// occupies all of the second column except the first row
+.tetris-board-panel {
+    grid-column: 2 / 2;
+    grid-row: 2 / -1;
+}
+
+// occupies third and fourth column at second row
+.score-panel {
+    grid-column: 3 / -1;
+    grid-row: 2 / 2;
+} 
+
+.score-panel-content, .level-panel-content, .lines-panel-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5px;
+}
+
+.score-label, .level-label, .lines-label, .accuracy-label {
+    font-family: NES;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.score-value, .score-delta, .level-value, .lines-value, .accuracy-value {
+    font-family: NES;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 0.95;
+}
+
+.score-value, .score-delta {
+    text-align: right;
+}
+
+// occupies third column at third row
+.level-panel {
+    grid-column: 3 / 3;
+    grid-row: 3 / 3;
+} 
+
+// occupies fourth column at third row
+.lines-panel {
+    grid-column: 4 / 4;
+    grid-row: 3 / 3;
+}
+
+// occupies third-fourth column at fourth row
+.accuracy-panel {
+    grid-column: 3 / -1;
+    grid-row: 4 / 4;
+}
+
+.accuracy-panel-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+// occupies third-fourth column at fifth row
+.trt-panel {
+    grid-column: 3 / -1;
+    grid-row: 5 / 5;
+}
+
+.trt-panel-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px;
+}
+
+.trt-label, .trt-value {
+    font-family: NES;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+// occupies third-fourth column at sixth row
+.video-panel {
+    grid-column: 3 / -1;
+    grid-row: 6 / 6;
+}
+
+// VACANT SLOT CSS
 
 .open-slot-button ::ng-deep .description {
     font-size: 13px;

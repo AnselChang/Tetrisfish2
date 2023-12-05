@@ -2,6 +2,58 @@
     <app-nes-panel class="name-panel">
         <h1 class="player-name">{{slot.playerName}}</h1>
     </app-nes-panel>
+
+    <app-nes-panel class="eval-bar-panel">
+        <app-eval-bar class="eval-bar" />
+    </app-nes-panel>
+
+    <app-nes-panel class="tetris-board-panel">
+        <app-interactive-tetris-board />
+    </app-nes-panel>
+
+    <app-nes-panel class="score-panel">
+        <div class="score-panel-content">
+            <p class="score-label">SCORE</p>
+            <div>
+                <p class="score-value">123456</p>
+                <p class="score-delta">23456</p>
+            </div>
+            
+        </div>
+    </app-nes-panel>
+
+    <app-nes-panel class="level-panel">
+        <div class="level-panel-content">
+            <p class="level-label">LEVEL</p>
+            <p class="level-value">18</p>
+        </div>
+    </app-nes-panel>
+
+    <app-nes-panel class="lines-panel">
+        <div class="lines-panel-content">
+            <p class="lines-label">LINES</p>
+            <p class="lines-value">123</p>
+        </div>
+    </app-nes-panel>
+
+    <app-nes-panel class="accuracy-panel">
+        <div class="accuracy-panel-content">
+            <p class="accuracy-label">ACCURACY</p>
+            <p class="accuracy-value">94.62%</p>
+        </div>
+    </app-nes-panel>
+
+    <app-nes-panel class="trt-panel">
+        <div class="trt-panel-content">
+            <p class="trt-label">TRT:</p>
+            <p class="trt-value">94%</p>
+        </div>
+    </app-nes-panel>
+
+    <app-nes-panel class="video-panel">
+        
+    </app-nes-panel>
+
 </div>
 
 <div *ngIf="isVacant() && isAdmin" class="slot vacant">
