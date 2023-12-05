@@ -10,6 +10,8 @@ import { MultiplayerService } from 'client/src/app/services/multiplayer.service'
 })
 export class MultiplayerComponent implements OnInit, OnDestroy {
 
+  public isCalibrating: boolean = false;
+
   public messageBeingTyped: string = '';
 
   constructor(
@@ -17,6 +19,14 @@ export class MultiplayerComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     ) {}
+
+  public hideCalibrationPage() {
+    this.isCalibrating = false;
+  }
+
+  public showCalibrationPage() {
+    this.isCalibrating = true;
+  }
 
   ngOnInit(): void {
 

@@ -1,64 +1,67 @@
-<div class="main">
+<app-calibrate-page *ngIf="isCalibrating" (onExit)="hideCalibrationPage()" [exitButtonText]="'Back to Match'" />
 
-    <div class="player-boards">
-        <app-slot *ngFor="let slot of multiplayer.getSlots()"
-        [slot]="slot" [isAdmin]="multiplayer.getIsAdmin()" [canRegisterMyself]="!multiplayer.isPlayingGame()" />
-    </div>
+<div class="multiplayer" *ngIf="!isCalibrating">
+    <div class="main">
 
-    <div class="panels">
+        <div class="player-boards">
+            <app-slot *ngFor="let slot of multiplayer.getSlots()"
+            [slot]="slot" [isAdmin]="multiplayer.getIsAdmin()" [canRegisterMyself]="!multiplayer.isPlayingGame()" />
+        </div>
 
-        <a routerLink="/calibrate" routerLinkActive="active" *ngIf="multiplayer.isPlayingGame()">
-            <app-button-big color="#626EDF" label="Edit Calibration"/>
-        </a>
+        <div class="panels">
 
-        <app-section class="admin-panel" *ngIf="multiplayer.getIsAdmin()">
-            <h1>Admin Panel</h1>
+            <app-button-big color="#626EDF" label="Edit Calibration" (click)="showCalibrationPage()"/>
 
-            <p>Room ID: {{multiplayer.getRoomID()}}</p>
-            <p>Slot ID: {{multiplayer.getSlotID()}}</p>
-            <p>isPlaying: {{multiplayer.isPlayingGame()}}</p>
+            <app-section class="admin-panel" *ngIf="multiplayer.getIsAdmin()">
+                <h1>Admin Panel</h1>
 
-            <div *ngFor="let slot of multiplayer.getSlots()">
-                <p>Slot id: {{slot.slotID}}</p>
-                <p>Player ID: {{slot.playerID}}</p>
-                <p>Player name: {{slot.playerName}}</p>
-                <p>Type: {{slot.type}}</p>
-                <p>NumHearts: {{slot.numHearts}}</p>
-            </div>
-            
-        </app-section>
+                <p>Room ID: {{multiplayer.getRoomID()}}</p>
+                <p>Slot ID: {{multiplayer.getSlotID()}}</p>
+                <p>isPlaying: {{multiplayer.isPlayingGame()}}</p>
 
-        <app-section class="chat-panel">
-            <h1>Live Chat</h1>
-            <p class="num-users-connected"
-                *ngIf="multiplayer.getNumUsersConnected() as i">
-                {{i}} {{i===1?'user':'users'}} connected
-            </p>
+                <div *ngFor="let slot of multiplayer.getSlots()">
+                    <p>Slot id: {{slot.slotID}}</p>
+                    <p>Player ID: {{slot.playerID}}</p>
+                    <p>Player name: {{slot.playerName}}</p>
+                    <p>Type: {{slot.type}}</p>
+                    <p>NumHearts: {{slot.numHearts}}</p>
+                </div>
+                
+            </app-section>
 
-            <div class="chat-messages-container">
-                <p class="message" *ngFor="let msg of multiplayer.getMessages()">
-                    <span class="username"
-                    [style.color]="msg.userIsPlayer ? '#387CFF' : (msg.userIsPro ? '#FFB938' : 'white')"
-                    >{{msg.name}}</span>
-                    <app-fixed-size-image class="patreon-icon" *ngIf="msg.userIsPro" [src]="'pro_user.svg'" [width]="13" [tooltip]="'Patreon Supporter'" />
-                    <span class="content" [ngClass]="(msg.userIsPro || msg.userIsPlayer) ? 'white' : ''">{{msg.message}}</span>
+            <app-section class="chat-panel">
+                <h1>Live Chat</h1>
+                <p class="num-users-connected"
+                    *ngIf="multiplayer.getNumUsersConnected() as i">
+                    {{i}} {{i===1?'user':'users'}} connected
                 </p>
-            </div>
 
-            <div class="send-message">
-                <input class="send-message-input" type="text"
-                placeholder="Type a message..." [(ngModel)]="messageBeingTyped"
-                (keydown.enter)="sendMessage()"/>
-                <img class="send-message-button" (click)="sendMessage()" [src]="'./assets/img/send_message.svg'" height="27px">
-            </div>
+                <div class="chat-messages-container">
+                    <p class="message" *ngFor="let msg of multiplayer.getMessages()">
+                        <span class="username"
+                        [style.color]="msg.userIsPlayer ? '#387CFF' : (msg.userIsPro ? '#FFB938' : 'white')"
+                        >{{msg.name}}</span>
+                        <app-fixed-size-image class="patreon-icon" *ngIf="msg.userIsPro" [src]="'pro_user.svg'" [width]="13" [tooltip]="'Patreon Supporter'" />
+                        <span class="content" [ngClass]="(msg.userIsPro || msg.userIsPlayer) ? 'white' : ''">{{msg.message}}</span>
+                    </p>
+                </div>
 
-        </app-section>
+                <div class="send-message">
+                    <input class="send-message-input" type="text"
+                    placeholder="Type a message..." [(ngModel)]="messageBeingTyped"
+                    (keydown.enter)="sendMessage()"/>
+                    <img class="send-message-button" (click)="sendMessage()" [src]="'./assets/img/send_message.svg'" height="27px">
+                </div>
+
+            </app-section>
+
+        </div>
 
     </div>
+
+    <app-section class="match-info">
+    <h1 class="title">March 2023 Computer Championship</h1>
+    <h2 class="subtitle">Semifinals 1</h2>
+    </app-section>
 
 </div>
-
-<app-section class="match-info">
-<h1 class="title">March 2023 Computer Championship</h1>
-<h2 class="subtitle">Semifinals 1</h2>
-</app-section>
