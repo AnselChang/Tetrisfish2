@@ -37,6 +37,15 @@ POST join-room-play {
     slotID: string
 }
 
+POST register-myself {
+    userID: string
+    roomID: string,
+    slotID: string
+} response {
+    success: boolean
+    error?: string
+}
+
 POST leave-room {
     userID: string
     roomID: string

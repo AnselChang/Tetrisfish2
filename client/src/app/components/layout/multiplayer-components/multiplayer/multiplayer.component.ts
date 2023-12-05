@@ -38,7 +38,7 @@ export class MultiplayerComponent implements OnInit, OnDestroy {
 
       // redirect if multiplayer service isn't in a valid room
       if (!this.multiplayer.isInRoom()) {
-        console.log('not in room. redirecting to play-portal');
+        console.log('not a valid room. redirecting to play-portal');
         this.router.navigate(['/play-portal']);
         return
       }

@@ -1,10 +1,17 @@
 <div class="main">
+
     <div class="player-boards">
-        <app-slot *ngFor="let slot of multiplayer.getSlots()" [slot]="slot" />
+        <app-slot *ngFor="let slot of multiplayer.getSlots()"
+        [slot]="slot" [isAdmin]="multiplayer.getIsAdmin()" [canRegisterMyself]="!multiplayer.isPlayingGame()" />
     </div>
 
     <div class="panels">
-        <app-section class="admin-panel">
+
+        <a routerLink="/calibrate" routerLinkActive="active" *ngIf="multiplayer.isPlayingGame()">
+            <app-button-big color="#626EDF" label="Edit Calibration"/>
+        </a>
+
+        <app-section class="admin-panel" *ngIf="multiplayer.getIsAdmin()">
             <h1>Admin Panel</h1>
 
             <p>Room ID: {{multiplayer.getRoomID()}}</p>
@@ -48,6 +55,7 @@
         </app-section>
 
     </div>
+
 </div>
 
 <app-section class="match-info">

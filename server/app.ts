@@ -20,7 +20,7 @@ import { getGlobalStatsRoute } from './routes/global-stats';
 import { LeaderboardType } from './database/leaderboard/leaderboard-schema';
 import { getLeaderboardAccuraciesRoute, getLeaderboardRoute } from './routes/leaderboard';
 import { MultiplayerManager } from './multiplayer/multiplayer-manager';
-import { createRoomRoute, doesRoomExistRoute, generateSlotAccessCodeRoute, joinRoomPlayRoute, leaveRoomRoute, revokeSlotAccessCodeRoute } from './routes/multiplayer';
+import { createRoomRoute, doesRoomExistRoute, generateSlotAccessCodeRoute, joinRoomPlayRoute, leaveRoomRoute, registerMyselfRoute, revokeSlotAccessCodeRoute } from './routes/multiplayer';
 
 
 declare module 'express-session' {
@@ -129,6 +129,8 @@ export default async function createApp(): Promise<{
 
     app.post('/api/multiplayer/generate-slot-access-code', async (req: Request, res: Response) => { generateSlotAccessCodeRoute(multiplayer, req, res) });
     app.post('/api/multiplayer/revoke-slot-access-code', async (req: Request, res: Response) => { revokeSlotAccessCodeRoute(multiplayer, req, res) });
+
+    app.post('/api/multiplayer/register-myself', async (req: Request, res: Response) => { registerMyselfRoute(multiplayer, req, res) });
 
     // catch all invalid api routes
     app.get('/api/*', (req, res) => {

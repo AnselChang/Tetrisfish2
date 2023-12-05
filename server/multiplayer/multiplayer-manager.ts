@@ -22,6 +22,14 @@ export class MultiplayerManager {
     getRoomByID(roomID: string): Room | undefined {
         return this.rooms.find(room => room.roomID === roomID);
     }
+    
+    getSlotByID(slotID: string): Slot | undefined {
+        for (const room of this.rooms) {
+            const slot = room.getSlotByID(slotID);
+            if (slot) return slot;
+        }
+        return undefined;
+    }
 
     doesRoomExist(roomID: string): boolean {
         return this.getRoomByID(roomID) !== undefined;

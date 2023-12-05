@@ -134,3 +134,46 @@ export async function leaveRoomRoute(multiplayer: MultiplayerManager, req: Reque
         success: true
     });
 }
+
+export async function registerMyselfRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
+
+    const userID = req.body['userID'] as string;
+    const slotID = req.body['slotID'] as string;
+
+    if (!userID || !slotID) {
+        res.status(200).send({
+            success: false,
+            error: "Invalid userID, roomID, or slotID"
+        });
+        return;
+    }
+
+    const slot = multiplayer.getSlotByID(slotID);
+
+    if (!slot) {
+        res.status(200).send({
+            success: false,
+            error: "Slot not found"
+        });
+        return;
+    }
+
+    // check if userID is already in a slot
+    if (slot.room.isUserInSlot(userID)) {
+        res.status(200).send({
+            success: false,
+            error: "User already in slot"
+        });
+        return;
+    }
+
+    // assign userID to slot
+    await slot.assignHuman(userID);
+
+    // broadcast change
+    slot.room.onChange();
+
+    res.status(200).send({
+        success: true,
+    });
+}

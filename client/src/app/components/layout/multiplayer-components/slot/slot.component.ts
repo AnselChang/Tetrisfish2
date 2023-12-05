@@ -2,6 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { SlotData } from 'client/src/app/services/multiplayer.service';
+import { UserService } from 'client/src/app/services/user.service';
 import { SlotType } from 'server/multiplayer/slot-state/slot-state';
 
 @Component({
@@ -44,8 +45,9 @@ import { SlotType } from 'server/multiplayer/slot-state/slot-state';
 })
 export class SlotComponent {
   @Input() slot!: SlotData;
+  @Input() isAdmin!: boolean;
+  @Input() canRegisterMyself: boolean = true;
   @Output() onRegisterAI = new EventEmitter<void>();
-  @Output() onRegisterMyself = new EventEmitter<void>();
   @Output() onDeleteSlot = new EventEmitter<void>();
 
   accessCode?: number;
@@ -59,6 +61,8 @@ export class SlotComponent {
 
   backState = 'invisible';
   backStyle = { display: 'none' };
+
+  constructor(private user: UserService) {}
   
 
   isVacant() {
@@ -99,6 +103,19 @@ export class SlotComponent {
     this.fadeOutCode();
     this.fadeOutBack();
     this.fadeOutInstructions();
+  }
+
+  // send POST register-myself request to server
+  async onClickRegisterMyself() {
+
+    const {status, content} = await fetchServer(Method.POST, '/api/multiplayer/register-myself', {
+      userID: this.user.getUserID(),
+      slotID: this.slot.slotID
+    });
+
+    const success = status === 200 && content['success'];
+    console.log('register-myself', success, content);
+
   }
 
   fadeOutButtons() {

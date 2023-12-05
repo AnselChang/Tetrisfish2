@@ -152,6 +152,19 @@ export class Room {
         return this.slots.includes(slot);
     }
 
+    // whether the given user with userID occupies a slot in the room
+    public isUserInSlot(userID: string | undefined): boolean {
+
+        if (!userID) return false;
+
+        for (const slot of this.slots) {
+            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).userID === userID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // anytime the room state changes, call this to broadcast the new state to all sockets in the room
     public onChange() {
         const data = this.serialize();

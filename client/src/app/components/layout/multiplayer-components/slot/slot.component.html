@@ -4,7 +4,7 @@
     </app-nes-panel>
 </div>
 
-<div *ngIf="isVacant()" class="slot vacant">
+<div *ngIf="isVacant() && isAdmin" class="slot vacant">
     <h1 class="open-slot-text">Open Slot {{slot.index+1}}</h1>
     <div class="open-slot-buttons">
         <app-button-big class="open-slot-button" label="Invite Player" icon="puzzle.png" color="#3DAD55"
@@ -18,7 +18,8 @@
         <app-button-big class="open-slot-button" label="Register myself" icon="puzzle.png" color="#4351CE"
             description="Register yourself to play through live capture or an integrated emulator"
             [@buttonOpacity]="buttonState" [ngStyle]="buttonStyle"
-            (click)="onRegisterMyself.emit()" />
+            [buttonDisabled]="!canRegisterMyself"
+            (click)="onClickRegisterMyself()" />
         <app-button-big class="open-slot-button" label="Delete Slot" icon="puzzle.png" color="#CB4C4C"
         [@buttonOpacity]="buttonState" [ngStyle]="buttonStyle"
         (click)="onDeleteSlot.emit()" />
@@ -35,6 +36,10 @@
         <p class="instructions" [@otherOpacity]="instructionsState" [ngStyle]="instructionsStyle">Invite a player to join this room using the access code!</p>
         <app-button-small class="back-button" label="Back" (click)="exitAccessCode()" [@otherOpacity]="backState" [ngStyle]="backStyle" />
     </div>
-    
+</div>
 
+<div *ngIf="isVacant() && !isAdmin" class="slot vacant">
+    <p>
+        Waiting for host to assign player...
+    </p>
 </div>
