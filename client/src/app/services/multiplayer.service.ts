@@ -102,6 +102,32 @@ export class MultiplayerService {
     });
   }
 
+    // leave as player and change to spectator mode
+    public exitMatch() {
+
+      // make sure socket is initialized so we can send message
+      if (!this.socket) {
+        console.error('socket not initialized');
+        return
+      }
+
+      // doesn't make sense to exit match if not already playing in match
+      if (!this.isPlayingGame()) {
+        console.error('not playing game');
+        return
+      }
+
+      /* SOCKET player-leave-match { // called when wanting to switch status from player to spectator
+        roomID: string,
+        userID: string
+      } */
+      this.socket.emit('player-leave-match', {
+        roomID: this.roomID,
+        userID: this.user.getUserID()
+      });
+      
+    }
+
   // on enter page, establish socket connection
   onEnterPage() {
     this.socket = io();

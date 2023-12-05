@@ -101,3 +101,8 @@ SOCKET send-message {
     userIsPlayer: boolean,
     message: string
 }
+
+SOCKET player-leave-match { // called when wanting to switch status from player to spectator
+    roomID: string,
+    userID: string
+}

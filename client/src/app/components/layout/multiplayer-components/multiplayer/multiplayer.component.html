@@ -10,7 +10,10 @@
 
         <div class="panels">
 
-            <app-button-big *ngIf="multiplayer.isPlayingGame()" color="#626EDF" label="Edit Calibration" (click)="showCalibrationPage()"/>
+            <div class="player-buttons" *ngIf="multiplayer.isPlayingGame()">
+                <app-button-big color="#DF6A62" label="Exit Match" (click)="multiplayer.exitMatch()"/>
+                <app-button-big color="#626EDF" label="Edit Calibration" (click)="showCalibrationPage()"/>    
+            </div>
 
             <app-section class="admin-panel" *ngIf="multiplayer.getIsAdmin()">
                 <h1>Admin Panel</h1>

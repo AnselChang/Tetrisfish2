@@ -129,6 +129,31 @@ export class MultiplayerManager {
             });
         });
 
+        /* SOCKET player-leave-match { // called when wanting to switch status from player to spectator
+            roomID: string,
+            userID: string
+        } */
+        socket.on("player-leave-match", (data: any) => {
+                
+            const roomID = data['roomID'] as string;
+            const userID = data['userID'] as string;
+
+            if (roomID === undefined || userID === undefined) {
+                console.error("Invalid player-leave-match data", data);
+                return;
+            }
+
+            const room = this.getRoomByID(roomID);
+            if (!room) {
+                console.error(`Room ${roomID} not found`);
+                return;
+            }
+
+            room.removePlayerFromSlot(userID);
+            room.onChange(); // broadcast new room state to all sockets in room
+
+        });
+
         socket.on("disconnect", () => {
             console.log(`Socket ${socket.id} disconnected from server`);
             this.onUnregisterSocket(socket);

@@ -165,6 +165,18 @@ export class Room {
         return false;
     }
 
+    // if userID is in a slot, remove them from the slot
+    public removePlayerFromSlot(userID: string) {
+
+        if (!this.isUserInSlot(userID)) return;
+
+        this.getSlots().forEach(slot => {
+            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).userID === userID) {
+                slot.vacate();
+            }
+        });
+    }
+
     // anytime the room state changes, call this to broadcast the new state to all sockets in the room
     public onChange() {
         const data = this.serialize();
