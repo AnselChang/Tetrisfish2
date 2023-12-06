@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
@@ -9,11 +9,13 @@ import { MultiplayerService } from 'client/src/app/services/multiplayer/multipla
   templateUrl: './multiplayer.component.html',
   styleUrls: ['./multiplayer.component.scss']
 })
-export class MultiplayerComponent implements OnInit, OnDestroy {
+export class MultiplayerComponent implements OnInit, OnDestroy, AfterViewChecked {
+  @ViewChild('chatMessagesContainer') private messageList!: ElementRef;
 
   public isCalibrating: boolean = false;
 
   public messageBeingTyped: string = '';
+  private oldScrollHeight = 0;
 
   constructor(
     public multiplayer: MultiplayerService,
@@ -21,6 +23,19 @@ export class MultiplayerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private videoCaptureService: VideoCaptureService,
     ) {}
+
+    ngAfterViewChecked() {
+      if (this.oldScrollHeight !== this.messageList.nativeElement.scrollHeight) {
+        this.scrollToBottom();
+        this.oldScrollHeight = this.messageList.nativeElement.scrollHeight;
+      }
+    }
+  
+    scrollToBottom(): void {
+      try {
+        this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight;
+      } catch(err) { }    
+    }
 
   public hideCalibrationPage() {
     this.isCalibrating = false;

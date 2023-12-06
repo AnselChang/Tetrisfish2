@@ -3,11 +3,18 @@
 <div class="multiplayer" *ngIf="!isCalibrating">
     <div class="main">
 
-        <div class="player-boards">
-            <app-slot *ngFor="let slot of multiplayer.getSlots()"
-            [slot]="slot" [isAdmin]="multiplayer.getIsAdmin()" [canRegisterMyself]="!multiplayer.isPlayingGame()" />
+        <div class="main-container">
+            <div class="player-boards">
+                <app-slot *ngFor="let slot of multiplayer.getSlots()"
+                [slot]="slot" [isAdmin]="multiplayer.getIsAdmin()" [canRegisterMyself]="!multiplayer.isPlayingGame()" />
+            </div>
+    
+            <app-section class="match-info">
+                <h1 class="title">March 2023 Computer Championship</h1>
+                <h2 class="subtitle">Semifinals 1</h2>
+                </app-section>
         </div>
-
+        
         <div class="panels">
 
             <app-section class="status-panel">
@@ -48,8 +55,8 @@
                     {{i}} {{i===1?'user':'users'}} connected
                 </p>
 
-                <div class="chat-messages-container">
-                    <p class="message" *ngFor="let msg of multiplayer.getMessages()">
+                <div class="chat-messages-container" #chatMessagesContainer>
+                    <p class="message" *ngFor="let msg of multiplayer.getMessages().slice().reverse()">
                         <span class="username"
                         [style.color]="msg.userIsPlayer ? '#387CFF' : (msg.userIsPro ? '#FFB938' : 'white')"
                         >{{msg.name}}</span>
@@ -70,10 +77,5 @@
         </div>
 
     </div>
-
-    <app-section class="match-info">
-    <h1 class="title">March 2023 Computer Championship</h1>
-    <h2 class="subtitle">Semifinals 1</h2>
-    </app-section>
 
 </div>

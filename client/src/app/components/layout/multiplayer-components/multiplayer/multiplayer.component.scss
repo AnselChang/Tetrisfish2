@@ -26,6 +26,12 @@
     gap: 10px;
 }
 
+.main-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .player-buttons {
     display: flex;
     flex-direction: column;
@@ -48,6 +54,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    height: calc(100dvh - 95px);
 }
 
 .status-panel .status {
@@ -80,6 +87,7 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
 }
 
 .num-users-connected {
@@ -102,7 +110,7 @@
 
     overflow-y: scroll;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 5px;
 }
 
@@ -175,6 +183,7 @@ p.message {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    height: fit-content;
 }
 
 .title {
