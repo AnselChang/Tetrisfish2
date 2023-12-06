@@ -56,4 +56,5 @@ export default class ColorGrid implements Grid {
         }
         return result;
     }
+    
 }

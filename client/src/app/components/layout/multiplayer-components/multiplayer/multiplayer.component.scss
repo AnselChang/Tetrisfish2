@@ -50,6 +50,32 @@
     gap: 10px;
 }
 
+.status-panel .status {
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.status-attributes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.status-attributes p {
+    color: rgba(255, 255, 255, 0.60);
+    font-family: Montserrat;
+    font-size: 8px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
 .chat-panel {
     flex-grow: 1;
     display: flex;

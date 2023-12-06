@@ -24,6 +24,18 @@ export class Slot {
         return this.state.type;
     }
 
+    getHumanState(): HumanSlotState | undefined {
+        if (!this.state) return undefined;
+        if (this.state.type === SlotType.HUMAN) return this.state as HumanSlotState;
+        return undefined;
+    }
+
+    getBoard(): Uint8Array | undefined {
+        if (!this.state) return undefined;
+        if (this.state.type === SlotType.HUMAN) return (this.state as HumanSlotState).getBoard();
+        return undefined;
+    }
+
     async assignHuman(userID: string) {
         this.state = new HumanSlotState(userID);
         this.playerName = (await getUserByID(userID))?.username ?? 'unknown';

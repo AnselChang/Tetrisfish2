@@ -87,6 +87,11 @@ SOCKET on-message {
     message: string
 }
 
+SOCKET on-update-board {
+    slotID: string,
+    board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
+}
+
 WEBRTC update {
     // frame of board state / camera
     // game state if it changed
@@ -100,6 +105,11 @@ SOCKET send-message {
     userIsPro: boolean,
     userIsPlayer: boolean,
     message: string
+}
+
+SOCKET send-board { // send whenever the player's board CHANGES
+    slotID: string,
+    board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
 }
 
 SOCKET player-leave-match { // called when wanting to switch status from player to spectator

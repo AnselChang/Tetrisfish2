@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
+import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
 import { MultiplayerService } from 'client/src/app/services/multiplayer.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class MultiplayerComponent implements OnInit, OnDestroy {
     public multiplayer: MultiplayerService,
     private router: Router,
     private route: ActivatedRoute,
+    private videoCaptureService: VideoCaptureService,
     ) {}
 
   public hideCalibrationPage() {
@@ -26,6 +28,10 @@ export class MultiplayerComponent implements OnInit, OnDestroy {
 
   public showCalibrationPage() {
     this.isCalibrating = true;
+  }
+
+  public getCaptureFPS(): number {
+    return this.videoCaptureService.getFPS();
   }
 
   // prompt user to confirm exiting the match

@@ -5,6 +5,9 @@ import { Socket, io } from 'socket.io-client';
 import { SerializedRoom } from 'server/multiplayer/serialized-room';
 import { ChatMessage } from 'server/multiplayer/chat';
 import { SlotType } from 'server/multiplayer/slot-state/slot-state';
+import ColorGrid from '../models/tetronimo-models/color-grid';
+import BinaryGrid from '../models/tetronimo-models/binary-grid';
+import { areUint8ArraysEqual, decodeColorGrid, encodeColorGrid } from '../scripts/encode-color-grid';
 
 export class SlotData {
   constructor(
@@ -15,6 +18,40 @@ export class SlotData {
     public readonly playerName?: string,
     public readonly numHearts: number = 0,
   ) {}
+}
+
+export class SlotBoardData {
+
+  public readonly binaryGrid: BinaryGrid;
+  public readonly colorGrid: ColorGrid;
+
+  constructor(encodedBoardGame?: Uint8Array) {
+    if (!encodedBoardGame) {
+      this.binaryGrid = new BinaryGrid();
+      this.colorGrid = new ColorGrid();
+    }
+
+    const {binaryGrid, colorGrid} = decodeColorGrid(encodedBoardGame);
+    this.binaryGrid = binaryGrid;
+    this.colorGrid = colorGrid;
+  }
+}
+
+export class SlotBoardDataManager {
+  private allSlotBoardData: {[slotID: string]: SlotBoardData} = {};
+
+  public getSlotBoardData(slotID: string): SlotBoardData {
+
+    if (!this.allSlotBoardData[slotID]) {
+      this.allSlotBoardData[slotID] = new SlotBoardData();
+    }
+    return this.allSlotBoardData[slotID];
+  }
+
+  public setSlotBoardData(slotID: string, encodedBoardGame?: Uint8Array) {
+    this.allSlotBoardData[slotID] = new SlotBoardData(encodedBoardGame);
+    console.log('setSlotBoardData', slotID, encodedBoardGame, this.allSlotBoardData[slotID]);
+  }
 }
 
 
@@ -37,6 +74,9 @@ export class MultiplayerService {
 
   private slots: SlotData[] = [];
 
+  private previousEncodedBoard?: Uint8Array;
+
+  private readonly slotBoardDataManager: SlotBoardDataManager = new SlotBoardDataManager();
 
   constructor(private user: UserService) { }
 
@@ -76,7 +116,11 @@ export class MultiplayerService {
   }
 
   isPlayingGame(): boolean {
-    return this.mySlot !== undefined;
+    return this.isInRoom() && this.mySlot !== undefined;
+  }
+
+  getBoardDataForSlotID(slotID: string): SlotBoardData {
+    return this.slotBoardDataManager.getSlotBoardData(slotID);
   }
 
   /* SOCKET send-message {
@@ -102,31 +146,63 @@ export class MultiplayerService {
     });
   }
 
-    // leave as player and change to spectator mode
-    public exitMatch() {
-
-      // make sure socket is initialized so we can send message
+  // send encoded board state color data to server. should only send if there was a CHANGE in board state
+  public sendBoard(binaryGrid: BinaryGrid, colorGrid: ColorGrid) {
+      
       if (!this.socket) {
         console.error('socket not initialized');
         return
       }
 
-      // doesn't make sense to exit match if not already playing in match
-      if (!this.isPlayingGame()) {
+      if (this.slotID === undefined) {
         console.error('not playing game');
         return
       }
 
-      /* SOCKET player-leave-match { // called when wanting to switch status from player to spectator
-        roomID: string,
-        userID: string
+      /* SOCKET send-board {
+          slotID: string,
+          board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
       } */
-      this.socket.emit('player-leave-match', {
-        roomID: this.roomID,
-        userID: this.user.getUserID()
+
+      // only send if there was a change
+      const encodedData = encodeColorGrid(binaryGrid, colorGrid);
+      if (areUint8ArraysEqual(encodedData, this.previousEncodedBoard)) return;
+
+      console.log('sending changed board', binaryGrid, colorGrid, encodedData);
+
+      this.socket.emit('send-board', {
+        slotID: this.slotID,
+        board: encodedData
       });
-      
+
+      this.previousEncodedBoard = encodedData;
+  }
+
+  // leave as player and change to spectator mode
+  public exitMatch() {
+
+    // make sure socket is initialized so we can send message
+    if (!this.socket) {
+      console.error('socket not initialized');
+      return
     }
+
+    // doesn't make sense to exit match if not already playing in match
+    if (!this.isPlayingGame()) {
+      console.error('not playing game');
+      return
+    }
+
+    /* SOCKET player-leave-match { // called when wanting to switch status from player to spectator
+      roomID: string,
+      userID: string
+    } */
+    this.socket.emit('player-leave-match', {
+      roomID: this.roomID,
+      userID: this.user.getUserID()
+    });
+    
+  }
 
   // on enter page, establish socket connection
   onEnterPage() {
@@ -190,6 +266,24 @@ export class MultiplayerService {
 
     });
 
+    /* SOCKET on-update-board {
+        slotID: string,
+        board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
+    } */
+    this.socket.on('on-update-board', (data: any) => {
+
+      const slotID = data['slotID'] as string;
+      const rawEncodedBoard = data['board'];
+      const encodedBoard = rawEncodedBoard ? new Uint8Array(rawEncodedBoard) : undefined;
+
+      if (slotID === undefined) {
+        console.error('no slotID provided', data);
+        return
+      }
+      console.log('on-update-board', slotID, encodedBoard);
+      this.slotBoardDataManager.setSlotBoardData(slotID, encodedBoard);
+    });
+
     // listen for chat message event
     this.socket.on('on-message', (data: any) => {
 
@@ -235,6 +329,7 @@ export class MultiplayerService {
 
     // find my slot, if it exists
     this.mySlot = this.slots.find(slot => slot.playerID === this.user.getUserID());
+    this.slotID = this.mySlot?.slotID;
 
   }
 
@@ -249,6 +344,16 @@ export class MultiplayerService {
       userID: this.user.getUserID(),
       roomID: this.roomID,
     });
+
+    // reset data
+    this.roomID = undefined;
+    this.slotID = undefined;
+    this.adminUserID = undefined;
+    this.isAdmin = false;
+    this.numUsersConnected = 0;
+    this.messages = [];
+    this.mySlot = undefined;
+    this.slots = [];
   }
 
 }

@@ -10,6 +10,15 @@
 
         <div class="panels">
 
+            <app-section class="status-panel">
+                <h1 class="status">Status: {{multiplayer.isPlayingGame() ? 'Player' : 'Spectator'}}</h1>
+                <div class="status-attributes">
+                    <p *ngIf="multiplayer.isPlayingGame()">capture fps: {{getCaptureFPS()}}</p>
+                    <p>server fps: {{3}}</p>
+                    <p>latency: {{3}}ms</p>
+                </div>
+            </app-section>
+
             <div class="player-buttons" *ngIf="multiplayer.isPlayingGame()">
                 <app-button-big color="#DF6A62" label="Exit Match" (click)="exitMatchPrompt()"/>
                 <app-button-big color="#626EDF" label="Edit Calibration" (click)="showCalibrationPage()"/>    

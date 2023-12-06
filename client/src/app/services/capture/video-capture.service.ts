@@ -7,6 +7,8 @@ import { Point } from '../../models/capture-models/point';
 import BinaryGrid from '../../models/tetronimo-models/binary-grid';
 import { OCRBox } from '../../models/capture-models/ocr-box';
 import { GameStateMachineService } from '../game-state-machine/game-state-machine.service';
+import { FpsTracker } from '../../models/fps-tracker';
+import { MultiplayerService } from '../multiplayer.service';
 
 export enum VideoPauseStatus {
   PLAYING = "PLAYING",
@@ -43,11 +45,14 @@ export class VideoCaptureService {
   public readonly CANVAS_RESOLUTION_SCALE_X = this.OCR_WIDTH / this.DISPLAY_WIDTH;
   public readonly CANVAS_RESOLUTION_SCALE_Y = this.OCR_HEIGHT / this.DISPLAY_HEIGHT;
 
+  private fpsTracker = new FpsTracker();
+
   constructor(
     private captureFrameService: CaptureFrameService,
     private captureSettingsService: CaptureSettingsService,
     private extractedStateService: ExtractedStateService,
     private gameStateMachineService: GameStateMachineService,
+    private multiplayerService: MultiplayerService,
     ) { }
 
   public initVideoDevices() {
@@ -179,10 +184,16 @@ export class VideoCaptureService {
     this.videoElement.nativeElement.srcObject = null;
   }
 
+  public getFPS(): number {
+    return this.fpsTracker.getFPS();
+  }
+
   executeFrame(): void {
 
     // stop capture if flag is set to false
     if (!this.isCaptureRunning || !this.videoElement || !this.canvasElement) return;
+
+    this.fpsTracker.tick();
 
     /* 
     STEP 1: Obtain the video frame and map it to the canvas
@@ -207,6 +218,15 @@ export class VideoCaptureService {
       this.updateNextBoxOCR();
       this.updateLevelOCR();
       this.updateLinesOCR();
+    }
+
+    /*
+    STEP 2a: if multiplayer and playing game, then send to server
+    */
+    if (this.multiplayerService.isPlayingGame()) {
+      const binaryGrid = this.extractedStateService.get().getGrid();
+      const colorGrid = this.extractedStateService.get().getColorGrid();
+      this.multiplayerService.sendBoard(binaryGrid, colorGrid);
     }
 
     /*

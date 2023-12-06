@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
-import { SlotData } from 'client/src/app/services/multiplayer.service';
+import { MultiplayerService, SlotBoardData, SlotData } from 'client/src/app/services/multiplayer.service';
 import { UserService } from 'client/src/app/services/user.service';
 import { SlotType } from 'server/multiplayer/slot-state/slot-state';
 import { VerticalAlign } from '../../../tetris/interactive-tetris-board/interactive-tetris-board.component';
@@ -65,7 +65,11 @@ export class SlotComponent {
   backState = 'invisible';
   backStyle = { display: 'none' };
 
-  constructor(private user: UserService, public extractedStateService: ExtractedStateService) {}
+  constructor(
+    private user: UserService,
+    public extractedStateService: ExtractedStateService,
+    public multiplayer: MultiplayerService
+    ) {}
 
   readonly VerticalAlign = VerticalAlign;
   
@@ -75,6 +79,10 @@ export class SlotComponent {
 
   isVacant() {
     return this.slot.type === SlotType.VACANT;
+  }
+
+  getBoardData(): SlotBoardData {
+    return this.multiplayer.getBoardDataForSlotID(this.slot.slotID);
   }
 
   async onClickInvitePlayer() {

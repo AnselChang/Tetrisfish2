@@ -4,6 +4,7 @@ import { Socket } from 'socket.io';
 import { AccessCodeManager } from './access-code-manager';
 import { Slot } from './slot';
 import { ChatMessage } from './chat';
+import { SlotType } from './slot-state/slot-state';
 
 
 /*
@@ -127,6 +128,42 @@ export class MultiplayerManager {
                 userIsPlayer: userIsPlayer,
                 message: message
             });
+        });
+
+        /* SOCKET send-board {
+            slotID: string,
+            board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
+        } */
+        socket.on("send-board", (data: any) => {
+
+            const slotID = data['slotID'] as string;
+            const board = data['board'] as Uint8Array;
+
+            if (slotID === undefined || board === undefined) {
+                console.error("Invalid send-board data", data);
+                return;
+            }
+
+            const slot = this.getSlotByID(slotID);
+            if (!slot) {
+                console.error(`Slot ${slotID} not found`);
+                return;
+            }
+
+            if (slot.getType() !== SlotType.HUMAN) {
+                console.error(`Slot ${slotID} is not a human slot`);
+                return;
+            }
+
+            // set board
+            slot.getHumanState()!.setBoard(board);
+            
+            // broadcast event to all sockets in room
+            slot.room.broadcastAll("on-update-board", {
+                slotID: slotID,
+                board: board
+            });
+
         });
 
         /* SOCKET player-leave-match { // called when wanting to switch status from player to spectator
