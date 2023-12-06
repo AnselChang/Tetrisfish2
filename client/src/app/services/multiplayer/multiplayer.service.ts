@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { UserService } from './user.service';
-import { Method, fetchServer } from '../scripts/fetch-server';
+import { UserService } from '../user.service';
+import { Method, fetchServer } from '../../scripts/fetch-server';
 import { Socket, io } from 'socket.io-client';
 import { SerializedRoom } from 'server/multiplayer/serialized-room';
 import { ChatMessage } from 'server/multiplayer/chat';
 import { SlotType } from 'server/multiplayer/slot-state/slot-state';
-import ColorGrid from '../models/tetronimo-models/color-grid';
-import BinaryGrid from '../models/tetronimo-models/binary-grid';
-import { areUint8ArraysEqual, decodeColorGrid, encodeColorGrid } from '../scripts/encode-color-grid';
+import { areUint8ArraysEqual, encodeColorGrid } from '../../scripts/encode-color-grid';
+import { ExtractedStateService } from '../capture/extracted-state.service';
+import { GameStateMachineService } from '../game-state-machine/game-state-machine.service';
+import { TetrominoType } from '../../models/tetronimo-models/tetromino';
+import { SlotBoardData, SlotBoardDataManager } from './slot-board-data';
+import { ActiveGameState, GameStateManager, IGameState, PlayerGameState } from './player-game-state';
 
 export class SlotData {
   constructor(
@@ -18,40 +21,6 @@ export class SlotData {
     public readonly playerName?: string,
     public readonly numHearts: number = 0,
   ) {}
-}
-
-export class SlotBoardData {
-
-  public readonly binaryGrid: BinaryGrid;
-  public readonly colorGrid: ColorGrid;
-
-  constructor(encodedBoardGame?: Uint8Array) {
-    if (!encodedBoardGame) {
-      this.binaryGrid = new BinaryGrid();
-      this.colorGrid = new ColorGrid();
-    }
-
-    const {binaryGrid, colorGrid} = decodeColorGrid(encodedBoardGame);
-    this.binaryGrid = binaryGrid;
-    this.colorGrid = colorGrid;
-  }
-}
-
-export class SlotBoardDataManager {
-  private allSlotBoardData: {[slotID: string]: SlotBoardData} = {};
-
-  public getSlotBoardData(slotID: string): SlotBoardData {
-
-    if (!this.allSlotBoardData[slotID]) {
-      this.allSlotBoardData[slotID] = new SlotBoardData();
-    }
-    return this.allSlotBoardData[slotID];
-  }
-
-  public setSlotBoardData(slotID: string, encodedBoardGame?: Uint8Array) {
-    this.allSlotBoardData[slotID] = new SlotBoardData(encodedBoardGame);
-    console.log('setSlotBoardData', slotID, encodedBoardGame, this.allSlotBoardData[slotID]);
-  }
 }
 
 
@@ -75,10 +44,16 @@ export class MultiplayerService {
   private slots: SlotData[] = [];
 
   private previousEncodedBoard?: Uint8Array;
+  private previousPlayerGameState?: PlayerGameState;
 
   private readonly slotBoardDataManager: SlotBoardDataManager = new SlotBoardDataManager();
+  private readonly gameStateManager: GameStateManager = new GameStateManager();
 
-  constructor(private user: UserService) { }
+  constructor(
+    private user: UserService,
+    private extractedStateService: ExtractedStateService,
+    private gameService: GameStateMachineService,
+    ) { }
 
   // join a room given id. if slotID, then join as a player
   onJoinRoom(roomID: string, slotID?: string) {
@@ -123,6 +98,10 @@ export class MultiplayerService {
     return this.slotBoardDataManager.getSlotBoardData(slotID);
   }
 
+  getPlayerStateForSlotID(slotID: string): IGameState {
+    return this.gameStateManager.getGameState(slotID);
+  }
+
   /* SOCKET send-message {
     roomID: string
     name: string,
@@ -147,7 +126,7 @@ export class MultiplayerService {
   }
 
   // send encoded board state color data to server. should only send if there was a CHANGE in board state
-  public sendBoard(binaryGrid: BinaryGrid, colorGrid: ColorGrid) {
+  public onNewVideoFrame() {
       
       if (!this.socket) {
         console.error('socket not initialized');
@@ -159,10 +138,21 @@ export class MultiplayerService {
         return
       }
 
+      this.handlePossibleBoardChange();
+      this.handlePossiblePlayerGameStateChange();
+
+  }
+
+  // send player board to server. should only send if there was a CHANGE in player board
+  private handlePossibleBoardChange() {
+
       /* SOCKET send-board {
           slotID: string,
           board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
       } */
+
+      const binaryGrid = this.extractedStateService.get().getGrid();
+      const colorGrid = this.extractedStateService.get().getColorGrid();
 
       // only send if there was a change
       const encodedData = encodeColorGrid(binaryGrid, colorGrid);
@@ -170,12 +160,48 @@ export class MultiplayerService {
 
       console.log('sending changed board', binaryGrid, colorGrid, encodedData);
 
-      this.socket.volatile.emit('send-board', {
+      this.socket!.volatile.emit('send-board', {
         slotID: this.slotID,
         board: encodedData
       });
 
       this.previousEncodedBoard = encodedData;
+  }
+
+  // send player game state to server. should only send if there was a CHANGE in player game state
+  private handlePossiblePlayerGameStateChange() {
+
+    // if tetrisfish reads a game, then it has more accurate info about things like level/lines, as well as
+    // things like current eval and accuracies
+    const inGame = this.gameService.isInGame();
+
+    // get the current state of the game to possibly send to server
+    const extractedState = this.extractedStateService.get();
+    const status = inGame ? this.gameService.getCurrentGameStatus() : extractedState.getStatus();
+    const nextPieceType = extractedState.getNextPieceType();
+    const isPaused = extractedState.getPaused();
+
+    let gameState: ActiveGameState | undefined = undefined;
+    if (inGame) {
+      const game = this.gameService.getGame()!;
+      const overallAccuracy = game.analysisStats.getOverallAccuracy().getAverage();
+      const currentMoveEval = 0; // TODO
+      const bestMoveEval = 0; // TODO
+      const tetrisRate = game.stats.getTetrisRate();
+      gameState = new ActiveGameState(overallAccuracy, currentMoveEval, bestMoveEval, tetrisRate);
+    }
+    const playerGameState = new PlayerGameState(status.level, status.lines, status.score, nextPieceType, isPaused, gameState);
+    
+    // if there is no change, then don't send
+    if (this.previousPlayerGameState && playerGameState.equals(this.previousPlayerGameState)) return;
+
+    // send to server
+    console.log('sending changed player game state', playerGameState);
+    this.socket!.emit('send-player-state', {
+      slotID: this.slotID,
+      state: playerGameState.getJson()
+    });
+    
   }
 
   // leave as player and change to spectator mode
@@ -282,6 +308,26 @@ export class MultiplayerService {
       }
       console.log('on-update-board', slotID, encodedBoard);
       this.slotBoardDataManager.setSlotBoardData(slotID, encodedBoard);
+    });
+
+
+    this.socket.on('on-update-player', (data: any) => {
+
+      const slotID = data['slotID'] as string;
+      const state = data['state'] as IGameState;
+
+      if (slotID === undefined) {
+        console.error('no slotID provided', data);
+        return
+      }
+
+      if (state === undefined) {
+        console.error('no state provided', data);
+        return
+      }
+
+      console.log('on-update-player', slotID, state);
+      this.gameStateManager.setGameState(slotID, state);
     });
 
     // listen for chat message event

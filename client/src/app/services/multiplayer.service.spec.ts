@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MultiplayerService } from './multiplayer.service';
+import { MultiplayerService } from './multiplayer/multiplayer.service';
 
 describe('MultiplayerService', () => {
   let service: MultiplayerService;

@@ -4,7 +4,7 @@ import { UserService } from 'client/src/app/services/user.service';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { loginWithDiscord } from 'client/src/app/scripts/login';
 import { Router } from '@angular/router';
-import { MultiplayerService } from 'client/src/app/services/multiplayer.service';
+import { MultiplayerService } from 'client/src/app/services/multiplayer/multiplayer.service';
 
 @Component({
   selector: 'app-play-portal',

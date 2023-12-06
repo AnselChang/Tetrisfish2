@@ -92,6 +92,11 @@ SOCKET VOLATILE on-update-board {
     board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
 }
 
+SOCKET on-update-player {
+    slotID: string,
+    state: playerGameState.getJson()
+}
+
 WEBRTC update {
     // frame of board state / camera
     // game state if it changed
@@ -110,6 +115,11 @@ SOCKET send-message {
 SOCKET VOLATILE send-board { // send whenever the player's board CHANGES
     slotID: string,
     board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
+}
+
+SOCKET send-player-state {
+    slotID: this.slotID,
+    state: playerGameState.getJson()
 }
 
 SOCKET player-leave-match { // called when wanting to switch status from player to spectator

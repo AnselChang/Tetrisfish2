@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { VideoCaptureService } from 'client/src/app/services/capture/video-capture.service';
-import { MultiplayerService } from 'client/src/app/services/multiplayer.service';
+import { MultiplayerService } from 'client/src/app/services/multiplayer/multiplayer.service';
 
 @Component({
   selector: 'app-multiplayer',

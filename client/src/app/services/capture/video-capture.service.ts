@@ -8,7 +8,7 @@ import BinaryGrid from '../../models/tetronimo-models/binary-grid';
 import { OCRBox } from '../../models/capture-models/ocr-box';
 import { GameStateMachineService } from '../game-state-machine/game-state-machine.service';
 import { FpsTracker } from '../../models/fps-tracker';
-import { MultiplayerService } from '../multiplayer.service';
+import { MultiplayerService } from '../multiplayer/multiplayer.service';
 
 export enum VideoPauseStatus {
   PLAYING = "PLAYING",
@@ -221,15 +221,6 @@ export class VideoCaptureService {
     }
 
     /*
-    STEP 2a: if multiplayer and playing game, then send to server
-    */
-    if (this.multiplayerService.isPlayingGame()) {
-      const binaryGrid = this.extractedStateService.get().getGrid();
-      const colorGrid = this.extractedStateService.get().getColorGrid();
-      this.multiplayerService.sendBoard(binaryGrid, colorGrid);
-    }
-
-    /*
     STEP 3: Run game state machine for game start/end, placements, etc.
     */
     this.gameStateMachineService.tick();
@@ -239,6 +230,13 @@ export class VideoCaptureService {
     */
     if (this.isOnCalibratePage()) {
       this.drawCanvasOverlays(ctx);
+    }
+
+     /*
+    STEP 2a: if multiplayer and playing game, send updates to server if there is any change
+    */
+    if (this.multiplayerService.isPlayingGame()) {
+      this.multiplayerService.onNewVideoFrame();
     }
 
     /*

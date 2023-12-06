@@ -664,7 +664,7 @@ export class GameStateMachineService {
     return this.game!.startLevel;
   }
 
-  public getCurrentGameStatus(): SmartGameStatus | undefined {
+  public getCurrentGameStatus(): SmartGameStatus {
     return this.game!.status;
   }
 

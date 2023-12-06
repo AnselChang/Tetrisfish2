@@ -166,6 +166,42 @@ export class MultiplayerManager {
 
         });
 
+        /* SOCKET send-player-state {
+            slotID: string,
+            state: playerGameState.getJson()
+        } */
+        socket.on("send-player-state", (data: any) => {
+
+            const slotID = data['slotID'] as string;
+            const state = data['state'];
+
+            if (slotID === undefined || state === undefined) {
+                console.error("Invalid send-board data", data);
+                return;
+            }
+
+            const slot = this.getSlotByID(slotID);
+            if (!slot) {
+                console.error(`Slot ${slotID} not found`);
+                return;
+            }
+
+            if (slot.getType() !== SlotType.HUMAN) {
+                console.error(`Slot ${slotID} is not a human slot`);
+                return;
+            }
+
+            // set state
+            slot.getHumanState()!.setState(state);
+            
+            // broadcast event to all sockets in room
+            slot.room.broadcastAll("on-update-player", {
+                slotID: slotID,
+                state: state
+            }, true);
+
+        });
+
         /* SOCKET player-leave-match { // called when wanting to switch status from player to spectator
             roomID: string,
             userID: string
