@@ -145,40 +145,42 @@ class GridStateMachine {
       // this.nextPieceType should be the type of the SPAWN piece (the nextbox BEFORE the SPAWN piece)
       // nextPieceType should be the type of the NEXT box AFTER the SPAWN piece
 
-      // find the spawned piece by running connected components algorithm
-      // if first placement, we search entire grid for matching tetronimo
-      // otherwise, we search first few rows for any connected component with matching mino count
-      const topRows = currentLevel >= 29 ? 8 : (currentLevel >= 19 ? 6 : 4)
-      let spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, isFirstPlacement ? undefined : topRows);
-      let spawnedMinosGrid = this.getSpawnedMinosAsGrid(spawnedMinos);
-      let spawnedPiece: MoveableTetromino | undefined = undefined;
-      
-      // if we can't find the spawned piece in the first few rows, we try a second pass with full grid
-      // but the piece has to match
-      if (spawnedMinos === null) {
-        this.debug.log("Finding CC on top rows failed.");
 
-        if (numMinosSpawned === 4 && false) {
-          this.debug.log(`+4, so we an try a second pass to find piece match of type ${this.nextPieceType}`);
-          spawnedMinos = findConnectedComponent(currentGrid, 4);
-          spawnedMinosGrid = this.getSpawnedMinosAsGrid(spawnedMinos);
-          spawnedPiece = MoveableTetromino.computeMoveableTetronimo(this.debug, spawnedMinosGrid, this.nextPieceType);
-          
-          // if we can't find spawned piece, we have to discard this pass as well and revert
-          if (spawnedPiece === undefined) {
-            this.debug.log("Second pass failed to find piece match.");
-            spawnedMinos = null;
-          } else {
-            this.debug.log("Second pass succeeded to find piece match.");
+      let spawnedMinos: Point[] | null = null;
+      let spawnedMinosGrid: BinaryGrid;
+      let spawnedPiece: MoveableTetromino | undefined = undefined;
+
+      if (linesCleared === 0) {
+        // if no line clears, find spawned minos by removing last stable grid from current grid
+        spawnedMinosGrid = BinaryGrid.subtract(currentGrid, this.stableGridWithPlacement!) ?? new BinaryGrid();
+
+        // for each filled mino in spawned minos grid, add to spawnedMinos list
+        spawnedMinos = [];
+        for (let x = 0; x < spawnedMinosGrid.numCols; x++) {
+          for (let y = 0; y < spawnedMinosGrid.numRows; y++) {
+            if (spawnedMinosGrid.at(x, y) === BlockType.FILLED) spawnedMinos.push({ x, y });
           }
-        } else {
-          this.debug.log("Not +4, so we can't try a second pass to find piece match.");
         }
 
+        this.debug.log("Since no line clear, we find spawned minos by subtracting last stable grid from current grid");
+
       } else {
-        this.debug.log(`Finding CC on top rows succeeded. Finding piece match of type ${this.nextPieceType}`);
-        spawnedPiece = MoveableTetromino.computeMoveableTetronimo(this.debug, spawnedMinosGrid, this.nextPieceType);
+        // find the spawned piece by running connected components algorithm
+        // if first placement, we search entire grid for matching tetronimo
+        // otherwise, we search first few rows for any connected component with matching mino count
+        const topRows = currentLevel >= 29 ? 8 : (currentLevel >= 19 ? 7 : 6)
+        spawnedMinos = findConnectedComponent(currentGrid, numMinosSpawned, isFirstPlacement ? undefined : topRows);
+        spawnedMinosGrid = this.getSpawnedMinosAsGrid(spawnedMinos);
+        
+        if (spawnedMinos === null) {
+          this.debug.log("Finding CC on top rows failed.");
+        } else {
+          this.debug.log(`Finding CC on top rows succeeded.`);
+        }
       }
+
+      // see if we can determine the spawned piece type
+      spawnedPiece = MoveableTetromino.computeMoveableTetronimo(this.debug, spawnedMinosGrid, this.nextPieceType);
 
       this.debug.logGrid("Spawned Minos", spawnedMinosGrid);
       this.debug.log(`Spawned Piece: ${spawnedPiece?.tetrominoType}`);
@@ -187,7 +189,7 @@ class GridStateMachine {
         this.debug.log("Although SPAWN detected, for the FIRST placement spawned piece needs to be a valid tetromino type");
         return [MinoResult.NO_CHANGE, undefined];
 
-      } else if (spawnedMinos === null) {
+      } else if (spawnedMinosGrid.count() !== numMinosSpawned) {
         this.debug.log(`Although spawn detected, detected spawn piece does not have ${numMinosSpawned} minos`);
         return [MinoResult.NO_CHANGE, undefined];
 

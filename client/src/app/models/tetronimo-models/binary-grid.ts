@@ -158,7 +158,7 @@ export default class BinaryGrid implements Grid {
             for (let j = 0; j < grid1.numCols; j++) {
                 if (grid2.at(j, i) === BlockType.FILLED) {
                     if (newGrid.at(j, i) === BlockType.EMPTY) {
-                        return undefined;
+                        return undefined; // cannot subtract filled from empty
                     } else {
                         newGrid.setAt(j, i, BlockType.EMPTY);
                     }

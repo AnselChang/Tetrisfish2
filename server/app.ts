@@ -90,13 +90,17 @@ export default async function createApp(): Promise<{
         const url = req.query['url'];
         console.log("Making request to Stack Rabbit API:", url);
 
+        let result;
+        let json;
         try {
-            const result = await fetch(url as string);
-            const json = await result.json();
+            result = await fetch(url as string);
+            json = await result.json();
             console.log("Got response from Stack Rabbit API:", json);
             res.send(json);
         } catch (e) {
             console.log("StackRabbit Server Error", e);
+            console.log("result:", result);
+            console.log("json:", json);
             res.status(500).send("StackRabbit Server Error");
         }
     });
