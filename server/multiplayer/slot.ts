@@ -36,8 +36,8 @@ export class Slot {
         return undefined;
     }
 
-    async assignHuman(userID: string) {
-        this.state = new HumanSlotState(userID);
+    async assignHuman(userID: string, sessionID: string) {
+        this.state = new HumanSlotState(userID, sessionID);
         this.playerName = (await getUserByID(userID))?.username ?? 'unknown';
     }
 

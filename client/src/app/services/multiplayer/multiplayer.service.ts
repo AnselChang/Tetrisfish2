@@ -233,7 +233,7 @@ export class MultiplayerService {
     } */
     this.socket.emit('player-leave-match', {
       roomID: this.roomID,
-      userID: this.user.getUserID()
+      sessionID: this.user.getSessionID()
     });
     
   }
@@ -251,6 +251,7 @@ export class MultiplayerService {
       // sever should respond with initialize-client with room data
       this.socket!.emit('register-socket', {
         userID: this.user.getUserID(),
+        sessionID: this.user.getSessionID(),
         roomID: this.roomID,
         slotID: this.slotID
       })
@@ -396,6 +397,7 @@ export class MultiplayerService {
     // send closing HTTP request
     fetchServer(Method.POST, '/api/multiplayer/leave-room', {
       userID: this.user.getUserID(),
+      sessionID: this.user.getSessionID(),
       roomID: this.roomID,
     });
 

@@ -129,7 +129,7 @@ export async function leaveRoomRoute(multiplayer: MultiplayerManager, req: Reque
         return;
     }
 
-    room.removeHumanFromRoom(userID);
+    room.removeHumanFromRoom(userID, sessionID);
     res.status(200).send({
         success: true
     });
@@ -139,11 +139,12 @@ export async function registerMyselfRoute(multiplayer: MultiplayerManager, req: 
 
     const userID = req.body['userID'] as string;
     const slotID = req.body['slotID'] as string;
+    const sessionID = req.body['sessionID'] as string;
 
-    if (!userID || !slotID) {
+    if (!userID || !slotID || !sessionID) {
         res.status(200).send({
             success: false,
-            error: "Invalid userID, roomID, or slotID"
+            error: "Invalid userID, sessionID, or slotID"
         });
         return;
     }
@@ -159,7 +160,7 @@ export async function registerMyselfRoute(multiplayer: MultiplayerManager, req: 
     }
 
     // check if userID is already in a slot
-    if (slot.room.isUserInSlot(userID)) {
+    if (slot.room.isUserSessionInSlot(sessionID)) {
         res.status(200).send({
             success: false,
             error: "User already in slot"
@@ -168,7 +169,7 @@ export async function registerMyselfRoute(multiplayer: MultiplayerManager, req: 
     }
 
     // assign userID to slot
-    await slot.assignHuman(userID);
+    await slot.assignHuman(userID, sessionID);
 
     // broadcast change
     slot.room.onChange();

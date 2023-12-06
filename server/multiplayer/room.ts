@@ -70,7 +70,7 @@ export class Room {
     // CALLED BY HTTP
     // add a human to a slot in the room. This happens after the HTTP request POST join-room-play
     // this does not necesarily mean the socket connection has been established yet. that will happen right after
-    public async addHumanToRoomWithSlot(userID: string, slot: Slot): Promise<boolean> {
+    public async addHumanToRoomWithSlot(userID: string, sessionID: string, slot: Slot): Promise<boolean> {
 
         if (!this.isSlotInRoom(slot)) {
             console.log('addHumanToRoomWithSlot: slot not in room');
@@ -78,23 +78,30 @@ export class Room {
         }
 
         console.log('addHumanToRoomWithSlot', userID, slot.slotID);
-        await slot.assignHuman(userID);
+        await slot.assignHuman(userID, sessionID);
         this.multiplayerManager.accessCodes.revokeAccessCodeForSlot(slot.slotID);
         return true;
     }
 
     // CALLED BY HTTP
-    // remove a human with userID from room. if in slot, remove from slot.
-    // if admin, promote someone else. if no human player, delete room
-    removeHumanFromRoom(userID: string) {
+    // remove only the slot that contains the user sessionID
+    removeHumanFromRoom(userID: string, sessionID: string) {
 
         this.getSlots().forEach(slot => {
-            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).userID === userID) {
+            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).sessionID === sessionID) {
                 slot.vacate();
             }
         });
 
-        if (userID === this.adminUserID) {
+        // check if there is any other instance of userID
+        const userStillInRoom = this.getSlots().some(slot => {
+            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).userID === userID) {
+                return true;
+            }
+            return false;
+        });
+
+        if (userID === this.adminUserID && !userStillInRoom) {
             // if user is admin, promote someone else or delete room
             const newAdminSlotState = (this.slots.find(slot => slot.getType() === SlotType.HUMAN))?.getState() as (HumanSlotState | undefined);
 
@@ -153,12 +160,12 @@ export class Room {
     }
 
     // whether the given user with userID occupies a slot in the room
-    public isUserInSlot(userID: string | undefined): boolean {
+    public isUserSessionInSlot(sessionID: string | undefined): boolean {
 
-        if (!userID) return false;
+        if (!sessionID) return false;
 
         for (const slot of this.slots) {
-            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).userID === userID) {
+            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).sessionID === sessionID) {
                 return true;
             }
         }
@@ -166,12 +173,12 @@ export class Room {
     }
 
     // if userID is in a slot, remove them from the slot
-    public removePlayerFromSlot(userID: string) {
+    public removePlayerSessionFromSlot(sessionID: string) {
 
-        if (!this.isUserInSlot(userID)) return;
+        if (!this.isUserSessionInSlot(sessionID)) return;
 
         this.getSlots().forEach(slot => {
-            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).userID === userID) {
+            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).sessionID === sessionID) {
                 slot.vacate();
             }
         });

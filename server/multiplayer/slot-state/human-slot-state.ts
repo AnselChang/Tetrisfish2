@@ -7,6 +7,7 @@ export class HumanSlotState extends SlotState {
 
     constructor(
         public readonly userID: string,
+        public readonly sessionID: string,
     ) {
         super(SlotType.HUMAN);
     }

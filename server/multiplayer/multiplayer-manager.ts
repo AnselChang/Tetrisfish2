@@ -88,12 +88,13 @@ export class MultiplayerManager {
         socket.on("register-socket", (data: any) => {
                 
             const userID = data['userID'] as (string | undefined);
+            const sessionID = data['sessionID'] as string;
             const roomID = data['roomID'] as (string | undefined);
             const slotID = data['slotID'] as (string | undefined);
 
             console.log(`Socket ${socket.id} registering with userID ${userID} and roomID ${roomID} and slotID ${slotID}`)
 
-            this.onRegisterSocket(socket, userID, roomID, slotID).then(response => {
+            this.onRegisterSocket(socket, sessionID, userID, roomID, slotID).then(response => {
                 socket.emit("initialize-client", response);
             });
         });
@@ -209,9 +210,9 @@ export class MultiplayerManager {
         socket.on("player-leave-match", (data: any) => {
                 
             const roomID = data['roomID'] as string;
-            const userID = data['userID'] as string;
+            const sessionID = data['sessionID'] as string;
 
-            if (roomID === undefined || userID === undefined) {
+            if (roomID === undefined || sessionID === undefined) {
                 console.error("Invalid player-leave-match data", data);
                 return;
             }
@@ -222,7 +223,7 @@ export class MultiplayerManager {
                 return;
             }
 
-            room.removePlayerFromSlot(userID);
+            room.removePlayerSessionFromSlot(sessionID);
             room.onChange(); // broadcast new room state to all sockets in room
 
         });
@@ -235,7 +236,7 @@ export class MultiplayerManager {
     }
 
     // called when a socket registers itself with the server. update corresponding room with socket
-    async onRegisterSocket(socket: Socket, userID?: string, roomID?: string, slotID?: string): Promise<any> {
+    async onRegisterSocket(socket: Socket, sessionID: string, userID?: string, roomID?: string, slotID?: string): Promise<any> {
 
         if (!roomID || !this.doesRoomExist(roomID)) {
             return {
@@ -251,7 +252,7 @@ export class MultiplayerManager {
 
         // if slotID is not none and is in the room, assign the slot to the socket
         if (userID && slotID) {
-            await room.addHumanToRoomWithSlot(userID!, room.getSlotByID(slotID)!);
+            await room.addHumanToRoomWithSlot(userID!, sessionID, room.getSlotByID(slotID)!);
         }
 
         room.onChange();

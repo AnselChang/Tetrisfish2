@@ -7,6 +7,7 @@ import { UserSettings } from 'shared/models/user-settings';
 import { Playstyle } from '../misc/playstyle';
 import { InputSpeed } from '../scripts/evaluation/input-frame-timeline';
 import { Threshold, ThresholdType } from '../models/capture-models/capture-settings';
+import { v4 as uuidv4 } from 'uuid';
 
 export enum LoginStatus {
   LOGGED_IN,
@@ -23,6 +24,9 @@ export class UserService {
   private username: string | null = null;
   private userID: string | null = null;
   private isProUser: boolean | null = null;
+
+  // id unique to this user and this session
+  private sessionID = uuidv4();
 
   private readonly randomTemporaryUsername = this.generateRandomUsername();
 
@@ -111,6 +115,10 @@ export class UserService {
 
   public getUserID(): string | null {
     return this.userID;
+  }
+
+  public getSessionID(): string {
+    return this.sessionID;
   }
 
   public getProUser(): boolean | null {

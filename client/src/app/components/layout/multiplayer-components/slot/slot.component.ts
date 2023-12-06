@@ -164,6 +164,7 @@ export class SlotComponent {
 
     const {status, content} = await fetchServer(Method.POST, '/api/multiplayer/register-myself', {
       userID: this.user.getUserID(),
+      sessionID: this.user.getSessionID(),
       slotID: this.slot.slotID
     });
 

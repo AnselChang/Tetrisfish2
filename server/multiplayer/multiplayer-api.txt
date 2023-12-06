@@ -39,6 +39,7 @@ POST join-room-play {
 
 POST register-myself {
     userID: string
+    sessionID: string
     roomID: string,
     slotID: string
 } response {
@@ -48,6 +49,7 @@ POST register-myself {
 
 POST leave-room {
     userID: string
+    sessionID: string
     roomID: string
 } response {
     success: boolean
@@ -59,6 +61,7 @@ INITIAL SOCKET HANDSHAKE
 (client to server)
 SOCKET register-socket {
     roomID: string
+    sessionID: string
     userID?: string // if undefined, is spectator
     slotID?: string // if undefined is spectator
 }
@@ -124,5 +127,5 @@ SOCKET send-player-state {
 
 SOCKET player-leave-match { // called when wanting to switch status from player to spectator
     roomID: string,
-    userID: string
+    sessionID: string
 }
