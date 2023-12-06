@@ -1,5 +1,5 @@
 <header *ngIf="userService.isLoggedIn()">
-    <h1>Ansel, let’s play a game.</h1>
+    <h1>{{userService.getUsername()}}, let’s play a game.</h1>
 </header>
 <header *ngIf="!userService.isLoggedIn()">
     <h2>To get started, log in!</h2>

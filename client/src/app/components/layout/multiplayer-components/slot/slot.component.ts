@@ -80,6 +80,10 @@ export class SlotComponent {
     return this.extractedStateService.get();
   }
 
+  isMyself(): boolean {
+    return this.slot.sessionID === this.user.getSessionID();
+  }
+
   isVacant() {
     return this.slot.type === SlotType.VACANT;
   }

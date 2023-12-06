@@ -1,13 +1,13 @@
 <div *ngIf="!isVacant()" class="slot occupied">
-    <app-nes-panel class="name-panel">
+    <app-nes-panel [highlight]="isMyself()" class="name-panel">
         <h1 class="player-name">{{slot.playerName}}</h1>
     </app-nes-panel>
 
-    <app-nes-panel class="eval-bar-panel">
+    <app-nes-panel [highlight]="isMyself()" class="eval-bar-panel">
         <app-eval-bar class="eval-bar" />
     </app-nes-panel>
 
-    <app-nes-panel class="tetris-board-panel">
+    <app-nes-panel [highlight]="isMyself()" class="tetris-board-panel">
         <app-interactive-tetris-board
             [grid]="getBoardData().binaryGrid"
             [colorGrid]="getBoardData().colorGrid"
@@ -17,7 +17,7 @@
         />
     </app-nes-panel>
 
-    <app-nes-panel class="score-panel">
+    <app-nes-panel [highlight]="isMyself()" class="score-panel">
         <div class="score-panel-content">
             <p class="score-label">SCORE</p>
             <div>
@@ -28,35 +28,35 @@
         </div>
     </app-nes-panel>
 
-    <app-nes-panel class="level-panel">
+    <app-nes-panel [highlight]="isMyself()" class="level-panel">
         <div class="level-panel-content">
             <p class="level-label">LEVEL</p>
             <p class="level-value">{{getPlayerState().level}}</p>
         </div>
     </app-nes-panel>
 
-    <app-nes-panel class="lines-panel">
+    <app-nes-panel [highlight]="isMyself()" class="lines-panel">
         <div class="lines-panel-content">
             <p class="lines-label">LINES</p>
             <p class="lines-value">{{getPlayerState().lines}}</p>
         </div>
     </app-nes-panel>
 
-    <app-nes-panel class="accuracy-panel">
+    <app-nes-panel [highlight]="isMyself()" class="accuracy-panel">
         <div class="accuracy-panel-content">
             <p class="accuracy-label">ACCURACY</p>
             <p class="accuracy-value" [style.color]="getAccuracyColor()">{{getAccuracyString()}}</p>
         </div>
     </app-nes-panel>
 
-    <app-nes-panel class="trt-panel">
+    <app-nes-panel [highlight]="isMyself()" class="trt-panel">
         <div class="trt-panel-content">
             <p class="trt-label">TRT:</p>
             <p class="trt-value">{{getTRTString()}}</p>
         </div>
     </app-nes-panel>
 
-    <app-nes-panel class="video-panel">
+    <app-nes-panel [highlight]="isMyself()" class="video-panel">
         
     </app-nes-panel>
 
