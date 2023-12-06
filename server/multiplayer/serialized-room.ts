@@ -15,6 +15,8 @@ export interface SerializedRoom {
 
     roomID: string;
     adminUserID: string;
+    adminName: string;
+    isAdminInRoom: boolean;
     numUsersConnected: number;
     slots: SerializedSlot[];
 

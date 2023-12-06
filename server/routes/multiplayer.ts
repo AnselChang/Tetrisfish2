@@ -5,7 +5,7 @@ import { SocketUser } from 'server/multiplayer/room';
 export async function createRoomRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
 
     const userID = req.body['userID'] as string;
-    const newRoom = multiplayer.createNewRoom(userID);
+    const newRoom = await multiplayer.createNewRoom(userID);
 
     res.status(200).send({
         success: true,

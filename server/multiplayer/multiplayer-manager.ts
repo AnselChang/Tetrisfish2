@@ -5,6 +5,7 @@ import { AccessCodeManager } from './access-code-manager';
 import { Slot } from './slot';
 import { ChatMessage } from './chat';
 import { SlotType } from './slot-state/slot-state';
+import { getUserByID } from '../database/user/user-service';
 
 
 /*
@@ -51,9 +52,10 @@ export class MultiplayerManager {
         return {room: room, slot: room.getSlotByID(slotID)!};
     }
 
-    createNewRoom(adminUserID: string): Room {
-
-        const room = new Room(this, uuidv4(), adminUserID);
+    async createNewRoom(adminUserID: string): Promise<Room> {
+        
+        const adminName = (await getUserByID(adminUserID))!.username;
+        const room = new Room(this, uuidv4(), adminUserID, adminName);
         this.rooms.push(room);
         return room;
     }

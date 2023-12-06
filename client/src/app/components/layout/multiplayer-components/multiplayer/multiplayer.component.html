@@ -18,7 +18,8 @@
         <div class="panels">
 
             <app-section class="status-panel">
-                <h1 class="status">Status: {{multiplayer.isPlayingGame() ? 'Player' : 'Spectator'}}</h1>
+                <h1 class="host">{{getHostText()}}</h1>
+                <h2 class="status">Status: {{multiplayer.isPlayingGame() ? 'Player' : 'Spectator'}}</h2>
                 <div class="status-attributes">
                     <p *ngIf="multiplayer.isPlayingGame()">capture fps: {{getCaptureFPS()}}</p>
                     <p>server fps: {{3}}</p>

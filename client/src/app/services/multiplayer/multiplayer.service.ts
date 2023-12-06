@@ -36,6 +36,8 @@ export class MultiplayerService {
   private slotID?: string;
 
   private adminUserID?: string;
+  private adminName?: string;
+  private isAdminInRoom: boolean = false;
   private isAdmin: boolean = false;
   private numUsersConnected: number = 0;
   private messages: ChatMessage[] = [];
@@ -77,6 +79,14 @@ export class MultiplayerService {
 
   getIsAdmin(): boolean {
     return this.isAdmin;
+  }
+
+  getAdminName(): string | undefined {
+    return this.adminName;
+  }
+
+  getIfAdminInRoom(): boolean {
+    return this.isAdminInRoom;
   }
 
   getNumUsersConnected(): number {
@@ -374,6 +384,9 @@ export class MultiplayerService {
     }
 
     this.adminUserID = data.adminUserID;
+    this.adminName = data.adminName;
+    this.isAdminInRoom = data.isAdminInRoom;
+
     this.isAdmin = this.adminUserID === this.user.getUserID();
     this.numUsersConnected = data.numUsersConnected;
 

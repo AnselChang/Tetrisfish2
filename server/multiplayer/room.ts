@@ -11,6 +11,7 @@ import { Chat } from "./chat";
 import { MultiplayerManager } from './multiplayer-manager';
 import { SlotType } from './slot-state/slot-state';
 import { HumanSlotState } from './slot-state/human-slot-state';
+import { getUserByID } from 'server/database/user/user-service';
 
 export class SocketUser {
     constructor(
@@ -30,7 +31,8 @@ export class Room {
     constructor(
         public readonly multiplayerManager: MultiplayerManager,
         public readonly roomID: string,
-        public adminUserID: string
+        public readonly adminUserID: string,
+        public readonly adminName: string, 
     ) {
 
         console.log('created room', roomID, 'with admin', adminUserID);
@@ -50,6 +52,16 @@ export class Room {
         
         for (const socketUser of this.sockets) {
             if (socketUser.sessionID === sessionID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public isThereSocketWithUserID(userID: string): boolean {
+
+        for (const socketUser of this.sockets) {
+            if (socketUser.userID === userID) {
                 return true;
             }
         }
@@ -93,26 +105,6 @@ export class Room {
                 slot.vacate();
             }
         });
-
-        // check if there is any other instance of userID
-        const userStillInRoom = this.getSlots().some(slot => {
-            if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).userID === userID) {
-                return true;
-            }
-            return false;
-        });
-
-        if (userID === this.adminUserID && !userStillInRoom) {
-            // if user is admin, promote someone else or delete room
-            const newAdminSlotState = (this.slots.find(slot => slot.getType() === SlotType.HUMAN))?.getState() as (HumanSlotState | undefined);
-
-            if (newAdminSlotState) { // there's a human player in the room to promote
-                console.log('promoting', newAdminSlotState.userID, 'to admin');
-                this.adminUserID = newAdminSlotState.userID;
-            } else { // no human players left in the room, delete room
-                this.multiplayerManager.deleteRoom(this);
-            }            
-        }
     }
 
     public isSocketConnected(socket: Socket): boolean {
@@ -143,6 +135,8 @@ export class Room {
         return {
             roomID: this.roomID,
             adminUserID: this.adminUserID,
+            adminName: this.adminName,
+            isAdminInRoom: this.isThereSocketWithUserID(this.adminUserID),
             numUsersConnected: this.getNumConnectedSockets(),
             slots: this.slots.map(slot => slot.serialize())
         }

@@ -49,6 +49,16 @@ export class MultiplayerComponent implements OnInit, OnDestroy, AfterViewChecked
     return this.videoCaptureService.getFPS();
   }
 
+  public getHostText(): string {
+    if (this.multiplayer.getIsAdmin()) {
+      return "You are the host";
+    } else if (this.multiplayer.getIfAdminInRoom()) {
+      return "Hosted by " + this.multiplayer.getAdminName();
+    } else {
+      return `Host (${this.multiplayer.getAdminName()}) left the room`;
+    }
+  }
+
   // prompt user to confirm exiting the match
   public exitMatchPrompt() {
     if (confirm("Are you sure you want to exit the match? You won't be able to rejoin unless the host sends you a new access code.")) {

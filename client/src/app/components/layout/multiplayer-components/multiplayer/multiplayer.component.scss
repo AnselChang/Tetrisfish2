@@ -57,11 +57,19 @@
     height: calc(100dvh - 95px);
 }
 
-.status-panel .status {
+.status-panel .host {
     font-family: Montserrat;
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
+    line-height: normal;
+}
+
+.status-panel .status {
+    font-family: Montserrat;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
     line-height: normal;
 }
 
