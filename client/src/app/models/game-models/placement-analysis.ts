@@ -31,7 +31,6 @@ export default class PlacementAnalysis {
         const finished = this.hasEngineMovelistDeep() && this.hasEngineMovelistShallow() && this.hasRateMoveDeep();
         if (finished) {
             this.isFinishedAnalysis = true;
-            //console.log("Finished analysis for placement", this.index+1);
             this.onFinishAnalysis$.next(true);
         }
     }
