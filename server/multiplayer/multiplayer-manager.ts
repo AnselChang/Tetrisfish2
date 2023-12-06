@@ -58,28 +58,6 @@ export class MultiplayerManager {
         return room;
     }
 
-    // called when a socket joins through room link. Attempt to join the room.
-    onSocketJoinRoom(roomID: string, socket: Socket, userID?: string): void {
-
-        const room = this.getRoomByID(roomID);
-        if (!room) {
-            console.error(`Room ${roomID} not found`);
-            socket.emit("on-join-room", {success: false, reason: "Room not found"});
-            return;
-        }
-
-        const socketUser = new SocketUser(socket, userID);
-        const success = room.addSocketUser(socketUser);
-        if (!success) {
-            console.error(`Socket already in room ${roomID}`);
-            socket.emit("on-join-room", {success: false, reason: "Socket already in room"});
-        }
-
-        console.log(`Socket ${socket.id} joined room ${roomID}`);
-        socket.emit("on-join-room", {success: true, room: room.serialize()});
-        
-    }
-
     // called when a socket connects to the server
     onSocketConnectToServer(socket: Socket): void {
         console.log(`Socket ${socket.id} connected to server`);
@@ -248,7 +226,7 @@ export class MultiplayerManager {
         const room = this.getRoomByID(roomID)!;
 
         // register socket with room
-        room.addSocketUser(new SocketUser(socket, userID));
+        room.addSocketUser(new SocketUser(socket, sessionID, userID));
 
         // if slotID is not none and is in the room, assign the slot to the socket
         if (userID && slotID) {

@@ -17,7 +17,8 @@ export class SlotData {
     public readonly slotID: string,
     public readonly index: number,
     public readonly type: SlotType,
-    public readonly playerID?: string,
+    public readonly userID?: string,
+    public readonly sessionID?: string,
     public readonly playerName?: string,
     public readonly numHearts: number = 0,
   ) {}
@@ -379,11 +380,11 @@ export class MultiplayerService {
     // initialize slots
     this.slots = [];
     data.slots.forEach((slot, index) => {
-      this.slots.push(new SlotData(slot.slotID, index, slot.type, slot.playerUserID, slot.playerName, slot.numHearts));
+      this.slots.push(new SlotData(slot.slotID, index, slot.type, slot.playerUserID, slot.playSessionID, slot.playerName, slot.numHearts));
     });
 
     // find my slot, if it exists
-    this.mySlot = this.slots.find(slot => slot.playerID === this.user.getUserID());
+    this.mySlot = this.slots.find(slot => slot.sessionID === this.user.getSessionID());
     this.slotID = this.mySlot?.slotID;
 
   }

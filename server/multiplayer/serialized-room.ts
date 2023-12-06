@@ -5,6 +5,7 @@ export interface SerializedSlot {
     slotID: string;
     type: SlotType;
     playerUserID?: string;
+    playSessionID?: string;
     playerName?: string;
     numHearts: number;
 }

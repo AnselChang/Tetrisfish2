@@ -47,6 +47,7 @@ export class Slot {
             type: this.getType(),
             playerName: this.playerName,
             playerUserID: this.state?.type === SlotType.HUMAN ? (this.state as HumanSlotState).userID : undefined,
+            playSessionID: this.state?.type === SlotType.HUMAN ? (this.state as HumanSlotState).sessionID : undefined,
             numHearts: this.numHearts
         }
     }

@@ -117,6 +117,7 @@ export async function revokeSlotAccessCodeRoute(multiplayer: MultiplayerManager,
 export async function leaveRoomRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
 
     const userID = req.body['userID'] as string;
+    const sessionID = req.body['sessionID'] as string;
     const roomID = req.body['roomID'] as string;
 
     const room = multiplayer.getRoomByID(roomID);

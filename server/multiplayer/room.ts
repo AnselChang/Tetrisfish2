@@ -15,6 +15,7 @@ import { HumanSlotState } from './slot-state/human-slot-state';
 export class SocketUser {
     constructor(
         public readonly socket: Socket,
+        public readonly sessionID: string,
         public readonly userID?: string, // undefined if not logged in
         ) {}
 
@@ -45,10 +46,10 @@ export class Room {
         return slot;
     }
 
-    public isThereSocketWithUserID(userID: string | undefined): boolean {
+    public isThereSocketWithSessionID(sessionID: string | undefined): boolean {
         
         for (const socketUser of this.sockets) {
-            if (socketUser.userID === userID) {
+            if (socketUser.sessionID === sessionID) {
                 return true;
             }
         }
@@ -59,7 +60,7 @@ export class Room {
     // tries to add a socket user to the room. Returns true if successful, false otherwise.
     // fails if the socketUser has userID and the userID is already in the room
     public addSocketUser(socketUser: SocketUser): boolean {
-        if (socketUser.userID !== undefined && this.isThereSocketWithUserID(socketUser.userID)) {
+        if (this.isThereSocketWithSessionID(socketUser.sessionID)) {
             return false
         }
         this.sockets.push(socketUser);

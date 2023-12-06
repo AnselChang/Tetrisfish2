@@ -34,17 +34,6 @@
             <app-section class="admin-panel" *ngIf="multiplayer.getIsAdmin()">
                 <h1>Admin Panel</h1>
 
-                <p>Room ID: {{multiplayer.getRoomID()}}</p>
-                <p>Slot ID: {{multiplayer.getSlotID()}}</p>
-                <p>isPlaying: {{multiplayer.isPlayingGame()}}</p>
-
-                <div *ngFor="let slot of multiplayer.getSlots()">
-                    <p>Slot id: {{slot.slotID}}</p>
-                    <p>Player ID: {{slot.playerID}}</p>
-                    <p>Player name: {{slot.playerName}}</p>
-                    <p>Type: {{slot.type}}</p>
-                    <p>NumHearts: {{slot.numHearts}}</p>
-                </div>
                 
             </app-section>
 
