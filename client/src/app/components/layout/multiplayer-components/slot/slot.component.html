@@ -22,7 +22,7 @@
             <p class="score-label">SCORE</p>
             <div>
                 <p class="score-value">{{getPlayerState().score}}</p>
-                <p class="score-delta">00000</p>
+                <p class="score-delta" [style.color]="isTopScorePlayer() ? '#00FF57' : '#FF0000'">{{getScoreDelta()}}</p>
             </div>
             
         </div>
@@ -45,7 +45,7 @@
     <app-nes-panel class="accuracy-panel">
         <div class="accuracy-panel-content">
             <p class="accuracy-label">ACCURACY</p>
-            <p class="accuracy-value">{{getAccuracyString()}}</p>
+            <p class="accuracy-value" [style.color]="getAccuracyColor()">{{getAccuracyString()}}</p>
         </div>
     </app-nes-panel>
 

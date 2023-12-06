@@ -85,6 +85,9 @@ export class ActiveGameState {
 
 export class GameStateManager {
     private allGameState: {[slotID: string]: IGameState} = {};
+    private allScoreDeltas: {[slotID: string]: number} = {};
+
+    private topSlotID: string | undefined;
   
     public getGameState(slotID: string): IGameState {
   
@@ -100,10 +103,19 @@ export class GameStateManager {
       }
       return this.allGameState[slotID];
     }
+
+    public getScoreDelta(slotID: string): number {
+        if (!this.allScoreDeltas[slotID]) return 0;
+        return this.allScoreDeltas[slotID];
+    }
+
+    public getTopSlotID(): string | undefined {
+        return this.topSlotID;
+    }
   
     public setGameState(slotID: string, state: IGameState) {
 
-      this.allGameState[slotID] = new PlayerGameState(
+        this.allGameState[slotID] = new PlayerGameState(
             state.level,
             state.lines,
             state.score,
@@ -116,5 +128,36 @@ export class GameStateManager {
                 state.game.tetrisRate,
             ) : undefined,
         );
+
+        this.updateScoreDeltas();
+    }
+
+    private updateScoreDeltas() {
+        // now, finding the top two scores which will be used to calculate deltas
+        let topSlotID;
+        let secondSlotID;
+        for (const slotID in this.allGameState) {
+            const score = this.allGameState[slotID].score;
+            if (topSlotID === undefined || score > this.allGameState[topSlotID].score) {
+                secondSlotID = topSlotID;
+                topSlotID = slotID;
+            } else if (secondSlotID === undefined || score > this.allGameState[secondSlotID].score) {
+                secondSlotID = slotID;
+            }
+        }
+
+        // for all slots that are not slot, delta is with respect to top slot
+        // for top slot, delta is with respect to second slot
+        for (const slotID in this.allGameState) {
+            if (topSlotID === undefined || secondSlotID === undefined) this.allScoreDeltas[slotID] = 0;
+            else if (slotID === topSlotID) {
+                this.allScoreDeltas[slotID] = this.allGameState[slotID].score - this.allGameState[secondSlotID].score;
+            } else {
+                this.allScoreDeltas[slotID] = this.allGameState[slotID].score - this.allGameState[topSlotID].score;
+            }
+        }
+
+        this.topSlotID = topSlotID;
+
     }
   }

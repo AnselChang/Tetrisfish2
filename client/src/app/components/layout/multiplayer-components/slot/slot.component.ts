@@ -9,6 +9,7 @@ import { SlotType } from 'server/multiplayer/slot-state/slot-state';
 import { VerticalAlign } from '../../../tetris/interactive-tetris-board/interactive-tetris-board.component';
 import { SlotBoardData } from 'client/src/app/services/multiplayer/slot-board-data';
 import { IGameState } from 'client/src/app/services/multiplayer/player-game-state';
+import { RATING_TO_COLOR, getRatingFromAveragePercent } from 'client/src/app/models/evaluation-models/rating';
 
 @Component({
   selector: 'app-slot',
@@ -91,15 +92,34 @@ export class SlotComponent {
     return this.multiplayer.getPlayerStateForSlotID(this.slot.slotID);
   }
 
+  getScoreDelta(): number {
+    return this.multiplayer.getScoreDeltaForSlotID(this.slot.slotID);
+  }
+
+  isTopScorePlayer(): boolean {
+    return this.slot.slotID === this.multiplayer.getTopScoreSlotID();
+  }
+
+  private getRawAccuracy(): number | undefined {
+    return this.getPlayerState().game?.overallAccuracy;
+  }
+
   getAccuracyString(): string {
-    const accuracy = this.getPlayerState().game?.overallAccuracy;
+    const accuracy = this.getRawAccuracy();
     if (!accuracy) return '-';
     return (accuracy * 100).toFixed(2) + '%';
   }
 
+  getAccuracyColor(): string {
+    const accuracy = this.getRawAccuracy();
+    if (accuracy === undefined) return 'white';
+    const rating = getRatingFromAveragePercent(accuracy);
+    return RATING_TO_COLOR[rating];
+  }
+
   getTRTString(): string {
     const trt = this.getPlayerState().game?.tetrisRate;
-    if (!trt) return '-';
+    if (trt === undefined) return '-';
     return Math.round(trt * 100) + '%';
   }
 

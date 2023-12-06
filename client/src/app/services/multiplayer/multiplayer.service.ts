@@ -102,6 +102,14 @@ export class MultiplayerService {
     return this.gameStateManager.getGameState(slotID);
   }
 
+  getScoreDeltaForSlotID(slotID: string): number {
+    return this.gameStateManager.getScoreDelta(slotID);
+  }
+
+  public getTopScoreSlotID(): string | undefined {
+    return this.gameStateManager.getTopSlotID();
+  }
+
   /* SOCKET send-message {
     roomID: string
     name: string,
