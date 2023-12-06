@@ -185,8 +185,9 @@ export class Room {
     }
 
     // broadcast socket.io event to all sockets in the room
-    public broadcastAll(event: string, data: any): void {
-        this.sockets.forEach(socketUser => socketUser.socket.emit(event, data));
+    public broadcastAll(event: string, data: any, volatile: boolean = false): void {
+        if (volatile) this.sockets.forEach(socketUser => socketUser.socket.volatile.emit(event, data));
+        else this.sockets.forEach(socketUser => socketUser.socket.emit(event, data));
     }
 
     // broadcast socket.io event to all sockets in the room except the given socket

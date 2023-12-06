@@ -87,7 +87,7 @@ SOCKET on-message {
     message: string
 }
 
-SOCKET on-update-board {
+SOCKET VOLATILE on-update-board {
     slotID: string,
     board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
 }
@@ -107,7 +107,7 @@ SOCKET send-message {
     message: string
 }
 
-SOCKET send-board { // send whenever the player's board CHANGES
+SOCKET VOLATILE send-board { // send whenever the player's board CHANGES
     slotID: string,
     board: Uint8Array, (encoded and decoded through encode-color-grid.ts)
 }

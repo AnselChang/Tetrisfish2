@@ -162,7 +162,7 @@ export class MultiplayerManager {
             slot.room.broadcastAll("on-update-board", {
                 slotID: slotID,
                 board: board
-            });
+            }, true);
 
         });
 

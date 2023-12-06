@@ -170,7 +170,7 @@ export class MultiplayerService {
 
       console.log('sending changed board', binaryGrid, colorGrid, encodedData);
 
-      this.socket.emit('send-board', {
+      this.socket.volatile.emit('send-board', {
         slotID: this.slotID,
         board: encodedData
       });
