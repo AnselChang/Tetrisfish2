@@ -1,0 +1,39 @@
+@import "../../../../styles.scss";
+@import "../button/button.component.scss";
+
+
+.button-tooltip {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 8px;
+    margin: 5px 0; // left-right padding must be 0 so that 100% width won't cause weird overflow issues
+
+    width: 100%;
+    box-sizing: border-box;
+    border: 0;
+
+    border-radius: 5px;
+    box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.5);
+}
+
+.button-tooltip:not(:disabled):hover {
+    box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.75);
+}
+
+.button-tooltip:not(:disabled):active {
+    transform: translateY(1px);
+    box-shadow: 0 0 4.5px 0.15px rgb(0,0,0,0.75);
+}
+
+.label {
+    font-family: Montserrat;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}

@@ -1,0 +1,25 @@
+<p *ngIf="multiplayer.getNumOccupiedSlots() === 0" class="no-players">
+    Invite players to join your room to get started!
+</p>
+<div *ngIf="multiplayer.getNumOccupiedSlots() as numSlots">
+
+    <div class="player-list">
+        <div class="player" *ngFor="let slot of multiplayer.getOccupiedSlots()">
+
+            <div class="name-component">
+                <h1 class="player-name">{{slot.playerName}}</h1>
+            </div>
+
+            <div class="settings-component">
+                <img class="player-button" src="./assets/img/plus_one.svg" width="30px" />
+                <img class="player-button" src="./assets/img/minus_one.svg" width="30px" />
+                <img class="player-button" src="./assets/img/remove.svg" width="47px" />
+            </div>
+
+        </div>
+    </div>
+
+    <app-tooltip-button label="Start Game" color="#50C346" [buttonDisabled]="numSlots < 2" tooltipText="Sends a confirmation dialog to all players to make sure they're ready, then starts the game" />
+    <app-tooltip-button label="End Match" color="#C34646" tooltipText="Ends the match and resets all scores" />
+
+</div>

@@ -1,0 +1,60 @@
+@import "../../../../../styles.scss";
+
+:host {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.player-list {
+    margin-top: 5px;
+    border-radius: 5px;
+    background: $layer-2-color;
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.player {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    padding-inline: 2px;
+}
+
+.name-component, .settings-component {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+
+.name-component {
+    justify-content: flex-start;
+}
+
+.settings-component {
+    justify-content: flex-end;
+}
+
+.player-name {
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.player-button {
+    box-shadow: 0 1.2px 4.5px 0.15px rgb(0,0,0,0.5);
+}
+
+.player-button:hover {
+    filter: brightness(0.8);
+}
+
+.player-button:active {
+    filter: brightness(0.7);
+}

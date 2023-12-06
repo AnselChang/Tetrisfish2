@@ -101,6 +101,14 @@ export class MultiplayerService {
     return this.slots;
   }
 
+  getNumOccupiedSlots(): number {
+    return this.slots.filter(slot => slot.type !== SlotType.VACANT).length;
+  }
+
+  getOccupiedSlots(): SlotData[] {
+    return this.slots.filter(slot => slot.type !== SlotType.VACANT);
+  }
+
   isPlayingGame(): boolean {
     return this.isInRoom() && this.mySlot !== undefined;
   }
