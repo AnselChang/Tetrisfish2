@@ -301,7 +301,8 @@ export class GameStateMachineService {
 
   public startGame(): void {
 
-    if (!this.lastGameSentToServerOrDiscarded) {
+    // disable this for now. means that you can start a new game while the previous game is still being sent to server
+    if (false && !this.lastGameSentToServerOrDiscarded) {
 
       if (!this.sentGameCancelledMessage) {
         console.log("ABORTING START GAME, PREVIOUS NOT SENT");
@@ -336,6 +337,8 @@ export class GameStateMachineService {
 
   // go through the game and see if any placements were missed
   public analyzeMissedPlacements(game: Game, callbackAfter?: ()=>void): void {
+
+    console.log("Analyzing missed placements");
 
 
     let gameSent: boolean = false;
@@ -388,23 +391,25 @@ export class GameStateMachineService {
 
   // this function handles pushing to game history and sending game to server once complete
   // precondition: game is fully analyzed
-  public onGameFinishedAndAnalyzed(callbackAfter?: ()=>void) {
+  public onGameFinishedAndAnalyzed(game: Game, callbackAfter?: ()=>void) {
 
-    if (!this.game) throw new Error("Game is undefined");
+    if (!game) throw new Error("Game is undefined");
 
-    this.game.setTimestamp(new Date());
+    console.log("Game finished and analyzed");
+
+    game.setTimestamp(new Date());
 
     // add to cache
-    this.gameCacheService.cacheGame(this.game);
+    this.gameCacheService.cacheGame(game);
 
     // push to session game history
     const historicalGame = new HistoricalGame(
-      this.game.getTimestamp()!,
-      this.game.startLevel,
-      this.game.status.score,
-      this.game.status.level,
-      this.game.status.lines,
-      this.game.analysisStats.getOverallAccuracy().getAverage(),
+      game.getTimestamp()!,
+      game.startLevel,
+      game.status.score,
+      game.status.level,
+      game.status.lines,
+      game.analysisStats.getOverallAccuracy().getAverage(),
       undefined
     )
     this.gameHistoryService.get().addGame(historicalGame);
@@ -412,26 +417,27 @@ export class GameStateMachineService {
     // push to full game history cache if it exists
     if (this.gameHistoryCacheService.hasCache()) {
       this.gameHistoryCacheService.pushGameToCache({
-        timestamp: this.game.getTimestamp()!.toISOString(),
-        gameID: this.game.gameID,
-        startLevel: this.game.startLevel,
-        score19: this.game.stats.getScoreAtTransitionTo19(),
-        score29: this.game.stats.getScoreAtTransitionTo29(),
-        finalScore: this.game.status.score,
-        finalLevel: this.game.status.level,
-        overallAccuracy: this.game.analysisStats.getOverallAccuracy().getAverage(),
-        accuracy18: this.game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_18)?.getAverage(),
-        accuracy19: this.game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_19)?.getAverage(),
-        droughtPercent: this.game.stats.getPercentInDrought(),
-        tetrisReadiness: this.game.stats.getTetrisReadiness(),
-        iPieceEfficiency: this.game.stats.getIPieceEfficiency(),
+        timestamp: game.getTimestamp()!.toISOString(),
+        gameID: game.gameID,
+        startLevel: game.startLevel,
+        score19: game.stats.getScoreAtTransitionTo19(),
+        score29: game.stats.getScoreAtTransitionTo29(),
+        finalScore: game.status.score,
+        finalLevel: game.status.level,
+        overallAccuracy: game.analysisStats.getOverallAccuracy().getAverage(),
+        accuracy18: game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_18)?.getAverage(),
+        accuracy19: game.analysisStats.getSpeedAccuracy(GameSpeed.SPEED_19)?.getAverage(),
+        droughtPercent: game.stats.getPercentInDrought(),
+        tetrisReadiness: game.stats.getTetrisReadiness(),
+        iPieceEfficiency: game.stats.getIPieceEfficiency(),
       });
     }
 
     // export and send to server
-    this.exportService.export(this.game).then(([notifyType, notifyMessage]) => {
-      const accuracy = Math.round(this.game!.analysisStats.getOverallAccuracy().getAverage() * 10000) / 100;
-      this.notifier.notify("success", `Game successfully saved with ${this.game!.status.score} points at ${accuracy}% accuracy.`);
+    this.exportService.export(game).then(([notifyType, notifyMessage]) => {
+      const accuracy = Math.round(game!.analysisStats.getOverallAccuracy().getAverage() * 10000) / 100;
+      this.notifier.notify("success", `Game successfully saved with ${game!.status.score} points at ${accuracy}% accuracy.`);
+      console.log("Game successfully saved");
       setTimeout(() => {
         if (notifyType !== "none") this.notifier.notify(notifyType, notifyMessage);
       }, 1000);
@@ -450,32 +456,36 @@ export class GameStateMachineService {
     this.playStatus = PlayStatus.NOT_PLAYING;
     // NOTE: do not set this.game to undefined, as we want to keep the game data for analysis
 
+    // cache game in case this.game is reset due to a new game starting
+    const endedGame = this.game;
+
 
     // if game has at least five placements, add to game history
-    if (this.game && this.game.numPlacements >= 5) {
+    if (endedGame && endedGame.numPlacements >= 5) {
 
       let gameSent = false;
 
       // delete last placement if placement is undefined
-      this.game.popLastPositionIfUndefined();
-      if (!this.game.getLastPosition()!.hasPlacement()) throw new Error("Last position has no placement");
+      endedGame.popLastPositionIfUndefined();
+      if (!endedGame.getLastPosition()!.hasPlacement()) throw new Error("Last position has no placement");
 
       // when last placement is finished analyzing, call onGameFinishedAndAnalyzed()
-      this.game.getLastPosition()!.analysis.onFinishAnalysis$.pipe(
+      endedGame.getLastPosition()!.analysis.onFinishAnalysis$.pipe(
         first(isAnalysisComplete => isAnalysisComplete)
       ).subscribe(() => {
         gameSent = true;
-        this.analyzeMissedPlacements(this.game!, () => {
-          this.onGameFinishedAndAnalyzed(callbackAfter);
+        console.log("Last placement finished analyzing");
+        this.analyzeMissedPlacements(endedGame!, () => {
+          this.onGameFinishedAndAnalyzed(endedGame!, callbackAfter);
         })
       });
 
       // after 3 seconds, check if analysis has started. if not, wifi failed. keep trying to send game
       let numRetries = 0;
       const retrySendGame = setInterval(() => {
-        if (!gameSent && !this.game!.getLastPosition()!.analysis.isAnalysisStarted()) {
+        if (!gameSent && !endedGame!.getLastPosition()!.analysis.isAnalysisStarted()) {
           if (numRetries % 3 === 0) this.notifier.notify("error", "Connection failed. Retrying...");
-          this.game!.runFullAnalysis(this.game!.getLastPosition()!);
+          endedGame!.runFullAnalysis(endedGame!.getLastPosition()!);
         } else {
           console.log("Break out of retry loop because sent");
           clearInterval(retrySendGame);

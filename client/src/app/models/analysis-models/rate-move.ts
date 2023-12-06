@@ -51,6 +51,11 @@ export class RateMoveDeep extends RateMove {
         return new RateMoveDeep(response, apiURL);
     }
 
+    static getURL(placement: GamePlacement, inputSpeed: InputSpeed): string {
+        const apiURL = generateRateMoveURL(placement, inputSpeed, LookaheadDepth.DEEP);
+        return apiURL;
+    }
+
     constructor(dict: any, public readonly apiURL: string) {
         super(dict);
         this.diff = this.playerNB ? (this.playerNB - this.bestNB) : undefined;

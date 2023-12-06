@@ -192,10 +192,13 @@ export class Game {
             this.analysisStats.onRateMoveDeep(placement);
 
             // update live leaderboard rank
-            this.onOverallAccuracyChange$.next(this.analysisStats.getOverallAccuracy().getAverage());
+            if (!this.onOverallAccuracyChange$.closed) {
+                this.onOverallAccuracyChange$.next(this.analysisStats.getOverallAccuracy().getAverage());
+            }
 
         }).catch(e => {
-            console.log("Error fetching rate-move deep for placement #", placement.index + 1);
+            console.log("Error fetching rate-move deep for placement #", placement.index + 1, e);
+            console.log("URL:", RateMoveDeep.getURL(placement, this.inputSpeed));
             placement.analysis.flagFailedAnalysis();
         });
     }
