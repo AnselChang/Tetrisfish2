@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { MultiplayerManager } from '../multiplayer/multiplayer-manager';
-import { SocketUser } from 'server/multiplayer/room';
 
 export async function createRoomRoute(multiplayer: MultiplayerManager, req: Request, res: Response) {
 

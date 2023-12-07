@@ -21,6 +21,7 @@ import { LeaderboardType } from './database/leaderboard/leaderboard-schema';
 import { getLeaderboardAccuraciesRoute, getLeaderboardRoute } from './routes/leaderboard';
 import { MultiplayerManager } from './multiplayer/multiplayer-manager';
 import { createRoomRoute, doesRoomExistRoute, generateSlotAccessCodeRoute, joinRoomPlayRoute, leaveRoomRoute, registerMyselfRoute, revokeSlotAccessCodeRoute } from './routes/multiplayer';
+import { testStackRabbitRoute } from './routes/test';
 
 
 declare module 'express-session' {
@@ -104,6 +105,8 @@ export default async function createApp(): Promise<{
             res.status(500).send("StackRabbit Server Error");
         }
     });
+    
+    app.get('/api/test-stackrabbit', testStackRabbitRoute);
 
     app.get('/api/auth', authRoute);
     app.get('/api/auth/callback', authCallbackRoute);
