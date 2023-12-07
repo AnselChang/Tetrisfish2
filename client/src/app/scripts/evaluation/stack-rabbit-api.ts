@@ -20,7 +20,8 @@ abstract class StackRabbitURL {
 
     public getURL(): string {
 
-        const baseUrl = 'http://24.144.70.115:3000';
+        //const baseUrl = 'http://24.144.70.115:3000';
+        const baseUrl = 'https://stackrabbit.herokuapp.com';
 
         let sendLevel = this.params.level;
         let sendLines = this.params.lines;
