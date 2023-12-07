@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ExtractedState } from 'client/src/app/models/capture-models/extracted-state';
 import { Method, fetchServer } from 'client/src/app/scripts/fetch-server';
 import { ExtractedStateService } from 'client/src/app/services/capture/extracted-state.service';
@@ -49,14 +49,12 @@ import { RATING_TO_COLOR, getRatingFromAveragePercent } from 'client/src/app/mod
     ]),
   ]
 })
-export class SlotComponent {
+export class SlotComponent implements OnInit {
   @Input() slot!: SlotData;
   @Input() isAdmin!: boolean;
   @Input() canRegisterMyself: boolean = true;
   @Output() onRegisterAI = new EventEmitter<void>();
   @Output() onDeleteSlot = new EventEmitter<void>();
-
-  accessCode?: number;
 
   buttonState = 'visible';
   buttonStyle = { display: 'block' };
@@ -73,6 +71,15 @@ export class SlotComponent {
     public extractedStateService: ExtractedStateService,
     public multiplayer: MultiplayerService
     ) {}
+
+  ngOnInit(): void {
+
+    // if slot alreaday has an access code, show it
+    if (this.slot.accessCode) {
+      this.fadeOutButtons(true);
+    }
+  }
+  
 
   readonly VerticalAlign = VerticalAlign;
   
@@ -140,8 +147,8 @@ export class SlotComponent {
     }
 
     // succeeded in generating access code
-    this.accessCode = content['accessCode'] as number;
-    console.log('accessCode', this.accessCode);
+    this.slot.accessCode = content['accessCode'] as number;
+    console.log('accessCode', this.slot.accessCode);
 
     this.fadeOutButtons();
   }
@@ -156,6 +163,10 @@ export class SlotComponent {
     if (status !== 200 || !content['success']) {
       console.error('failed to revoke access code', content);
     }
+
+    // succeeded in revoking access code
+    console.log('revoked access code');
+    this.slot.accessCode = undefined;
     
 
     this.fadeOutCode();
@@ -177,12 +188,20 @@ export class SlotComponent {
 
   }
 
-  fadeOutButtons() {
+  fadeOutButtons(instant: boolean = false) {
     this.buttonState = 'invisible';
-    setTimeout(() => {
+
+    if (instant) {
       this.buttonStyle.display = 'none'
-      this.fadeInCode();
-    }, 100);
+      this.fadeInCode(instant);
+    }
+    else {
+      setTimeout(() => {
+        this.buttonStyle.display = 'none'
+        this.fadeInCode();
+      }, 100);
+    }
+    
   }
 
   fadeInButtons() {
@@ -190,11 +209,14 @@ export class SlotComponent {
     this.buttonStyle.display = 'block';
   }
 
-  fadeInCode() {
+  fadeInCode(instant: boolean = false) {
     this.codeAnimationState = 'final';
-    setTimeout(() => {
-      this.fadeInInstructions();
-    }, 500);
+    if (instant) this.fadeInInstructions(instant);
+    else {
+      setTimeout(() => {
+        this.fadeInInstructions();
+      }, 500);
+    }
   }
 
   fadeOutCode() {
@@ -204,12 +226,16 @@ export class SlotComponent {
     }, 300);
   }
 
-  fadeInInstructions() {
+  fadeInInstructions(instant: boolean = false) {
     this.instructionsState = 'visible';
     this.instructionsStyle.display = 'block';
-    setTimeout(() => {
-      this.fadeInBack();
-    }, 350);
+
+    if (instant) this.fadeInBack();
+    else {
+      setTimeout(() => {
+        this.fadeInBack();
+      }, 350);
+    }
   }
 
   fadeOutInstructions() {
@@ -233,8 +259,8 @@ export class SlotComponent {
 
   // if digit is 0, then get left-most digit
   getAccessCodeDigit(digit: number) {
-    if (!this.accessCode) return 0;
-    const str = this.accessCode.toString();
+    if (!this.slot.accessCode) return 0;
+    const str = this.slot.accessCode.toString();
     if (digit < 0) return 0;
     return parseInt(str[digit]);
   }

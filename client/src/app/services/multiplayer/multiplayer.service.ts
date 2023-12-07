@@ -13,6 +13,9 @@ import { SlotBoardData, SlotBoardDataManager } from './slot-board-data';
 import { ActiveGameState, GameStateManager, IGameState, PlayerGameState } from './player-game-state';
 
 export class SlotData {
+
+  public accessCode?: number;
+  
   constructor(
     public readonly slotID: string,
     public readonly index: number,
@@ -399,10 +402,17 @@ export class MultiplayerService {
     this.numUsersConnected = data.numUsersConnected;
 
     // initialize slots
-    this.slots = [];
+    const newSlots: SlotData[] = [];
     data.slots.forEach((slot, index) => {
-      this.slots.push(new SlotData(slot.slotID, index, slot.type, slot.playerUserID, slot.playSessionID, slot.playerName, slot.numHearts));
+      const newSlot = new SlotData(slot.slotID, index, slot.type, slot.playerUserID, slot.playSessionID, slot.playerName, slot.numHearts);
+
+      // if this slot previously existed and had an access code, retain this info
+      const oldSlot = this.slots.find(oldSlot => oldSlot.slotID === newSlot.slotID);
+      if (oldSlot && oldSlot.accessCode) newSlot.accessCode = oldSlot.accessCode;
+
+      newSlots.push(newSlot);
     });
+    this.slots = newSlots;
 
     // find my slot, if it exists
     this.mySlot = this.slots.find(slot => slot.sessionID === this.user.getSessionID());
