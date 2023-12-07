@@ -185,7 +185,11 @@ class GridStateMachine {
       this.debug.logGrid("Spawned Minos", spawnedMinosGrid);
       this.debug.log(`Spawned Piece: ${spawnedPiece?.tetrominoType}`);
 
-      if (isFirstPlacement && spawnedPiece === undefined) {
+      if (nextPieceType === undefined) {
+        this.debug.log("Although SPAWN detected, next piece is undefined. Skipping frame");
+        return [MinoResult.NO_CHANGE, undefined];
+
+      } else if (isFirstPlacement && spawnedPiece === undefined) {
         this.debug.log("Although SPAWN detected, for the FIRST placement spawned piece needs to be a valid tetromino type");
         return [MinoResult.NO_CHANGE, undefined];
 
@@ -200,6 +204,7 @@ class GridStateMachine {
         // if we CAN determine the spawned piece, then we can assume that the new piece has actually spawned and it's not a capture mistsake
         const previousPieceType = this.currentPieceType;
         this.currentPieceType = this.nextPieceType;
+        this.nextPieceType = nextPieceType;
 
         // update mino count
         this.lastStableMinoCount += linesCleared * (-10) + 4;
@@ -244,11 +249,12 @@ class GridStateMachine {
       this.stableGridWithPlacement = currentGrid.copy();
       this.debug.logGrid("Stable Grid With Placement updated", this.stableGridWithPlacement);
 
-      // keep polling next box to overwrite possibly bad previous next box values
-      if (nextPieceType !== undefined) {
-        this.nextPieceType = nextPieceType;
-        this.debug.log(`Next piece type updated: ${nextPieceType}`);
-      }
+      // BECAUSE THE NEXT BOX CAN UPDATE EARLY RIGHT BEFORE A PIECE CHANGE, DO NOT RUN THIS CODE
+      // // keep polling next box to overwrite possibly bad previous next box values
+      // if (nextPieceType !== undefined) {
+      //   this.nextPieceType = nextPieceType;
+      //   this.debug.log(`Next piece type updated: ${nextPieceType}`);
+      // }
 
       return [MinoResult.NO_CHANGE, undefined];
     } else { // result === MinoResult.LIMBO
