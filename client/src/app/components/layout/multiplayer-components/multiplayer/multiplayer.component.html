@@ -21,9 +21,9 @@
                 <h1 class="host">{{getHostText()}}</h1>
                 <h2 class="status">Status: {{multiplayer.isPlayingGame() ? 'Player' : 'Spectator'}}</h2>
                 <div class="status-attributes">
-                    <p *ngIf="multiplayer.isPlayingGame()">capture fps: {{getCaptureFPS()}}</p>
-                    <p>server fps: {{3}}</p>
-                    <p>latency: {{3}}ms</p>
+                    <p [ngStyle]="{textAlign: 'left'}">capture fps: {{videoCaptureService.getFPS()}}</p>
+                    <p [ngStyle]="{textAlign: 'center'}">tick duration: {{getTickBusyDuration()}}ms</p>
+                    <p [ngStyle]="{textAlign: 'right'}">ping: {{getPingString()}}</p>
                 </div>
             </app-section>
 

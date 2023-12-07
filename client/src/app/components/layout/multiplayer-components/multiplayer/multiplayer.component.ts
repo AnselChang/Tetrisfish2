@@ -21,7 +21,7 @@ export class MultiplayerComponent implements OnInit, OnDestroy, AfterViewChecked
     public multiplayer: MultiplayerService,
     private router: Router,
     private route: ActivatedRoute,
-    private videoCaptureService: VideoCaptureService,
+    public videoCaptureService: VideoCaptureService,
     ) {}
 
     ngAfterViewChecked() {
@@ -45,10 +45,6 @@ export class MultiplayerComponent implements OnInit, OnDestroy, AfterViewChecked
     this.isCalibrating = true;
   }
 
-  public getCaptureFPS(): number {
-    return this.videoCaptureService.getFPS();
-  }
-
   public getHostText(): string {
     if (this.multiplayer.getIsAdmin()) {
       return "You are the host";
@@ -64,6 +60,16 @@ export class MultiplayerComponent implements OnInit, OnDestroy, AfterViewChecked
     if (confirm("Are you sure you want to exit the match? You won't be able to rejoin unless the host sends you a new access code.")) {
       this.multiplayer.exitMatch();
     }
+  }
+
+  public getTickBusyDuration(): number {
+    return Math.round(this.videoCaptureService.getTickBusyDuration());
+  }
+
+  public getPingString(): string {
+    const ping = this.multiplayer.getPing();
+    if (ping === undefined) return "waiting...";
+    return Math.round(ping) + "ms";
   }
 
   ngOnInit(): void {

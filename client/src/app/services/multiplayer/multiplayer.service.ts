@@ -11,6 +11,7 @@ import { GameStateMachineService } from '../game-state-machine/game-state-machin
 import { TetrominoType } from '../../models/tetronimo-models/tetromino';
 import { SlotBoardData, SlotBoardDataManager } from './slot-board-data';
 import { ActiveGameState, GameStateManager, IGameState, PlayerGameState } from './player-game-state';
+import { PingCalculator } from './ping-calculator';
 
 export class SlotData {
 
@@ -55,6 +56,9 @@ export class MultiplayerService {
   private readonly slotBoardDataManager: SlotBoardDataManager = new SlotBoardDataManager();
   private readonly gameStateManager: GameStateManager = new GameStateManager();
 
+  private readonly pingCalculator = new PingCalculator();
+  private pingCallback: any = undefined;
+
   constructor(
     private user: UserService,
     private extractedStateService: ExtractedStateService,
@@ -74,6 +78,10 @@ export class MultiplayerService {
 
   getSlotID(): string | undefined {
     return this.slotID;
+  }
+
+  getPing(): number | undefined {
+    return this.pingCalculator.getPing();
   }
 
   isInRoom(): boolean {
@@ -268,6 +276,13 @@ export class MultiplayerService {
     this.socket.on('connect', () => {
       console.log('connected to socket');
 
+      // send a ping every 3 seconds to calculate ping
+      this.pingCallback = setInterval(() => {
+        this.socket!.emit('ping', {
+          id: this.pingCalculator.sendPing()
+        });
+      }, 3000);
+
       // start socket initialization handshake
       // this tells server to associate userID with socket
       // sever should respond with initialize-client with room data
@@ -277,6 +292,12 @@ export class MultiplayerService {
         roomID: this.roomID,
         slotID: this.slotID
       })
+    });
+
+    // listen for socket pong event
+    this.socket.on('pong', (data: any) => {
+      const id = data['id'] as number;
+      this.pingCalculator.receivePong(id);
     });
 
     // listen for event to sync server data with client

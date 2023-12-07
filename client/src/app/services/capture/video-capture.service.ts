@@ -188,6 +188,10 @@ export class VideoCaptureService {
     return this.fpsTracker.getFPS();
   }
 
+  public getTickBusyDuration(): number {
+    return this.fpsTracker.getTickBusyDuration();
+  }
+
   executeFrame(): void {
 
     // stop capture if flag is set to false
@@ -242,6 +246,7 @@ export class VideoCaptureService {
     /*
     STEP 5: Execute next frame after some delay
     */
+    this.fpsTracker.endTick();
     requestAnimationFrame(this.executeFrame.bind(this));
   }
 

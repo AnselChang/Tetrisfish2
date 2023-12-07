@@ -16,7 +16,7 @@ export class RootComponent implements AfterViewInit, OnInit, OnDestroy {
   public pages = [
     ["/home", "Home"],
     ["/play-portal", "Play"],
-    ["/analysis", "Learn"],
+    ["/analysis", "Analyze"],
     ["/puzzles", "Puzzles"],
     ["/leaderboard", "Leaderboard"],
     ["/more", "More..."]

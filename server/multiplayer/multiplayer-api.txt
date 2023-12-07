@@ -129,3 +129,16 @@ SOCKET player-leave-match { // called when wanting to switch status from player 
     roomID: string,
     sessionID: string
 }
+
+--------------------
+PING PONG calculation
+
+(client to server)
+SOCKET ping {
+    id: number
+}
+
+(server to client)
+SOCKET pong {
+    id: number
+}

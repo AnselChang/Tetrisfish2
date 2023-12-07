@@ -7,8 +7,14 @@
  *   getFPS(): Calculates and returns the average number of ticks per second over the last second.
  **/
 
+import { RollingAverage } from "../scripts/rolling-average";
+
 export class FpsTracker {
     private timestamps: number[];
+    private averageFPS = new RollingAverage(20);
+    private averageTickBusyDuration = new RollingAverage(20);
+
+    private lastTick = Date.now();
 
     constructor() {
         this.timestamps = [];
@@ -22,10 +28,24 @@ export class FpsTracker {
         while (this.timestamps.length > 0 && now - this.timestamps[0] > 1000) {
             this.timestamps.shift();
         }
+
+        const fps = this.timestamps.length;
+        this.averageFPS.push(fps);
+
+        this.lastTick = now;
+    }
+
+    endTick(): void {
+        const tickBusyDuration = Date.now() - this.lastTick;
+        this.averageTickBusyDuration.push(tickBusyDuration);
     }
 
     getFPS(): number {
-        // Calculate FPS based on the number of timestamps in the last second
-        return this.timestamps.length;
+        return this.averageFPS.get();
+    }
+
+    // returns the average duration of a tick (between tick() and endTick()) in milliseconds
+    getTickBusyDuration(): number {
+        return this.averageTickBusyDuration.get();
     }
 }

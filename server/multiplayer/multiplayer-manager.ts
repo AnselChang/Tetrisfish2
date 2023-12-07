@@ -64,6 +64,11 @@ export class MultiplayerManager {
     onSocketConnectToServer(socket: Socket): void {
         console.log(`Socket ${socket.id} connected to server`);
 
+        // whenever client sends a ping with data, send pong with same data
+        socket.on("ping", (data: any) => {
+            socket.emit("pong", data);
+        });
+
         // when client connects, it immediately sends register-socket event to bind userID to socket
         socket.on("register-socket", (data: any) => {
                 
