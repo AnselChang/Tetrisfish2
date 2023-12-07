@@ -1,4 +1,5 @@
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
+import { SlotData } from "./multiplayer.service";
 
 export interface IActiveGameState {
     overallAccuracy: number;
@@ -128,6 +129,27 @@ export class GameStateManager {
                 state.game.tetrisRate,
             ) : undefined,
         );
+
+        this.updateScoreDeltas();
+    }
+    
+    // whenever receiving new room data from server, like a player leaving/joining,
+    // update which slots still exist
+    public onSyncServerData(allSlots: SlotData[]) {
+
+        // find list of slots that no longer exist
+        const nonExistingSlots: string[] = [];
+        for (const slotID in this.allGameState) {
+            if (!allSlots.find(slot => slot.slotID === slotID)) {
+                nonExistingSlots.push(slotID);
+            }
+        }
+
+        // delete those slots
+        for (const slotID of nonExistingSlots) {
+            delete this.allGameState[slotID];
+            delete this.allScoreDeltas[slotID];
+        }
 
         this.updateScoreDeltas();
     }

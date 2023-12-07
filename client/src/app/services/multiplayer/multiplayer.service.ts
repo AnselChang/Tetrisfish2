@@ -408,6 +408,8 @@ export class MultiplayerService {
     this.mySlot = this.slots.find(slot => slot.sessionID === this.user.getSessionID());
     this.slotID = this.mySlot?.slotID;
 
+    this.gameStateManager.onSyncServerData(this.slots);
+
   }
 
   // on leave page, disconnect socket and send closing HTTP request
