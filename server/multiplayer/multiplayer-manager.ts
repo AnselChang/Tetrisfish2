@@ -247,6 +247,16 @@ export class MultiplayerManager {
     // called when a socket disconnects from the server. remove socket from all rooms
     onUnregisterSocket(socket: Socket): void {
 
+
+        // if socket is playing in any room, remove
+        this.rooms.forEach(room => {
+            const socketUser = room.getSocketUserBySocket(socket);
+            if (socketUser) {
+                const changed = room.removePlayerSessionFromSlot(socketUser.sessionID);
+                if (changed) room.onChange();
+            }
+        });
+
         const emptyRooms: Room[] = [];
 
         this.rooms.forEach(room => {

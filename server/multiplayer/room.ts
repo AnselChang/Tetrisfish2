@@ -80,6 +80,10 @@ export class Room {
         return true;
     }
 
+    public getSocketUserBySocket(socket: Socket): SocketUser | undefined {
+        return this.sockets.find(socketUser => socketUser.socket === socket);
+    }
+
     // CALLED BY HTTP
     // add a human to a slot in the room. This happens after the HTTP request POST join-room-play
     // this does not necesarily mean the socket connection has been established yet. that will happen right after
@@ -168,15 +172,20 @@ export class Room {
     }
 
     // if userID is in a slot, remove them from the slot
-    public removePlayerSessionFromSlot(sessionID: string) {
+    // return true if action was taken
+    public removePlayerSessionFromSlot(sessionID: string): boolean {
 
-        if (!this.isUserSessionInSlot(sessionID)) return;
+        if (!this.isUserSessionInSlot(sessionID)) return false;
 
+        let changed = false;
         this.getSlots().forEach(slot => {
             if (slot.getType() === SlotType.HUMAN && (slot.getState() as HumanSlotState).sessionID === sessionID) {
                 slot.vacate();
+                changed = true;
             }
         });
+
+        return changed;
     }
 
     // anytime the room state changes, call this to broadcast the new state to all sockets in the room
