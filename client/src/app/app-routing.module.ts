@@ -14,6 +14,7 @@ import { OnLoginComponent } from './components/layout/on-login/on-login.componen
 import { GameAnalysisPageComponent } from './components/layout/game-analysis-components/game-analysis-page/game-analysis-page.component';
 import { PlayPortalComponent } from './components/layout/play-portal/play-portal.component';
 import { MultiplayerComponent } from './components/layout/multiplayer-components/multiplayer/multiplayer.component';
+import { MlDatasetComponent } from './components/layout/ml-dataset/ml-dataset.component';
 
 const routes: Routes = [
   // { path: 'login', component: LoginPageComponent},
@@ -34,6 +35,7 @@ const routes: Routes = [
       { path: 'board-creation', component: BoardCreationPageComponent },
       { path: 'debug', component: DebugGameComponent },
       { path: 'on-login', component: OnLoginComponent },
+      { path: 'ml-dataset', component: MlDatasetComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: '**', redirectTo: 'home' },
     ]

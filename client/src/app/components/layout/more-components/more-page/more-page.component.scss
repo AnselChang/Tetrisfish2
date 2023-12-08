@@ -1,11 +1,16 @@
+@import "../../../../../styles.scss";
+
 .list-section {
     display: flex;
-    justify-content: left;
+    justify-content: center;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: calc(1.5vw + 5px);
+    gap: 30px;
 }
 
-header, section {
-    padding-left: calc(1.5vw + 5px);
+
+.title {
+    font-size: 35px;
+    margin-bottom: 25px !important;
+    margin-top: 25px !important;
 }

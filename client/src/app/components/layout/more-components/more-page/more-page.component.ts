@@ -20,9 +20,7 @@ export class MorePageComponent {
 
   public pages: PageInfo[] = [
     new PageInfo("board_creation.svg", "Board Creation", "Export into analysis or share as a puzzle!", "/board-creation"),
-    new PageInfo("board_creation.svg", "Board Creation", "Export into analysis or share as a puzzle!", "/board-creation"),
-    new PageInfo("board_creation.svg", "Board Creation", "Export into analysis or share as a puzzle!", "/board-creation"),
-    new PageInfo("board_creation.svg", "Board Creation", "Export into analysis or share as a puzzle!", "/board-creation"),
+    new PageInfo("machine_learning.png", "ML Dataset", "Generate a dataset of placements for Ansel's ML class", "/ml-dataset"),
   ]
 
 }
