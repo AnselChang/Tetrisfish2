@@ -47,10 +47,10 @@ export async function setUserSettings(settings: UserSettings): Promise<void> {
         return;
     }
 
-    user.playstyle = settings.playstyle;
-    user.inputSpeed = settings.inputSpeed;
-    user.minoThreshold = settings.minoThreshold;
-    user.textThreshold = settings.textThreshold;
+    if (settings.playstyle) user.playstyle = settings.playstyle;
+    if (settings.inputSpeed) user.inputSpeed = settings.inputSpeed;
+    if (settings.minoThreshold) user.minoThreshold = settings.minoThreshold;
+    if (settings.textThreshold) user.textThreshold = settings.textThreshold;
 
     await user.save();
 }

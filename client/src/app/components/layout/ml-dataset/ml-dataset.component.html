@@ -1,1 +1,57 @@
-<p>ml-dataset works!</p>
+<app-section class="collection-section">
+    <h1 class="padded">Data Collection</h1>
+    <p>
+        We currently have <span class="bold">{{numPlacements}}</span> placements from  <span class="bold">{{numGames}}</span>
+        games stored in our tetrisfish database. To train a ML board evaluation model, we filter
+        to only placements on level 18, on games where the player completed at least most level 18.
+        To get started, press the button below to extract this data from our database.
+    </p>
+
+    <div class="button-container">
+        <app-button-big [label]="finishedExtractingData ? 'Extraction Complete' : extractingData ? 'Extracting Data...' : 'Extract Data'" [buttonDisabled]="extractingData" (click)="extractData()"/>
+    </div>
+
+    <h2 *ngIf="serializedPlacements">Number of extracted placements: {{serializedPlacements.numPlacements}}</h2>
+
+</app-section>
+
+<app-section class="placements-section" *ngIf="serializedPlacements">
+    <h1 class="padded">Data Cleaning</h1>
+    <p>
+        Our ML model is a simple one. Given a surface array, which is a 10-element array of the
+        height at each column, evaluate the board as a single number. We use an existing AI, StackRabbit,
+        to generate a "ground truth" evaluation for each placement. We then train a simple regression
+        model to predict the ground truth evaluation from the surface array. However, since we're simplifying
+        the problem to only consider the surface array, we want to ignore boards that have holes in them, as they
+        would not be adequately represented by the surface array.
+    </p>
+
+    <p>
+        Press the button below to filter out placements with holes.
+    </p>
+
+    <div class="button-container">
+        <app-button-big [label]="finishedFilteringPlacements ? 'Filtering Complete' : filteringPlacements ? 'Filtering Placements...' : 'Filter Placements'" [buttonDisabled]="filteringPlacements" (click)="filterPlacements()"/>
+    </div>
+
+    <h2 *ngIf="mlPlacements">Number of placements after filtering: {{mlPlacements.length}}</h2>
+
+
+</app-section>
+
+<app-section class="data-annotation-section" *ngIf="mlPlacements">
+    <h1 class="padded">Data Annotation</h1>
+    <p>
+        Now, we must calculate the surface array for each placement, and make an API request to the StackRabbit
+        AI in order to obtain the ground truth board evaluation. This will take a bit.
+    </p>
+
+    <div class="button-container">
+        <app-button-big [label]="finishedAnnotatingPlacements ? 'Annotation Complete' :annotatingPlacements ? 'Annotating Placements...' : 'Annotate Placements'" [buttonDisabled]="annotationProgress !== undefined" (click)="annotatePlacements()"/>
+    </div>
+
+    <p *ngIf="annotatingPlacements">
+        {{numAnnotated}} out of {{mlPlacements.length}} placements annotated ({{(numAnnotated / mlPlacements.length).toFixed(2)}}%)
+    </p>
+
+</app-section>
