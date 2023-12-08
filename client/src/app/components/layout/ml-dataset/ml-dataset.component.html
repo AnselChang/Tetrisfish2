@@ -48,7 +48,7 @@
     </p>
 
     <div class="button-container">
-        <app-button-big [label]="finishedAnnotatingPlacements ? 'Dataset Downloaded!' :annotatingPlacements ? 'Annotating Placements...' : 'Annotate Placements'" [buttonDisabled]="annotationProgress !== undefined" (click)="annotatePlacements()"/>
+        <app-button-big [label]="finishedAnnotatingPlacements ? 'Dataset Downloaded!' :annotatingPlacements ? 'Annotating Placements...' : 'Annotate Placements'" [buttonDisabled]="annotatingPlacements" (click)="annotatePlacements()"/>
     </div>
 
     <p *ngIf="annotatingPlacements">
