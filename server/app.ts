@@ -22,6 +22,7 @@ import { getLeaderboardAccuraciesRoute, getLeaderboardRoute } from './routes/lea
 import { MultiplayerManager } from './multiplayer/multiplayer-manager';
 import { createRoomRoute, doesRoomExistRoute, generateSlotAccessCodeRoute, joinRoomPlayRoute, leaveRoomRoute, registerMyselfRoute, revokeSlotAccessCodeRoute } from './routes/multiplayer';
 import { testStackRabbitRoute } from './routes/test';
+import { getPlacementsRoute } from './routes/placements';
 
 
 declare module 'express-session' {
@@ -136,6 +137,8 @@ export default async function createApp(): Promise<{
     app.post('/api/send-game', (req: Request, res: Response) => sendGameRoute(req, res));
     app.get('/api/get-game', (req: Request, res: Response) => getGameRoute(req, res));
     app.get('/api/get-games-by-player', (req: Request, res: Response) => getGamesByPlayerRoute(req, res));
+
+    app.get('/api/get-all-18-placements', getPlacementsRoute);
 
     app.get('/api/get-global-stats', async (req: Request, res: Response) => getGlobalStatsRoute(req, res));
 
