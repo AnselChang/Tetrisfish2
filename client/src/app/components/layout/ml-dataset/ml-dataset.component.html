@@ -43,11 +43,12 @@
     <h1 class="padded">Data Annotation</h1>
     <p>
         Now, we must calculate the surface array for each placement, and make an API request to the StackRabbit
-        AI in order to obtain the ground truth board evaluation. This will take a bit.
+        AI in order to obtain the ground truth board evaluation. This will take a bit. Once it's done, it'll
+        be exported as labelled_placements.csv!
     </p>
 
     <div class="button-container">
-        <app-button-big [label]="finishedAnnotatingPlacements ? 'Annotation Complete' :annotatingPlacements ? 'Annotating Placements...' : 'Annotate Placements'" [buttonDisabled]="annotationProgress !== undefined" (click)="annotatePlacements()"/>
+        <app-button-big [label]="finishedAnnotatingPlacements ? 'Dataset Downloaded!' :annotatingPlacements ? 'Annotating Placements...' : 'Annotate Placements'" [buttonDisabled]="annotationProgress !== undefined" (click)="annotatePlacements()"/>
     </div>
 
     <p *ngIf="annotatingPlacements">

@@ -97,7 +97,7 @@ export class MlDatasetComponent implements OnInit {
 
 
       // TESTING: only use 100 placements
-      this.mlPlacements = this.mlPlacements.slice(0, 100);
+      // this.mlPlacements = this.mlPlacements.slice(0, 100);
 
       this.finishedFilteringPlacements = true;
     }, 0);
