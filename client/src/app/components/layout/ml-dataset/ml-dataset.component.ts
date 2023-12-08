@@ -94,9 +94,30 @@ export class MlDatasetComponent implements OnInit {
 
       // filter invalid placements
       this.mlPlacements = this.mlPlacements.filter(placement => placement.isBoardValidForML());
+
+
+      // TESTING: only use 100 placements
+      this.mlPlacements = this.mlPlacements.slice(0, 100);
+
       this.finishedFilteringPlacements = true;
     }, 0);
 
+  }
+
+  private dataPointToCSVRow(dataPoint: MLDataPoint): any {
+    return {
+      col0: dataPoint.surface[0],
+      col1: dataPoint.surface[1],
+      col2: dataPoint.surface[2],
+      col3: dataPoint.surface[3],
+      col4: dataPoint.surface[4],
+      col5: dataPoint.surface[5],
+      col6: dataPoint.surface[6],
+      col7: dataPoint.surface[7],
+      col8: dataPoint.surface[8],
+      col9: dataPoint.surface[9],
+      eval: dataPoint.eval,
+    }
   }
 
   async annotatePlacements() {
@@ -107,7 +128,7 @@ export class MlDatasetComponent implements OnInit {
 
     this.numAnnotated = 0;
 
-    const dataPoints: MLDataPoint[] = [];
+    const csvRows: any[] = [];
 
     setTimeout(async () => {
 
@@ -119,15 +140,17 @@ export class MlDatasetComponent implements OnInit {
 
         for (let j = 0; j < batch.length; j++) {
           const placement = batch[j];
-          
-          if (placement.getDataPoint()) dataPoints.push(placement.getDataPoint()!);
+          const dataPoint = placement.getDataPoint()!;
+          const csvRow = this.dataPointToCSVRow(dataPoint);
+          if (placement.getDataPoint()) csvRows.push(csvRow);
         }
 
         this.numAnnotated += responses.length;
       }
 
       // now we have all the data points, export as csv
-      exportToCSV(dataPoints, "labelled_placements.csv");
+      exportToCSV(csvRows, "labelled_placements.csv");
+      this.finishedAnnotatingPlacements = true;
 
     });
   }

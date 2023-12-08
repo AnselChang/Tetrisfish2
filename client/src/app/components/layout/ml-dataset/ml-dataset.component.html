@@ -51,7 +51,7 @@
     </div>
 
     <p *ngIf="annotatingPlacements">
-        {{numAnnotated}} out of {{mlPlacements.length}} placements annotated ({{(numAnnotated / mlPlacements.length).toFixed(2)}}%)
+        {{numAnnotated}} out of {{mlPlacements.length}} placements annotated ({{(100*numAnnotated / mlPlacements.length).toFixed(2)}}%)
     </p>
 
 </app-section>
