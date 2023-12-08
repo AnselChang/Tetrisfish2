@@ -211,7 +211,6 @@ export class GameAnalysisPageComponent implements OnInit, OnDestroy {
 
   // toggle whether the current placement is temporary (from graph). // make sure the newly selected placement is analyzed
   public setWhetherTemporaryPlacement(isTemporary: boolean) {
-    console.log("Setting temporary placement to", isTemporary);
     this.isTemporaryPlacement = isTemporary;
     if (!isTemporary) this.analyzePlacementIfNotAnalyzed(this.placementIndex);
   }

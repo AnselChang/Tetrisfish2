@@ -48,6 +48,8 @@ export class Game {
         // if not recreating an existing game, generate a new uuid
         this.gameID = existingGameID ?? uuidv4();
 
+        console.log("Game object with id", this.gameID, "and start level", startLevel, "and input speed", inputSpeed, "and player name", playerName, "and playstyle", playstyle);
+
         this.status = new SmartGameStatus(startLevel);
 
         let transitionLevelsToTrack = [startLevel+1];

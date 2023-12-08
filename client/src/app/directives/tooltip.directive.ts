@@ -16,7 +16,6 @@ export class TooltipDirective {
   }
 
   @HostListener('mousemove', ['$event']) onMouseMove(event: MouseEvent) {
-    console.log("Mouse move event:", event);
     this.tooltipManager.setPosition(event.clientX, event.clientY);
   }
 
