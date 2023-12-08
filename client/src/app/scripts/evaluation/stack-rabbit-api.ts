@@ -6,7 +6,7 @@ import { INPUT_SPEED_TO_TIMELINE, InputSpeed } from "./input-frame-timeline";
 class StandardParams {
     constructor(
         public board: string,
-        public currentPiece: string,
+        public currentPiece: string | undefined,
         public level: number,
         public lines: number,
         public inputFrameTimeline: string,
@@ -32,7 +32,7 @@ abstract class StackRabbitURL {
 
         const queryParams = new URLSearchParams();
         queryParams.append('board', this.params.board);
-        queryParams.append('currentPiece', this.params.currentPiece);
+        if (this.params.currentPiece !== undefined) queryParams.append('currentPiece', this.params.currentPiece);
         queryParams.append('level', sendLevel.toString());
         queryParams.append('lines', sendLines.toString());
         queryParams.append('inputFrameTimeline', this.params.inputFrameTimeline);
@@ -48,6 +48,18 @@ abstract class StackRabbitURL {
 export enum LookaheadDepth {
     DEEP = 1,
     SHALLOW = 0,
+}
+
+export class EvalBoardURL extends StackRabbitURL {
+    constructor(
+        public override params: StandardParams,
+    ) {
+        super(params, 'eval');
+    }
+
+    override addParams(paramsObject: URLSearchParams): void {
+        // no additional params
+    }
 }
 
 export class RateMoveURL extends StackRabbitURL {
@@ -96,7 +108,7 @@ export function boardToString(grid: BinaryGrid): string {
     return result;
 }
 
-export function generateStandardParams(board: BinaryGrid, currentPieceType: TetrominoType, status: GameStatus, inputSpeed: InputSpeed): StandardParams {
+export function generateStandardParams(board: BinaryGrid, currentPieceType: TetrominoType | undefined, status: GameStatus, inputSpeed: InputSpeed): StandardParams {
     return new StandardParams(
         boardToString(board),
         currentPieceType,

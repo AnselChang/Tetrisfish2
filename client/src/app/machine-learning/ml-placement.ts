@@ -5,7 +5,8 @@ import { TetrominoType } from "../models/tetronimo-models/tetromino";
 import { fetchStackRabbitURL } from "../scripts/evaluation/evaluator";
 import { InputSpeed } from "../scripts/evaluation/input-frame-timeline";
 import { convertSRPlacement } from "../scripts/evaluation/sr-placement-converter";
-import { EngineMovelistURL, LookaheadDepth, generateStandardParams } from "../scripts/evaluation/stack-rabbit-api";
+import { EngineMovelistURL, EvalBoardURL, LookaheadDepth, generateStandardParams } from "../scripts/evaluation/stack-rabbit-api";
+import { Method, fetchServer } from "../scripts/fetch-server";
 
 /*
 Given a board, and a current/next piece type, generate a labeled data point
@@ -13,36 +14,58 @@ by finding SR's recommended placements and evaluation.
 The output is the resultant board after the placement, as well as the evaluation of the resultant board.
 */
 
-export class EngineResponse {
+export class SRBestMoveResponse {
     constructor(
-        public readonly resultingBoard: BinaryGrid,
         public readonly evaluation: number,
         public readonly firstPiecePlacement: MoveableTetromino,
         public readonly secondPiecePlacement: MoveableTetromino,
     ) {}
 }
 
+export class SRRawEvalResponse {
+    constructor(
+        public readonly rawEvaluation: number,
+    ) {}
+}
+
+// a single data point for ML training. consists of a 10-element surface array, which contains heights 0-20 for each column
+// also contains the RAW SR eval for that board
+export interface MLDataPoint {
+    surface: number[];
+    eval: number;
+}
+
 export class MLPlacement {
 
     // whether this should be included into the ML dataset
-    private isValidForML: boolean = false;
+    private readonly isValidForML: boolean;
+    private dataPoint?: MLDataPoint;
 
-    private engineResponse?: EngineResponse;
+    private bestMoveResponse?: SRBestMoveResponse;
+    private rawEvalResponse?: SRRawEvalResponse;
 
     constructor(
         public readonly board: BinaryGrid,
         public readonly firstPieceType: TetrominoType,
         public readonly secondPieceType: TetrominoType,
-    ) {}
+    ) {
+        this.isValidForML = this._isValidForML();
+    }
+
+    private generateEvalURL(): string {
+        
+        const status = new GameStatus(18, 0, 0);
+        const params = generateStandardParams(this.board, undefined, status, InputSpeed.HZ_30);
+        return new EvalBoardURL(params).getURL();
+    }
 
     private generateMovelistURL(): string {
-        
         const status = new GameStatus(18, 0, 0);
         const params = generateStandardParams(this.board, this.firstPieceType, status, InputSpeed.HZ_30);
         return new EngineMovelistURL(params, this.secondPieceType, LookaheadDepth.DEEP).getURL();
     }
 
-    private processResponse(response: any) {
+    private _getBestMoveResponse(response: any): SRBestMoveResponse {
 
         const bestMove = response[0];
         const thisDict = bestMove[0];
@@ -53,31 +76,23 @@ export class MLPlacement {
         const firstPlacement = convertSRPlacement(thisDict["placement"], this.firstPieceType);
         const secondPlacement = convertSRPlacement(nextDict["placement"], this.secondPieceType);
 
-        // find resulting board by placing placements and hnadling line clears
-        const resultingBoard = this.board.copy();
-        firstPlacement.blitToGrid(resultingBoard);
-        resultingBoard.processLineClears();
-        secondPlacement.blitToGrid(resultingBoard);
-        resultingBoard.processLineClears();
-
-        this.engineResponse = new EngineResponse(resultingBoard, evaluation, firstPlacement, secondPlacement);
+        return new SRBestMoveResponse(evaluation, firstPlacement, secondPlacement);
     }
 
     private isThereHoleInColumn(col: number): boolean {
         // first, find the lowest block in the column
-        let lowestBlock = 0;
+        let lastEmptyBlock = -1;
         for (let y = 0; y < 20; y++) {
             if (this.board.at(col, y) === BlockType.FILLED) {
-                lowestBlock = y;
                 break;
+            } else {
+                lastEmptyBlock = y;
             }
         }
 
-        // no blocks in column at all
-        if (lowestBlock === 19) return false;
 
         // check if there is a hole in the column
-        for (let y = lowestBlock + 1; y < 20; y++) {
+        for (let y = lastEmptyBlock + 1; y < 20; y++) {
             if (this.board.at(col, y) === BlockType.EMPTY) return true;
         }
 
@@ -91,30 +106,76 @@ export class MLPlacement {
 
         for (let x = 0; x < 9; x++) { // ignore right column
             if (this.isThereHoleInColumn(x)) {
-                this.isValidForML = false;
+                console.log("hole in column", x);
                 return false;
             }
         }
         return true;
+    }
+
+    private _calculateSurface(): number[] {
+
+        // calculate surface array by finding the height of each column
+        const surface: number[] = [];
+        for (let x = 0; x < 10; x++) {
+            let y = 0;
+            while (y < 20 && this.board.at(x, y) === BlockType.EMPTY) {
+                y++;
+            }
+            surface.push(20 - y);
+        }
+
+        return surface;
 
     }
 
     // call this to evaluate the placement
-    async runStackRabbit() {
+    async runSRBestMove() {
 
         const url = this.generateMovelistURL();
+        console.log("eval url", url);
         const response = await fetchStackRabbitURL(url);
-        this.processResponse(response);
+        this.bestMoveResponse = this._getBestMoveResponse(response);
+    }
 
-        this.isValidForML = this._isValidForML();
+    async runSRRawEval() {
+            
+        const url = this.generateEvalURL();
+        console.log("eval url", url);
+        const {status, content} = await fetchServer(Method.GET, "/api/stackrabbit-wrapped",
+            {"url": url}
+        );
+
+        if (status !== 200) return;
+        const rawEval = content["data"] as number;
+
+        if (rawEval === undefined) return;
+
+        this.rawEvalResponse = new SRRawEvalResponse(rawEval);
+
+        if (this.isBoardValidForML()) {
+            this.dataPoint = {
+                surface: this._calculateSurface(),
+                eval: rawEval,
+            }
+        }
+        
     }
 
     isBoardValidForML(): boolean {
         return this.isValidForML;
     }
 
-    getEngineResponse(): EngineResponse | undefined {
-        return this.engineResponse;
+    getEngineResponse(): SRBestMoveResponse | undefined {
+        return this.bestMoveResponse;
+    }
+
+    getRawEvalResponse(): SRRawEvalResponse | undefined {
+        return this.rawEvalResponse;
+    }
+
+    getDataPoint(): MLDataPoint | undefined {
+        return this.dataPoint;
     }
 
 }

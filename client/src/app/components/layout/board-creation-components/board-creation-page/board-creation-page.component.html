@@ -16,19 +16,24 @@
             tooltipText="Get the recommended move from StackRabbit AI for your custom board!"
             (click)="onAnalysis()"/>
 
-        <app-tetris-panel-item class="toggleable-piece" (click)="toggleFirstPiece()">
+        <app-tetris-panel-item class="toggleable-piece prevent-text-select" (click)="toggleFirstPiece()">
             <h2>First Piece
                 <app-tooltip-indicator tooltip="Click to change!"/>
             </h2>
             <app-next-box [showBackground]="false" [level]="18" [type]="cache.currentPieceType"></app-next-box>
         </app-tetris-panel-item>
 
-        <app-tetris-panel-item class="toggleable-piece" (click)="toggleSecondPiece()">
+        <app-tetris-panel-item class="toggleable-piece prevent-text-select" (click)="toggleSecondPiece()">
             <h2>Second Piece
                 <app-tooltip-indicator tooltip="Click to change!"/>
             </h2>
             <app-next-box [showBackground]="false" [level]="18" [type]="cache.nextPieceType"></app-next-box>
         </app-tetris-panel-item>
+
+        <p class="is-valid">Include in training data: {{isBoardValidForML() ? 'Yes' : 'No'}}</p>
+        <p *ngIf="getEngineResponse() as r" class="sr-placement-evaluation">SR placement eval: {{r.evaluation}}</p>
+        <p *ngIf="getRawSRResponse() as r" class="sr-raw-evaluation">SR raw board eval: {{r.rawEvaluation}}</p>
+        <p *ngIf="getDataPointString() as dp">{{dp}}</p>
 
     </app-tetris-panel>
 </div>

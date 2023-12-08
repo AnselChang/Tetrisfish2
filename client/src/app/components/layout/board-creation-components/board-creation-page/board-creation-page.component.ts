@@ -7,7 +7,7 @@ import { fetchMovelist } from 'client/src/app/scripts/evaluation/evaluator';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 import { SmartGameStatus } from 'client/src/app/models/tetronimo-models/smart-game-status';
 import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
-import { MLPlacement } from 'client/src/app/machine-learning/ml-placement';
+import { SRBestMoveResponse, MLPlacement, SRRawEvalResponse, MLDataPoint } from 'client/src/app/machine-learning/ml-placement';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 
 @Component({
@@ -118,15 +118,33 @@ export class BoardCreationPageComponent {
 
   public async onAnalysis() {
     this.cache.ml = new MLPlacement(this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType);
-    await this.cache.ml.runStackRabbit();
+    await this.cache.ml.runSRBestMove();
+    await this.cache.ml.runSRRawEval();
+  }
+
+  public getRawSRResponse(): SRRawEvalResponse | undefined {
+    return this.cache.ml?.getRawEvalResponse();
+  }
+
+  public getEngineResponse(): SRBestMoveResponse | undefined {
+    return this.cache.ml?.getEngineResponse();
+  }
+
+  public getDataPointString(): string | undefined {
+    const dp = this.cache.ml?.getDataPoint();
+    return dp ? JSON.stringify(dp) : undefined;
+  }
+
+  public isBoardValidForML(): boolean {
+    return this.cache.ml?.isBoardValidForML() ?? false;
   }
 
   public getBestFirstPiece(): MoveableTetromino | undefined {
-    return this.cache.ml?.getEngineResponse()?.firstPiecePlacement;
+    return this.getEngineResponse()?.firstPiecePlacement;
   }
 
   public getBestSecondPiece(): MoveableTetromino | undefined {
-    return this.cache.ml?.getEngineResponse()?.secondPiecePlacement;
+    return this.getEngineResponse()?.secondPiecePlacement;
   }
 
 }

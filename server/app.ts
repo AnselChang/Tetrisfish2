@@ -103,6 +103,23 @@ export default async function createApp(): Promise<{
             res.status(500).send("StackRabbit Server Error");
         }
     });
+
+    app.get('/api/stackrabbit-wrapped', async (req: Request, res: Response) => {
+        const url = req.query['url'];
+        console.log("Making request to Stack Rabbit API:", url);
+
+        let result;
+        let json;
+        try {
+            result = await fetch(url as string);
+            json = await result.json();
+            console.log("success");
+            res.send({data : json});
+        } catch (e) {
+            console.log("StackRabbit Server Error", e);
+            res.status(500).send("StackRabbit Server Error");
+        }
+    });
     
     app.get('/api/test-stackrabbit', testStackRabbitRoute);
 
