@@ -6,7 +6,7 @@ import { InputSpeed } from "./input-frame-timeline";
 import { EngineMovelistURL, LookaheadDepth, RateMoveURL, boardToString, generateStandardParams } from "./stack-rabbit-api";
 
 
-async function fetchStackRabbitURL(url: string): Promise<any> {
+export async function fetchStackRabbitURL(url: string): Promise<any> {
 
     const result = await fetchServer(Method.GET, "/api/stackrabbit", {"url" : url});
     if (result.status !== 200) {

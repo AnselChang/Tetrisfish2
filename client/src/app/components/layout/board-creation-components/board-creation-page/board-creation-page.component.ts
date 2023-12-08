@@ -6,6 +6,9 @@ import GameStatus from 'client/src/app/models/tetronimo-models/game-status';
 import { fetchMovelist } from 'client/src/app/scripts/evaluation/evaluator';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 import { SmartGameStatus } from 'client/src/app/models/tetronimo-models/smart-game-status';
+import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
+import { MLPlacement } from 'client/src/app/machine-learning/ml-placement';
+import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 
 @Component({
   selector: 'app-board-creation-page',
@@ -52,6 +55,9 @@ export class BoardCreationPageComponent {
 
   public onMouseDown(block: BlockData) {
 
+    // reset ml object
+    this.cache.ml = undefined;
+
     // make a copy of grid to revert to whenever mouse is moved so that fill can be applied again
     this.oldGrid = this.cache.grid.copy();
 
@@ -88,8 +94,39 @@ export class BoardCreationPageComponent {
     console.log(this.cache.grid._getAsString());
   }
 
-  public async onAnalysis() {
+  public getNextTetrominoType(currentType: TetrominoType): TetrominoType {
+    // Convert the enum values to an array
+    const types = Object.values(TetrominoType);
 
+    // Find the index of the current type in the array
+    const currentIndex = types.indexOf(currentType);
+
+    // Calculate the index of the next type. If the current type is the last one, wrap to 0.
+    const nextIndex = (currentIndex + 1) % types.length;
+
+    // Return the next type
+    return types[nextIndex];
+  }
+
+  public async toggleFirstPiece() {
+    this.cache.currentPieceType = this.getNextTetrominoType(this.cache.currentPieceType);
+  }
+
+  public async toggleSecondPiece() {
+    this.cache.nextPieceType = this.getNextTetrominoType(this.cache.nextPieceType);
+  }
+
+  public async onAnalysis() {
+    this.cache.ml = new MLPlacement(this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType);
+    await this.cache.ml.runStackRabbit();
+  }
+
+  public getBestFirstPiece(): MoveableTetromino | undefined {
+    return this.cache.ml?.getEngineResponse()?.firstPiecePlacement;
+  }
+
+  public getBestSecondPiece(): MoveableTetromino | undefined {
+    return this.cache.ml?.getEngineResponse()?.secondPiecePlacement;
   }
 
 }

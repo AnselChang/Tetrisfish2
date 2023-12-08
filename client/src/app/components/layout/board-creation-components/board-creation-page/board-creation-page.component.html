@@ -1,56 +1,34 @@
-<div id="board-creation-page">
-    <section class="display-section">
-        <h2>Create a board</h2>
-        <div class="section-content" id="display-content">
+<div class="board-editor">
+    <h1 class="padded">Board Editor</h1>
+    <app-tetris-panel>
+        <app-interactive-tetris-board
+            [mode]="TetrisBoardMode.MOVEABLE_CURRENT_PIECE"
+            [level]="18"
+            [grid]="cache.grid"
+            [currentPiece]="getBestFirstPiece()"
+            [nextPiece]="getBestSecondPiece()"
+            (hoveredBlock)="onBlockHover($event)"
+            (onMouseDown)="onMouseDown($event)"
+            (onHoverOff)="onHoverOff()"/>
 
-            <div class="board">
-                <app-interactive-tetris-board
-                    [mode]="TetrisBoardMode.MOVEABLE_CURRENT_PIECE"
-                    [level]="cache.level"
-                    [grid]="cache.grid"
-                    (hoveredBlock)="onBlockHover($event)"
-                    (onMouseDown)="onMouseDown($event)"
-                    (onHoverOff)="onHoverOff()"/>
-            </div>
+        <app-tooltip-button
+            label="StackRabbit"
+            tooltipText="Get the recommended move from StackRabbit AI for your custom board!"
+            (click)="onAnalysis()"/>
 
-            <div class="subsection-container status-subsection">
-                <div class="subsection status-container" id="level-status">
-                    <h4>Level</h4>
-                    <h2>18</h2>
-                </div>
-                <div class="subsection piece-box current-piece">
-                    <h4>Current piece</h4>
-                    <app-next-box class="nb" [showBackground]="false" [level]="cache.level" [type]="cache.currentPieceType"></app-next-box>
-                </div>
-                <div class="subsection piece-box next-piece">
-                    <h4>Next piece</h4>
-                    <app-next-box class="nb" [showBackground]="false" [level]="cache.level" [type]="cache.nextPieceType"></app-next-box>
-                </div>
-            </div>
-        </div>
-    </section>
+        <app-tetris-panel-item class="toggleable-piece" (click)="toggleFirstPiece()">
+            <h2>First Piece
+                <app-tooltip-indicator tooltip="Click to change!"/>
+            </h2>
+            <app-next-box [showBackground]="false" [level]="18" [type]="cache.currentPieceType"></app-next-box>
+        </app-tetris-panel-item>
 
-    <section class="buttons-section">
-        <app-button [expandToFitWidth]="true" (click)="onAnalysis()">
-            <div class="image-button">
-                <app-image [src]="'analysis.png'" [widthPx]="50" />
-                <h2>Analyze</h2>
-            </div>
-        </app-button>
+        <app-tetris-panel-item class="toggleable-piece" (click)="toggleSecondPiece()">
+            <h2>Second Piece
+                <app-tooltip-indicator tooltip="Click to change!"/>
+            </h2>
+            <app-next-box [showBackground]="false" [level]="18" [type]="cache.nextPieceType"></app-next-box>
+        </app-tetris-panel-item>
 
-        <app-button [expandToFitWidth]="true" (click)="printBoard()">
-            <div class="image-button">
-                <app-image [src]="'puzzle.png'" [widthPx]="50" />
-                <h2>Upload a puzzle</h2>
-            </div>
-        </app-button>
-
-        <app-button [expandToFitWidth]="true">
-            <div class="image-button">
-                <app-image [src]="'poll.png'" [widthPx]="50" />
-                <h2>Create a poll</h2>
-            </div>
-        </app-button>
-    </section>
-
+    </app-tetris-panel>
 </div>
