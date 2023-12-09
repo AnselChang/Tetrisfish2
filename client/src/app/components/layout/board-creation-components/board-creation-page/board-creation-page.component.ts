@@ -7,8 +7,9 @@ import { fetchMovelist } from 'client/src/app/scripts/evaluation/evaluator';
 import { GamePlacement } from 'client/src/app/models/game-models/game-placement';
 import { SmartGameStatus } from 'client/src/app/models/tetronimo-models/smart-game-status';
 import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
-import { SRBestMoveResponse, MLPlacement, SRRawEvalResponse, MLDataPoint } from 'client/src/app/machine-learning/ml-placement';
+import { MLPlacement, SRRawEvalResponse, MLDataPoint } from 'client/src/app/machine-learning/ml-placement';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
+import { BestMoveResponse } from 'client/src/app/ai/abstract-ai-adapter/best-move-response';
 
 @Component({
   selector: 'app-board-creation-page',
@@ -126,7 +127,7 @@ export class BoardCreationPageComponent {
     return this.cache.ml?.getRawEvalResponse();
   }
 
-  public getEngineResponse(): SRBestMoveResponse | undefined {
+  public getEngineResponse(): BestMoveResponse | undefined {
     return this.cache.ml?.getEngineResponse();
   }
 
@@ -140,11 +141,11 @@ export class BoardCreationPageComponent {
   }
 
   public getBestFirstPiece(): MoveableTetromino | undefined {
-    return this.getEngineResponse()?.firstPiecePlacement;
+    return this.getEngineResponse()?.currentPlacement;
   }
 
   public getBestSecondPiece(): MoveableTetromino | undefined {
-    return this.getEngineResponse()?.secondPiecePlacement;
+    return this.getEngineResponse()?.nextPlacement;
   }
 
 }

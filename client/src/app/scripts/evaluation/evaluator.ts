@@ -1,8 +1,10 @@
+import { BestMoveResponse } from "../../ai/abstract-ai-adapter/best-move-response";
 import { GamePlacement } from "../../models/game-models/game-placement";
 import MoveableTetromino from "../../models/game-models/moveable-tetromino";
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
 import { Method, fetchServer } from "../fetch-server";
 import { InputSpeed } from "./input-frame-timeline";
+import { convertSRPlacement } from "./sr-placement-converter";
 import { EngineMovelistURL, LookaheadDepth, RateMoveURL, boardToString, generateStandardParams } from "./stack-rabbit-api";
 
 
@@ -53,4 +55,22 @@ export async function fetchRateMove(placement: GamePlacement, inputSpeed: InputS
 
     const rateMoveURL = generateRateMoveURL(placement, inputSpeed, lookaheadDepth);
     return fetchStackRabbitURL(rateMoveURL);
+}
+
+export function getBestMoveFromMovelistResponse(response: any, currentPieceType: TetrominoType, nextPieceType: TetrominoType): BestMoveResponse {
+    
+    const bestMove = response[0];
+    const thisDict = bestMove[0];
+    const nextDict = bestMove[1];
+
+    // extract SR placements and evaluation
+    const evaluation = nextDict["totalValue"] as number;
+    const firstPlacement = convertSRPlacement(thisDict["placement"], currentPieceType);
+    const secondPlacement = convertSRPlacement(nextDict["placement"], nextPieceType);
+
+    return {
+        evaluation: evaluation,
+        currentPlacement: firstPlacement,
+        nextPlacement: secondPlacement,
+    };
 }
