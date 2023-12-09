@@ -19,3 +19,27 @@
     flex-direction: column;
     align-items: center;
 }
+
+.nav-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.arrow-button {
+    cursor: pointer;
+}
+
+.arrow-button:hover {
+    opacity: 0.9;
+}
+
+.arrow-button:active {
+    opacity: 0.8;
+}
+
+.arrow-button.disabled {
+    opacity: 0.2;
+}

@@ -9,8 +9,8 @@ import { SimulationState } from "./simulation-state";
 // Manages the simulation of a full game and its placements for an AI
 export class AISimulation {
 
-    readonly startingState: SimulationState; // the state at the very beginning of the game
-    readonly allPlacements: SimulationPlacement[] = [];
+    private readonly startingState: SimulationState; // the state at the very beginning of the game
+    private readonly allPlacements: SimulationPlacement[] = [];
 
     constructor(
         public readonly ai: AbstractAIAdapter, // the AI model to use
@@ -59,6 +59,21 @@ export class AISimulation {
         this.allPlacements.push(newPlacement);
 
         return newPlacement;
+    }
+
+    public getNumPlacements(): number {
+        return this.allPlacements.length;
+    }
+
+    public getStartState(): SimulationState {
+        return this.startingState;
+    }
+    
+    public getPlacementAtIndex(index: number): SimulationPlacement {
+        if (index < 0 || index >= this.allPlacements.length) {
+            throw new Error(`Invalid index ${index}`);
+        }
+        return this.allPlacements[index];
     }
 
 }
