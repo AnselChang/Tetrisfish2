@@ -1,6 +1,6 @@
 <a [routerLink]="routerLink" routerLinkActive="active">
     <div class="page-container">
-        <app-image [src]="icon" [widthPx]="150" />
+        <img [src]="'./assets/img/' + icon" height="150px" >
         <h1 class="title">{{title}}</h1>
         <p class="subtitle">{{subtitle}}</p>
     </div>

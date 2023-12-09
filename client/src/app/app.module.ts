@@ -67,6 +67,7 @@ import { NesPanelComponent } from './components/layout/multiplayer-components/ne
 import { AdminPanelComponent } from './components/layout/multiplayer-components/admin-panel/admin-panel.component';
 import { TooltipButtonComponent } from './components/BLOCK/tooltip-button/tooltip-button.component';
 import { MlDatasetComponent } from './components/layout/ml-dataset/ml-dataset.component';
+import { BotPlaygroundComponent } from './components/layout/bot-playground-components/bot-playground/bot-playground.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -172,6 +173,7 @@ const customNotifierOptions: NotifierOptions = {
     AdminPanelComponent,
     TooltipButtonComponent,
     MlDatasetComponent,
+    BotPlaygroundComponent,
   ],
   imports: [
     BrowserModule,
