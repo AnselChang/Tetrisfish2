@@ -1,0 +1,21 @@
+@import "../../../../../styles.scss";
+
+:host {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.board-editor {
+    margin-top: 20px;
+    width: fit-content;
+    background: $layer-1-color;
+    padding: 20px;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

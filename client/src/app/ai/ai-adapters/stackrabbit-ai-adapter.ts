@@ -7,6 +7,10 @@ import { BestMoveResponse } from "../abstract-ai-adapter/best-move-response";
 
 export class StackRabbitAIAdapter extends AbstractAIAdapter {
 
+    getName(): string {
+        return "StackRabbit";
+    }
+
     // make a StackRabbit engine-movelist request to find the best move
     async getBestMove(request: BestMoveRequest): Promise<BestMoveResponse> {
 

@@ -1,1 +1,18 @@
-<p>bot-playground works!</p>
+<div class="board-editor">
+
+    <h1 class="padded">Bot Playground</h1>
+
+    <app-tetris-panel>
+        <app-interactive-tetris-board/>
+
+        <app-tetris-panel-item class="prevent-text-select">
+            <app-next-box [showBackground]="false" [level]="18" [type]="nextPieceType"></app-next-box>
+        </app-tetris-panel-item>
+
+        <app-tooltip-button
+            label="Start game"
+            [tooltipText]="'Simulate a full game with ' + selectedAI.getName() + ' AI!'"
+            (click)="startGame()"/>
+
+    </app-tetris-panel>
+</div>
