@@ -12,6 +12,9 @@ export class AISimulation {
     private readonly startingState: SimulationState; // the state at the very beginning of the game
     private readonly allPlacements: SimulationPlacement[] = [];
 
+    private simulating: boolean = false;
+    private toppedOut: boolean = false;
+
     constructor(
         public readonly ai: AbstractAIAdapter, // the AI model to use
         public readonly rng: PieceSequenceGenerator, // the piece sequence generation algorithm to use
@@ -43,8 +46,19 @@ export class AISimulation {
         return lastPlacement.getStateAfter()!;
     }
 
-    // simulate one placement at the end of the game so far, add it to the list, and return it
-    public async simulateOnePlacement(): Promise<SimulationPlacement> {
+    // simulate one placement at the end of the game so far, add it to the list
+    // return true if success, false if topped out
+    public async simulateOnePlacement(): Promise<boolean> {
+
+        if (this.toppedOut) {
+            return false;
+        }
+
+        if (this.simulating) {
+            throw new Error("Already simulating");
+        }
+
+        this.simulating = true; // make sure operation is atomic
 
         const lastState = this.getLastState();
         const nextPiece = this.generateNextPiece();
@@ -53,12 +67,21 @@ export class AISimulation {
         const newPlacement = new SimulationPlacement(this.ai, lastState);
 
         // compute the placement
-        await newPlacement.compute(nextPiece);
+        const success = await newPlacement.compute(nextPiece);
+
+        // topped out
+        if (!success) {
+            this.simulating = false;
+            this.toppedOut = true;
+            return false;
+        }
 
         // add the placement to the list
         this.allPlacements.push(newPlacement);
 
-        return newPlacement;
+        this.simulating = false;
+
+        return true;
     }
 
     public getNumPlacements(): number {
@@ -74,6 +97,14 @@ export class AISimulation {
             throw new Error(`Invalid index ${index}`);
         }
         return this.allPlacements[index];
+    }
+
+    public isSimulating(): boolean {
+        return this.simulating;
+    }
+
+    public isToppedOut(): boolean {
+        return this.toppedOut;
     }
 
 }

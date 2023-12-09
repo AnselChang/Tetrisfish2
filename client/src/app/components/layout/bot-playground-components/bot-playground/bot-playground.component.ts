@@ -19,6 +19,9 @@ export class BotPlaygroundComponent {
   // placementIndex is simulation.placements[placementIndex].stateBefore
   // placementIndex+1 is simulation.placements[placementIndex].stateAfter
   public placementIndex: number = 0;
+  public playing: boolean = false;
+
+  private playingLoopID?: any;
 
   readonly simulation: AISimulation;
 
@@ -27,7 +30,17 @@ export class BotPlaygroundComponent {
   }
 
   startGame() {
-    console.log("Starting game with", this.selectedAI.getName());
+    this.playing = true;
+
+    // keep going to the next placement until game ends or stopGame() is called
+    this.playingLoopID = setInterval(async () => {
+      await this.goToNextPlacement();
+    }, 10);
+  }
+  
+  stopGame() {
+    this.playing = false;
+    clearInterval(this.playingLoopID);
   }
 
   goToPreviousPlacement() {
@@ -36,11 +49,17 @@ export class BotPlaygroundComponent {
 
   // if the no new placements in cache, simulate new one
   async goToNextPlacement() {
-    this.placementIndex++;
 
-    if (this.placementIndex === this.simulation.getNumPlacements() + 1) {
-      await this.simulation.simulateOnePlacement();
+    if (this.simulation.isSimulating()) return;
+
+    if (this.placementIndex === this.simulation.getNumPlacements()) {
+      const success = await this.simulation.simulateOnePlacement();
+      if (!success) {
+        this.stopGame();
+        return;
+      }
     }
+    this.placementIndex++;
   }
 
   // at placementIndex = 0, return the starting state
@@ -50,7 +69,7 @@ export class BotPlaygroundComponent {
       return this.simulation.getStartState();
     }
     else {
-      const placement = this.simulation.getPlacementAtIndex(this.placementIndex - 1).getStateAfter();
+      const placement = this.simulation.getPlacementAtIndex(this.placementIndex - 1).getStateBefore();
       if (placement === undefined) {
         throw new Error("State after placement not computed");
       }

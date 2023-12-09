@@ -20,6 +20,12 @@
     align-items: center;
 }
 
+.level-lines {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 .nav-buttons {
     display: flex;
     flex-direction: row;

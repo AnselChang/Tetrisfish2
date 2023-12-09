@@ -9,6 +9,7 @@ export abstract class AbstractAIAdapter {
     abstract getName(): string;
 
     // given a request for a board position, return the best move according to that model
-    abstract getBestMove(request: BestMoveRequest): Promise<BestMoveResponse>;
+    // undefined if no possible moves
+    abstract getBestMove(request: BestMoveRequest): Promise<BestMoveResponse | undefined>;
 
 }

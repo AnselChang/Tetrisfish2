@@ -6,21 +6,35 @@
         <app-interactive-tetris-board
             [level]="getCurrentState().status.level"
             [grid]="getCurrentState().board"
-            [currentPiece]="getCurrentPlacement()?.currentPlacement"
-            [nextPiece]="getCurrentPlacement()?.nextPlacement"/>
-        />
+            [currentPiece]="getCurrentPlacement()?.currentPlacement"/>
+
+        <app-tetris-panel-item>
+            <h2>Score</h2>
+            <h1>{{getCurrentState().status.score}}</h1>
+        </app-tetris-panel-item>
+        <div class="level-lines">
+            <app-tetris-panel-item>
+                <h2>Lines</h2>
+                <h1>{{getCurrentState().status.lines}}</h1>
+            </app-tetris-panel-item>
+            <app-tetris-panel-item>
+                <h2>Level</h2>
+                <h1>{{getCurrentState().status.level}}</h1>
+            </app-tetris-panel-item>
+        </div>
 
         <app-tetris-panel-item class="prevent-text-select">
             <app-next-box [showBackground]="false" [level]="18" [type]="getCurrentState().nextPieceType"></app-next-box>
         </app-tetris-panel-item>
 
         <app-tooltip-button
-            label="Start game"
-            [tooltipText]="'Simulate a full game with ' + selectedAI.getName() + ' AI!'"
-            (click)="startGame()"/>
+            [label]="!playing ? 'Start Playing' : 'Pause Game'"
+            [color]="!playing ? '#50C346' : '#C34646'"
+            [tooltipText]="'Simulate a game from this position with ' + selectedAI.getName() + ' AI!'"
+            (click)="!playing ? startGame() : stopGame()"/>
 
         <app-tetris-panel-item>
-            <h2>Position #{{placementIndex + 1}}</h2>
+            <h2>Position #{{placementIndex}}</h2>
             <div class="nav-buttons">
                 <app-fixed-size-image src="arrow_left.svg" class="arrow-button" [ngClass]="{'disabled': placementIndex <= 0}" [width]="25" (click)="goToPreviousPlacement()"></app-fixed-size-image>
                 <app-fixed-size-image src="arrow_right.svg" class="arrow-button" [width]="25" (click)="goToNextPlacement()"></app-fixed-size-image>

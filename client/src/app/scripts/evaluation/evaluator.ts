@@ -57,8 +57,12 @@ export async function fetchRateMove(placement: GamePlacement, inputSpeed: InputS
     return fetchStackRabbitURL(rateMoveURL);
 }
 
-export function getBestMoveFromMovelistResponse(response: any, currentPieceType: TetrominoType, nextPieceType: TetrominoType): BestMoveResponse {
+export function getBestMoveFromMovelistResponse(response: any, currentPieceType: TetrominoType, nextPieceType: TetrominoType): BestMoveResponse | undefined {
     
+    if (response.length === 0) {
+        return undefined;
+    }
+
     const bestMove = response[0];
     const thisDict = bestMove[0];
     const nextDict = bestMove[1];

@@ -12,7 +12,7 @@ export class StackRabbitAIAdapter extends AbstractAIAdapter {
     }
 
     // make a StackRabbit engine-movelist request to find the best move
-    async getBestMove(request: BestMoveRequest): Promise<BestMoveResponse> {
+    async getBestMove(request: BestMoveRequest): Promise<BestMoveResponse | undefined> {
 
         const status = new GameStatus(request.level ?? 18, request.lines ?? 0, request.score ?? 0);
         const standardParams = generateStandardParams(request.board, request.currentPieceType, status, request.inputSpeed);
