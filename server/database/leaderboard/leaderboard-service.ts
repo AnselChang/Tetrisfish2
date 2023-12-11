@@ -2,8 +2,8 @@ import { SerializedGame } from "shared/models/serialized-game";
 import DBLeaderboard, { LeaderboardEntry, LeaderboardType } from "./leaderboard-schema";
 import { getUserByID } from "../user/user-service";
 
-const MAX_LEADERBOARD_ENTRIES = 100;
-const MAX_LEADERBOARD_ENTRIES_WITH_BUFFER = 110; // 10 extra entries to reduce chance of  race conditions
+// const MAX_LEADERBOARD_ENTRIES = 100;
+// const MAX_LEADERBOARD_ENTRIES_WITH_BUFFER = 110; // 10 extra entries to reduce chance of  race conditions
 
 // if game is good enough for leaderboard, add it to the leaderboard and remove the worst game if full
 // return success/error message
@@ -48,11 +48,11 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
 
     const gameAccuracy = game.startLevel === 29 ? game.accuracy100LinesFor29! : game.overallAccuracy;
     
-    // check if game is better than the worst game in the leaderboard using leaderboard's lowestAccuracy cache
-    if (leaderboard.entries.length >=  MAX_LEADERBOARD_ENTRIES && gameAccuracy < leaderboard.lowestAccuracy) {
-        return ["warning", "Note: although the game qualified for leaderboards, game accuracy was not high enough for the top 100."]
+    // // check if game is better than the worst game in the leaderboard using leaderboard's lowestAccuracy cache
+    // if (leaderboard.entries.length >=  MAX_LEADERBOARD_ENTRIES && gameAccuracy < leaderboard.lowestAccuracy) {
+    //     return ["warning", "Note: although the game qualified for leaderboards, game accuracy was not high enough for the top 100."]
 
-    }
+    // }
 
     // get user info
     const user = await getUserByID(userID);
@@ -87,12 +87,12 @@ export async function addGameToLeaderboard(game: SerializedGame, userID: string)
         accuracy: gameAccuracy,
     });
 
-    // if leaderboard is full, remove the worst game
-    if (leaderboard.entries.length > MAX_LEADERBOARD_ENTRIES_WITH_BUFFER) {
-        leaderboard.entries.sort((a, b) => a.accuracy - b.accuracy);
-        leaderboard.entries.shift(); // remove the worst game
-        console.log("Removed worst game from leaderboard:", leaderboardType);
-    }
+    // // if leaderboard is full, remove the worst game
+    // if (leaderboard.entries.length > MAX_LEADERBOARD_ENTRIES_WITH_BUFFER) {
+    //     leaderboard.entries.sort((a, b) => a.accuracy - b.accuracy);
+    //     leaderboard.entries.shift(); // remove the worst game
+    //     console.log("Removed worst game from leaderboard:", leaderboardType);
+    // }
 
     // update the lowest accuracy cache
     leaderboard.lowestAccuracy = leaderboard.entries[0].accuracy;
@@ -128,8 +128,8 @@ export async function getLeaderboard(leaderboardType: LeaderboardType): Promise<
         games.push(entry);
     }
 
-    // trim past MAX_LEADERBOARD_ENTRIES
-    games.splice(MAX_LEADERBOARD_ENTRIES);
+    // // trim past MAX_LEADERBOARD_ENTRIES
+    // games.splice(MAX_LEADERBOARD_ENTRIES);
     
 
     return games;
@@ -153,8 +153,8 @@ export async function getLeaderboardAccuracies(leaderboardType: LeaderboardType)
         accuracies.push(entry.accuracy);
     }
 
-    // trim past MAX_LEADERBOARD_ENTRIES
-    accuracies.splice(MAX_LEADERBOARD_ENTRIES);
+    // // trim past MAX_LEADERBOARD_ENTRIES
+    // accuracies.splice(MAX_LEADERBOARD_ENTRIES);
 
     return accuracies;
 }
