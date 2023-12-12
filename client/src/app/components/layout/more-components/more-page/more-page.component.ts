@@ -22,6 +22,7 @@ export class MorePageComponent {
     new PageInfo("board_creation.svg", "Board Creation", "Construct a custom board for analysis or to export as a puzzle", "/board-creation"),
     new PageInfo("bot_playground.png", "Bot Playground", "Simulate full games with various Tetris AIs like StackRabbit and Leo", "/bot-playground"),
     new PageInfo("machine_learning.png", "ML Dataset", "Generate a dataset of placements for Ansel's ML class", "/ml-dataset"),
+    new PageInfo("devleopment_testbed.png", "Development Testbed", "Miscellaneous debug and code testing", "development-testbed")
   ]
 
 }
