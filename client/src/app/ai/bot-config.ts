@@ -9,6 +9,7 @@ import { ALL_RNG_TYPES, RNGType } from "./piece-sequence-generation/all-rng";
 export class BotConfig {
 
     public aiType: AIAdapterType = ALL_ADAPTER_TYPES[0];
+    public variant: string = "";
     public inputSpeed: InputSpeed = InputSpeed.HZ_30;
     public reactionTimeFrames: number = 0;
 

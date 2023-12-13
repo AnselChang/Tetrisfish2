@@ -11,8 +11,9 @@ import PlacementAnalysis from "./placement-analysis";
 import { SmartGameStatus } from "../tetronimo-models/smart-game-status"
 import { TagID } from "../tag-models/tag-types";
 import TagAssigner, { SimplePlacement } from "../tag-models/tag-assigner";
+import { BasePlacement } from "./base-placement";
 
-export class GamePlacement {
+export class GamePlacement implements BasePlacement {
 
     // stores all the optional analysis data from SR for this placement
     public readonly analysis: PlacementAnalysis;
@@ -76,6 +77,20 @@ export class GamePlacement {
         return gridWithPiece;
 
     }
+
+    getBoard(): BinaryGrid {
+        return this.grid;
+    }
+
+    getMTPlacement(): MoveableTetromino {
+        if (!this.hasPlacement()) throw new Error("No piece placement");
+        return this.piecePlacement!;
+    }
+
+    getNextType(): TetrominoType {
+        return this.nextPieceType;
+    }
+
 
 
 }

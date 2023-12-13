@@ -69,6 +69,7 @@ import { TooltipButtonComponent } from './components/BLOCK/tooltip-button/toolti
 import { MlDatasetComponent } from './components/layout/ml-dataset/ml-dataset.component';
 import { BotPlaygroundComponent } from './components/layout/bot-playground-components/bot-playground/bot-playground.component';
 import { DevelopmentTestbedComponent } from './components/layout/development-testbed/development-testbed.component';
+import { LevelContainerComponent } from './components/layout/bot-playground-components/level-container/level-container.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -176,6 +177,7 @@ const customNotifierOptions: NotifierOptions = {
     MlDatasetComponent,
     BotPlaygroundComponent,
     DevelopmentTestbedComponent,
+    LevelContainerComponent,
   ],
   imports: [
     BrowserModule,

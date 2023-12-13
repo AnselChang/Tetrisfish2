@@ -5,22 +5,51 @@ import { AbstractAIAdapter } from "../abstract-ai-adapter/abstract-ai-adapter";
 import { BestMoveRequest } from "../abstract-ai-adapter/best-move-request";
 import { BestMoveResponse } from "../abstract-ai-adapter/best-move-response";
 
+export enum StackRabbitVariant {
+    DEEP = "Deep",
+    SHALLOW = "Shallow",
+}
+
 export class StackRabbitAIAdapter extends AbstractAIAdapter {
 
-    getName(): string {
-        return "StackRabbit";
+    getName(variant: StackRabbitVariant): string {
+        return `StackRabbit (${variant})`;
     }
 
-    getDescription(): string {
-        return "Depth 3 tree search AI with hand tuned evaluation by Greg Cannon"
+    getDescription(variant: StackRabbitVariant): string {
+        const depth = (variant === StackRabbitVariant.DEEP) ? 3 : 2;
+        return `Depth ${depth} tree search AI with hand tuned evaluation by Greg Cannon`
+    }
+
+    override getVariants(): string[] {
+        return [StackRabbitVariant.DEEP, StackRabbitVariant.SHALLOW];
+    }
+
+    override getVariantOptionString(variant: StackRabbitVariant): string {
+        switch (variant) {
+            case StackRabbitVariant.DEEP:
+                return "Deep Search";
+            case StackRabbitVariant.SHALLOW:
+                return "Shallow Search";
+        }
     }
 
     // make a StackRabbit engine-movelist request to find the best move
-    async getBestMove(request: BestMoveRequest): Promise<BestMoveResponse | undefined> {
+    async getBestMove(variant: StackRabbitVariant, request: BestMoveRequest): Promise<BestMoveResponse | undefined> {
+
+        let depth: LookaheadDepth;
+        switch (variant) {
+            case StackRabbitVariant.DEEP:
+                depth = LookaheadDepth.DEEP;
+                break;
+            case StackRabbitVariant.SHALLOW:
+                depth = LookaheadDepth.SHALLOW;
+                break;
+        }
 
         const status = new GameStatus(request.level ?? 18, request.lines ?? 0, request.score ?? 0);
         const standardParams = generateStandardParams(request.board, request.currentPieceType, status, request.inputSpeed);
-        const movelistURL = new EngineMovelistURL(standardParams, request.nextPieceType, LookaheadDepth.DEEP).getURL();
+        const movelistURL = new EngineMovelistURL(standardParams, request.nextPieceType, depth).getURL();
         const response = await fetchStackRabbitURL(movelistURL);
 
         return getBestMoveFromMovelistResponse(response, request.currentPieceType, request.nextPieceType);

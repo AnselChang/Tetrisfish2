@@ -1,5 +1,7 @@
 import BinaryGrid from "../tetronimo-models/binary-grid";
+import { IGameStatus } from "../tetronimo-models/game-status";
 import { TetrominoType } from "../tetronimo-models/tetromino";
+import { BasePlacement } from "./base-placement";
 import { GamePlacement } from "./game-placement";
 
 // transition TO this level
@@ -8,6 +10,46 @@ export class TransitionScore {
         public readonly level: number,
         public score: number | undefined,
     ) {}
+}
+
+export class Subscore {
+
+    private totalPositions = 0;
+
+    public readonly droughtStats: DroughtStats = new DroughtStats();
+    public readonly lineClearStats: LineClearStats = new LineClearStats();
+    public readonly efficiencyStats: EfficiencyStats = new EfficiencyStats();
+    public readonly tetrisReadinessStats: TetrisReadinessStats = new TetrisReadinessStats();
+    public readonly rightWellOpenStats: RightWellOpenStats = new RightWellOpenStats();
+
+    constructor(
+        public readonly level: number,
+        private score: number = 0,
+    ) {}
+
+    public onPlacement(placement: BasePlacement, linesBurned: number, statusBeforePlacement: IGameStatus, statusAfterPlacement: IGameStatus): void {
+        
+        const diff = statusAfterPlacement.score - statusBeforePlacement.score;
+        const currentType = placement.getMTPlacement().tetrominoType;
+        
+        this.droughtStats.updateDroughtCount(currentType);
+        this.lineClearStats.updateBurnedLinesAndTetrises(linesBurned);
+        this.efficiencyStats.updateIPieceEfficiency(currentType, linesBurned);
+        this.tetrisReadinessStats.updateTetrisReadiness(placement.getBoard());
+        this.rightWellOpenStats.updateRightWellOpen(placement.getBoard());
+
+        this.score += diff;
+        this.totalPositions++;
+    }
+
+    public getScore(): number {
+        return this.score;
+    }
+
+    public getNumPositions(): number {
+        return this.totalPositions;
+    }
+
 }
 
 class RightWellOpenStats {
@@ -118,6 +160,7 @@ class DroughtStats {
 export class GameStats {
 
     private transitionScores: TransitionScore[] = [];
+    private subscores: Subscore[] = [];
 
     private readonly droughtStats: DroughtStats = new DroughtStats();
     private readonly lineClearStats: LineClearStats = new LineClearStats();
@@ -127,18 +170,53 @@ export class GameStats {
 
     private numPlacements: number = 0;
 
-    constructor(transitionLevelsToTrack: number[]) {
+    constructor(transitionLevelsToTrack: number[], subscoresToTrack: number[] = []) {
         transitionLevelsToTrack.forEach(level => {
             this.transitionScores.push(new TransitionScore(level, undefined));
         });
+
+        subscoresToTrack.forEach(level => {
+            this.subscores.push(new Subscore(level));
+        });
     }
 
-    public onPiecePlacement(placement: GamePlacement, linesBurned: number): void {
-        this.droughtStats.updateDroughtCount(placement.currentPieceType);
+    private calculateTransitionScores(statusAfterPlacement: IGameStatus): void {
+        for (let transition of this.getTransitionScores()) {
+            if (statusAfterPlacement.level === transition.level && transition.score === undefined) {
+                // on transition
+                transition.score = statusAfterPlacement.score;
+            }
+        }
+    }
+
+    private updateSubscores(placement: BasePlacement, linesBurned: number, statusBeforePlacement: IGameStatus, statusAfterPlacement: IGameStatus): void {
+        const diff = statusAfterPlacement.score - statusBeforePlacement.score;
+        if (diff === 0) return;
+
+        let matchingSubscore: Subscore | undefined = undefined;
+        for (let subscore of this.subscores) {
+            if (statusBeforePlacement.level >= subscore.level) {
+                matchingSubscore = subscore;
+                break;
+            }
+        }
+
+        if (matchingSubscore === undefined) return;
+
+        matchingSubscore.onPlacement(placement, linesBurned, statusBeforePlacement, statusAfterPlacement);
+    }
+
+    public onPiecePlacement(placement: BasePlacement, linesBurned: number, statusBeforePlacement: IGameStatus, statusAfterPlacement: IGameStatus): void {
+        const currentType = placement.getMTPlacement().tetrominoType;
+
+        this.droughtStats.updateDroughtCount(currentType);
         this.lineClearStats.updateBurnedLinesAndTetrises(linesBurned);
-        this.efficiencyStats.updateIPieceEfficiency(placement.currentPieceType, linesBurned);
-        this.tetrisReadinessStats.updateTetrisReadiness(placement.grid);
-        this.rightWellOpenStats.updateRightWellOpen(placement.grid);
+        this.efficiencyStats.updateIPieceEfficiency(currentType, linesBurned);
+        this.tetrisReadinessStats.updateTetrisReadiness(placement.getBoard());
+        this.rightWellOpenStats.updateRightWellOpen(placement.getBoard());
+
+        this.calculateTransitionScores(statusAfterPlacement);
+        this.updateSubscores(placement ,linesBurned, statusBeforePlacement, statusAfterPlacement);
 
         this.numPlacements++;
     }
@@ -153,6 +231,10 @@ export class GameStats {
 
     public getTransitionScores(): TransitionScore[] {
         return this.transitionScores;
+    }
+
+    public getSubscore(level: number): Subscore | undefined {
+        return this.subscores.find(subscore => subscore.level === level);
     }
 
     public getDroughtCount(): number | undefined {

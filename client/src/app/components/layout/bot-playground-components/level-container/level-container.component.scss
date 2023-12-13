@@ -1,0 +1,44 @@
+.level-container {
+    margin: 0;
+    padding: 0;
+    border-radius: 5px;
+
+    display: grid;
+    grid-template-columns: 55px 125px 1fr 1fr 1fr 1fr;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    padding-block: 5px;
+}
+
+.column.level {
+    border-radius: 5px;
+}
+
+.column.label {
+    align-items: flex-end;
+    margin-right: 10px;
+}
+
+.column p {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.column h1 {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}

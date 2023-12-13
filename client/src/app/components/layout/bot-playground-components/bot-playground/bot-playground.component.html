@@ -1,8 +1,8 @@
 <app-section class="game-simulation-section">
 
     <div class="game-simulation-title">
-        <h1 class="padded">{{getSelectedAI().getName()}}</h1>
-        <app-tooltip-indicator [tooltip]="getSelectedAI().getDescription()" />
+        <h1 class="padded">{{getSelectedAI().getName(botConfig.variant)}}</h1>
+        <app-tooltip-indicator [tooltip]="getSelectedAI().getDescription(botConfig.variant)" />
     </div>
 
     <app-tetris-panel>
@@ -41,7 +41,7 @@
         <app-tooltip-button
             [label]="!playing ? 'Start Playing' : 'Pause Game'"
             [color]="!playing ? '#50C346' : '#C34646'"
-            [tooltipText]="'Simulate a game from this position with ' + getSelectedAI().getName() + ' AI!'"
+            [tooltipText]="'Simulate a game from this position with ' + getSelectedAI().getName(botConfig.variant) + ' AI!'"
             (click)="!playing ? startGame() : stopGame()"/>
 
         <app-tetris-panel-item>
@@ -69,6 +69,12 @@
                     </select>
                 </div>
                 <div class="dropdown">
+                    <h2>Variant:</h2>
+                    <select [(ngModel)]="botConfig.variant" (ngModelChange)="onAITypeChange()">
+                        <option *ngFor="let variant of getSelectedAI().getVariants()" [ngValue]="variant">{{getSelectedAI().getVariantOptionString(variant)}}</option>
+                    </select>
+                </div>
+                <div class="dropdown">
                     <h2>Input Speed:</h2>
                     <select [(ngModel)]="botConfig.inputSpeed" (ngModelChange)="onAITypeChange()">
                         <option *ngFor="let speed of ALL_INPUT_SPEEDS" [ngValue]="speed">
@@ -92,6 +98,32 @@
 
     <app-section class="statistics-section">
         <h1 class="padded">Simulation Statistics</h1>
+        <div class="level-containers">
+            <app-level-container level="*" [r]="66"[g]="255" [b]="0"
+                [labels]="['Overall Score']"
+                [averages]="stats.score.getAverage() ? [stats.score.getAverage()!] : []"
+                [medians]="stats.score.getMedian() ? [stats.score.getMedian()!] : []"
+                [bests]="stats.score.getBest() ? [stats.score.getBest()!] : []"
+                [worsts]="stats.score.getWorst() ? [stats.score.getWorst()!] : []" />
+            <app-level-container level="18" [r]="0"[g]="90" [b]="255"
+                [labels]="['Subscore','Tetris rate','Right well open','Tetris ready']"
+                [averages]="aggregate(18, averageFunc)"
+                [medians]="aggregate(18, medianFunc)"
+                [bests]="aggregate(18, bestFunc)"
+                [worsts]="aggregate(18, worstFunc)" />
+            <app-level-container level="19" [r]="255"[g]="184" [b]="0"
+                [labels]="['Subscore','Tetris rate','Right well open','Tetris ready']"
+                [averages]="aggregate(19, averageFunc)"
+                [medians]="aggregate(19, medianFunc)"
+                [bests]="aggregate(19, bestFunc)"
+                [worsts]="aggregate(19, worstFunc)" />
+            <app-level-container level="29" [r]="255"[g]="0" [b]="0"
+                [labels]="['Subscore','Tetris rate','Right well open','Tetris ready']"
+                [averages]="aggregate(29, averageFunc)"
+                [medians]="aggregate(29, medianFunc)"
+                [bests]="aggregate(29, bestFunc)"
+                [worsts]="aggregate(29, worstFunc)" />
+        </div>
     </app-section>
 
 </div>

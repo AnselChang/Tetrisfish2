@@ -6,7 +6,9 @@ import { BotConfig } from 'client/src/app/ai/bot-config';
 import { RNG_MAP } from 'client/src/app/ai/piece-sequence-generation/all-rng';
 import { RandomRNG } from 'client/src/app/ai/piece-sequence-generation/random-rng';
 import { AISimulation } from 'client/src/app/ai/simulation/ai-simulation';
+import { AISimulationStats, StatLevel, StatsForLevel } from 'client/src/app/ai/simulation/ai-simulation-stats';
 import { SimulationState } from 'client/src/app/ai/simulation/simulation-state';
+import { Metric } from 'client/src/app/models/metric';
 import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
 import { ALL_INPUT_SPEEDS } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 
@@ -28,24 +30,41 @@ export class BotPlaygroundComponent {
   public botConfig = new BotConfig(); 
 
   simulation!: AISimulation;
+  stats!: AISimulationStats;
+
+  private loggedToppedOutGame: boolean = false;
 
   readonly ALL_ADAPTER_TYPES = ALL_ADAPTER_TYPES;
   readonly ALL_INPUT_SPEEDS = ALL_INPUT_SPEEDS;
   readonly ALL_START_LEVELS = [18, 19, 29];
+
+  readonly averageFunc = (m: Metric) => m.getAverage();
+  readonly medianFunc = (m: Metric) => m.getMedian();
+  readonly bestFunc = (m: Metric) => m.getBest();
+  readonly worstFunc = (m: Metric) => m.getWorst();
 
   constructor() {
     this.resetGame();
   }
 
   onAITypeChange() {
+
+    // if variant does not exist, set to first variant
+    if (!this.getSelectedAI().getVariants().includes(this.botConfig.variant)) {
+      this.botConfig.variant = this.getSelectedAI().getVariants()[0];
+    }
+
     this.resetGame();
   }
+
 
   resetGame() {
     this.stopGame();
     this.placementIndex = 0;
     const rng = RNG_MAP[this.botConfig.rngType];
-    this.simulation = new AISimulation(this.getSelectedAI(), rng, this.botConfig.startLevel, this.botConfig.inputSpeed, this.botConfig.reactionTimeFrames);
+    this.simulation = new AISimulation(this.getSelectedAI(), this.botConfig.variant, rng, this.botConfig.startLevel, this.botConfig.inputSpeed, this.botConfig.reactionTimeFrames);
+    this.stats = new AISimulationStats();
+    this.loggedToppedOutGame = false;
   }
 
   startGame() {
@@ -66,6 +85,11 @@ export class BotPlaygroundComponent {
     this.placementIndex = Math.max(0, this.placementIndex - 1);
   }
 
+  // add game stats
+  private onTopOutGame() {
+    this.stats
+  }
+
   // if the no new placements in cache, simulate new one
   async goToNextPlacement() {
 
@@ -75,6 +99,12 @@ export class BotPlaygroundComponent {
       const success = await this.simulation.simulateOnePlacement();
       if (!success) {
         this.stopGame();
+
+        if (!this.loggedToppedOutGame) {
+          this.onTopOutGame();
+          this.loggedToppedOutGame = true;
+        }
+
         return;
       }
     }
@@ -107,6 +137,20 @@ export class BotPlaygroundComponent {
     else {
       return this.simulation.getPlacementAtIndex(this.placementIndex - 1).getPlacement();
     }
+  }
+
+  aggregate(level: StatLevel, func: ((m: Metric) => number | undefined)): number[] | undefined {
+    const stats = this.stats.statsForLevel[level];
+
+    if (!stats.hasValues()) return undefined;
+
+    return [
+      func(stats.subscore)!,
+      func(stats.tetrisRate)!,
+      func(stats.rightWellOpen)!,
+      func(stats.tetrisReady)!,
+    ];
+
   }
 
   @HostListener('window:keydown', ['$event'])

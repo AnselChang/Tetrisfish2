@@ -16,6 +16,12 @@ export enum LeoModelTypes {
     LASSO_REGRESSION_NORM = "lasso_regression_norm",
 }
 
+export enum LeoTrainingSpeed {
+    SPEED_18 = "18",
+    SPEED_19 = "19",
+    SPEED_29 = "29",
+}
+
 abstract class LeoAIAdapter extends AbstractAIAdapter {
 
     constructor(
@@ -24,8 +30,24 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         super();
     }
 
+    override getVariants(): LeoTrainingSpeed[] {
+        return [LeoTrainingSpeed.SPEED_18, LeoTrainingSpeed.SPEED_19, LeoTrainingSpeed.SPEED_29];
+    }
+
+    override getVariantOptionString(variant: LeoTrainingSpeed): string {
+        switch (variant) {
+            case LeoTrainingSpeed.SPEED_18:
+                return "Trained on 18";
+            case LeoTrainingSpeed.SPEED_19:
+                return "Trained on 19";
+            case LeoTrainingSpeed.SPEED_29:
+                return "Trained on 29";
+        }
+    }
+
+
     // make a StackRabbit engine-movelist request to find the best move
-    async getBestMove(request: BestMoveRequest): Promise<BestMoveResponse | undefined> {
+    async getBestMove(variant: LeoTrainingSpeed, request: BestMoveRequest): Promise<BestMoveResponse | undefined> {
 
         // possiblePlacements are pairs of {firstPiecePlacement: MoveableTetromino, board: BinaryGrid}
         // where piece is the first piece placement
@@ -55,10 +77,13 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         console.log("Heights:", heights);
 
         const startTime = Date.now();
+
+        const modelTypeWithVariant = this.modelType + "_" + variant;
+
         // POST /multi-predict
         const {status, content} = await fetchServer(Method.POST, "/api/leo", {
             heights: heights,
-            model: this.modelType,
+            model: modelTypeWithVariant,
         });
         console.log("Leo AI took", Date.now() - startTime, "ms");
 
@@ -112,12 +137,12 @@ export class LeoLRAdapter extends LeoAIAdapter {
     constructor() {
         super(LeoModelTypes.LINEAR_REGRESSION);
     }
-    override getName() {
-        return "Leo (LR)"
+    override getName(variant: LeoTrainingSpeed) {
+        return `Leo (LR on ${variant})`
     }
 
-    override getDescription() {
-        return "Board surface evaluator using linear regression"
+    override getDescription(variant: LeoTrainingSpeed) {
+        return "Board surface evaluator using linear regression trained on level " + variant
     }
 }
 

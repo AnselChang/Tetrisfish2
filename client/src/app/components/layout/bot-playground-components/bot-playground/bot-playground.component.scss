@@ -39,7 +39,7 @@
 }
 
 .statistics-section {
-    flex-grow: 1;
+    // flex-grow: 1;
 }
 
 .level-lines {
@@ -111,4 +111,14 @@
 
 .dropdown h2 {
     text-wrap: nowrap;
+}
+
+.level-containers {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-inline: 10px;
+    margin-bottom: 5px;
 }

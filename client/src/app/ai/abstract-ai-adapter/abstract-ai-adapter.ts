@@ -6,11 +6,19 @@ import { BestMoveResponse } from "./best-move-response";
 
 export abstract class AbstractAIAdapter {
 
-    abstract getName(): string;
-    abstract getDescription(): string;
+    abstract getName(variant: string): string;
+    abstract getDescription(variant: string): string;
+
+    getVariants(): string[] {
+        return ["Default"];
+    }
+
+    getVariantOptionString(variant: string): string {
+        return variant;
+    }
 
     // given a request for a board position, return the best move according to that model
     // undefined if no possible moves
-    abstract getBestMove(request: BestMoveRequest): Promise<BestMoveResponse | undefined>;
+    abstract getBestMove(variant: string, request: BestMoveRequest): Promise<BestMoveResponse | undefined>;
 
 }

@@ -159,9 +159,9 @@ export class Game {
         placement.setPlacement(moveableTetronimo, numLineClears);
 
         // update game stats for placement
-        this.stats.onPiecePlacement(placement, numLineClears);
+        const statusBeforePlacement = this.status.copy();
         this.status.onLineClear(numLineClears);
-        this.calculateTransitionScores();
+        this.stats.onPiecePlacement(placement, numLineClears, statusBeforePlacement, this.status);
 
         // assign tags for previous placement based on this placement
         if (placement.index > 0) {
@@ -208,16 +208,6 @@ export class Game {
     public runFullAnalysis(placement: GamePlacement): void {
         this.runPositionAnalysis(placement);
         this.runPlacementAnalysis(placement);
-    }
-
-    // if any of the flagged transition levels have been reached, set the transition score
-    public calculateTransitionScores(): void {
-
-        for (let transition of this.stats.getTransitionScores()) {
-            if (this.status.level === transition.level && transition.score === undefined) {
-                transition.score = this.status.score;
-            }
-        }
     }
 
     public getCurrentScore(): number {
