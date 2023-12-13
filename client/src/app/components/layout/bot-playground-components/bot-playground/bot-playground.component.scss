@@ -122,3 +122,10 @@
     padding-inline: 10px;
     margin-bottom: 5px;
 }
+
+@media screen and (max-width: 900px) {
+    :host {
+        flex-direction: column;
+    }
+    
+}
