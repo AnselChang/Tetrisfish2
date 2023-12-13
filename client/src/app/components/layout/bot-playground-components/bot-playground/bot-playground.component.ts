@@ -32,7 +32,7 @@ export class BotPlaygroundComponent {
   simulation!: AISimulation;
   stats!: AISimulationStats;
 
-  private loggedToppedOutGame: boolean = false;
+  public isToppedOut: boolean = false;
 
   readonly ALL_ADAPTER_TYPES = ALL_ADAPTER_TYPES;
   readonly ALL_INPUT_SPEEDS = ALL_INPUT_SPEEDS;
@@ -64,10 +64,15 @@ export class BotPlaygroundComponent {
     this.placementIndex = 0;
     const rng = RNG_MAP[this.botConfig.rngType];
     this.simulation = new AISimulation(this.getSelectedAI(), this.botConfig.variant, rng, this.botConfig.startLevel, this.botConfig.inputSpeed, this.botConfig.reactionTimeFrames);
-    this.loggedToppedOutGame = false;
+    this.isToppedOut = false;
   }
 
-  startGame() {
+  startGame(restartGame: boolean = false) {
+
+    if (restartGame) {
+      this.resetGame();
+    }
+
     this.playing = true;
 
     // keep going to the next placement until game ends or stopGame() is called
@@ -94,6 +99,8 @@ export class BotPlaygroundComponent {
   // if the no new placements in cache, simulate new one
   async goToNextPlacement() {
 
+    if (!this.playing) return;
+
     if (this.simulation.isSimulating()) return;
 
     if (this.placementIndex === this.simulation.getNumPlacements()) {
@@ -101,15 +108,15 @@ export class BotPlaygroundComponent {
       if (!success) {
         this.stopGame();
 
-        if (!this.loggedToppedOutGame) {
+        if (!this.isToppedOut) {
           this.onTopOutGame();
-          this.loggedToppedOutGame = true;
+          this.isToppedOut = true;
         }
 
         return;
       }
     }
-    this.placementIndex++;
+    this.placementIndex = Math.min(this.placementIndex + 1, this.simulation.getNumPlacements());
   }
 
   // at placementIndex = 0, return the starting state

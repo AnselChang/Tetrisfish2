@@ -39,10 +39,10 @@
             (click)="resetGame()"/>
 
         <app-tooltip-button
-            [label]="!playing ? 'Start Playing' : 'Pause Game'"
+            [label]="!playing ? (isToppedOut ? 'Restart' : 'Start Playing') : 'Pause Game'"
             [color]="!playing ? '#50C346' : '#C34646'"
             [tooltipText]="'Simulate a game from this position with ' + getSelectedAI().getName(botConfig.variant) + ' AI!'"
-            (click)="!playing ? startGame() : stopGame()"/>
+            (click)="!playing ? startGame(isToppedOut) : stopGame()"/>
 
         <app-tetris-panel-item>
             <h2>Position #{{placementIndex}}</h2>
