@@ -1,5 +1,5 @@
 import { AbstractAIAdapter } from "../abstract-ai-adapter/abstract-ai-adapter";
-import { LeoDTAdapter, LeoDTNormAdapter, LeoLRAdapter, LeoLRNormAdapter, LeoLassoAdapter } from "./leo-ai-adapter";
+import { LeoDTAdapter, LeoDTNormAdapter, LeoLRAdapter, LeoLRNormAdapter, LeoLassoAdapter, LeoLassoNormAdapter } from "./leo-ai-adapter";
 import { StackRabbitAIAdapter } from "./stackrabbit-ai-adapter";
 
 export enum AIAdapterType {

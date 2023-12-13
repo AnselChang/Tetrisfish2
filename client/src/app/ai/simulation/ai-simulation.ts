@@ -1,6 +1,7 @@
 import BinaryGrid from "../../models/tetronimo-models/binary-grid";
 import { SmartGameStatus } from "../../models/tetronimo-models/smart-game-status";
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
+import { InputSpeed } from "../../scripts/evaluation/input-frame-timeline";
 import { AbstractAIAdapter } from "../abstract-ai-adapter/abstract-ai-adapter";
 import { RNG } from "../piece-sequence-generation/rng";
 import { SimulationPlacement } from "./simulation-placement";
@@ -19,6 +20,8 @@ export class AISimulation {
         public readonly ai: AbstractAIAdapter, // the AI model to use
         public readonly rng: RNG, // the piece sequence generation algorithm to use
         public readonly startLevel: number = 18,
+        public readonly inputSpeed: InputSpeed = InputSpeed.HZ_30,
+        public readonly reactionTimeFrames: number = 0,
     ) {
 
         const startingPiece = this.generateNextPiece();
@@ -67,7 +70,7 @@ export class AISimulation {
         const newPlacement = new SimulationPlacement(this.ai, lastState);
 
         // compute the placement
-        const success = await newPlacement.compute(nextPiece);
+        const success = await newPlacement.compute(nextPiece, this.inputSpeed, this.reactionTimeFrames);
 
         // topped out
         if (!success) {

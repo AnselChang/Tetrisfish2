@@ -45,7 +45,7 @@ export class BotPlaygroundComponent {
     this.stopGame();
     this.placementIndex = 0;
     const rng = RNG_MAP[this.botConfig.rngType];
-    this.simulation = new AISimulation(this.getSelectedAI(), rng, this.botConfig.startLevel);
+    this.simulation = new AISimulation(this.getSelectedAI(), rng, this.botConfig.startLevel, this.botConfig.inputSpeed, this.botConfig.reactionTimeFrames);
   }
 
   startGame() {
