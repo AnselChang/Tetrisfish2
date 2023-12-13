@@ -48,7 +48,8 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         const startTime = Date.now();
         // POST /multi-predict
         const {status, content} = await fetchServer(Method.POST, "/api/leo", {
-            heights: heights
+            heights: heights,
+            model: this.modelType,
         });
         console.log("Leo AI took", Date.now() - startTime, "ms");
 
@@ -67,7 +68,7 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         for (const placement of possiblePlacements) {
 
             // evaluate the board
-            const evaluation = evals[i][this.modelType];
+            const evaluation = evals[i];
             console.log("eval", evaluation, "for placement", placement.firstPiecePlacement.toString(), placement.secondPiecePlacement.toString());
             //placement.firstPiecePlacement.print();
             //placement.secondPiecePlacement.print();
