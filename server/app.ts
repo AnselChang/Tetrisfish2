@@ -125,7 +125,7 @@ export default async function createApp(): Promise<{
     
     app.get('/api/test-stackrabbit', testStackRabbitRoute);
 
-    app.post('api/leo', leoRoute);
+    app.post('/api/leo', leoRoute);
 
     app.get('/api/auth', authRoute);
     app.get('/api/auth/callback', authCallbackRoute);

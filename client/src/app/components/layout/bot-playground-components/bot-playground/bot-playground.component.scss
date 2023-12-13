@@ -9,6 +9,14 @@
     gap: 20px;
 }
 
+.game-simulation-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
 
 .board-editor {
     margin-top: 20px;
