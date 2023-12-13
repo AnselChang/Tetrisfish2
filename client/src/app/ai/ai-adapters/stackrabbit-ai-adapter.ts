@@ -50,10 +50,15 @@ export class StackRabbitAIAdapter extends AbstractAIAdapter {
         const status = new GameStatus(request.level ?? 18, request.lines ?? 0, request.score ?? 0);
         const standardParams = generateStandardParams(request.board, request.currentPieceType, status, request.inputSpeed);
         const movelistURL = new EngineMovelistURL(standardParams, request.nextPieceType, depth).getURL();
-        const response = await fetchStackRabbitURL(movelistURL);
-
-        return getBestMoveFromMovelistResponse(response, request.currentPieceType, request.nextPieceType);
-
+        
+        try {
+            const response = await fetchStackRabbitURL(movelistURL);
+            return getBestMoveFromMovelistResponse(response, request.currentPieceType, request.nextPieceType);
+        } catch (e) {
+            console.error(e);
+            return undefined;
+        }
+        
     }
 
 };

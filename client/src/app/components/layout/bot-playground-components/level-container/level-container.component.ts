@@ -11,10 +11,10 @@ export class LevelContainerComponent {
   @Input() b! : number;
   @Input() level!: number | string;
   @Input() labels!: (string)[];
+  @Input() currents?: (string | number)[];
   @Input() averages?: (string | number)[];
   @Input() medians?: (string | number)[];
   @Input() bests?: (string | number)[];
-  @Input() worsts?: (string | number)[];
 
   // opacity from 0 to 1
   getColor(opacity: number): string {

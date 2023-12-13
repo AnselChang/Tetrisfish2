@@ -28,8 +28,15 @@ export class AISimulationStats {
     [StatLevel.LEVEL_29]: new StatsForLevel(),
   };
 
+  private numGamesPlayed: number = 0;
+
+  public getNumGamesPlayed(): number {
+    return this.numGamesPlayed;
+  }
+
   public onGameEnd(finalScore: number, gameStats: GameStats) {
     this.score.push(finalScore);
+    this.numGamesPlayed++;
 
     for (const statLevel of ALL_STAT_LEVELS) {
 

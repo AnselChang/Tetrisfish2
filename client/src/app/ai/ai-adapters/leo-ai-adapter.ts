@@ -142,7 +142,7 @@ export class LeoLRAdapter extends LeoAIAdapter {
     }
 
     override getDescription(variant: LeoTrainingSpeed) {
-        return "Board surface evaluator using linear regression trained on level " + variant
+        return `Board surface evaluator using linear regression trained on level ${variant}`
     }
 }
 
@@ -150,12 +150,12 @@ export class LeoDTAdapter extends LeoAIAdapter {
     constructor() {
         super(LeoModelTypes.DECISION_TREE);
     }
-    override getName() {
-        return "Leo (DT)"
+    override getName(variant: LeoTrainingSpeed) {
+        return `Leo (DT on ${variant})`
     }
 
-    override getDescription() {
-        return "Board surface evaluator using decision tree"
+    override getDescription(variant: LeoTrainingSpeed) {
+        return `Board surface evaluator using decision tree trained on level ${variant}`
     }
 }
 
@@ -163,11 +163,11 @@ export class LeoLassoAdapter extends LeoAIAdapter {
     constructor() {
         super(LeoModelTypes.LASSO_REGRESSION);
     }
-    override getName() {
-        return "Leo (Lasso)"
+    override getName(variant: LeoTrainingSpeed) {
+        return `Leo (Lasso on ${variant})`
     }
 
-    override getDescription() {
-        return "Board surface evaluator using lasso regression"
+    override getDescription(variant: LeoTrainingSpeed) {
+        return `Board surface evaluator using lasso regression trained on level ${variant}`
     }
 }

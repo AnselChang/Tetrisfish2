@@ -32,17 +32,28 @@
             <app-next-box [showBackground]="false" [level]="18" [type]="getCurrentState().nextPieceType"></app-next-box>
         </app-tetris-panel-item>
 
-        <app-tooltip-button
-            label="Reset Game"
-            color="#C34646"
-            tooltipText="Discard current game and start a new one"
-            (click)="resetGame()"/>
+        <div class="buttons">
 
-        <app-tooltip-button
-            [label]="!playing ? (isToppedOut ? 'Restart' : 'Start Playing') : 'Pause Game'"
-            [color]="!playing ? '#50C346' : '#C34646'"
-            [tooltipText]="'Simulate a game from this position with ' + getSelectedAI().getName(botConfig.variant) + ' AI!'"
-            (click)="!playing ? startGame(isToppedOut) : stopGame()"/>
+            <app-tooltip-button class="reset-button"
+                label="Reset Game"
+                color="#C34646"
+                tooltipText="Discard current game and start a new one"
+                (click)="resetGame()"/>
+
+            <app-tooltip-button
+                [label]="!playing ? (isToppedOut ? 'Restart' : 'Start Playing') : 'Pause Game'"
+                [color]="!playing ? '#50C346' : '#C34646'"
+                [tooltipText]="'Simulate a game from this position with ' + getSelectedAI().getName(botConfig.variant) + ' AI!'"
+                (click)="!playing ? startGame(isToppedOut) : stopGame()"/>
+
+            <app-tooltip-button
+                [label]="!autoplay ? 'Enable Autoplay' : 'Stop Autoplay (' + autoplayLeft + ')'"
+                [color]="!autoplay ? '#E49334' : '#C34646'"
+                tooltipText="Continuously play out some specified number of games"
+                (click)="!autoplay ? startAutoplay() : stopAutoplay()"/>
+
+        </div>
+        
 
         <app-tetris-panel-item>
             <h2>Position #{{placementIndex}}</h2>
@@ -97,32 +108,32 @@
     </app-section>
 
     <app-section class="statistics-section">
-        <h1 class="padded">Simulation Statistics</h1>
+        <h1 class="padded">Statistics ({{stats.getNumGamesPlayed()}} games)</h1>
         <div class="level-containers">
             <app-level-container level="*" [r]="66"[g]="255" [b]="0"
                 [labels]="['Overall Score']"
+                [currents]="[simulation.getLastState().status.score]"
                 [averages]="stats.score.getAverage() ? [stats.score.getAverage()!.toFixed(0)] : []"
                 [medians]="stats.score.getMedian() ? [stats.score.getMedian()!] : []"
-                [bests]="stats.score.getBest() ? [stats.score.getBest()!] : []"
-                [worsts]="stats.score.getWorst() ? [stats.score.getWorst()!] : []" />
+                [bests]="stats.score.getBest() ? [stats.score.getBest()!] : []"/>
             <app-level-container level="18" [r]="0"[g]="90" [b]="255"
                 [labels]="['Subscore','Tetris rate','Right well open','Tetris ready']"
+                [currents]="aggregateCurrent(18)"
                 [averages]="aggregate(18, averageFunc)"
                 [medians]="aggregate(18, medianFunc)"
-                [bests]="aggregate(18, bestFunc)"
-                [worsts]="aggregate(18, worstFunc)" />
+                [bests]="aggregate(18, bestFunc)"/>
             <app-level-container level="19" [r]="255"[g]="184" [b]="0"
                 [labels]="['Subscore','Tetris rate','Right well open','Tetris ready']"
+                [currents]="aggregateCurrent(19)"
                 [averages]="aggregate(19, averageFunc)"
                 [medians]="aggregate(19, medianFunc)"
-                [bests]="aggregate(19, bestFunc)"
-                [worsts]="aggregate(19, worstFunc)" />
+                [bests]="aggregate(19, bestFunc)"/>
             <app-level-container level="29" [r]="255"[g]="0" [b]="0"
                 [labels]="['Subscore','Tetris rate','Right well open','Tetris ready']"
+                [currents]="aggregateCurrent(29)"
                 [averages]="aggregate(29, averageFunc)"
                 [medians]="aggregate(29, medianFunc)"
-                [bests]="aggregate(29, bestFunc)"
-                [worsts]="aggregate(29, worstFunc)" />
+                [bests]="aggregate(29, bestFunc)"/>
         </div>
     </app-section>
 

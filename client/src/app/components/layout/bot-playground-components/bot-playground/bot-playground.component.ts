@@ -23,6 +23,8 @@ export class BotPlaygroundComponent {
   // placementIndex+1 is simulation.placements[placementIndex].stateAfter
   public placementIndex: number = 0;
   public playing: boolean = false;
+  public autoplay: boolean = false;
+  public autoplayLeft: number = 0;
 
   private playingLoopID?: any;
 
@@ -53,6 +55,9 @@ export class BotPlaygroundComponent {
     if (!this.getSelectedAI().getVariants().includes(this.botConfig.variant)) {
       this.botConfig.variant = this.getSelectedAI().getVariants()[0];
     }
+
+    this.autoplay = false;
+    this.autoplayLeft = 0;
 
     this.resetGame();
     this.stats = new AISimulationStats();
@@ -86,6 +91,32 @@ export class BotPlaygroundComponent {
     clearInterval(this.playingLoopID);
   }
 
+  startAutoplay() {
+
+    const response = prompt("Autoplay will automatically play some number of games without needing you to restart games. How many games do you want to autoplay? (limit: 100)");
+    if (response === null) return;
+
+    const numGames = parseInt(response);
+    if (isNaN(numGames) || numGames < 1 || numGames > 100) {
+      alert("Invalid number of games");
+      return;
+    }
+
+    this.autoplay = true;
+    this.autoplayLeft = numGames;
+    if (!this.playing) {
+      if (this.isToppedOut) this.resetGame();
+      this.startGame();
+    }
+  }
+
+  stopAutoplay() {
+    this.autoplay = false;
+    if (this.playing) {
+      this.stopGame();
+    }
+  }
+
   goToPreviousPlacement() {
     this.placementIndex = Math.max(0, this.placementIndex - 1);
   }
@@ -99,8 +130,6 @@ export class BotPlaygroundComponent {
   // if the no new placements in cache, simulate new one
   async goToNextPlacement() {
 
-    if (!this.playing) return;
-
     if (this.simulation.isSimulating()) return;
 
     if (this.placementIndex === this.simulation.getNumPlacements()) {
@@ -111,6 +140,18 @@ export class BotPlaygroundComponent {
         if (!this.isToppedOut) {
           this.onTopOutGame();
           this.isToppedOut = true;
+
+          // handle autoplay
+          if (this.autoplay) {
+            if (this.autoplayLeft > 0) {
+              this.autoplayLeft--;
+              if (this.autoplayLeft === 0) this.autoplay = false;
+              this.startGame(true);
+            } else {
+              this.autoplay = false;
+            }
+          }
+
         }
 
         return;
@@ -145,6 +186,23 @@ export class BotPlaygroundComponent {
     else {
       return this.simulation.getPlacementAtIndex(this.placementIndex - 1).getPlacement();
     }
+  }
+
+  aggregateCurrent(level: StatLevel): string[] | undefined {
+
+    const subscore = this.simulation.stats.getSubscore(level);
+    if (subscore === undefined) return undefined;
+
+    const nums = [
+      subscore.getScore(),
+      subscore.lineClearStats.getTetrisRate(),
+      subscore.rightWellOpenStats.getRightWellOpen(subscore.getNumPositions()),
+      subscore.tetrisReadinessStats.getTetrisReadiness(subscore.getNumPositions()),
+    ];
+
+    // divide by 100, round to whole number and add % sign. except first element
+    return nums.map((n, i) => i === 0 ? n.toFixed(0) : (n! * 100).toFixed(0) + "%");
+
   }
 
   aggregate(level: StatLevel, func: ((m: Metric) => number | undefined)): string[] | undefined {

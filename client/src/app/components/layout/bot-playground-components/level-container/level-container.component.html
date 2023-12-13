@@ -5,17 +5,17 @@
     <div class="label column">
         <p *ngFor="let label of labels">{{label}}</p>
     </div>
-    <div class="average column" [style.backgroundColor]="getColor(0.15)">
+    <div class="current column" [style.backgroundColor]="getColor(0.15)">
+        <p *ngFor="let current of currents">{{current}}</p>
+    </div>
+    <div class="average column">
         <p *ngFor="let average of averages">{{average}}</p>
     </div>
-    <div class="median column" >
+    <div class="median column" [style.backgroundColor]="getColor(0.15)">
         <p *ngFor="let median of medians">{{median}}</p>
     </div>
-    <div class="best column" [style.backgroundColor]="getColor(0.15)">
+    <div class="best column">
         <p *ngFor="let best of bests">{{best}}</p>
-    </div>
-    <div class="worst column">
-        <p *ngFor="let worst of worsts">{{worst}}</p>
     </div>
 
 </div>
