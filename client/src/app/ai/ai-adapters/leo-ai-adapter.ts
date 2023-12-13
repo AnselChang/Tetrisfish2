@@ -43,6 +43,8 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
             heights.push(surfaceArray);
         }
 
+        console.log("Heights:", heights);
+
         const startTime = Date.now();
         // POST /multi-predict
         const {status, content} = await fetchServer(Method.POST, "/api/leo", {
@@ -61,14 +63,14 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         let bestFirstPlacement: MoveableTetromino | undefined = undefined;
         let bestSecondPlacement: MoveableTetromino | undefined = undefined;
         let i = 0;
+        console.log(evals);
         for (const placement of possiblePlacements) {
 
             // evaluate the board
             const evaluation = evals[i][this.modelType];
-
-            //console.log("eval", evaluation, "for placement", placement.firstPiecePlacement.toString(), placement.secondPiecePlacement.toString());
-            placement.firstPiecePlacement.print();
-            placement.secondPiecePlacement.print();
+            console.log("eval", evaluation, "for placement", placement.firstPiecePlacement.toString(), placement.secondPiecePlacement.toString());
+            //placement.firstPiecePlacement.print();
+            //placement.secondPiecePlacement.print();
 
             // update if its better than current best eval
             if (evaluation > bestEval) {
@@ -81,7 +83,14 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         }
 
         // if no placements found, return undefined
-        if (bestFirstPlacement === undefined || bestSecondPlacement === undefined) return undefined;
+        if (bestFirstPlacement === undefined || bestSecondPlacement === undefined) {
+            console.log("Error: no best placement found");
+            return undefined;
+        }
+
+        console.log("best eval", bestEval);
+        bestFirstPlacement.print();
+        bestSecondPlacement.print();
 
         // otherwise, find return the best first piece placement
         return new BestMoveResponse(bestFirstPlacement, bestSecondPlacement, bestEval);
