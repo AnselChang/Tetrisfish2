@@ -196,7 +196,6 @@ export class GameStats {
         for (let subscore of this.subscores) {
             if (statusBeforePlacement.level >= subscore.level) {
                 matchingSubscore = subscore;
-                break;
             }
         }
 

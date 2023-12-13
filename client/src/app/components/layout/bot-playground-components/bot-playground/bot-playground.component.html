@@ -108,7 +108,7 @@
     </app-section>
 
     <app-section class="statistics-section">
-        <h1 class="padded">Statistics ({{stats.getNumGamesPlayed()}} games)</h1>
+        <h1 class="padded">Statistics ({{stats.getNumGamesPlayed()}} {{stats.getNumGamesPlayed() === 1 ? 'game' : 'games'}})</h1>
         <div class="level-containers">
             <div class="statistics-label">
                 <div></div>
