@@ -28,7 +28,7 @@ export class Subscore {
     ) {}
 
     public onPlacement(placement: BasePlacement, linesBurned: number, statusBeforePlacement: IGameStatus, statusAfterPlacement: IGameStatus): void {
-        
+        console.log("subscore", statusBeforePlacement.level);
         const diff = statusAfterPlacement.score - statusBeforePlacement.score;
         const currentType = placement.getMTPlacement().tetrominoType;
         
@@ -190,8 +190,7 @@ export class GameStats {
     }
 
     private updateSubscores(placement: BasePlacement, linesBurned: number, statusBeforePlacement: IGameStatus, statusAfterPlacement: IGameStatus): void {
-        const diff = statusAfterPlacement.score - statusBeforePlacement.score;
-        if (diff === 0) return;
+
 
         let matchingSubscore: Subscore | undefined = undefined;
         for (let subscore of this.subscores) {

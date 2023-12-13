@@ -65,7 +65,7 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         });
         possiblePlacements = possiblePlacements.filter(placement => findForcedBurnLines(placement.board, true).length === minBurnedLines);
 
-        console.log("After pruning, there are " + possiblePlacements.length + " placements with " + minBurnedLines + " burned lines");
+        // console.log("After pruning, there are " + possiblePlacements.length + " placements with " + minBurnedLines + " burned lines");
 
         // get a list of all the heights of all the boards
         const heights = [];
@@ -74,7 +74,7 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
             heights.push(surfaceArray);
         }
 
-        console.log("Heights:", heights);
+        // console.log("Heights:", heights);
 
         const startTime = Date.now();
 
@@ -85,7 +85,7 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
             heights: heights,
             model: modelTypeWithVariant,
         });
-        console.log("Leo AI took", Date.now() - startTime, "ms");
+        // console.log("Leo AI took", Date.now() - startTime, "ms");
 
         if (status !== 200) {
             throw new Error("Could not evaluate position");
@@ -99,7 +99,7 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         let bestFirstPlacement: MoveableTetromino | undefined = undefined;
         let bestSecondPlacement: MoveableTetromino | undefined = undefined;
         let i = 0;
-        console.log("leo time elapsed", timeElapsed, "s");
+        // console.log("leo time elapsed", timeElapsed, "s");
         for (const placement of possiblePlacements) {
 
             // evaluate the board
@@ -124,9 +124,9 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
             return undefined;
         }
 
-        console.log("best eval", bestEval);
-        bestFirstPlacement.print();
-        bestSecondPlacement.print();
+        // console.log("best eval", bestEval);
+        // bestFirstPlacement.print();
+        // bestSecondPlacement.print();
 
         // otherwise, find return the best first piece placement
         return new BestMoveResponse(bestFirstPlacement, bestSecondPlacement, bestEval);

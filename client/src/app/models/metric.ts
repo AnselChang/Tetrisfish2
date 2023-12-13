@@ -9,7 +9,6 @@ export class Metric {
     public push(value: number) {
         if (this.best === undefined) {
             this.best = value;
-            return;
         }
 
         if (this.worst === undefined) {

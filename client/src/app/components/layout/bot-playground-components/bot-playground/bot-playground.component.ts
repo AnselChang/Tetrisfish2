@@ -44,7 +44,7 @@ export class BotPlaygroundComponent {
   readonly worstFunc = (m: Metric) => m.getWorst();
 
   constructor() {
-    this.resetGame();
+    this.onAITypeChange();
   }
 
   onAITypeChange() {
@@ -55,6 +55,7 @@ export class BotPlaygroundComponent {
     }
 
     this.resetGame();
+    this.stats = new AISimulationStats();
   }
 
 
@@ -63,7 +64,6 @@ export class BotPlaygroundComponent {
     this.placementIndex = 0;
     const rng = RNG_MAP[this.botConfig.rngType];
     this.simulation = new AISimulation(this.getSelectedAI(), this.botConfig.variant, rng, this.botConfig.startLevel, this.botConfig.inputSpeed, this.botConfig.reactionTimeFrames);
-    this.stats = new AISimulationStats();
     this.loggedToppedOutGame = false;
   }
 
@@ -87,7 +87,8 @@ export class BotPlaygroundComponent {
 
   // add game stats
   private onTopOutGame() {
-    this.stats
+    console.log("Game topped out");
+    this.stats.onGameEnd(this.simulation.getLastState().status.score, this.simulation.stats);
   }
 
   // if the no new placements in cache, simulate new one
@@ -139,17 +140,20 @@ export class BotPlaygroundComponent {
     }
   }
 
-  aggregate(level: StatLevel, func: ((m: Metric) => number | undefined)): number[] | undefined {
+  aggregate(level: StatLevel, func: ((m: Metric) => number | undefined)): string[] | undefined {
     const stats = this.stats.statsForLevel[level];
 
     if (!stats.hasValues()) return undefined;
 
-    return [
+    const nums = [
       func(stats.subscore)!,
       func(stats.tetrisRate)!,
       func(stats.rightWellOpen)!,
       func(stats.tetrisReady)!,
     ];
+
+    // divide by 100, round to whole number and add % sign. except first element
+    return nums.map((n, i) => i === 0 ? n.toFixed(0) : (n! * 100).toFixed(0) + "%");
 
   }
 

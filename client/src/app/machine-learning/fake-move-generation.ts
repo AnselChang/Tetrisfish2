@@ -90,8 +90,8 @@ export function depthTwoFakeMoveGeneration(
     }
 
     const endTime = Date.now();
-    console.log("Finished depth 2 fake move generation with " + result.length + " placements");
-    console.log("Time taken: " + (endTime - startTime) + "ms");
+    // console.log("Finished depth 2 fake move generation with " + result.length + " placements");
+    // console.log("Time taken: " + (endTime - startTime) + "ms");
 
     return result;
     

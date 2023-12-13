@@ -37,23 +37,25 @@ export class AISimulationStats {
         if (subscoreObj === undefined) return;
 
         const numPositions = subscoreObj.getNumPositions();
+        if (numPositions === 0) return;
 
         let subscore = subscoreObj.getScore();
         if (subscore === undefined) subscore = 0;
         this.statsForLevel[statLevel].subscore.push(subscore);
+        console.log("Push subscore", subscore, "for level", statLevel);
 
-        if (numPositions > 0) {
+        const tetrisRate = subscoreObj.lineClearStats.getTetrisRate();
+        console.log("Push tetris rate", tetrisRate, "for level", statLevel);
+        this.statsForLevel[statLevel].tetrisRate.push(tetrisRate);
 
-            const tetrisRate = subscoreObj.lineClearStats.getTetrisRate();
-            this.statsForLevel[statLevel].tetrisRate.push(tetrisRate);
+        const rightWellOpen = subscoreObj.rightWellOpenStats.getRightWellOpen(numPositions);
+        console.log("Push right well open", rightWellOpen, "for level", statLevel);
+        this.statsForLevel[statLevel].rightWellOpen.push(rightWellOpen);
 
-            const rightWellOpen = subscoreObj.rightWellOpenStats.getRightWellOpen(numPositions);
-            this.statsForLevel[statLevel].rightWellOpen.push(rightWellOpen);
+        const tetrisReady = subscoreObj.tetrisReadinessStats.getTetrisReadiness(numPositions);
+        console.log("Push tetris ready", tetrisReady, "for level", statLevel);
+        this.statsForLevel[statLevel].tetrisReady.push(tetrisReady);
 
-            const tetrisReady = subscoreObj.tetrisReadinessStats.getTetrisReadiness(numPositions);
-            this.statsForLevel[statLevel].tetrisReady.push(tetrisReady);
-
-        }
     }
   }
 

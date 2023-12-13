@@ -101,7 +101,7 @@
         <div class="level-containers">
             <app-level-container level="*" [r]="66"[g]="255" [b]="0"
                 [labels]="['Overall Score']"
-                [averages]="stats.score.getAverage() ? [stats.score.getAverage()!] : []"
+                [averages]="stats.score.getAverage() ? [stats.score.getAverage()!.toFixed(0)] : []"
                 [medians]="stats.score.getMedian() ? [stats.score.getMedian()!] : []"
                 [bests]="stats.score.getBest() ? [stats.score.getBest()!] : []"
                 [worsts]="stats.score.getWorst() ? [stats.score.getWorst()!] : []" />
