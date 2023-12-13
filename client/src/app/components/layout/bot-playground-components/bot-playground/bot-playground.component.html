@@ -1,12 +1,14 @@
-<div class="board-editor">
+<app-section class="game-simulation-section">
 
-    <h1 class="padded">Bot Playground</h1>
+    <h1 class="padded">Game Simulation</h1>
 
     <app-tetris-panel>
         <app-interactive-tetris-board
             [level]="getCurrentState().status.level"
             [grid]="getCurrentState().board"
-            [currentPiece]="getCurrentPlacement()?.currentPlacement"/>
+            [currentPiece]="getCurrentPlacement()?.currentPlacement"
+            [nextPiece]="playing ? undefined : getCurrentPlacement()?.nextPlacement"
+            />
 
         <app-tetris-panel-item>
             <h2>Score</h2>
@@ -28,9 +30,15 @@
         </app-tetris-panel-item>
 
         <app-tooltip-button
+            label="Reset Game"
+            color="#C34646"
+            tooltipText="Discard current game and start a new one"
+            (click)="resetGame()"/>
+
+        <app-tooltip-button
             [label]="!playing ? 'Start Playing' : 'Pause Game'"
             [color]="!playing ? '#50C346' : '#C34646'"
-            [tooltipText]="'Simulate a game from this position with ' + selectedAI.getName() + ' AI!'"
+            [tooltipText]="'Simulate a game from this position with ' + getSelectedAI().getName() + ' AI!'"
             (click)="!playing ? startGame() : stopGame()"/>
 
         <app-tetris-panel-item>
@@ -42,4 +50,48 @@
         </app-tetris-panel-item>
 
     </app-tetris-panel>
+</app-section>
+
+<div class="right-col">
+
+    <app-section class="bot-config-section">
+        <div class="bot-config-title">
+            <h1 class="padded">{{getSelectedAI().getName()}}</h1>
+            <app-tooltip-indicator [tooltip]="getSelectedAI().getDescription()" />
+        </div>
+        
+        <div class="bot-config-columns">
+            <div class="bot-config-column left">
+                <div class="dropdown">
+                    <h2>AI:</h2>
+                    <select [(ngModel)]="botConfig.aiType" (ngModelChange)="onAITypeChange()">
+                        <option *ngFor="let type of ALL_ADAPTER_TYPES" [ngValue]="type">{{type}}</option>
+                    </select>
+                </div>
+                <div class="dropdown">
+                    <h2>Input Speed:</h2>
+                    <select [(ngModel)]="botConfig.inputSpeed">
+                        <option *ngFor="let speed of ALL_INPUT_SPEEDS" [ngValue]="speed">
+                            {{speed}}hz
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="bot-config-column right">
+                <div class="dropdown">
+                    <h2>Start Level:</h2>
+                    <select [(ngModel)]="botConfig.startLevel">
+                        <option *ngFor="let startLevel of ALL_START_LEVELS" [ngValue]="startLevel">
+                            {{startLevel}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </app-section>
+
+    <app-section class="statistics-section">
+        <h1 class="padded">Simulation Statistics</h1>
+    </app-section>
+
 </div>

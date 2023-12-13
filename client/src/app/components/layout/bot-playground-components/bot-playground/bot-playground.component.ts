@@ -1,11 +1,14 @@
 import { Component, HostListener } from '@angular/core';
 import { AbstractAIAdapter } from 'client/src/app/ai/abstract-ai-adapter/abstract-ai-adapter';
 import { BestMoveResponse } from 'client/src/app/ai/abstract-ai-adapter/best-move-response';
-import { ALL_ADAPTERS } from 'client/src/app/ai/ai-adapters/all-adapters';
-import { RandomPieceSequenceGenerator } from 'client/src/app/ai/piece-sequence-generation/random-piece-sequence-generator';
+import { ADAPTER_MAP, ALL_ADAPTER_TYPES } from 'client/src/app/ai/ai-adapters/all-adapters';
+import { BotConfig } from 'client/src/app/ai/bot-config';
+import { RNG_MAP } from 'client/src/app/ai/piece-sequence-generation/all-rng';
+import { RandomRNG } from 'client/src/app/ai/piece-sequence-generation/random-rng';
 import { AISimulation } from 'client/src/app/ai/simulation/ai-simulation';
 import { SimulationState } from 'client/src/app/ai/simulation/simulation-state';
 import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
+import { ALL_INPUT_SPEEDS } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 
 @Component({
   selector: 'app-bot-playground',
@@ -14,8 +17,6 @@ import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino'
 })
 export class BotPlaygroundComponent {
 
-  public selectedAI: AbstractAIAdapter = ALL_ADAPTERS[0];
-
   // placementIndex is simulation.placements[placementIndex].stateBefore
   // placementIndex+1 is simulation.placements[placementIndex].stateAfter
   public placementIndex: number = 0;
@@ -23,10 +24,28 @@ export class BotPlaygroundComponent {
 
   private playingLoopID?: any;
 
-  readonly simulation: AISimulation;
+  // the settings of the current bot
+  public botConfig = new BotConfig(); 
+
+  simulation!: AISimulation;
+
+  readonly ALL_ADAPTER_TYPES = ALL_ADAPTER_TYPES;
+  readonly ALL_INPUT_SPEEDS = ALL_INPUT_SPEEDS;
+  readonly ALL_START_LEVELS = [18, 19, 29];
 
   constructor() {
-    this.simulation = new AISimulation(this.selectedAI, new RandomPieceSequenceGenerator(), 18);
+    this.resetGame();
+  }
+
+  onAITypeChange() {
+    this.resetGame();
+  }
+
+  resetGame() {
+    this.stopGame();
+    this.placementIndex = 0;
+    const rng = RNG_MAP[this.botConfig.rngType];
+    this.simulation = new AISimulation(this.getSelectedAI(), rng, this.botConfig.startLevel);
   }
 
   startGame() {
@@ -75,6 +94,10 @@ export class BotPlaygroundComponent {
       }
       return placement;
     }
+  }
+
+  getSelectedAI(): AbstractAIAdapter {
+    return ADAPTER_MAP[this.botConfig.aiType];
   }
 
   getCurrentPlacement(): BestMoveResponse | undefined {

@@ -6,6 +6,7 @@ import { fetchStackRabbitURL, getBestMoveFromMovelistResponse } from "../scripts
 import { InputSpeed } from "../scripts/evaluation/input-frame-timeline";
 import { EngineMovelistURL, EvalBoardURL, LookaheadDepth, generateStandardParams } from "../scripts/evaluation/stack-rabbit-api";
 import { Method, fetchServer } from "../scripts/fetch-server";
+import { getSurfaceArray } from "./board-surface";
 
 /*
 Given a board, and a current/next piece type, generate a labeled data point
@@ -90,22 +91,6 @@ export class MLPlacement {
         return true;
     }
 
-    private _calculateSurface(): number[] {
-
-        // calculate surface array by finding the height of each column
-        const surface: number[] = [];
-        for (let x = 0; x < 10; x++) {
-            let y = 0;
-            while (y < 20 && this.board.at(x, y) === BlockType.EMPTY) {
-                y++;
-            }
-            surface.push(20 - y);
-        }
-
-        return surface;
-
-    }
-
     // call this to evaluate the placement
     async runSRBestMove() {
 
@@ -132,7 +117,7 @@ export class MLPlacement {
 
         if (this.isBoardValidForML()) {
             this.dataPoint = {
-                surface: this._calculateSurface(),
+                surface: getSurfaceArray(this.board),
                 eval: rawEval,
             }
         }

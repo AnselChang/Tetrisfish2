@@ -33,14 +33,57 @@ export function fakeMoveGeneration(board: BinaryGrid, type: TetrominoType): Move
                 // not valid placement. keep dropping
                 row++;
             }
+
+            column++;
         }
-    }
-    
-    // debug: print all
-    for (const placement of validPlacements) {
-        console.log(placement.print());
-    }
+    }    
 
     return validPlacements;
 
+}
+
+// return [{piece: MoveableTetromino, board: BinaryGrid}] pairs for all possible placements of the current and next piece
+// MoveableTetromino is the placement of the first piece
+// BinaryGrid is the board state after the placement of BOTH the first and second pieces
+export function depthTwoFakeMoveGeneration(
+    board: BinaryGrid,
+    currentPieceType: TetrominoType,
+    nextPieceType: TetrominoType
+): {
+    firstPiecePlacement: MoveableTetromino,
+    secondPiecePlacement: MoveableTetromino,
+    board: BinaryGrid
+}[] {
+
+    const result: {firstPiecePlacement: MoveableTetromino, secondPiecePlacement: MoveableTetromino, board: BinaryGrid}[] = [];
+
+    // loop through each possible placement of the first piece
+    const firstPiecePlacements = fakeMoveGeneration(board, currentPieceType);
+    for (const firstPiecePlacement of firstPiecePlacements) {
+
+        // place the first piece on a copy of the board and process line clears
+        const boardAfterFirstPiece = board.copy();
+        firstPiecePlacement.blitToGrid(boardAfterFirstPiece);
+        boardAfterFirstPiece.processLineClears();
+
+        // generate and loop through each possible placement of the second piece for the board after the first piece
+        const secondPiecePlacements = fakeMoveGeneration(boardAfterFirstPiece, nextPieceType);
+        for (const secondPiecePlacement of secondPiecePlacements) {
+
+            // place the second piece on a copy of the board after the first piece
+            const boardAfterSecondPiece = boardAfterFirstPiece.copy();
+            secondPiecePlacement.blitToGrid(boardAfterSecondPiece);
+            boardAfterSecondPiece.processLineClears();
+
+            // add the result to the list
+            result.push({
+                firstPiecePlacement: firstPiecePlacement,
+                secondPiecePlacement: secondPiecePlacement,
+                board: boardAfterSecondPiece
+            });
+        }
+    }
+
+    return result;
+    
 }

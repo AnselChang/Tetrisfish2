@@ -1,10 +1,10 @@
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
-import { PieceSequenceGenerator } from "./piece-sequence-generator";
+import { RNG } from "./rng";
 
 /*
 The simplest possible RNG with 1/7 probability for each piece.
 */
-export  class RandomPieceSequenceGenerator extends PieceSequenceGenerator {
+export  class RandomRNG extends RNG {
     override getNextPiece(): TetrominoType {
         const rand = Math.random();
         if (rand < 1/7) {

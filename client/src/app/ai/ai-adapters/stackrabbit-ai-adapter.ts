@@ -11,6 +11,10 @@ export class StackRabbitAIAdapter extends AbstractAIAdapter {
         return "StackRabbit";
     }
 
+    getDescription(): string {
+        return "Depth 3 tree search AI with hand tuned evaluation by Greg Cannon"
+    }
+
     // make a StackRabbit engine-movelist request to find the best move
     async getBestMove(request: BestMoveRequest): Promise<BestMoveResponse | undefined> {
 

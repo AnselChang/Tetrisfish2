@@ -7,6 +7,7 @@ import { BestMoveResponse } from "./best-move-response";
 export abstract class AbstractAIAdapter {
 
     abstract getName(): string;
+    abstract getDescription(): string;
 
     // given a request for a board position, return the best move according to that model
     // undefined if no possible moves

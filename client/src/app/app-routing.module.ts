@@ -16,7 +16,7 @@ import { PlayPortalComponent } from './components/layout/play-portal/play-portal
 import { MultiplayerComponent } from './components/layout/multiplayer-components/multiplayer/multiplayer.component';
 import { MlDatasetComponent } from './components/layout/ml-dataset/ml-dataset.component';
 import { BotPlaygroundComponent } from './components/layout/bot-playground-components/bot-playground/bot-playground.component';
-import { DevelopmentTestbedComponent } from './components/development-testbed/development-testbed.component';
+import { DevelopmentTestbedComponent } from './components/layout/development-testbed/development-testbed.component';
 
 const routes: Routes = [
   // { path: 'login', component: LoginPageComponent},

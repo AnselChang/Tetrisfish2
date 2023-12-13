@@ -4,7 +4,7 @@ import BinaryGrid from "../../models/tetronimo-models/binary-grid";
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
 import { BestMoveRequest } from "../abstract-ai-adapter/best-move-request";
 import { BestMoveResponse } from "../abstract-ai-adapter/best-move-response";
-import { StackRabbitAIAdapter } from "../ai-adapters/stackrabbit-ai-adapter";
+import { StackRabbitAIAdapter } from "../ai-adapters/leo-ai-adapter";
 import { SimulationState } from "./simulation-state";
 
 // do all the computations to be able to simulate the piece falling and placement of the piece

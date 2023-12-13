@@ -3,7 +3,7 @@ Could be 1/7 randomness, NES randomness, set seed, etc. */
 
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
 
-export abstract class PieceSequenceGenerator {
+export abstract class RNG {
 
     abstract getNextPiece(): TetrominoType;
 

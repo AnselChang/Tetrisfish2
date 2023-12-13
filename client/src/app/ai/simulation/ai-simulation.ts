@@ -2,7 +2,7 @@ import BinaryGrid from "../../models/tetronimo-models/binary-grid";
 import { SmartGameStatus } from "../../models/tetronimo-models/smart-game-status";
 import { TetrominoType } from "../../models/tetronimo-models/tetromino";
 import { AbstractAIAdapter } from "../abstract-ai-adapter/abstract-ai-adapter";
-import { PieceSequenceGenerator } from "../piece-sequence-generation/piece-sequence-generator";
+import { RNG } from "../piece-sequence-generation/rng";
 import { SimulationPlacement } from "./simulation-placement";
 import { SimulationState } from "./simulation-state";
 
@@ -17,7 +17,7 @@ export class AISimulation {
 
     constructor(
         public readonly ai: AbstractAIAdapter, // the AI model to use
-        public readonly rng: PieceSequenceGenerator, // the piece sequence generation algorithm to use
+        public readonly rng: RNG, // the piece sequence generation algorithm to use
         public readonly startLevel: number = 18,
     ) {
 
