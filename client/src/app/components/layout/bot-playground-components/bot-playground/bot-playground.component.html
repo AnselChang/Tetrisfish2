@@ -70,7 +70,7 @@
                 </div>
                 <div class="dropdown">
                     <h2>Input Speed:</h2>
-                    <select [(ngModel)]="botConfig.inputSpeed">
+                    <select [(ngModel)]="botConfig.inputSpeed" (ngModelChange)="onAITypeChange()">
                         <option *ngFor="let speed of ALL_INPUT_SPEEDS" [ngValue]="speed">
                             {{speed}}hz
                         </option>
@@ -80,7 +80,7 @@
             <div class="bot-config-column right">
                 <div class="dropdown">
                     <h2>Start Level:</h2>
-                    <select [(ngModel)]="botConfig.startLevel">
+                    <select [(ngModel)]="botConfig.startLevel" (ngModelChange)="onAITypeChange()">
                         <option *ngFor="let startLevel of ALL_START_LEVELS" [ngValue]="startLevel">
                             {{startLevel}}
                         </option>

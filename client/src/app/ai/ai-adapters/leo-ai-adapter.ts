@@ -13,7 +13,6 @@ export enum LeoModelTypes {
     DECISION_TREE = "decision_tree",
     LASSO_REGRESSION = "lasso_regression",
     LINEAR_REGRESSION_NORM = "linear_regression_norm",
-    DECISION_TREE_NORM = "decision_tree_norm",
     LASSO_REGRESSION_NORM = "lasso_regression_norm",
 }
 
@@ -145,44 +144,5 @@ export class LeoLassoAdapter extends LeoAIAdapter {
 
     override getDescription() {
         return "Board surface evaluator using lasso regression"
-    }
-}
-
-export class LeoLRNormAdapter extends LeoAIAdapter {
-    constructor() {
-        super(LeoModelTypes.LINEAR_REGRESSION_NORM);
-    }
-    override getName() {
-        return "Leo (LR Norm)"
-    }
-
-    override getDescription() {
-        return "Board surface evaluator using linear regression (normalized)"
-    }
-}
-
-export class LeoDTNormAdapter extends LeoAIAdapter {
-    constructor() {
-        super(LeoModelTypes.DECISION_TREE_NORM);
-    }
-    override getName() {
-        return "Leo (DT Norm)"
-    }
-
-    override getDescription() {
-        return "Board surface evaluator using decision tree (normalized)"
-    }
-}
-
-export class LeoLassoNormAdapter extends LeoAIAdapter {
-    constructor() {
-        super(LeoModelTypes.LASSO_REGRESSION_NORM);
-    }
-    override getName() {
-        return "Leo (Lasso Norm)"
-    }
-
-    override getDescription() {
-        return "Board surface evaluator using lasso regression (normalized)"
     }
 }
