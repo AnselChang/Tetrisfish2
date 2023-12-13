@@ -24,21 +24,6 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         super();
     }
 
-    private async getLeoEval(board: BinaryGrid): Promise<number> {
-
-        const surfaceArray = getSurfaceArray(board);
-        const {status, content} = await fetchServer(Method.POST, "/api/leo", {
-            heights: surfaceArray
-        });
-
-        if (status !== 200) {
-            throw new Error("Could not evaluate position");
-        }
-
-        return content[this.modelType] as number;
-
-    }
-
     // make a StackRabbit engine-movelist request to find the best move
     async getBestMove(request: BestMoveRequest): Promise<BestMoveResponse | undefined> {
 
@@ -48,14 +33,42 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         // thus, there are multiple possible boards for each firstPiecePlacement
         const possiblePlacements = depthTwoFakeMoveGeneration(request.board, request.currentPieceType, request.nextPieceType);
 
+        // if no placements found, return undefined
+        if (possiblePlacements.length === 0) return undefined;
+
+        // get a list of all the heights of all the boards
+        const heights = [];
+        for (const placement of possiblePlacements) {
+            const surfaceArray = getSurfaceArray(placement.board);
+            heights.push(surfaceArray);
+        }
+
+        const startTime = Date.now();
+        // POST /multi-predict
+        const {status, content} = await fetchServer(Method.POST, "/api/leo", {
+            heights: heights
+        });
+        console.log("Leo AI took", Date.now() - startTime, "ms");
+
+        if (status !== 200) {
+            throw new Error("Could not evaluate position");
+        }
+
+        const evals = content["eval"] as any[];
+
         // find best firstPiecePlacement
         let bestEval = Number.NEGATIVE_INFINITY;
         let bestFirstPlacement: MoveableTetromino | undefined = undefined;
         let bestSecondPlacement: MoveableTetromino | undefined = undefined;
+        let i = 0;
         for (const placement of possiblePlacements) {
 
             // evaluate the board
-            const evaluation = await this.getLeoEval(placement.board);
+            const evaluation = evals[i][this.modelType];
+
+            //console.log("eval", evaluation, "for placement", placement.firstPiecePlacement.toString(), placement.secondPiecePlacement.toString());
+            placement.firstPiecePlacement.print();
+            placement.secondPiecePlacement.print();
 
             // update if its better than current best eval
             if (evaluation > bestEval) {
@@ -63,10 +76,12 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
                 bestFirstPlacement = placement.firstPiecePlacement;
                 bestSecondPlacement = placement.secondPiecePlacement;
             }
+
+            i++;
         }
 
         // if no placements found, return undefined
-        if (!bestFirstPlacement) return undefined;
+        if (bestFirstPlacement === undefined || bestSecondPlacement === undefined) return undefined;
 
         // otherwise, find return the best first piece placement
         return new BestMoveResponse(bestFirstPlacement, bestSecondPlacement, bestEval);

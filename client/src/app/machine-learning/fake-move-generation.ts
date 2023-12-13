@@ -55,6 +55,8 @@ export function depthTwoFakeMoveGeneration(
     board: BinaryGrid
 }[] {
 
+    const startTime = Date.now();
+
     const result: {firstPiecePlacement: MoveableTetromino, secondPiecePlacement: MoveableTetromino, board: BinaryGrid}[] = [];
 
     // loop through each possible placement of the first piece
@@ -83,6 +85,10 @@ export function depthTwoFakeMoveGeneration(
             });
         }
     }
+
+    const endTime = Date.now();
+    console.log("Finished depth 2 fake move generation with " + result.length + " placements");
+    console.log("Time taken: " + (endTime - startTime) + "ms");
 
     return result;
     
