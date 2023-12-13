@@ -132,7 +132,7 @@ export class BoardCreationPageComponent {
   public async onAnalysis() {
     this.cache.ml = new MLPlacement(this.cache.grid, this.cache.currentPieceType, this.cache.nextPieceType);
     await this.cache.ml.runSRBestMove();
-    await this.cache.ml.runSRRawEval();
+    await this.cache.ml.runSRRawEval(18);
   }
 
   public getRawSRResponse(): SRRawEvalResponse | undefined {

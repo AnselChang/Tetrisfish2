@@ -30,7 +30,11 @@ export class MlDatasetComponent implements OnInit {
   public annotatingPlacements: boolean = false;
   public finishedAnnotatingPlacements: boolean = false;
 
+  public annotationLevel: number = 18;
+
   public numAnnotated: number = 0;
+
+  readonly ALL_LEVELS = [18, 19, 29];
 
   constructor() { }
 
@@ -135,7 +139,7 @@ export class MlDatasetComponent implements OnInit {
       const BATCH_SIZE = 20;
       for (let i = 0; i < this.mlPlacements!.length; i += BATCH_SIZE) {
         const batch = this.mlPlacements!.slice(i, i + BATCH_SIZE);
-        const urls = batch.map(placement => placement.runSRRawEval());
+        const urls = batch.map(placement => placement.runSRRawEval(this.annotationLevel));
         const responses = await Promise.all(urls);
 
         for (let j = 0; j < batch.length; j++) {

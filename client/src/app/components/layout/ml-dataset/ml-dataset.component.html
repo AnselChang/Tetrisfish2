@@ -47,6 +47,13 @@
         be exported as labelled_placements.csv!
     </p>
 
+    <div class="dropdown">
+        <h2>Game level fed to StackRabbit to evaluate boards:</h2>
+        <select [(ngModel)]="annotationLevel" [disabled]="annotatingPlacements">
+            <option *ngFor="let level of ALL_LEVELS" [ngValue]="level">Level {{level}}</option>
+        </select>
+    </div>
+
     <div class="button-container">
         <app-button-big [label]="finishedAnnotatingPlacements ? 'Dataset Downloaded!' :annotatingPlacements ? 'Annotating Placements...' : 'Annotate Placements'" [buttonDisabled]="annotatingPlacements" (click)="annotatePlacements()"/>
     </div>

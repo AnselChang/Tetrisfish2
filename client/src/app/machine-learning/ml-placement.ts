@@ -44,9 +44,9 @@ export class MLPlacement {
         this.isValidForML = this._isValidForML();
     }
 
-    private generateEvalURL(): string {
+    private generateEvalURL(level: number): string {
         
-        const status = new GameStatus(18, 0, 0);
+        const status = new GameStatus(level, 0, 0);
         const params = generateStandardParams(this.board, undefined, status, InputSpeed.HZ_30);
         return new EvalBoardURL(params).getURL();
     }
@@ -100,9 +100,9 @@ export class MLPlacement {
         this.bestMoveResponse = getBestMoveFromMovelistResponse(response, this.firstPieceType, this.secondPieceType);
     }
 
-    async runSRRawEval() {
+    async runSRRawEval(level: number) {
             
-        const url = this.generateEvalURL();
+        const url = this.generateEvalURL(level);
         console.log("eval url", url);
         const {status, content} = await fetchServer(Method.GET, "/api/stackrabbit-wrapped",
             {"url": url}
