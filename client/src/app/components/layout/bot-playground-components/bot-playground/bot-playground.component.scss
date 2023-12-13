@@ -129,6 +129,22 @@
     gap: 5px;
 }
 
+.statistics-label {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 55px 125px 1fr 1fr 1fr 1fr;
+}
+
+.statistics-label p {
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
 @media screen and (max-width: 900px) {
     :host {
         flex-direction: column;

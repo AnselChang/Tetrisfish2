@@ -110,6 +110,15 @@
     <app-section class="statistics-section">
         <h1 class="padded">Statistics ({{stats.getNumGamesPlayed()}} games)</h1>
         <div class="level-containers">
+            <div class="statistics-label">
+                <div></div>
+                <div></div>
+                <div class="label"><p>Current</p></div>
+                <div class="label"><p>Average</p></div>
+                <div class="label"><p>Median</p></div>
+                <div class="label"><p>Best</p></div>
+                
+            </div>
             <app-level-container level="*" [r]="66"[g]="255" [b]="0"
                 [labels]="['Overall Score']"
                 [currents]="[simulation.getLastState().status.score]"
