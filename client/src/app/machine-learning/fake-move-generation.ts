@@ -24,6 +24,9 @@ export function fakeMoveGeneration(board: BinaryGrid, type: TetrominoType): Move
                 // not in bounds. break
                 if (!mt.isInBounds()) break;
 
+                // intersects grid. break
+                if (mt.intersectsGrid(board)) break;
+
                 // valid placement. add to list then break
                 if (mt.isValidPlacement(board)) {
                     validPlacements.push(mt);

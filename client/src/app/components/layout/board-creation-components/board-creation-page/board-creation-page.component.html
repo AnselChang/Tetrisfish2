@@ -30,6 +30,7 @@
             <app-next-box [showBackground]="false" [level]="18" [type]="cache.nextPieceType"></app-next-box>
         </app-tetris-panel-item>
 
+        <p class="burned-lines">Burned rows: {{burnRows}}</p>
         <p class="is-valid">Include in training data: {{isBoardValidForML() ? 'Yes' : 'No'}}</p>
         <p *ngIf="getEngineResponse() as r" class="sr-placement-evaluation">SR placement eval: {{r.evaluation}}</p>
         <p *ngIf="getRawSRResponse() as r" class="sr-raw-evaluation">SR raw board eval: {{r.rawEvaluation}}</p>

@@ -1,5 +1,6 @@
 import { getSurfaceArray } from "../../machine-learning/board-surface";
 import { depthTwoFakeMoveGeneration } from "../../machine-learning/fake-move-generation";
+import { findForcedBurnLines } from "../../machine-learning/find-forced-burn-rows";
 import MoveableTetromino from "../../models/game-models/moveable-tetromino";
 import BinaryGrid from "../../models/tetronimo-models/binary-grid";
 import { Method, fetchServer } from "../../scripts/fetch-server";
@@ -31,10 +32,19 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         // where piece is the first piece placement
         // and board is the resulting board after BOTH pieces are placed
         // thus, there are multiple possible boards for each firstPiecePlacement
-        const possiblePlacements = depthTwoFakeMoveGeneration(request.board, request.currentPieceType, request.nextPieceType);
+        let possiblePlacements = depthTwoFakeMoveGeneration(request.board, request.currentPieceType, request.nextPieceType);
 
         // if no placements found, return undefined
         if (possiblePlacements.length === 0) return undefined;
+
+        // prune placements that do not have the minimum burned lines
+        let minBurnedLines = 20;
+        possiblePlacements.forEach(placement => {
+            minBurnedLines = Math.min(minBurnedLines, findForcedBurnLines(placement.board, true).length);
+        });
+        possiblePlacements = possiblePlacements.filter(placement => findForcedBurnLines(placement.board, true).length === minBurnedLines);
+
+        console.log("After pruning, there are " + possiblePlacements.length + " placements with " + minBurnedLines + " burned lines");
 
         // get a list of all the heights of all the boards
         const heights = [];
@@ -58,18 +68,19 @@ abstract class LeoAIAdapter extends AbstractAIAdapter {
         }
 
         const evals = content["eval"] as any[];
+        const timeElapsed = content["time_elapsed"] as number;
 
         // find best firstPiecePlacement
         let bestEval = Number.NEGATIVE_INFINITY;
         let bestFirstPlacement: MoveableTetromino | undefined = undefined;
         let bestSecondPlacement: MoveableTetromino | undefined = undefined;
         let i = 0;
-        console.log(evals);
+        console.log("leo time elapsed", timeElapsed, "s");
         for (const placement of possiblePlacements) {
 
             // evaluate the board
             const evaluation = evals[i];
-            console.log("eval", evaluation, "for placement", placement.firstPiecePlacement.toString(), placement.secondPiecePlacement.toString());
+            // console.log("eval", evaluation, "for placement", placement.firstPiecePlacement.toString(), placement.secondPiecePlacement.toString());
             //placement.firstPiecePlacement.print();
             //placement.secondPiecePlacement.print();
 

@@ -10,6 +10,7 @@ import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino'
 import { MLPlacement, SRRawEvalResponse, MLDataPoint } from 'client/src/app/machine-learning/ml-placement';
 import MoveableTetromino from 'client/src/app/models/game-models/moveable-tetromino';
 import { BestMoveResponse } from 'client/src/app/ai/abstract-ai-adapter/best-move-response';
+import { findForcedBurnLines } from 'client/src/app/machine-learning/find-forced-burn-rows';
 
 @Component({
   selector: 'app-board-creation-page',
@@ -27,9 +28,15 @@ export class BoardCreationPageComponent {
   private hoveringOverBoard: boolean = false;
   private mouseUpListener: Function | null = null;
 
+  public burnRows: number[] = [];
+
 
   constructor(private renderer: Renderer2, public cache: BoardCreationCacheService
     ) {}
+
+  private onBoardChange() {
+    this.burnRows = findForcedBurnLines(this.cache.grid);
+  }
   
   public onBlockHover(block: BlockData) {
 
@@ -51,6 +58,8 @@ export class BoardCreationPageComponent {
           this.cache.grid.setAt(x, y, this.fillType);
         }
       }
+
+      this.onBoardChange();
     }
   }
 
@@ -67,6 +76,8 @@ export class BoardCreationPageComponent {
     this.cache.grid.setAt(block.x, block.y, this.fillType);
     this.mouseDown = true;
 
+    this.onBoardChange();
+
     // listen for mouse up globally
     this.mouseUpListener = this.renderer.listen('document', 'mouseup', this.onGlobalMouseUp.bind(this));
 
@@ -77,6 +88,7 @@ export class BoardCreationPageComponent {
 
     if (!this.hoveringOverBoard) {
       this.cache.grid = this.oldGrid!;
+      this.onBoardChange();
     }
 
     // remove listener
