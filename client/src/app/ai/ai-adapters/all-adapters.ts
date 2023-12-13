@@ -1,5 +1,5 @@
 import { AbstractAIAdapter } from "../abstract-ai-adapter/abstract-ai-adapter";
-import { LeoLRAdapter } from "./leo-ai-adapter";
+import { LeoDTAdapter, LeoDTNormAdapter, LeoLRAdapter, LeoLRNormAdapter, LeoLassoAdapter } from "./leo-ai-adapter";
 import { StackRabbitAIAdapter } from "./stackrabbit-ai-adapter";
 
 export enum AIAdapterType {
@@ -25,9 +25,9 @@ export const ALL_ADAPTER_TYPES: AIAdapterType[] = [
 export const ADAPTER_MAP: { [type in AIAdapterType]: AbstractAIAdapter } = {
     [AIAdapterType.STACK_RABBIT]: new StackRabbitAIAdapter(),
     [AIAdapterType.LEO_LR]: new LeoLRAdapter(),
-    [AIAdapterType.LEO_DT]: new LeoLRAdapter(),
-    [AIAdapterType.LEO_LASSO]: new LeoLRAdapter(),
-    [AIAdapterType.LEO_LR_NORM]: new LeoLRAdapter(),
-    [AIAdapterType.LEO_DT_NORM]: new LeoLRAdapter(),
-    [AIAdapterType.LEO_LASSO_NORM]: new LeoLRAdapter(),
+    [AIAdapterType.LEO_DT]: new LeoDTAdapter(),
+    [AIAdapterType.LEO_LASSO]: new LeoLassoAdapter(),
+    [AIAdapterType.LEO_LR_NORM]: new LeoLRNormAdapter(),
+    [AIAdapterType.LEO_DT_NORM]: new LeoDTNormAdapter(),
+    [AIAdapterType.LEO_LASSO_NORM]: new LeoLassoNormAdapter(),
 };
