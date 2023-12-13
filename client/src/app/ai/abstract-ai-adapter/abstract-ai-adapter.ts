@@ -6,6 +6,7 @@ import { BestMoveResponse } from "./best-move-response";
 
 export abstract class AbstractAIAdapter {
 
+    abstract getGenericName(): string;
     abstract getName(variant: string): string;
     abstract getDescription(variant: string): string;
 

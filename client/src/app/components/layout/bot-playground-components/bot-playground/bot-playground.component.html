@@ -76,7 +76,7 @@
                 <div class="dropdown">
                     <h2>AI:</h2>
                     <select [(ngModel)]="botConfig.aiType" (ngModelChange)="onAITypeChange()">
-                        <option *ngFor="let type of ALL_ADAPTER_TYPES" [ngValue]="type">{{type}}</option>
+                        <option *ngFor="let type of ALL_ADAPTER_TYPES" [ngValue]="type">{{adapterTypeToString(type)}}</option>
                     </select>
                 </div>
                 <div class="dropdown">

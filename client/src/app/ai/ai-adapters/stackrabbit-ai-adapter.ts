@@ -12,6 +12,10 @@ export enum StackRabbitVariant {
 
 export class StackRabbitAIAdapter extends AbstractAIAdapter {
 
+    override getGenericName(): string {
+        return "StackRabbit";
+    }
+
     getName(variant: StackRabbitVariant): string {
         return `StackRabbit (${variant})`;
     }

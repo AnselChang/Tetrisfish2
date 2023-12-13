@@ -137,6 +137,11 @@ export class LeoLRAdapter extends LeoAIAdapter {
     constructor() {
         super(LeoModelTypes.LINEAR_REGRESSION);
     }
+
+    override getGenericName(): string {
+        return "Leo (LR)";
+    }
+
     override getName(variant: LeoTrainingSpeed) {
         return `Leo (LR on ${variant})`
     }
@@ -150,6 +155,11 @@ export class LeoDTAdapter extends LeoAIAdapter {
     constructor() {
         super(LeoModelTypes.DECISION_TREE);
     }
+
+    override getGenericName(): string {
+        return "Leo (DT)";
+    }
+
     override getName(variant: LeoTrainingSpeed) {
         return `Leo (DT on ${variant})`
     }
@@ -163,6 +173,11 @@ export class LeoLassoAdapter extends LeoAIAdapter {
     constructor() {
         super(LeoModelTypes.LASSO_REGRESSION);
     }
+
+    override getGenericName(): string {
+        return "Leo (Lasso)";
+    }
+
     override getName(variant: LeoTrainingSpeed) {
         return `Leo (Lasso on ${variant})`
     }

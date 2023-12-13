@@ -1,16 +1,18 @@
 import { Component, HostListener } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AbstractAIAdapter } from 'client/src/app/ai/abstract-ai-adapter/abstract-ai-adapter';
 import { BestMoveResponse } from 'client/src/app/ai/abstract-ai-adapter/best-move-response';
-import { ADAPTER_MAP, ALL_ADAPTER_TYPES } from 'client/src/app/ai/ai-adapters/all-adapters';
-import { BotConfig } from 'client/src/app/ai/bot-config';
-import { RNG_MAP } from 'client/src/app/ai/piece-sequence-generation/all-rng';
+import { ADAPTER_MAP, AIAdapterType, ALL_ADAPTER_TYPES } from 'client/src/app/ai/ai-adapters/all-adapters';
+import { BotConfig, Linecap } from 'client/src/app/ai/bot-config';
+import { RNGType, RNG_MAP } from 'client/src/app/ai/piece-sequence-generation/all-rng';
 import { RandomRNG } from 'client/src/app/ai/piece-sequence-generation/random-rng';
 import { AISimulation } from 'client/src/app/ai/simulation/ai-simulation';
 import { AISimulationStats, StatLevel, StatsForLevel } from 'client/src/app/ai/simulation/ai-simulation-stats';
 import { SimulationState } from 'client/src/app/ai/simulation/simulation-state';
 import { Metric } from 'client/src/app/models/metric';
 import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
-import { ALL_INPUT_SPEEDS } from 'client/src/app/scripts/evaluation/input-frame-timeline';
+import { convertToEnum } from 'client/src/app/scripts/convert-to-enum';
+import { ALL_INPUT_SPEEDS, InputSpeed } from 'client/src/app/scripts/evaluation/input-frame-timeline';
 
 @Component({
   selector: 'app-bot-playground',
@@ -45,7 +47,27 @@ export class BotPlaygroundComponent {
   readonly bestFunc = (m: Metric) => m.getBest();
   readonly worstFunc = (m: Metric) => m.getWorst();
 
-  constructor() {
+  adapterTypeToString(type: AIAdapterType): string {
+    return ADAPTER_MAP[type].getGenericName();
+  }
+
+  constructor(private route: ActivatedRoute) {
+    
+    // sanitize and update botConfig from URL
+    this.route.queryParams.subscribe(params => {
+      this.botConfig.aiType = convertToEnum(AIAdapterType, params['ai'], ALL_ADAPTER_TYPES[0]) as AIAdapterType;
+      this.botConfig.variant = params['variant']; // will be sanitized by onAITypeChange()
+      this.botConfig.inputSpeed = convertToEnum(InputSpeed, parseInt(params['hz']), InputSpeed.HZ_30) as InputSpeed;
+      
+      const level = parseInt(params['level']);
+      this.botConfig.startLevel = [18, 19, 29].includes(level) ? level : 18;
+
+      this.botConfig.rngType = convertToEnum(RNGType, params['rng'], RNGType.RANDOM) as RNGType;
+      this.botConfig.reactionTimeFrames = parseInt(params['reaction']) || 0;
+      this.botConfig.linecap = convertToEnum(Linecap, parseInt(params['linecap']), Linecap.NOCAP) as Linecap;
+      this.botConfig.misdropRate = parseFloat(params['misdrop']) || 0;
+    });
+
     this.onAITypeChange();
   }
 
@@ -56,7 +78,7 @@ export class BotPlaygroundComponent {
       this.botConfig.variant = this.getSelectedAI().getVariants()[0];
     }
 
-    // update URL that encodes botConfig settings
+  // update URL that encodes botConfig settings
     const params = new URLSearchParams();
     params.set("ai", this.botConfig.aiType);
     params.set("variant", this.botConfig.variant);

@@ -4,9 +4,9 @@ import { StackRabbitAIAdapter } from "./stackrabbit-ai-adapter";
 
 export enum AIAdapterType {
     STACK_RABBIT = "StackRabbit",
-    LEO_LR = "Leo (LR)",
-    LEO_DT = "Leo (DT)",
-    LEO_LASSO = "Leo (Lasso)",
+    LEO_LR = "Leo_LR",
+    LEO_DT = "Leo_DT",
+    LEO_LASSO = "Leo_Lasso",
 }
 
 export const ALL_ADAPTER_TYPES: AIAdapterType[] = [
