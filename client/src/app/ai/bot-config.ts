@@ -14,7 +14,7 @@ export class BotConfig {
     public reactionTimeFrames: number = 0;
 
     public startLevel: number = 18;
-    public linecap?: number = undefined;
+    public linecap: number = 0; // means no linecap
     public rngType: RNGType = ALL_RNG_TYPES[0];
     public misdropRate: number = 0; // 0-1 indicating the probability of a misdrop
 

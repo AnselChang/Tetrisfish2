@@ -2,7 +2,7 @@
     <div class="level column" [style.backgroundColor]="getColor(0.8)">
         <h1>{{level}}</h1>
     </div>
-    <div class="label column">
+    <div class="label column" [style.backgroundColor]="getColor(0.4)">
         <p *ngFor="let label of labels">{{label}}</p>
     </div>
     <div class="current column" [style.backgroundColor]="getColor(0.15)">

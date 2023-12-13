@@ -56,6 +56,19 @@ export class BotPlaygroundComponent {
       this.botConfig.variant = this.getSelectedAI().getVariants()[0];
     }
 
+    // update URL that encodes botConfig settings
+    const params = new URLSearchParams();
+    params.set("ai", this.botConfig.aiType);
+    params.set("variant", this.botConfig.variant);
+    params.set("hz", this.botConfig.inputSpeed.toString());
+    params.set("level", this.botConfig.startLevel.toString());
+    params.set("rng", this.botConfig.rngType);
+    params.set("reaction", this.botConfig.reactionTimeFrames.toString());
+    params.set("linecap", this.botConfig.linecap.toString());
+    params.set("misdrop", this.botConfig.misdropRate.toString());
+
+    window.history.replaceState({}, "", `/bot-playground?${params.toString()}`);
+
     this.autoplay = false;
     this.autoplayLeft = 0;
 
