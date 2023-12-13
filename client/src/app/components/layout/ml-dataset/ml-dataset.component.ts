@@ -153,7 +153,7 @@ export class MlDatasetComponent implements OnInit {
       }
 
       // now we have all the data points, export as csv
-      exportToCSV(csvRows, "labelled_placements.csv");
+      exportToCSV(csvRows, `labelled_placements_level${this.annotationLevel}.csv`);
       this.finishedAnnotatingPlacements = true;
 
     });
