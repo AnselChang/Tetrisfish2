@@ -144,8 +144,8 @@
     filter: brightness(0.7);
 }
 
-.export-button:disabled {
-    filter: brightness(0.2);
+.export-button.disabled {
+    filter: brightness(0.4);
 }
 
 .statistics-label {
