@@ -74,7 +74,7 @@
         <div class="bot-config-columns">
             <div class="bot-config-column left">
                 <div class="dropdown">
-                    <h2>AI:</h2>
+                    <h2>AI Model:</h2>
                     <select [(ngModel)]="botConfig.aiType" (ngModelChange)="onAITypeChange()">
                         <option *ngFor="let type of ALL_ADAPTER_TYPES" [ngValue]="type">{{adapterTypeToString(type)}}</option>
                     </select>
@@ -108,7 +108,13 @@
     </app-section>
 
     <app-section class="statistics-section">
-        <h1 class="padded">Statistics ({{stats.getNumGamesPlayed()}} {{stats.getNumGamesPlayed() === 1 ? 'game' : 'games'}})</h1>
+        <div class="statistics-header">
+            <h1 class="padded">Statistics ({{stats.getNumGamesPlayed()}} {{stats.getNumGamesPlayed() === 1 ? 'game' : 'games'}})</h1>
+            <img src="./assets/img/export_csv.svg" width="30px" class="export-button"
+                [ngClass]="{'disabled': stats.getNumGamesPlayed() === 0}"
+                [tooltip]="stats.getNumGamesPlayed() === 0 ? 'Play a game first!' : ('Export statistics for ' + stats.getNumGamesPlayed() + ' games as csv')" 
+                (click)="exportStatisticsAsCSV()"/>
+        </div>
         <div class="level-containers">
             <div class="statistics-label">
                 <div></div>

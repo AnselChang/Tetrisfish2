@@ -128,6 +128,26 @@
     flex-direction: column;
 }
 
+.statistics-header {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.export-button:hover {
+    filter: brightness(0.8);
+}
+
+.export-button:active {
+    filter: brightness(0.7);
+}
+
+.export-button:disabled {
+    filter: brightness(0.2);
+}
+
 .statistics-label {
     margin: 0;
     padding: 0;

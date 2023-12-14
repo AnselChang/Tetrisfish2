@@ -13,6 +13,7 @@ import { Metric } from 'client/src/app/models/metric';
 import { TetrominoType } from 'client/src/app/models/tetronimo-models/tetromino';
 import { convertToEnum } from 'client/src/app/scripts/convert-to-enum';
 import { ALL_INPUT_SPEEDS, InputSpeed } from 'client/src/app/scripts/evaluation/input-frame-timeline';
+import { exportToCSV } from '../../ml-dataset/csv';
 
 @Component({
   selector: 'app-bot-playground',
@@ -255,6 +256,15 @@ export class BotPlaygroundComponent {
     // divide by 100, round to whole number and add % sign. except first element
     return nums.map((n, i) => i === 0 ? n.toFixed(0) : (n! * 100).toFixed(0) + "%");
 
+  }
+
+  exportStatisticsAsCSV() {
+
+    // if no games played, do nothing
+    if (this.stats.getNumGamesPlayed() === 0) return;
+
+    const csvData = this.stats.getCSVStats();
+    exportToCSV(csvData, `simulation_statistics_${this.botConfig.aiType}_${this.botConfig.variant}_${this.stats.getNumGamesPlayed()}_games.csv`);
   }
 
   @HostListener('window:keydown', ['$event'])

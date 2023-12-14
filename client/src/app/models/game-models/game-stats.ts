@@ -28,7 +28,6 @@ export class Subscore {
     ) {}
 
     public onPlacement(placement: BasePlacement, linesBurned: number, statusBeforePlacement: IGameStatus, statusAfterPlacement: IGameStatus): void {
-        console.log("subscore", statusBeforePlacement.level);
         const diff = statusAfterPlacement.score - statusBeforePlacement.score;
         const currentType = placement.getMTPlacement().tetrominoType;
         

@@ -4,9 +4,17 @@ export class Metric {
     private worst?: number;
 
     private sum = 0;
-    private values: number[] = [];
+    private sortedValues: number[] = []; // sorted in ascending order for fast median calculation
+    private orderedValues: (number | undefined)[] = []; // retain push order
 
-    public push(value: number) {
+    // if undefined is pushed, it goes into orderedValues but ignored for all other metrics
+    public push(value: number | undefined) {
+
+        if (value === undefined) {
+            this.orderedValues.push(value);
+            return;
+        }
+
         if (this.best === undefined) {
             this.best = value;
         }
@@ -18,15 +26,22 @@ export class Metric {
         this.best = Math.max(this.best, value);
         this.worst = Math.min(this.worst, value);
         this.sum += value;
-        this.values.push(value);
+        this.sortedValues.push(value);
+        this.orderedValues.push(value);
 
-        this.values.sort((a, b) => a - b);
+        this.sortedValues.sort((a, b) => a - b);
     }
 
     public hasValues(): boolean {
-        return this.values.length > 0;
+        return this.sortedValues.length > 0;
     }
 
+    // get values ordered as originally pushed
+    public getValues(): (number | undefined)[] {
+        return this.orderedValues;
+    }
+
+    
     public getWorst(): number | undefined {
         return this.worst;
     }
@@ -36,12 +51,12 @@ export class Metric {
     }
 
     public getAverage(): number | undefined {
-        if (this.values.length === 0) return undefined;
-        return this.sum / this.values.length;
+        if (this.sortedValues.length === 0) return undefined;
+        return this.sum / this.sortedValues.length;
     }
 
     public getMedian(): number | undefined {
-        if (this.values.length === 0) return undefined;
-        return this.values[Math.floor(this.values.length / 2)];
+        if (this.sortedValues.length === 0) return undefined;
+        return this.sortedValues[Math.floor(this.sortedValues.length / 2)];
     }
 }
