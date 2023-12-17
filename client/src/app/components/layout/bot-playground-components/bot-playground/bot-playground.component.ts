@@ -181,7 +181,7 @@ export class BotPlaygroundComponent {
           if (this.autoplay) {
             if (this.autoplayLeft > 0) {
               this.autoplayLeft--;
-              if (this.autoplayLeft === 0) this.autoplay = false;
+              // if (this.autoplayLeft === 0) this.autoplay = false;
               this.startGame(true);
             } else {
               this.autoplay = false;
