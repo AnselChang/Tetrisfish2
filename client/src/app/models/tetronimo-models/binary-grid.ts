@@ -42,6 +42,10 @@ export default class BinaryGrid implements Grid {
     }
 
     public setAt(x: number, y: number, blockType: BlockType) {
+        if (x < 0) throw new Error(`x must be >= 0, got ${x}`);
+        if (x >= this.numCols) throw new Error(`x must be < ${this.numCols}, got ${x}`);
+        if (y < 0) throw new Error(`y must be >= 0, got ${y}`);
+        if (y >= this.numRows) throw new Error(`y must be < ${this.numRows}, got ${y}`);
         this.blocks[y][x] = blockType;
     }
 

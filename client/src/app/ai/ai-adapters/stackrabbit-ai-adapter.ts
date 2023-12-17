@@ -68,6 +68,7 @@ export class StackRabbitAIAdapter extends AbstractAIAdapter {
         const status = new GameStatus(request.level ?? 18, request.lines ?? 0, request.score ?? 0);
         const standardParams = generateStandardParams(request.board, request.currentPieceType, status, request.inputSpeed);
         const movelistURL = new EngineMovelistURL(standardParams, nextPieceType, depth).getURL();
+        console.log(movelistURL);
         
         try {
             const response = await fetchStackRabbitURL(movelistURL);
