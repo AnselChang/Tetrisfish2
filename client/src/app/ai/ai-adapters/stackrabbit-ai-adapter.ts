@@ -1,5 +1,5 @@
 import GameStatus from "../../models/tetronimo-models/game-status";
-import { fetchStackRabbitURL, getBestMoveFromMovelistResponse } from "../../scripts/evaluation/evaluator";
+import { fetchStackRabbitURL, getBestMoveFromMovelistNNBResponse, getBestMoveFromMovelistResponse } from "../../scripts/evaluation/evaluator";
 import { EngineMovelistURL, LookaheadDepth, generateStandardParams } from "../../scripts/evaluation/stack-rabbit-api";
 import { AbstractAIAdapter } from "../abstract-ai-adapter/abstract-ai-adapter";
 import { BestMoveRequest } from "../abstract-ai-adapter/best-move-request";
@@ -8,6 +8,7 @@ import { BestMoveResponse } from "../abstract-ai-adapter/best-move-response";
 export enum StackRabbitVariant {
     DEEP = "Deep",
     SHALLOW = "Shallow",
+    NO_LOOKAHEAD = "NoLookahead",
 }
 
 export class StackRabbitAIAdapter extends AbstractAIAdapter {
@@ -17,6 +18,9 @@ export class StackRabbitAIAdapter extends AbstractAIAdapter {
     }
 
     getName(variant: StackRabbitVariant): string {
+        if (variant === StackRabbitVariant.NO_LOOKAHEAD) {
+            return "StackRabbit (No Lookahead)";
+        }
         return `StackRabbit (${variant})`;
     }
 
@@ -26,7 +30,7 @@ export class StackRabbitAIAdapter extends AbstractAIAdapter {
     }
 
     override getVariants(): string[] {
-        return [StackRabbitVariant.DEEP, StackRabbitVariant.SHALLOW];
+        return [StackRabbitVariant.DEEP, StackRabbitVariant.SHALLOW, StackRabbitVariant.NO_LOOKAHEAD];
     }
 
     override getVariantOptionString(variant: StackRabbitVariant): string {
@@ -35,6 +39,8 @@ export class StackRabbitAIAdapter extends AbstractAIAdapter {
                 return "Deep Search";
             case StackRabbitVariant.SHALLOW:
                 return "Shallow Search";
+            case StackRabbitVariant.NO_LOOKAHEAD:
+                return "No Next Box";
         }
     }
 
@@ -44,20 +50,33 @@ export class StackRabbitAIAdapter extends AbstractAIAdapter {
         let depth: LookaheadDepth;
         switch (variant) {
             case StackRabbitVariant.DEEP:
+            case StackRabbitVariant.NO_LOOKAHEAD:
                 depth = LookaheadDepth.DEEP;
                 break;
             case StackRabbitVariant.SHALLOW:
                 depth = LookaheadDepth.SHALLOW;
                 break;
         }
+        
+        let nextPieceType: string | undefined;
+        if (variant === StackRabbitVariant.NO_LOOKAHEAD) {
+            nextPieceType = undefined;
+        } else {
+            nextPieceType = request.nextPieceType;
+        }
 
         const status = new GameStatus(request.level ?? 18, request.lines ?? 0, request.score ?? 0);
         const standardParams = generateStandardParams(request.board, request.currentPieceType, status, request.inputSpeed);
-        const movelistURL = new EngineMovelistURL(standardParams, request.nextPieceType, depth).getURL();
+        const movelistURL = new EngineMovelistURL(standardParams, nextPieceType, depth).getURL();
         
         try {
             const response = await fetchStackRabbitURL(movelistURL);
-            return getBestMoveFromMovelistResponse(response, request.currentPieceType, request.nextPieceType);
+            if (nextPieceType === undefined) {
+                return getBestMoveFromMovelistNNBResponse(response, request.currentPieceType);
+            }
+            else {
+                return getBestMoveFromMovelistResponse(response, request.currentPieceType, request.nextPieceType);
+            }
         } catch (e) {
             console.error(e);
             return undefined;

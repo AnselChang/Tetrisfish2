@@ -78,3 +78,22 @@ export function getBestMoveFromMovelistResponse(response: any, currentPieceType:
         nextPlacement: secondPlacement,
     };
 }
+
+export function getBestMoveFromMovelistNNBResponse(response: any, currentPieceType: TetrominoType): BestMoveResponse | undefined {
+    
+    if (response.length === 0) {
+        return undefined;
+    }
+
+    const bestMove = response[0];
+
+    // extract SR placements and evaluation
+    const evaluation = bestMove["totalValue"] as number;
+    const firstPlacement = convertSRPlacement(bestMove["placement"], currentPieceType);
+
+    return {
+        evaluation: evaluation,
+        currentPlacement: firstPlacement,
+        nextPlacement: undefined,
+    };
+}
