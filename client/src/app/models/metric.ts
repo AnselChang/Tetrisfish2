@@ -57,6 +57,14 @@ export class Metric {
 
     public getMedian(): number | undefined {
         if (this.sortedValues.length === 0) return undefined;
-        return this.sortedValues[Math.floor(this.sortedValues.length / 2)];
+
+        // if even, take average of middle two
+        if (this.sortedValues.length % 2 === 0) {
+            return (this.sortedValues[this.sortedValues.length / 2 - 1] + this.sortedValues[this.sortedValues.length / 2]) / 2;
+        }
+        else { // if odd, take middle
+            return this.sortedValues[Math.floor(this.sortedValues.length / 2)];
+        }
+
     }
 }

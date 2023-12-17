@@ -139,7 +139,7 @@ export class BotPlaygroundComponent {
     }
 
     this.autoplay = true;
-    this.autoplayLeft = numGames;
+    this.autoplayLeft = numGames - 1; // because we are starting a game now
     if (!this.playing) {
       if (this.isToppedOut) this.resetGame();
       this.startGame();
