@@ -7,8 +7,8 @@ import { AIAdapterType, ALL_ADAPTER_TYPES } from "./ai-adapters/all-adapters";
 import { ALL_RNG_TYPES, RNGType } from "./piece-sequence-generation/all-rng";
 
 export enum Linecap {
-    NOCAP = 0,
-    CAP29 = 29,
+    NOCAP = "None",
+    CAP29 = "Level 29 Cap",
     CAP39 = 39,
     CAP49 = 49
 }
