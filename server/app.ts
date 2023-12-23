@@ -43,7 +43,7 @@ require('dotenv').config();
 export default async function createApp(): Promise<{
     app : Express,
     database: Database,
-    discordBot: DiscordBot,
+    discordBot: DiscordBot | undefined,
     multiplayer: MultiplayerManager
 }> {
     const app = express();
@@ -66,7 +66,14 @@ export default async function createApp(): Promise<{
     await database.connect();
 
     // connect to discord
-    const discordBot = new DiscordBot();
+    let discordBot: DiscordBot | undefined;
+    if (process.env['PRODUCTION'] === 'true') {
+        console.log("Starting discord bot in production mode...")
+        discordBot = new DiscordBot();
+    } else {
+        console.log("Discord bot disabled in debug mode.")
+        discordBot = undefined;
+    }
 
     // multiplayer manager
     const multiplayer = new MultiplayerManager();

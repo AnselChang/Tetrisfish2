@@ -11,7 +11,7 @@ import DiscordBot from '../singletons/discord-bot';
 //     "endScore": number
 //     "data": json
 // }
-export async function sendBugReportRoute(discordBot: DiscordBot, req: Request, res: Response) {
+export async function sendBugReportRoute(discordBot: DiscordBot | undefined, req: Request, res: Response) {
 
     let username = req.session?.state?.username;
     if (!username) username = "Anonymous";
@@ -36,8 +36,15 @@ export async function sendBugReportRoute(discordBot: DiscordBot, req: Request, r
     const url = `https://www.tetrisfish.com/debug/?id=${gameID}`;
 
     // Send the bug report to the discord channel
-    await discordBot.sendBugReport(username, description, url);
-    console.log("Bug report sent to discord", username, description, url, data);
+    if (discordBot) {
+        await discordBot.sendBugReport(username, description, url);
+        console.log("Bug report sent to discord", username, description, url, data);
+    } else {
+        console.log("In debug mode, so not sending bug report to discord. Instead, here's the data:");
+        console.log("Username:", username);
+        console.log("Description:", description);
+        console.log("URL:", url);
+    }
 
     res.status(200).send({success: true});
 
