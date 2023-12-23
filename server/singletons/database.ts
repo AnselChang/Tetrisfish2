@@ -6,11 +6,11 @@ export class Database {
 
     getConnectionString() {
 
-        const username = process.env['MONGODB_USERNAME']!;
-        const password = process.env['MONGODB_PASSWORD']!;
-        console.log("Username:", username);
-        console.log("Password:", password);
+        const isProduction = process.env['PRODUCTION'] === 'true'
 
+        const username = process.env[isProduction ? 'MONGODB_USERNAME_PRODUCTION' : 'MONGODB_USERNAME_DEBUG']!;
+        const password = process.env[isProduction ? 'MONGODB_PASSWORD_PRODUCTION' : 'MONGODB_PASSWORD_DEBUG']!;
+        console.log(isProduction ? 'Connecting to production database...' : 'Connecting to debug database...')
         return `mongodb+srv://${username}:${password}@serverlessinstance0.hznwj0u.mongodb.net/?retryWrites=true&w=majority`;
     }
 

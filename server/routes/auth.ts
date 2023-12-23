@@ -67,7 +67,29 @@ async function getUserFromAuth(accessToken: string) {
     return discordUser;
 }
 
+const DEBUG_DISCORD_ID = "0";
+const DEBUG_USERNAME = "debug";
+
 export async function authRoute(req: Request, res: Response) {
+
+    // if on DEBUG MODE, login as user "debug" with ID 0
+    if (process.env['PRODUCTION'] !== 'true') {
+        console.log("DEBUG MODE ON");
+        req.session.state = new SessionState(DEBUG_DISCORD_ID, DEBUG_USERNAME, false);
+
+        // check if user exists in database
+        const userExists = await doesUserExist(DEBUG_DISCORD_ID);
+
+        // if not, create new user
+        if (!userExists) {
+            await createNewUser(DEBUG_DISCORD_ID, DEBUG_USERNAME);
+        }
+
+        const userRedirect = req.query['redirect'] as string;
+        const redirectURL = `${getBaseURL(req)}/on-login?redirect=${userRedirect}&new-user=false`;
+        res.redirect(redirectURL);
+        return;
+    }
 
     const clientID = process.env['DISCORD_CLIENT_ID'];
     console.log("Client ID:", clientID);
