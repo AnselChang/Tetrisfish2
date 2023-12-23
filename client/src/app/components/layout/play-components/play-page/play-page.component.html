@@ -31,7 +31,6 @@
         <h1 class="padded">Live Capture Mode • <span [ngStyle]="{'color': getStatusColor()}">{{getStatusString()}}</span></h1>
 
         <canvas #canvasElement
-        [width]="videoCaptureService.OCR_WIDTH" [height]="videoCaptureService.OCR_HEIGHT"
         [style.width.px]="videoCaptureService.DISPLAY_WIDTH" [style.height.px]="videoCaptureService.DISPLAY_HEIGHT"
         [style.display]="isInGame() ? 'none' : 'block'"></canvas>
 

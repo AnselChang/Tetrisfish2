@@ -59,8 +59,10 @@ export class VideoCaptureComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public onMouseMove(event: MouseEvent): void {
     const rect = this.canvasElement.nativeElement.getBoundingClientRect();
-    this.mouseX = (event.clientX - rect.left) * this.captureServ.CANVAS_RESOLUTION_SCALE_X;
-    this.mouseY = (event.clientY - rect.top) * this.captureServ.CANVAS_RESOLUTION_SCALE_Y;
+    const CANVAS_RESOLUTION_SCALE_X = this.canvasElement.nativeElement.width / this.captureServ.DISPLAY_WIDTH;
+    const CANVAS_RESOLUTION_SCALE_Y = this.canvasElement.nativeElement.height / this.captureServ.DISPLAY_HEIGHT;
+    this.mouseX = (event.clientX - rect.left) * CANVAS_RESOLUTION_SCALE_X;
+    this.mouseY = (event.clientY - rect.top) * CANVAS_RESOLUTION_SCALE_Y;
 
   }
 

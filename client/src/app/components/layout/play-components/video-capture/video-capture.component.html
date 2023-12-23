@@ -16,7 +16,6 @@
 [ngStyle]="{'border' : hasVideo() ? (isCalibrated() ? '2px solid green' : '2px solid red') : '1px solid white'}"
 (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
 (mousemove)="onMouseMove($event)"
-[width]="captureServ.OCR_WIDTH" [height]="captureServ.OCR_HEIGHT"
 [style.width.px]="captureServ.DISPLAY_WIDTH" [style.height.px]="captureServ.DISPLAY_HEIGHT">
 </canvas>
 

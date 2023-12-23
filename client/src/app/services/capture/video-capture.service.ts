@@ -38,12 +38,15 @@ export class VideoCaptureService {
 
   // how many times larger the canvas stored resolution is compared to display resolution
   // the higher the is, the more expensive OCR calculations are, but the more accurate they are
-  public readonly OCR_WIDTH = 900;
-  public readonly OCR_HEIGHT = 900;
+  // public readonly OCR_WIDTH = 900;
+  // public readonly OCR_HEIGHT = 900;
   public readonly DISPLAY_WIDTH = 450;
   public readonly DISPLAY_HEIGHT = 450;
-  public readonly CANVAS_RESOLUTION_SCALE_X = this.OCR_WIDTH / this.DISPLAY_WIDTH;
-  public readonly CANVAS_RESOLUTION_SCALE_Y = this.OCR_HEIGHT / this.DISPLAY_HEIGHT;
+
+  private videoWidth?: number;
+  private videoHeight?: number;
+  // public readonly CANVAS_RESOLUTION_SCALE_X = this.OCR_WIDTH / this.DISPLAY_WIDTH;
+  // public readonly CANVAS_RESOLUTION_SCALE_Y = this.OCR_HEIGHT / this.DISPLAY_HEIGHT;
 
   private fpsTracker = new FpsTracker();
 
@@ -72,6 +75,8 @@ export class VideoCaptureService {
     console.log("registering canvas", canvasElement, isCanvasHidden);
     this.canvasElement = canvasElement;
     this.isCanvasHidden = isCanvasHidden;
+
+    this.updateCanvasResolution();
   }
 
   public isPaused(): boolean {
@@ -137,11 +142,11 @@ export class VideoCaptureService {
         video: {
           deviceId: this.selectedDevice.deviceId,
           width: {
-            ideal: this.OCR_WIDTH
+            ideal: 1000,
           },
-          height: {
-            ideal: this.OCR_HEIGHT
-          }
+          // height: {
+          //   ideal: this.OCR_HEIGHT
+          // }
         }
       });
       
@@ -159,11 +164,11 @@ export class VideoCaptureService {
       const mediaStream = await navigator.mediaDevices.getDisplayMedia({
         video: {
           width: {
-            ideal: this.OCR_WIDTH
+            ideal: 1000,
           },
-          height: {
-            ideal: this.OCR_HEIGHT
-          }
+          // height: {
+          //   ideal: this.OCR_HEIGHT
+          // }
         }
       });
       
@@ -174,11 +179,29 @@ export class VideoCaptureService {
     }
   }
 
+  // update canvas resolution to video resolution, if defined
+  updateCanvasResolution(): void {
+    if (this.videoWidth && this.videoHeight) {
+      this.canvasElement.nativeElement.width = this.videoWidth;
+      this.canvasElement.nativeElement.height = this.videoHeight;
+      console.log("set canvas to video resolution", this.videoWidth, this.videoHeight);
+    }
+  }
+
   async startCapture(mediaStream: MediaStream) {
     
     try {
       this.videoElement.nativeElement.srcObject = mediaStream;
       this.permissionError = null; // Clear any previous error
+
+      // set video resolution
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      const settings = videoTrack.getSettings();
+      this.videoWidth = settings.width;
+      this.videoHeight = settings.height;
+      console.log("set video resolution", this.videoWidth, this.videoHeight);
+
+      this.updateCanvasResolution();
 
       // Start reading the pixels
       this.status = VideoPauseStatus.PLAYING;
