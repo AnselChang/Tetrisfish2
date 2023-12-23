@@ -135,7 +135,13 @@ export class VideoCaptureService {
 
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          deviceId: this.selectedDevice.deviceId
+          deviceId: this.selectedDevice.deviceId,
+          width: {
+            ideal: this.OCR_WIDTH
+          },
+          height: {
+            ideal: this.OCR_HEIGHT
+          }
         }
       });
       
@@ -151,7 +157,14 @@ export class VideoCaptureService {
     try {
 
       const mediaStream = await navigator.mediaDevices.getDisplayMedia({
-        video: true
+        video: {
+          width: {
+            ideal: this.OCR_WIDTH
+          },
+          height: {
+            ideal: this.OCR_HEIGHT
+          }
+        }
       });
       
       this.startCapture(mediaStream);
@@ -190,6 +203,10 @@ export class VideoCaptureService {
 
   public getTickBusyDuration(): number {
     return this.fpsTracker.getTickBusyDuration();
+  }
+
+  public getTickIdleDuration(): number {
+    return this.fpsTracker.getTickIdleDuration();
   }
 
   executeFrame(): void {
@@ -247,7 +264,11 @@ export class VideoCaptureService {
     STEP 5: Execute next frame after some delay
     */
     this.fpsTracker.endTick();
-    requestAnimationFrame(this.executeFrame.bind(this));
+
+    // wait to maintain 30fps
+    this.fpsTracker.idleToMaintainFPS(30).then(() => {
+      requestAnimationFrame(this.executeFrame.bind(this));
+    });
   }
 
   updateBoardOCR(): void {

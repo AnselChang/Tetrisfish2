@@ -8,11 +8,13 @@
  **/
 
 import { RollingAverage } from "../scripts/rolling-average";
+import { sleep } from "../scripts/sleep";
 
 export class FpsTracker {
     private timestamps: number[];
     private averageFPS = new RollingAverage(20);
     private averageTickBusyDuration = new RollingAverage(20);
+    private averageTickIdleDuration = new RollingAverage(20);
 
     private lastTick = Date.now();
 
@@ -40,6 +42,20 @@ export class FpsTracker {
         this.averageTickBusyDuration.push(tickBusyDuration);
     }
 
+    async idleToMaintainFPS(fps: number) {
+        const now = Date.now();
+        const tickIdleDuration = 1000 / fps - (now - this.lastTick);
+
+        if (tickIdleDuration > 0) {
+            await sleep(tickIdleDuration);
+            const actualIdleDuration = Date.now() - now;
+            this.averageTickIdleDuration.push(actualIdleDuration);
+        } else {
+            this.averageTickIdleDuration.push(0);
+        }
+
+    }
+
     getFPS(): number {
         return this.averageFPS.get();
     }
@@ -47,5 +63,10 @@ export class FpsTracker {
     // returns the average duration of a tick (between tick() and endTick()) in milliseconds
     getTickBusyDuration(): number {
         return this.averageTickBusyDuration.get();
+    }
+
+    // returns the average duration of the idle time between ticks in milliseconds
+    getTickIdleDuration(): number {
+        return this.averageTickIdleDuration.get();
     }
 }

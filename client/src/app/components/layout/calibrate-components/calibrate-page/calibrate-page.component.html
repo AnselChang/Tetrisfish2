@@ -68,6 +68,13 @@
                 <app-next-box [showBackground]="false" [level]="extractedState.getStatus().level" [type]="extractedState.getNextPieceType()"></app-next-box>
             </app-tetris-panel-item>
 
+            <app-tetris-panel-item>
+                <h2>Debug</h2>
+                <p class="tiny">FPS: {{videoCaptureService.getFPS()}}</p>
+                <p class="tiny">Tick busy duration: {{videoCaptureService.getTickBusyDuration().toFixed(0)}}ms</p>
+                <p class="tiny">Tick idle duration: {{videoCaptureService.getTickIdleDuration().toFixed(0)}}ms</p>
+            </app-tetris-panel-item>
+
         </app-tetris-panel>
 
     </app-section>
