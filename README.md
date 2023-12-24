@@ -9,7 +9,9 @@
 - A sandbox to play with and learn from various configurable NES Tetris AIs
 - Multiplayer rooms, equipped with admin controls, scoring, and live chat, so that multiple players and AIs can play together in realtime
 
-...but the ultimate goal of tetrisfish is an ambitious one. I aim for a full ranked multiplayer system not unlike chess.com. Players can battle other players and bots in realtime to gain elo and rank up in the leaderboards. But to pull this off, every previously mentioned feature needs to be tuned to perfection. And thus sets the massive scope I hope to pull off.
+...but the ultimate goal of tetrisfish is an ambitious one. I aim for a full ranked multiplayer system not unlike chess.com. Players can battle other players and bots in realtime to gain elo and rank up in the leaderboards.
+
+I want tetrisfish ultimately to be the *de facto* standard for all major tournaments. I want it to make the multiplayer NES Tetris experience a seamless one. But to pull this off, every previously mentioned feature needs to be tuned to perfection. And thus sets the massive scope I hope to pull off.
 
 ## To join the community
 
@@ -52,7 +54,11 @@ The SESSION_SECRET should be some random string of your choice.
 
 You will need to set up your own MongoDB database, which is free on the lowest tier. After setting up a MongoDB project, you'll get your own username, password, and database url that you should update your .env with.
 
-### 
+### Building Locally
+
+With your enviornment correctly set up, you can now build the client and server locally. If you haven't done so, `cd` into the directory and `npm install`, which should automatically install all the required dependencies into your local copy. That command needs to run only once.
+
+Then, whenever you make a change, you'll need to build and restart the application. Here are some useful commands:
 
 `npm run build` - Build both client and server.
 
@@ -63,3 +69,8 @@ You will need to set up your own MongoDB database, which is free on the lowest t
 `npm start` - Run full application in production mode.
 
 `git push heroku main` - Deploy build in main branch to heroku. Only Ansel has permissions for this.
+
+Once you've `npm run build` and `npm start`, you should be able to run the tetrisfish client on any browser with `localhost:3000`.
+
+Then, you are free to make changes on your local copy and create pull requests. However, I strongly recommend discussing potential changes on the discord server first, so we can be on the same page.
+
