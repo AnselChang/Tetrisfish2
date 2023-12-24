@@ -97,5 +97,5 @@ const gameSchema = new Schema({
     }
 });
 
-const DBGame = mongoose.model('DBGame', gameSchema);
+const DBGame = mongoose.model('DBGame2', gameSchema);
 export default DBGame;
