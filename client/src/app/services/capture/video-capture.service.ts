@@ -142,7 +142,7 @@ export class VideoCaptureService {
         video: {
           deviceId: this.selectedDevice.deviceId,
           width: {
-            ideal: 1000,
+            ideal: 800,
           },
           // height: {
           //   ideal: this.OCR_HEIGHT
@@ -164,7 +164,7 @@ export class VideoCaptureService {
       const mediaStream = await navigator.mediaDevices.getDisplayMedia({
         video: {
           width: {
-            ideal: 1000,
+            ideal: 800,
           },
           // height: {
           //   ideal: this.OCR_HEIGHT
@@ -289,9 +289,11 @@ export class VideoCaptureService {
     this.fpsTracker.endTick();
 
     // wait to maintain 30fps
-    this.fpsTracker.idleToMaintainFPS(30).then(() => {
-      requestAnimationFrame(this.executeFrame.bind(this));
-    });
+    // this.fpsTracker.idleToMaintainFPS(30).then(() => {
+    //   requestAnimationFrame(this.executeFrame.bind(this));
+    // });
+
+    requestAnimationFrame(this.executeFrame.bind(this));
   }
 
   updateBoardOCR(): void {

@@ -62,25 +62,23 @@ export interface SerializedGame {
     readonly numZ: number, // number of placements with Z piece
 }
 
+//
+export interface SerializedFrame {
+
+}
+
 // serialized JSON for a placement.
 // since will be sending hundreds of these in a request, need to compress as much as possible
 // minimize key names
 // index and score/level/lines and be rederived when converting back to a GamePlacement
 export interface SerializedPlacement {
 
+    readonly b: string, // board encoded as a string
     readonly c: string, // type of current piece as a character
+    readonly n: string, // type of next piece as a character
     readonly r: number, // placement rotation of current piece
     readonly x: number, // placement x position of current piece
     readonly y: number, // placement y position of current piece
-    readonly p: number, // number of pushdown points for this placement
-
-}
-
-export interface SerializedRecoveryData {
-    readonly b: string, // base64 encoded isolated board BEFORE the next placement
-    readonly c: string, // the tetromino type for the next piece for the previous placement
-    readonly le: number, // level at the start of the next placement after recovery
-    readonly li: number, // lines at the start of the next placement after recovery
-    readonly s: number, // score at the start of the next placement after recovery
+    readonly l: number, // number of line clears from placement
 
 }
